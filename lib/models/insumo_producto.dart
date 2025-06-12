@@ -1,19 +1,29 @@
-class InsumoProducto {
-  int? idInsumoProducto;
-  int idInsumo;
-  int idProducto;
-  double cantidadRequerida;
+import 'package:cafe_valdivia/models/base_model.dart';
+import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/producto.dart';
+
+class InsumoProducto implements BaseModel {
+  @override
+  int? id;
+  final int idInsumo;
+  final int idProducto;
+  final double cantidadRequerida;
+  Insumos? insumo; //Relacion cargada
+  Producto? producto; //Relacion cargada
 
   InsumoProducto({
-    this.idInsumoProducto,
+    this.id,
     required this.idInsumo,
     required this.idProducto,
-    this.cantidadRequerida = 0.0,
+    required this.cantidadRequerida,
+    this.insumo,
+    this.producto,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
-      'id_insumo_producto': idInsumoProducto,
+      'id_insumo_producto': id,
       'id_insumo': idInsumo,
       'id_producto': idProducto,
       'cantidad_requerida': cantidadRequerida,
@@ -22,10 +32,10 @@ class InsumoProducto {
 
   factory InsumoProducto.fromMap(Map<String, dynamic> map) {
     return InsumoProducto(
-      idInsumoProducto: map['id_insumo_producto'],
+      id: map['id_insumo_producto'],
       idInsumo: map['id_insumo'],
       idProducto: map['id_producto'],
-      cantidadRequerida: map['cantidad_requerida'] as double,
+      cantidadRequerida: map['cantidad_requerida']?.toDouble() ?? 0.0,
     );
   }
 }

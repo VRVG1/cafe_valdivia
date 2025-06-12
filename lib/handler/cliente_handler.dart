@@ -14,7 +14,7 @@ class ClienteHandler {
     );
   }
 
-  Future<List<Cliente>> get() async {
+  Future<List<Cliente>> getAll() async {
     final db = await _getDatabase();
     final List<Map<String, dynamic>> maps = await db.query('Cliente');
     return List.generate(maps.length, (i) {
@@ -30,10 +30,7 @@ class ClienteHandler {
       whereArgs: [id],
       limit: 1,
     );
-    if (maps.isNotEmpty) {
-      return Cliente.fromMap(maps.first);
-    }
-    return null;
+    return maps.isNotEmpty ? Cliente.fromMap(maps.first) : null;
   }
 
   Future<int> update(Cliente cliente) async {
@@ -49,5 +46,16 @@ class ClienteHandler {
   Future<int> delete(int id) async {
     final db = await _getDatabase();
     return await db.delete('Cliente', where: 'id_cliente = ?', whereArgs: [id]);
+  }
+
+  Future<List<Cliente>> buscarNombreOApellido(String query) async {
+    final db = await _getDatabase();
+    final maps = await db.query(
+      'Cliente',
+      where: 'nombre LIKE ? OR apellido LIKE ?',
+      whereArgs: ['%$query%', '%$query%'],
+    );
+
+    return List.generate(maps.length, (i) => Cliente.fromMap(maps[i]));
   }
 }

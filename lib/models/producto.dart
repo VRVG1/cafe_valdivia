@@ -1,35 +1,38 @@
-class Producto {
-  int? idProducto;
-  String nombre;
-  String? descripcion;
-  double precioVenta;
-  int stockDisponible;
+import 'package:cafe_valdivia/models/base_model.dart';
+import 'package:cafe_valdivia/models/insumo_producto.dart';
+
+class Producto implements BaseModel {
+  @override
+  int? id;
+  final String nombre;
+  final String? descripcion;
+  final double precioVenta;
+  List<InsumoProducto>? insumos; // Relacion cargada
 
   Producto({
-    this.idProducto,
+    this.id,
     required this.nombre,
     this.descripcion,
     this.precioVenta = 0.0,
-    this.stockDisponible = 0,
+    this.insumos,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
-      'id_producto': idProducto,
+      'id_producto': id,
       'nombre': nombre,
       'descripcion': descripcion,
       'precio_venta': precioVenta,
-      'stock_disponible': stockDisponible,
     };
   }
 
   factory Producto.fromMap(Map<String, dynamic> map) {
     return Producto(
-      idProducto: map['id_producto'],
+      id: map['id_producto'],
       nombre: map['nombre'],
       descripcion: map['descripcion'],
-      precioVenta: map['precio_venta'] as double,
-      stockDisponible: map['stock_disponible'] as int,
+      precioVenta: map['precio_venta']?.toDouble() ?? 0.0,
     );
   }
 }
