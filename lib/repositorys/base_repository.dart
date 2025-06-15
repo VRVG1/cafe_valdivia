@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/handler/db_helper.dart';
+import 'package:cafe_valdivia/services/db_helper.dart';
 
 abstract class BaseRepository<T> {
   final DatabaseHelper dbHelper;

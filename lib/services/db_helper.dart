@@ -198,7 +198,7 @@ class DatabaseHelper {
         fecha DATETIME NOT NULL,
         detalles TEXT,
         pagado BOOLEAN DEFAULT 0,
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)
+        FOREIGN KEY (id_proveedor) REFERENCES Proveedor (id_proveedor)
       )
     ''');
 
@@ -215,7 +215,7 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Invetario(
+      CREATE TABLE Inventario(
         id_insumo INTEGER PRIMARY KEY AUTOINCREMENT,
         stock REAL NOT NULL DEFAULT 0,
         FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)
@@ -226,7 +226,7 @@ class DatabaseHelper {
       CREATE TABLE Movimiento_Inventario(
         id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
         id_insumo INTEGER NOT NULL,
-        tipo TEXT NOT NULL CHECK (tipo IN ('Entrada', 'Salida')),
+        tipo TEXT NOT NULL CHECK (tipo IN ('Entrada', 'Salida', 'AjusteEntrada', 'AjusteSalida')),
         cantidad REAL NOT NULL,
         fecha DATETIME NOT NULL,
         id_detalle_compra INTEGER,

@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/handler/db_helper.dart';
+import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/cliente.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 
@@ -69,7 +69,7 @@ class ClienteRepository implements BaseRepository<Cliente> {
   Future<List<Cliente>> search(String query) async {
     return getAll(
       where: 'nombre LIKE ? OR apellido LIKE ? OR telefono LIKE ?',
-      whereArgs: ['%@query', '%@query', '%@query'],
+      whereArgs: ['%$query', '%$query', '%$query'],
     );
   }
 }

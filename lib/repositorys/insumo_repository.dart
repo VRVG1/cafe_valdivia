@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/handler/db_helper.dart';
+import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/insumos.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_respository.dart';
@@ -73,5 +73,21 @@ class InsumoRepository implements BaseRepository<Insumos> {
     final insumo = await getById(id);
     insumo.unidad = await unidadRepo.getById(insumo.idUnidad);
     return insumo;
+  }
+
+  Future<double> getCostoPromedio(int insumoId) async {
+    final db = await dbHelper.database;
+
+    // Obtener el costo promedio ponderado de las utimas compras
+    final result = await db.rawQuery(
+      '''
+      SELECT SUM(dc.cantidad * dc.precio_unitario_compra) / SUM(dc.cantidad) as costo_promedio
+      FROM Detalle_Compra dc
+      WHERE dc.id_insumo = ?
+      AND dc.cantidad > 0
+      ''',
+      [insumoId],
+    );
+    return result.first['costo_promedio'] as double? ?? 0.0;
   }
 }

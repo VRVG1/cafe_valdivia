@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/handler/db_helper.dart';
+import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/compra.dart';
 import 'package:cafe_valdivia/models/detalle_compra.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
@@ -54,5 +54,51 @@ class CompraRepository {
         });
       }
     });
+  }
+
+  Future<Compra> getFullCompra(int compraId) async {
+    return await dbHelper.transaction((txn) async {
+      // Obtener compra principal
+      final compraMap =
+          (await txn.query(
+            tableName,
+            where: '$idColumn = ?',
+            whereArgs: [compraId],
+          )).first;
+
+      final compra = Compra.fromMap(compraMap);
+
+      // obtener proveedor
+      compra.proveedor = await proveedorRepo.getById(compra.idProveedor);
+
+      // Obtener detalles
+      final detalles = await txn.query(
+        'Detalle_Compra',
+        where: 'id_compra = ?',
+        whereArgs: [idColumn],
+      );
+
+      compra.detallesCompra = await Future.wait(
+        detalles.map((detMap) async {
+          final detalle = DetalleCompra.fromMap(detMap);
+          detalle.insumo = await insumoRepo.getById(detalle.idInsumo);
+          return detalle;
+        }),
+      );
+
+      return compra;
+    });
+  }
+
+  Future<int> markAsPaid(int compraId) async {
+    final result = await dbHelper.transaction((txn) async {
+      txn.update(
+        tableName,
+        {'pagado': 1, 'fecha': DateTime.now()},
+        where: '$idColumn = ?',
+        whereArgs: [compraId],
+      );
+    });
+    return result;
   }
 }

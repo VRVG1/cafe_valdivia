@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/handler/db_helper.dart';
+import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/movimiento_invetario.dart';
 
 class MovimientoInventarioRepository {
@@ -18,14 +18,32 @@ class MovimientoInventarioRepository {
     return result.map((map) => MovimientoInvetario.fromMap(map)).toList();
   }
 
+  Future<void> registrarMovimiento(
+    TipoMovimiento tipo,
+    int insumoId,
+    double cantidad,
+    String motivo,
+    int? idDetalleCompra,
+  ) async {
+    await dbHelper.insert(tableName, {
+      'tipo': tipo,
+      'id_insumo': insumoId,
+      'cantidad': cantidad.abs(),
+      'fecha': DateTime.now().toIso8601String(),
+      'motivo': motivo,
+      'id_detalle_compra': idDetalleCompra,
+    });
+  }
+
   Future<void> registrarAjuste(
+    TipoMovimiento tipo,
     int insumoId,
     double cantidad,
     String motivo,
   ) async {
     await dbHelper.insert(tableName, {
       'id_insumo': insumoId,
-      'tipo': 'Ajuste',
+      'tipo': tipo,
       'cantidad': cantidad.abs(),
       'fecha': DateTime.now().toIso8601String(),
       'motivo': motivo,
