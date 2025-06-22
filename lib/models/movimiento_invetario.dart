@@ -1,7 +1,13 @@
 import 'package:cafe_valdivia/models/base_model.dart';
 import 'package:cafe_valdivia/models/insumos.dart';
 
-enum TipoMovimiento { entrada, salida, ajusteEntrada, ajusteSalida }
+enum TipoMovimiento { entrada, salida, ajusteEntrada, ajusteSalida, invalid }
+
+extension ParseToString on TipoMovimiento {
+  String toShortString() {
+    return toString().split('.').last;
+  }
+}
 
 class MovimientoInvetario implements BaseModel {
   @override
@@ -32,7 +38,7 @@ class MovimientoInvetario implements BaseModel {
     return {
       'id_movimiento_invetario': id,
       'id_insumo': idInsumo,
-      'tipo': tipo.name,
+      'tipo': tipo.toShortString(),
       'cantidad': cantidad,
       'fecha': fecha.toIso8601String(),
       'motivo': motivo,
@@ -45,15 +51,18 @@ class MovimientoInvetario implements BaseModel {
     return MovimientoInvetario(
       id: map['id_movimiento_invetario'],
       idInsumo: map['id_insumo'],
+      // tipo: TipoMovimiento.values.firstWhere(
+      //   (e) => e.name == map['tipo'],
+      //   orElse: () => TipoMovimiento.ajusteSalida,
+      // ),
       tipo: TipoMovimiento.values.firstWhere(
-        (e) => e.name == map['tipo'],
-        orElse: () => TipoMovimiento.ajusteSalida,
+        (e) => e == map['tipo'],
+        orElse: () => TipoMovimiento.invalid,
       ),
       cantidad: map['cantidad']?.toDouble() ?? 0.0,
       fecha: DateTime.parse(map['fecha']),
       motivo: map['motivo'],
       idDetalleCompra: map['id_detalle_compra'],
-      idDetalleVenta: map['id_detalle_venta'],
     );
   }
 }
