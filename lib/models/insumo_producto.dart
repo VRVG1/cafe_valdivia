@@ -38,4 +38,18 @@ class InsumoProducto implements BaseModel {
       cantidadRequerida: map['cantidad_requerida']?.toDouble() ?? 0.0,
     );
   }
+
+  InsumoProducto copyWith({
+    int? id,
+    int? idInsumo,
+    int? idProducto,
+    double? cantidadRequerida,
+  }) {
+    return InsumoProducto(
+      id: id ?? this.id,
+      idInsumo: idInsumo ?? this.idInsumo,
+      idProducto: idProducto ?? this.idProducto,
+      cantidadRequerida: cantidadRequerida ?? this.cantidadRequerida,
+    );
+  }
 }

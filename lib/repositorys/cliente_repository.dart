@@ -51,7 +51,7 @@ class ClienteRepository implements BaseRepository<Cliente> {
       whereArgs: [id],
       limit: 1,
     );
-    if (result.isEmpty) throw Exception('Unidad no encontrada');
+    if (result.isEmpty) throw Exception('Cliente no encontrada');
     return fromMap(result.first);
   }
 

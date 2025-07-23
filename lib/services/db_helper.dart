@@ -29,6 +29,14 @@ class DatabaseHelper {
     );
   }
 
+  // Metodos para facilitar las pruebas
+  Future<void> testOnCreate(Database db, [int version = 2]) =>
+      _onCreate(db, version);
+  Future<void> testOnConfigure(Database db) => _onConfigure(db);
+  void setMockDatabase(Database database) {
+    _database = database;
+  }
+
   Future<void> _onConfigure(Database db) async {
     // Configura la base de datos para permitir el uso de transacciones
     await db.execute('PRAGMA foreign_keys = ON');
@@ -112,7 +120,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Unidad_Medida (
         id_unidad INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE,
+        nombre TEXT NOT NULL UNIQUE
       )
     ''');
 
@@ -122,7 +130,7 @@ class DatabaseHelper {
         nombre TEXT NOT NULL,
         apellido TEXT,
         telefono TEXT,
-        email TEXT,
+        email TEXT
       )
     ''');
 
@@ -152,7 +160,7 @@ class DatabaseHelper {
         id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL UNIQUE,
         descripcion TEXT,
-        precio_venta REAL DEFAULT 0.0,
+        precio_venta REAL DEFAULT 0.0
       )
     ''');
 
@@ -226,14 +234,14 @@ class DatabaseHelper {
       CREATE TABLE Movimiento_Inventario(
         id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
         id_insumo INTEGER NOT NULL,
-        tipo TEXT NOT NULL CHECK (tipo IN ('Entrada', 'Salida', 'AjusteEntrada', 'AjusteSalida')),
+        tipo TEXT NOT NULL CHECK (tipo IN ('Entrada', 'Salida', 'Ajuste Entrada', 'Ajuste Salida', 'invalid')),
         cantidad REAL NOT NULL,
         fecha DATETIME NOT NULL,
         id_detalle_compra INTEGER,
         id_detalle_venta INTEGER,
         motivo TEXT,
         FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo),
-        FOREIGN KEY (id_detalle_compra) REFERENCES Detalle_Compra(id_detalle_compra),
+FOREIGN KEY (id_detalle_compra) REFERENCES Detalle_Compra(id_detalle_compra),
         FOREIGN KEY (id_detalle_venta) REFERENCES Detalle_Venta (id_detalle_venta)
       )
       ''');

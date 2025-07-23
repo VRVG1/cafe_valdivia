@@ -19,19 +19,21 @@ class MovimientoInventarioRepository {
   }
 
   Future<void> registrarMovimiento(
-    TipoMovimiento tipo,
     int insumoId,
+    TipoMovimiento tipo,
     double cantidad,
     String motivo,
     int? idDetalleCompra,
+    int? idDetalleVenta,
   ) async {
     await dbHelper.insert(tableName, {
-      'tipo': tipo,
+      'tipo': tipo.dbValue,
       'id_insumo': insumoId,
       'cantidad': cantidad.abs(),
       'fecha': DateTime.now().toIso8601String(),
       'motivo': motivo,
       'id_detalle_compra': idDetalleCompra,
+      'id_detalle_venta': idDetalleVenta,
     });
   }
 
@@ -41,9 +43,9 @@ class MovimientoInventarioRepository {
     double cantidad,
     String motivo,
   ) async {
-    await dbHelper.insert(tableName, {
+    await dbHelper.update(tableName, {
       'id_insumo': insumoId,
-      'tipo': tipo,
+      'tipo': tipo.dbValue,
       'cantidad': cantidad.abs(),
       'fecha': DateTime.now().toIso8601String(),
       'motivo': motivo,

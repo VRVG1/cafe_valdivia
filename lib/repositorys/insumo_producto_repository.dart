@@ -16,7 +16,7 @@ class InsumoProductoRepository {
     return await dbHelper.update(
       tableName,
       relacion.toMap(),
-      where: 'id_insumo_producot = ?',
+      where: 'id_insumo_producto = ?',
       whereArgs: [relacion.id],
     );
   }
@@ -30,11 +30,41 @@ class InsumoProductoRepository {
     return result.map((map) => InsumoProducto.fromMap(map)).toList();
   }
 
+  Future<List<InsumoProducto>> getAll({
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
+    final result = await dbHelper.query(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+    );
+    return result.map(InsumoProducto.fromMap).toList();
+  }
+
+  Future<InsumoProducto> getById(int insumoProductoId) async {
+    final result = await dbHelper.query(
+      tableName,
+      where: 'id_insumo_producto = ?',
+      whereArgs: [insumoProductoId],
+    );
+    if (result.isEmpty) throw Exception('Unidad no encontrada');
+    return InsumoProducto.fromMap(result.first);
+  }
+
   Future<int> deleteByProducto(int productoId) async {
     return await dbHelper.delete(
       tableName,
       where: 'id_producto = ?',
       whereArgs: [productoId],
+    );
+  }
+
+  Future<int> delete(int insumoProductoId) async {
+    return await dbHelper.delete(
+      tableName,
+      where: 'id_insumo_producto = ?',
+      whereArgs: [insumoProductoId],
     );
   }
 }

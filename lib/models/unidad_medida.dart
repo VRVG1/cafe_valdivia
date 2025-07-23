@@ -15,4 +15,8 @@ class UnidadMedida implements BaseModel {
   factory UnidadMedida.fromMap(Map<String, dynamic> map) {
     return UnidadMedida(id: map['id_unidad'], nombre: map['nombre']);
   }
+
+  UnidadMedida copyWith({int? id, String? nombre}) {
+    return UnidadMedida(id: id ?? this.id, nombre: nombre ?? this.nombre);
+  }
 }

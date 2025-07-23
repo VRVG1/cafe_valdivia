@@ -36,4 +36,20 @@ class Cliente implements BaseModel {
       email: map['email'],
     );
   }
+
+  Cliente copyWith({
+    int? id,
+    String? nombre,
+    String? apellido,
+    String? telefono,
+    String? email,
+  }) {
+    return Cliente(
+      id: id ?? this.id,
+      nombre: nombre ?? this.nombre,
+      apellido: apellido ?? this.apellido,
+      telefono: telefono ?? this.telefono,
+      email: email ?? this.email,
+    );
+  }
 }
