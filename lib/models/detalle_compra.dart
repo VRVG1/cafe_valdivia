@@ -4,22 +4,22 @@ import 'package:cafe_valdivia/models/insumos.dart';
 class DetalleCompra implements BaseModel {
   @override
   int? id;
-  final int idCompra;
+  int? idCompra;
   final int idInsumo;
   final double cantidad;
-  final double costoUnitario;
+  final double precioUnitarioCompra;
   Insumos? insumo;
 
   DetalleCompra({
     this.id,
-    required this.idCompra,
+    this.idCompra,
     required this.idInsumo,
     required this.cantidad,
-    required this.costoUnitario,
+    required this.precioUnitarioCompra,
     this.insumo,
   });
 
-  double get subtotal => cantidad * costoUnitario;
+  double get subtotal => cantidad * precioUnitarioCompra;
 
   @override
   Map<String, dynamic> toMap() {
@@ -28,7 +28,7 @@ class DetalleCompra implements BaseModel {
       'id_compra': idCompra,
       'id_insumo': idInsumo,
       'cantidad': cantidad,
-      'costo_unitario': costoUnitario,
+      'precio_unitario_compra': precioUnitarioCompra,
     };
   }
 
@@ -38,7 +38,7 @@ class DetalleCompra implements BaseModel {
       idCompra: map['id_compra'],
       idInsumo: map['id_insumo'],
       cantidad: map['cantidad']?.toDouble() ?? 0.0,
-      costoUnitario: map['costo_unitario']?.toDouble() ?? 0.0,
+      precioUnitarioCompra: map['precio_unitario_compra']?.toDouble() ?? 0.0,
     );
   }
 }

@@ -39,4 +39,18 @@ class Insumos implements BaseModel {
       //costoUnitario: map['costo_unitario']?.toDouble() ?? 0.0,
     );
   }
+
+  Insumos copyWith({
+    int? id,
+    String? nombre,
+    String? descripcion,
+    int? idUnidad,
+  }) {
+    return Insumos(
+      id: id ?? this.id,
+      nombre: nombre ?? this.nombre,
+      descripcion: descripcion ?? this.descripcion,
+      idUnidad: idUnidad ?? this.idUnidad,
+    );
+  }
 }

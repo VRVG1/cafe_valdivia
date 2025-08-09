@@ -41,6 +41,10 @@ class CompraRepository {
         whereArgs: [compraId],
       );
 
+      if (detalles.isEmpty) {
+        throw Exception('Compra con ID $compraId no encontrada');
+      }
+
       for (final detMap in detalles) {
         final detalle = DetalleCompra.fromMap(detMap);
 
@@ -56,49 +60,51 @@ class CompraRepository {
     });
   }
 
-  Future<Compra> getFullCompra(int compraId) async {
-    return await dbHelper.transaction((txn) async {
-      // Obtener compra principal
-      final compraMap =
-          (await txn.query(
-            tableName,
-            where: '$idColumn = ?',
-            whereArgs: [compraId],
-          )).first;
+    Future<Compra> getFullCompra(int compraId) async {
+    final db = await dbHelper.database;
+    // Obtener compra principal
+    final compraList = (await db.query(
+      tableName,
+      where: '$idColumn = ?',
+      whereArgs: [compraId],
+      limit: 1,
+    ));
+    if (compraList.isEmpty) {
+      throw Exception('Compra con ID $compraId no encontrada');
+    }
+    final compraMap = compraList.first;
+    final compra = Compra.fromMap(compraMap);
 
-      final compra = Compra.fromMap(compraMap);
+    // obtener proveedor
+    compra.proveedor = await proveedorRepo.getById(compra.idProveedor);
 
-      // obtener proveedor
-      compra.proveedor = await proveedorRepo.getById(compra.idProveedor);
+    // Obtener detalles
+    final detalles = await db.query(
+      'Detalle_Compra',
+      where: 'id_compra = ?',
+      whereArgs: [compraId],
+    );
+    print("Estoy en la funcion del repositorio $detalles");
 
-      // Obtener detalles
-      final detalles = await txn.query(
-        'Detalle_Compra',
-        where: 'id_compra = ?',
-        whereArgs: [idColumn],
-      );
+    compra.detallesCompra = await Future.wait(
+      detalles.map((detMap) async {
+        final detalle = DetalleCompra.fromMap(detMap);
+        detalle.insumo = await insumoRepo.getById(detalle.idInsumo);
+        return detalle;
+      }),
+    );
 
-      compra.detallesCompra = await Future.wait(
-        detalles.map((detMap) async {
-          final detalle = DetalleCompra.fromMap(detMap);
-          detalle.insumo = await insumoRepo.getById(detalle.idInsumo);
-          return detalle;
-        }),
-      );
-
-      return compra;
-    });
+    return compra;
   }
 
   Future<int> markAsPaid(int compraId) async {
-    final result = await dbHelper.transaction((txn) async {
-      txn.update(
+    return await dbHelper.transaction((txn) async {
+      return await txn.update(
         tableName,
-        {'pagado': 1, 'fecha': DateTime.now()},
+        {'pagado': 1, 'fecha': DateTime.now().toIso8601String()},
         where: '$idColumn = ?',
         whereArgs: [compraId],
       );
     });
-    return result;
   }
 }

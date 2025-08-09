@@ -43,13 +43,13 @@ void main() {
         detallesCompra: [
           DetalleCompra(
             cantidad: 2,
-            costoUnitario: 10,
+            precioUnitarioCompra: 10,
             idCompra: 1,
             idInsumo: 1,
           ),
           DetalleCompra(
             cantidad: 3,
-            costoUnitario: 5,
+            precioUnitarioCompra: 5,
             idCompra: 1,
             idInsumo: 2,
           ),

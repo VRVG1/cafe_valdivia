@@ -35,4 +35,18 @@ class Producto implements BaseModel {
       precioVenta: map['precio_venta']?.toDouble() ?? 0.0,
     );
   }
+
+  Producto copyWith({
+    int? id,
+    String? nombre,
+    String? descripcion,
+    double? precioVenta,
+  }) {
+    return Producto(
+      id: id ?? this.id,
+      nombre: nombre ?? this.nombre,
+      descripcion: descripcion ?? this.descripcion,
+      precioVenta: precioVenta ?? this.precioVenta,
+    );
+  }
 }

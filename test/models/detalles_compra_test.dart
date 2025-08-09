@@ -8,7 +8,7 @@ void main() {
       'id_compra': 100,
       'id_insumo': 200,
       'cantidad': 5.0,
-      'costo_unitario': 2.5,
+      'precio_unitario_compra': 2.5,
     };
 
     test('fromMap creates correct instance', () {
@@ -18,7 +18,7 @@ void main() {
       expect(detalle.idCompra, 100);
       expect(detalle.idInsumo, 200);
       expect(detalle.cantidad, 5.0);
-      expect(detalle.costoUnitario, 2.5);
+      expect(detalle.precioUnitarioCompra, 2.5);
     });
 
     test('toMap returns correct structure', () {
@@ -27,7 +27,7 @@ void main() {
         idCompra: 100,
         idInsumo: 200,
         cantidad: 5.0,
-        costoUnitario: 2.5,
+        precioUnitarioCompra: 2.5,
       );
 
       final map = detalle.toMap();
@@ -36,13 +36,13 @@ void main() {
       expect(map['id_compra'], 100);
       expect(map['id_insumo'], 200);
       expect(map['cantidad'], 5.0);
-      expect(map['costo_unitario'], 2.5);
+      expect(map['precio_unitario_compra'], 2.5);
     });
 
     test('subtotal calculates correctly', () {
       final detalle = DetalleCompra(
         cantidad: 4,
-        costoUnitario: 3.25,
+        precioUnitarioCompra: 3.25,
         idCompra: 1,
         idInsumo: 1,
       );

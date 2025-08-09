@@ -69,7 +69,7 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
   Future<List<Proveedor>> search(String query) async {
     return getAll(
       where: 'nombre LIKE ? OR direccion LIKE ? OR telefono LIKE ?',
-      whereArgs: ['%$query', '%$query', '%$query'],
+      whereArgs: ['%$query%', '%$query%', '%$query%'],
     );
   }
 }

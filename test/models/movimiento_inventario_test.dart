@@ -15,7 +15,7 @@ void main() {
 
     final mapa = {
       'id_insumo': 9,
-      'tipo': TipoMovimiento.salida,
+      'tipo': 'Salida',
       'cantidad': 88,
       'fecha': '2023-10-01T12:00:00.000Z',
       'id_movimiento_invetario': 777,
@@ -41,7 +41,7 @@ void main() {
       final toMap = objeto.toMap();
 
       expect(toMap['id_insumo'], 10);
-      expect(toMap['tipo'], TipoMovimiento.entrada.toShortString());
+      expect(toMap['tipo'], TipoMovimiento.entrada.dbValue);
       expect(toMap['cantidad'], 99);
       expect(toMap['id_movimiento_invetario'], 999);
       expect(toMap['motivo'], 'Prueba sale bien');

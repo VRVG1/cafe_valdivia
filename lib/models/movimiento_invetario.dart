@@ -41,7 +41,7 @@ TipoMovimiento tipoMovimientoFromDb(String value) {
     case 'Ajuste Salida':
       return TipoMovimiento.ajusteSalida;
     default:
-      throw TipoMovimiento.invalid;
+      return TipoMovimiento.invalid;
   }
 }
 

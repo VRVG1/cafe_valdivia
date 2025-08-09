@@ -30,7 +30,7 @@ class Compra implements BaseModel {
 
   double get total => detallesCompra.fold(
     0,
-    (sum, detalle) => sum + (detalle.cantidad * detalle.costoUnitario),
+    (sum, detalle) => sum + (detalle.cantidad * detalle.precioUnitarioCompra),
   );
   //
   @override
