@@ -60,7 +60,7 @@ class CompraRepository {
     });
   }
 
-    Future<Compra> getFullCompra(int compraId) async {
+  Future<Compra> getFullCompra(int compraId) async {
     final db = await dbHelper.database;
     // Obtener compra principal
     final compraList = (await db.query(

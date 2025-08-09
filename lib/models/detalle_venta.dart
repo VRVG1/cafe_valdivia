@@ -4,7 +4,7 @@ import 'package:cafe_valdivia/models/producto.dart';
 class DetalleVenta implements BaseModel {
   @override
   int? id;
-  final int idVenta;
+  int? idVenta;
   final int idProducto;
   final int cantidad;
   final double precioUnitarioVenta;
@@ -12,7 +12,7 @@ class DetalleVenta implements BaseModel {
 
   DetalleVenta({
     this.id,
-    required this.idVenta,
+    this.idVenta,
     required this.idProducto,
     required this.cantidad,
     required this.precioUnitarioVenta,

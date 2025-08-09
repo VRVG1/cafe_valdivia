@@ -33,37 +33,39 @@ class VentaRepository {
   }
 
   Future<Venta> getFullVenta(int id) async {
-    return await dbHelper.transaction((txn) async {
-      // Obtener venta principal
-      final ventaMap =
-          (await txn.query(
-            tableName,
-            where: '$idColumn = ?',
-            whereArgs: [id],
-          )).first;
+    final db = await dbHelper.database;
+    // Obtener venta principal
+    final ventaList = (await db.query(
+      tableName,
+      where: '$idColumn = ?',
+      whereArgs: [id],
+      limit: 1,
+    ));
+    if (ventaList.isEmpty) {
+      throw Exception('Venta con ID $id no encontrada');
+    }
+    final ventaMap = ventaList.first;
+    final venta = Venta.fromMap(ventaMap);
 
-      final venta = Venta.fromMap(ventaMap);
+    // Obtener cliente
+    venta.cliente = await clienteRepo.getById(venta.idCliente);
 
-      // Obtener cliente
-      venta.cliente = await clienteRepo.getById(venta.idCliente);
+    // Obtener detalles
+    final detalles = await db.query(
+      'Detalle_Venta',
+      where: 'id_venta = ?',
+      whereArgs: [id],
+    );
 
-      // Obtener detalles
-      final detalles = await txn.query(
-        'Detalle_Venta',
-        where: 'id_venta = ?',
-        whereArgs: [id],
-      );
+    venta.detallesVenta = await Future.wait(
+      detalles.map((detMap) async {
+        final detalle = DetalleVenta.fromMap(detMap);
+        detalle.producto = await productoRepo.getById(detalle.idProducto);
+        return detalle;
+      }),
+    );
 
-      venta.detallesVenta = await Future.wait(
-        detalles.map((detMap) async {
-          final detalle = DetalleVenta.fromMap(detMap);
-          detalle.producto = await productoRepo.getById(detalle.idProducto);
-          return detalle;
-        }),
-      );
-
-      return venta;
-    });
+    return venta;
   }
 
   Future<List<Venta>> getVentasByCliente(int clienteId) async {
