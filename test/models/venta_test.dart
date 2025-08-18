@@ -64,5 +64,34 @@ void main() {
 
       expect(venta.total, 120.0);
     });
+
+    test('Venta.fromMap handles estado correctly', () {
+      final ventaMapConEstado = {
+        ...mapaVenta,
+        'estado': 'Anulada',
+      };
+      final venta = Venta.fromMap(ventaMapConEstado);
+      expect(venta.estado, VentaEstado.anulada);
+    });
+
+    test('Venta.fromMap uses default estado when null', () {
+      final venta = Venta.fromMap(mapaVenta);
+      expect(venta.estado, VentaEstado.completa);
+    });
+
+    test('Venta.toMap handles estado correctly', () {
+      final venta = Venta(
+        idCliente: 1,
+        fecha: DateTime.now(),
+        estado: VentaEstado.anulada,
+      );
+      final mapa = venta.toMap();
+      expect(mapa['estado'], 'Anulada');
+    });
+
+    test('VentaEstado.fromValue throws ArgumentError for invalid value', () {
+      expect(() => VentaEstado.fromValue('Invalido'),
+          throwsA(isA<ArgumentError>()));
+    });
   });
 }

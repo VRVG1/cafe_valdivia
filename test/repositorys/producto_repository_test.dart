@@ -3,7 +3,7 @@ import 'package:cafe_valdivia/models/producto.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
-import 'package:cafe_valdivia/repositorys/unidad_medida_respository.dart';
+import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
@@ -17,8 +17,8 @@ void main() {
 
   group('Unit test for ProductoRepository', () {
     late DatabaseHelper databaseHelper;
-    late UnidadMedidaRespository unidadRepo;
-    late ProdutoRepository produtoRepository;
+    late UnidadMedidaRepository unidadRepo;
+    late ProductoRepository produtoRepository;
     late InsumoRepository insumoRepository;
     late Database database;
     late String path;
@@ -57,9 +57,9 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      unidadRepo = UnidadMedidaRespository(databaseHelper);
+      unidadRepo = UnidadMedidaRepository(databaseHelper);
       insumoRepository = InsumoRepository(databaseHelper, unidadRepo);
-      produtoRepository = ProdutoRepository(databaseHelper, insumoRepository);
+      produtoRepository = ProductoRepository(databaseHelper, insumoRepository);
     });
 
     tearDown(() async {

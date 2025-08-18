@@ -4,7 +4,7 @@ import 'package:cafe_valdivia/models/producto.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 
-class ProdutoRepository implements BaseRepository<Producto> {
+class ProductoRepository implements BaseRepository<Producto> {
   @override
   final DatabaseHelper dbHelper;
   @override
@@ -14,7 +14,7 @@ class ProdutoRepository implements BaseRepository<Producto> {
 
   final InsumoRepository insumoRepo;
 
-  ProdutoRepository(this.dbHelper, this.insumoRepo);
+  ProductoRepository(this.dbHelper, this.insumoRepo);
 
   @override
   Producto fromMap(Map<String, dynamic> map) => Producto.fromMap(map);

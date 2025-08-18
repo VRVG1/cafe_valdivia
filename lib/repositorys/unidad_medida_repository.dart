@@ -2,7 +2,7 @@ import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 
-class UnidadMedidaRespository implements BaseRepository<UnidadMedida> {
+class UnidadMedidaRepository implements BaseRepository<UnidadMedida> {
   @override
   final DatabaseHelper dbHelper;
   @override
@@ -10,7 +10,7 @@ class UnidadMedidaRespository implements BaseRepository<UnidadMedida> {
   @override
   final String idColumn = 'id_unidad';
 
-  UnidadMedidaRespository(this.dbHelper);
+  UnidadMedidaRepository(this.dbHelper);
 
   @override
   UnidadMedida fromMap(Map<String, dynamic> map) => UnidadMedida.fromMap(map);

@@ -13,7 +13,7 @@ class InventarioServicio {
   final InsumoRepository insumoRepository;
   final CompraRepository compraRepository;
   final VentaRepository ventaRepository;
-  final ProdutoRepository produtoRepository;
+  final ProductoRepository productoRepository;
   final DatabaseHelper dbHelper;
 
   InventarioServicio({
@@ -22,30 +22,29 @@ class InventarioServicio {
     required this.movimientoInventarioRepository,
     required this.inventarioRepository,
     required this.ventaRepository,
-    required this.produtoRepository,
+    required this.productoRepository,
     required this.dbHelper,
   });
 
   /// Registrar una entrada de inventario por compra
   Future<void> resgistrarEntradaPorCompra(int compraId) async {
-    await dbHelper.transaction((txn) async {
-      final compra = await compraRepository.getFullCompra(compraId);
-      for (final detalles in compra.detallesCompra) {
-        // Registrar movimiento
-        await movimientoInventarioRepository.registrarMovimiento(
-          TipoMovimiento.entrada,
-          detalles.idInsumo,
-          detalles.cantidad,
-          'Compra #$compraId',
-          detalles.id,
-        );
+    final compra = await compraRepository.getFullCompra(compraId);
+    for (final detalles in compra.detallesCompra) {
+      // Registrar movimiento
+      await movimientoInventarioRepository.registrarMovimiento(
+        detalles.idInsumo,
+        TipoMovimiento.entrada,
+        detalles.cantidad,
+        'Compra #$compraId',
+        detalles.id,
+        null,
+      );
 
-        await inventarioRepository.updateStock(
-          detalles.idInsumo,
-          detalles.cantidad,
-        );
-      }
-    });
+      await inventarioRepository.updateStock(
+        detalles.idInsumo,
+        detalles.cantidad,
+      );
+    }
   }
 
   // Registrar una salida de inventario por venta
@@ -53,7 +52,7 @@ class InventarioServicio {
     final venta = await ventaRepository.getFullVenta(ventaId);
 
     for (final detalle in venta.detallesVenta) {
-      final producto = await produtoRepository.getWithInsumo(
+      final producto = await productoRepository.getWithInsumo(
         detalle.idProducto,
       );
 
@@ -62,10 +61,11 @@ class InventarioServicio {
 
         // Registrar movimiento
         await movimientoInventarioRepository.registrarMovimiento(
-          TipoMovimiento.salida,
           insumo.idInsumo,
+          TipoMovimiento.salida,
           cantidadRequerida,
           'Venta #$ventaId - ${producto.nombre}',
+          null,
           detalle.id,
         );
 
@@ -73,6 +73,37 @@ class InventarioServicio {
         await inventarioRepository.updateStock(
           insumo.idInsumo,
           -cantidadRequerida,
+        );
+      }
+    }
+  }
+
+  // Registrar una salida de inventario por venta
+  Future<void> registrarDevolucionPorVentaAnulada(int ventaId) async {
+    final venta = await ventaRepository.getFullVenta(ventaId);
+
+    for (final detalle in venta.detallesVenta) {
+      final producto = await productoRepository.getWithInsumo(
+        detalle.idProducto,
+      );
+
+      for (final insumo in producto.insumos!) {
+        final cantidadRequerida = insumo.cantidadRequerida * detalle.cantidad;
+
+        // Registrar movimiento
+        await movimientoInventarioRepository.registrarMovimiento(
+          insumo.idInsumo,
+          TipoMovimiento.ajusteEntrada,
+          cantidadRequerida,
+          'Venta #$ventaId - ${producto.nombre}',
+          null,
+          detalle.id,
+        );
+
+        // Actualizar stock
+        await inventarioRepository.updateStock(
+          insumo.idInsumo,
+          cantidadRequerida,
         );
       }
     }
@@ -102,7 +133,7 @@ class InventarioServicio {
 
   // Verificar si hay suficiente stock para un producto
   Future<bool> verificarStockDisponible(int productoId, int cantidad) async {
-    final producto = await produtoRepository.getWithInsumo(productoId);
+    final producto = await productoRepository.getWithInsumo(productoId);
 
     final resultado = await Future.wait(
       producto.insumos!.map((insumo) async {
@@ -113,9 +144,9 @@ class InventarioServicio {
     return resultado.every((tieneStock) => tieneStock);
   }
 
-  /// Calcular el costo actual de produccion de un producot
-  Future<double> calcularCostoProducot(int productoId) async {
-    final producto = await produtoRepository.getWithInsumo(productoId);
+  /// Calcular el costo actual de produccion de un producto
+  Future<double> calcularCostoProducto(int productoId) async {
+    final producto = await productoRepository.getWithInsumo(productoId);
 
     double costoTotal = 0.0;
 

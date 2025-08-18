@@ -10,7 +10,7 @@ class VentaRepository {
   final String idColumn = 'id_venta';
 
   final ClienteRepository clienteRepo;
-  final ProdutoRepository productoRepo;
+  final ProductoRepository productoRepo;
 
   VentaRepository(this.dbHelper, this.productoRepo, this.clienteRepo);
 
@@ -68,6 +68,15 @@ class VentaRepository {
     return venta;
   }
 
+  Future<List<Venta>> getAll() async {
+    final maps = await dbHelper.query(tableName, orderBy: 'fecha DESC');
+    return await Future.wait(
+      maps.map((map) async {
+        return await getFullVenta(map['id_venta'] as int);
+      }),
+    );
+  }
+
   Future<List<Venta>> getVentasByCliente(int clienteId) async {
     final ventas = await dbHelper.query(
       tableName,
@@ -82,6 +91,15 @@ class VentaRepository {
         venta.cliente = await clienteRepo.getById(clienteId);
         return venta;
       }),
+    );
+  }
+
+  Future<int> markAsNulled(int ventaId) async {
+    return await dbHelper.update(
+      tableName,
+      {'estado': VentaEstado.anulada.value},
+      where: '$idColumn = ?',
+      whereArgs: [ventaId],
     );
   }
 }
