@@ -7,7 +7,7 @@ import 'package:cafe_valdivia/models/compra.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
-import 'package:cafe_valdivia/repositorys/unidad_medida_respository.dart';
+import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/models/proveedor.dart';
 import 'package:cafe_valdivia/models/insumos.dart';
 import 'package:cafe_valdivia/models/detalle_compra.dart';
@@ -20,7 +20,7 @@ void main() {
 
   group('CompraRepository Tests', () {
     late DatabaseHelper databaseHelper;
-    late UnidadMedidaRespository unidadRepo;
+    late UnidadMedidaRepository unidadRepo;
     late InsumoRepository insumoRepo;
     late ProveedorRepository proveedorRepo;
     late CompraRepository compraRepo;
@@ -28,8 +28,10 @@ void main() {
     late String path;
 
     // Funciones de utilidad para crear datos de prueba
-    Future<int> crearUnidad() async {
-      return await unidadRepo.create(UnidadMedida(nombre: 'Unidad'));
+    Future<int> crearUnidad({String? nombreUnidad}) async {
+      return await unidadRepo.create(
+        UnidadMedida(nombre: nombreUnidad ?? 'Unidad'),
+      );
     }
 
     Future<int> crearInsumo(int unidadId, {String? nombre}) async {
@@ -42,22 +44,39 @@ void main() {
       return await proveedorRepo.create(Proveedor(nombre: 'Proveedor Test'));
     }
 
-    Future<Compra> crearCompraCompleta() async {
+    Future<Compra> crearCompraCompleta(
+      bool paid, {
+      String? nombreUnidad,
+      String? nombreInsumo,
+    }) async {
       final proveedorId = await crearProveedor();
-      final unidadId = await crearUnidad();
-      final insumoId = await crearInsumo(unidadId);
+      final unidadId = await crearUnidad(nombreUnidad: nombreUnidad);
+      final insumoId = await crearInsumo(unidadId, nombre: nombreInsumo);
 
-      return Compra(
-        idProveedor: proveedorId,
-        fecha: DateTime.now(),
-        detallesCompra: [
-          DetalleCompra(
-            idInsumo: insumoId,
-            cantidad: 10,
-            precioUnitarioCompra: 5.99,
-          ),
-        ],
-      );
+      return paid
+          ? Compra(
+            idProveedor: proveedorId,
+            fecha: DateTime.now(),
+            pagado: true,
+            detallesCompra: [
+              DetalleCompra(
+                idInsumo: insumoId,
+                cantidad: 10,
+                precioUnitarioCompra: 5.99,
+              ),
+            ],
+          )
+          : Compra(
+            idProveedor: proveedorId,
+            fecha: DateTime.now(),
+            detallesCompra: [
+              DetalleCompra(
+                idInsumo: insumoId,
+                cantidad: 10,
+                precioUnitarioCompra: 5.99,
+              ),
+            ],
+          );
     }
 
     setUp(() async {
@@ -78,7 +97,7 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      unidadRepo = UnidadMedidaRespository(databaseHelper);
+      unidadRepo = UnidadMedidaRepository(databaseHelper);
       insumoRepo = InsumoRepository(databaseHelper, unidadRepo);
       proveedorRepo = ProveedorRepository(databaseHelper);
       compraRepo = CompraRepository(databaseHelper, proveedorRepo, insumoRepo);
@@ -90,7 +109,7 @@ void main() {
 
     // ---------------------- PRUEBAS CRUD ----------------------
     test('createWithDetails inserts compra and detalles', () async {
-      final compra = await crearCompraCompleta();
+      final compra = await crearCompraCompleta(false);
       final compraId = await compraRepo.createWithDetails(compra);
       expect(compraId, greaterThan(0));
 
@@ -105,7 +124,7 @@ void main() {
     });
 
     test('getFullCompra loads all relationships', () async {
-      final compra = await crearCompraCompleta();
+      final compra = await crearCompraCompleta(false);
       final compraId = await compraRepo.createWithDetails(compra);
 
       final compraCompleta = await compraRepo.getFullCompra(compraId);
@@ -118,7 +137,7 @@ void main() {
     });
 
     test('markAsPaid updates payment status', () async {
-      final compra = await crearCompraCompleta();
+      final compra = await crearCompraCompleta(false);
       final compraId = await compraRepo.createWithDetails(compra);
 
       await compraRepo.markAsPaid(compraId);
@@ -132,9 +151,42 @@ void main() {
       expect(compraDb.first['pagado'], 1);
     });
 
+    test('markAsUnpaid updates payment status', () async {
+      final compra = await crearCompraCompleta(true);
+      final compraId = await compraRepo.createWithDetails(compra);
+
+      await compraRepo.markAsUnpaid(compraId);
+
+      final compraDb = await database.query(
+        'Compra',
+        where: 'id_compra = ?',
+        whereArgs: [compraId],
+      );
+
+      expect(compraDb.first['pagado'], 0);
+    });
+
+    test('getall returns all compras', () async {
+      final venta1 = await crearCompraCompleta(
+        true,
+        nombreUnidad: "Unidad 1",
+        nombreInsumo: "Insumo 1",
+      );
+      final venta2 = await crearCompraCompleta(
+        false,
+        nombreUnidad: "Unidad 2",
+        nombreInsumo: "Insumo 2",
+      );
+      await compraRepo.createWithDetails(venta1);
+      await compraRepo.createWithDetails(venta2);
+
+      final todasLasVentas = await compraRepo.getAll();
+
+      expect(todasLasVentas.length, 2);
+    });
     // ---------------------- PRUEBAS DE INVENTARIO ----------------------
     test('processCompraInventory creates inventory movements', () async {
-      final compra = await crearCompraCompleta();
+      final compra = await crearCompraCompleta(false);
       final compraId = await compraRepo.createWithDetails(compra);
 
       await compraRepo.processCompraInventory(compraId);

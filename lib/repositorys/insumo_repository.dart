@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/insumos.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
-import 'package:cafe_valdivia/repositorys/unidad_medida_respository.dart';
+import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 
 class InsumoRepository implements BaseRepository<Insumos> {
   @override
@@ -11,7 +11,7 @@ class InsumoRepository implements BaseRepository<Insumos> {
   @override
   final String idColumn = 'id_insumo';
 
-  final UnidadMedidaRespository unidadRepo;
+  final UnidadMedidaRepository unidadRepo;
 
   InsumoRepository(this.dbHelper, this.unidadRepo);
 

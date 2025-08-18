@@ -84,7 +84,6 @@ class CompraRepository {
       where: 'id_compra = ?',
       whereArgs: [compraId],
     );
-    print("Estoy en la funcion del repositorio $detalles");
 
     compra.detallesCompra = await Future.wait(
       detalles.map((detMap) async {
@@ -97,11 +96,29 @@ class CompraRepository {
     return compra;
   }
 
+  Future<List<Compra>> getAll() async {
+    final maps = await dbHelper.query(tableName, orderBy: 'fecha DESC');
+    return await Future.wait(maps.map((map) async {
+      return await getFullCompra(map['id_compra'] as int);
+    }));
+  }
+
   Future<int> markAsPaid(int compraId) async {
     return await dbHelper.transaction((txn) async {
       return await txn.update(
         tableName,
         {'pagado': 1, 'fecha': DateTime.now().toIso8601String()},
+        where: '$idColumn = ?',
+        whereArgs: [compraId],
+      );
+    });
+  }
+
+  Future<int> markAsUnpaid(int compraId) async {
+    return await dbHelper.transaction((txn) async {
+      return await txn.update(
+        tableName,
+        {'pagado': 0, 'fecha': DateTime.now().toIso8601String()},
         where: '$idColumn = ?',
         whereArgs: [compraId],
       );

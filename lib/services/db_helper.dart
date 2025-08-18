@@ -183,6 +183,7 @@ class DatabaseHelper {
         fecha DATETIME NOT NULL,
         detalles TEXT,
         pagado BOOLEAN DEFAULT 0,
+        estado TEXT NOT NULL DEFAULT 'Completa',
         FOREIGN KEY (id_cliente) REFERENCES Cliente (id_cliente) ON DELETE RESTRICT
       )
     ''');

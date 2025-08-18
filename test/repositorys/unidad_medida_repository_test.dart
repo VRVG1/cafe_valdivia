@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/models/unidad_medida.dart';
-import 'package:cafe_valdivia/repositorys/unidad_medida_respository.dart';
+import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,7 +13,7 @@ void main() {
 
   group('unidad_medida_respository test', () {
     late DatabaseHelper databaseHelper;
-    late UnidadMedidaRespository respository;
+    late UnidadMedidaRepository respository;
     late Database database;
 
     late String path;
@@ -35,7 +35,7 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      respository = UnidadMedidaRespository(databaseHelper);
+      respository = UnidadMedidaRepository(databaseHelper);
     });
 
     tearDown(() async {

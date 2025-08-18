@@ -47,8 +47,13 @@ class CompraServicio {
 
   Future<void> actulizarEstadoPago(int compraId, bool pagado) async {
     try {
-      await _compraRepository.markAsPaid(compraId);
-      appLogger.i("Se actualizo el pago de una compra: $compraId");
+      if (pagado) {
+        await _compraRepository.markAsPaid(compraId);
+      } else {
+        await _compraRepository.markAsUnpaid(compraId);
+      }
+      appLogger
+          .i("Se actualizo el pago de una compra: $compraId a pagado: $pagado");
     } catch (e, stackTrace) {
       appLogger.e("Error al actualizar pago", error: e, stackTrace: stackTrace);
       throw OperacionInvalidaException("Error al actulizar pago: $e");

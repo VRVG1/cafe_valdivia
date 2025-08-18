@@ -1,10 +1,9 @@
 import 'package:cafe_valdivia/models/insumos.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
-import 'package:cafe_valdivia/repositorys/unidad_medida_respository.dart';
+import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
 
@@ -17,11 +16,10 @@ void main() {
   group('Insumo repository test', () {
     late DatabaseHelper databaseHelper;
     late InsumoRepository insumoRepository;
-    late UnidadMedidaRespository unidadMedidaRespository;
+    late UnidadMedidaRepository unidadMedidaRespository;
     late Database database;
 
     late String path;
-
     setUp(() async {
       path = p.join(inMemoryDatabasePath, 'test_unidad_medida_repository.db');
       await databaseFactory.deleteDatabase(path);
@@ -41,7 +39,7 @@ void main() {
       databaseHelper.setMockDatabase(database);
 
       // Crear el repositorio del que depende InsumoRepository
-      unidadMedidaRespository = UnidadMedidaRespository(databaseHelper);
+      unidadMedidaRespository = UnidadMedidaRepository(databaseHelper);
 
       // Crear el repositorio a probar, inyectando sus dependencias.
       insumoRepository = InsumoRepository(
