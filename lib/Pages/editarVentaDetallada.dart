@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cafe_valdivia/Components/CustomTextField.dart';
+import 'package:cafe_valdivia/Components/custom_text_field.dart';
 import 'package:intl/intl.dart';
 
 class Editarventadetallada extends StatefulWidget {

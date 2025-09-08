@@ -1,7 +1,11 @@
-import 'package:cafe_valdivia/Components/NavigationScreen.dart';
+import 'package:cafe_valdivia/Components/navigation_screen.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  sqfliteFfiInit();
+
+  databaseFactory = databaseFactoryFfi;
   runApp(const MyApp());
 }
 

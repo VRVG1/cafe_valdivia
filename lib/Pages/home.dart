@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +11,7 @@ class Home extends StatelessWidget {
       margin: const EdgeInsets.all(8.0),
       child: SizedBox.expand(
         child: Center(
-          child: Text(
-            'Home page 3',
-            style: theme.textTheme.titleLarge,
-          ),
+          child: Text('Home page 3', style: theme.textTheme.titleLarge),
         ),
       ),
     );

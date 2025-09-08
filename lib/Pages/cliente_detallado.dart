@@ -1,14 +1,14 @@
-import 'package:cafe_valdivia/Components/CustomTextField.dart';
+import 'package:cafe_valdivia/Components/custom_text_field.dart';
 import 'package:cafe_valdivia/Pages/editarClienteDetallada.dart';
 import 'package:flutter/material.dart';
 
 class ClienteDetallado extends StatefulWidget {
   const ClienteDetallado({super.key}) : super();
   @override
-  _ClienteDetalladoState createState() => _ClienteDetalladoState();
+  ClienteDetalladoState createState() => ClienteDetalladoState();
 }
 
-class _ClienteDetalladoState extends State<ClienteDetallado> {
+class ClienteDetalladoState extends State<ClienteDetallado> {
   final TextEditingController _nombreController = TextEditingController(
     text: "Vicente",
   );

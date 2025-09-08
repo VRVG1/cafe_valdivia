@@ -13,7 +13,6 @@ class CustomTextField extends StatelessWidget {
   final String? errorText;
 
   const CustomTextField({
-    Key? key,
     this.labelText,
     this.prefixIcon,
     this.suffixText,
@@ -24,7 +23,7 @@ class CustomTextField extends StatelessWidget {
     required this.onChanged,
     this.errorText,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

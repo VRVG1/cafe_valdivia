@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/Components/CustomTextField.dart';
+import 'package:cafe_valdivia/Components/custom_text_field.dart';
 import 'package:cafe_valdivia/Pages/editarVentaDetallada.dart';
 import 'package:flutter/material.dart';
 

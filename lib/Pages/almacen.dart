@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/Components/cardAlmacen.dart';
+import 'package:cafe_valdivia/Components/card_almacen.dart';
 import 'package:flutter/material.dart';
 
 class Almacen extends StatelessWidget {
@@ -6,7 +6,7 @@ class Almacen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    // final ThemeData theme = Theme.of(context);
     return Center(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,9 +1,8 @@
 import 'package:cafe_valdivia/Pages/ventaDetallada.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Lista extends StatelessWidget {
-  const Lista({Key? key}) : super(key: key);
+  const Lista({super.key});
 
   @override
   Widget build(BuildContext context) {

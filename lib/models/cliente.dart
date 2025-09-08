@@ -17,6 +17,9 @@ class Cliente implements BaseModel {
   });
 
   @override
+  String toString() => '$nombre $apellido';
+
+  @override
   Map<String, dynamic> toMap() {
     return {
       'id_cliente': id,
