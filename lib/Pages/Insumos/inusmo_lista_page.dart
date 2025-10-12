@@ -12,7 +12,7 @@ class InusmoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncInsumos = ref.watch(insumoNotifierProvider);
+    final asyncInsumos = ref.watch(insumoProvider);
 
     return asyncInsumos.when(
       data: (insumos) {

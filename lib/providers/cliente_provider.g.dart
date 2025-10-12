@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'insumo_providers.dart';
+part of 'cliente_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,39 +9,39 @@ part of 'insumo_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(InsumoDetail)
-const insumoDetailProvider = InsumoDetailFamily._();
+@ProviderFor(ClienteDetail)
+const clienteDetailProvider = ClienteDetailFamily._();
 
-final class InsumoDetailProvider
-    extends $AsyncNotifierProvider<InsumoDetail, Insumos> {
-  const InsumoDetailProvider._({
-    required InsumoDetailFamily super.from,
+final class ClienteDetailProvider
+    extends $AsyncNotifierProvider<ClienteDetail, Cliente> {
+  const ClienteDetailProvider._({
+    required ClienteDetailFamily super.from,
     required int super.argument,
   }) : super(
          retry: null,
-         name: r'insumoDetailProvider',
+         name: r'clienteDetailProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$insumoDetailHash();
+  String debugGetCreateSourceHash() => _$clienteDetailHash();
 
   @override
   String toString() {
-    return r'insumoDetailProvider'
+    return r'clienteDetailProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  InsumoDetail create() => InsumoDetail();
+  ClienteDetail create() => ClienteDetail();
 
   @override
   bool operator ==(Object other) {
-    return other is InsumoDetailProvider && other.argument == argument;
+    return other is ClienteDetailProvider && other.argument == argument;
   }
 
   @override
@@ -50,48 +50,48 @@ final class InsumoDetailProvider
   }
 }
 
-String _$insumoDetailHash() => r'6fc5c1fd35912a3c6008ec69406888e3daa9fb36';
+String _$clienteDetailHash() => r'0c0a6d79c533d8359126a701d9bee8e816322dad';
 
-final class InsumoDetailFamily extends $Family
+final class ClienteDetailFamily extends $Family
     with
         $ClassFamilyOverride<
-          InsumoDetail,
-          AsyncValue<Insumos>,
-          Insumos,
-          FutureOr<Insumos>,
+          ClienteDetail,
+          AsyncValue<Cliente>,
+          Cliente,
+          FutureOr<Cliente>,
           int
         > {
-  const InsumoDetailFamily._()
+  const ClienteDetailFamily._()
     : super(
         retry: null,
-        name: r'insumoDetailProvider',
+        name: r'clienteDetailProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  InsumoDetailProvider call(int id) =>
-      InsumoDetailProvider._(argument: id, from: this);
+  ClienteDetailProvider call(int id) =>
+      ClienteDetailProvider._(argument: id, from: this);
 
   @override
-  String toString() => r'insumoDetailProvider';
+  String toString() => r'clienteDetailProvider';
 }
 
-abstract class _$InsumoDetail extends $AsyncNotifier<Insumos> {
+abstract class _$ClienteDetail extends $AsyncNotifier<Cliente> {
   late final _$args = ref.$arg as int;
   int get id => _$args;
 
-  FutureOr<Insumos> build(int id);
+  FutureOr<Cliente> build(int id);
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<Insumos>, Insumos>;
+    final ref = this.ref as $Ref<AsyncValue<Cliente>, Cliente>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<Insumos>, Insumos>,
-              AsyncValue<Insumos>,
+              AnyNotifier<AsyncValue<Cliente>, Cliente>,
+              AsyncValue<Cliente>,
               Object?,
               Object?
             >;

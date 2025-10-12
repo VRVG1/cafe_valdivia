@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/providers/repository_providers.dart';
+import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'proveedor_notifier.g.dart';

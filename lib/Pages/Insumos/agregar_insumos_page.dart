@@ -74,7 +74,7 @@ class AgregarInsumosPageState extends ConsumerState<AgregarInsumosPage> {
         descripcion: _descripcionController.text,
         idUnidad: _selectedUnidadMedidad!.id!,
       );
-      await ref.read(insumoNotifierProvider.notifier).create(insumo);
+      await ref.read(insumoProvider.notifier).create(insumo);
       // await Future.delayed(const Duration(seconds: 5));
       _mensajeExito();
     }
@@ -158,7 +158,7 @@ class AgregarInsumosPageState extends ConsumerState<AgregarInsumosPage> {
   Widget _buildDropDownMenu() {
     return Consumer(
       builder: (context, ref, child) {
-        final asyncUM = ref.watch(unidadMedidaNotifierProvider);
+        final asyncUM = ref.watch(unidadMedidaProvider);
 
         return asyncUM.when(
           data: (ums) {

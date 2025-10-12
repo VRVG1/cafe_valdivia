@@ -82,9 +82,7 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
         idUnidad: unidadFinal.id!,
       );
 
-      await ref
-          .read(insumoNotifierProvider.notifier)
-          .updateInsumo(updatedInsumo);
+      await ref.read(insumoProvider.notifier).updateInsumo(updatedInsumo);
       _mensajeExito();
     }
   }
@@ -180,7 +178,7 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
   }
 
   Widget _buildDropDownMenu(UnidadMedida? selectedUM) {
-    final asyncUM = ref.watch(unidadMedidaNotifierProvider);
+    final asyncUM = ref.watch(unidadMedidaProvider);
 
     return asyncUM.when(
       data: (ums) {

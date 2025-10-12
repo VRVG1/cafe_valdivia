@@ -6,25 +6,53 @@ part of 'unidad_medida_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$unidadMedidaNotifierHash() =>
-    r'55a6a0a6d76a45e66799ede4e05ac3e93cfd072a';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [UnidadMedidaNotifier].
 @ProviderFor(UnidadMedidaNotifier)
-final unidadMedidaNotifierProvider = AutoDisposeAsyncNotifierProvider<
-  UnidadMedidaNotifier,
-  List<UnidadMedida>
->.internal(
-  UnidadMedidaNotifier.new,
-  name: r'unidadMedidaNotifierProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$unidadMedidaNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const unidadMedidaProvider = UnidadMedidaNotifierProvider._();
 
-typedef _$UnidadMedidaNotifier = AutoDisposeAsyncNotifier<List<UnidadMedida>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class UnidadMedidaNotifierProvider
+    extends $AsyncNotifierProvider<UnidadMedidaNotifier, List<UnidadMedida>> {
+  const UnidadMedidaNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unidadMedidaProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$unidadMedidaNotifierHash();
+
+  @$internal
+  @override
+  UnidadMedidaNotifier create() => UnidadMedidaNotifier();
+}
+
+String _$unidadMedidaNotifierHash() =>
+    r'2db0dc6da00ab7894dcee968eab06c55afd9b064';
+
+abstract class _$UnidadMedidaNotifier
+    extends $AsyncNotifier<List<UnidadMedida>> {
+  FutureOr<List<UnidadMedida>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref as $Ref<AsyncValue<List<UnidadMedida>>, List<UnidadMedida>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<UnidadMedida>>, List<UnidadMedida>>,
+              AsyncValue<List<UnidadMedida>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

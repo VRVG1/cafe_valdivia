@@ -44,9 +44,7 @@ class ProveedorDetallado extends ConsumerWidget {
 
   void _eliminar(BuildContext context, WidgetRef ref, ThemeData theme) async {
     try {
-      await ref
-          .read(proveedorNotifierProvider.notifier)
-          .deleteProveedor(proveedorId);
+      await ref.read(proveedorProvider.notifier).deleteProveedor(proveedorId);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

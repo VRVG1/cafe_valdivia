@@ -16,7 +16,7 @@ class ProveedorListaState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final asyncProveedor = ref.watch(proveedorNotifierProvider);
+    final asyncProveedor = ref.watch(proveedorProvider);
 
     return asyncProveedor.when(
       data: (proveedores) {

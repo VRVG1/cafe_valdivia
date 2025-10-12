@@ -31,7 +31,7 @@ class _AddInsumoDialogState extends ConsumerState<AddInsumoDialog> {
 
       if (_selectedInsumo != null && cantidad > 0 && precio > 0) {
         ref
-            .read(crearCompraNotifierProvider.notifier)
+            .read(crearCompraProvider.notifier)
             .agregarItem(_selectedInsumo!, cantidad, precio);
         Navigator.of(context).pop(); // Cierra el diálogo
       }
@@ -40,7 +40,7 @@ class _AddInsumoDialogState extends ConsumerState<AddInsumoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncInsumos = ref.watch(insumoNotifierProvider);
+    final asyncInsumos = ref.watch(insumoProvider);
 
     return AlertDialog(
       title: const Text('Añadir Insumo'),

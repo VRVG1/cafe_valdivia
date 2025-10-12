@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/models/cliente.dart';
-import 'package:cafe_valdivia/providers/repository_providers.dart';
+import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'cliente_notifier.g.dart';
@@ -26,10 +26,4 @@ class ClienteNotifier extends _$ClienteNotifier {
     await ref.read(clienteRepositoryProvider).delete(id);
     ref.invalidateSelf();
   }
-}
-
-@riverpod
-Future<Cliente> clienteDetail(ClienteDetailRef ref, int id) async {
-  final repository = ref.watch(clienteRepositoryProvider);
-  return repository.getById(id);
 }

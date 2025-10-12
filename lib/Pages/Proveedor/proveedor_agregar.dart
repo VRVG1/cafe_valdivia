@@ -77,7 +77,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     );
 
     try {
-      await ref.read(proveedorNotifierProvider.notifier).create(proveedor);
+      await ref.read(proveedorProvider.notifier).create(proveedor);
       _mensajeExito();
       if (mounted) {
         Navigator.of(context).pop();
@@ -206,4 +206,3 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     );
   }
 }
-

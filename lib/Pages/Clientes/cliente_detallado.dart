@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/providers/cliente_notifier.dart';
+import 'package:cafe_valdivia/providers/cliente_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,7 +41,7 @@ class ClienteDetallado extends ConsumerWidget {
   void _eliminarCliente(BuildContext context, WidgetRef ref) async {
     final ThemeData theme = Theme.of(context);
     try {
-      await ref.read(clienteNotifierProvider.notifier).delete(clienteId);
+      await ref.read(clienteProvider.notifier).delete(clienteId);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

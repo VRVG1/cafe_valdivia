@@ -4,37 +4,38 @@ import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repository_providers.g.dart';
 
 @riverpod
-ClienteRepository clienteRepository(ClienteRepositoryRef ref) {
+ClienteRepository clienteRepository(AutoDisposeProviderRef ref) {
   final dbHelper = ref.watch(databaseHelperProvider);
   return ClienteRepository(dbHelper);
 }
 
 @riverpod
-ProveedorRepository proveedorRepository(ProveedorRepositoryRef ref) {
+ProveedorRepository proveedorRepository(AutoDisposeProviderRef ref) {
   final dbHelper = ref.watch(databaseHelperProvider);
   return ProveedorRepository(dbHelper);
 }
 
 @riverpod
-UnidadMedidaRepository unidadMedidaRepository(UnidadMedidaRepositoryRef ref) {
+UnidadMedidaRepository unidadMedidaRepository(AutoDisposeProviderRef ref) {
   final dbHelper = ref.watch(databaseHelperProvider);
   return UnidadMedidaRepository(dbHelper);
 }
 
 @riverpod
-InsumoRepository insumoRepository(InsumoRepositoryRef ref) {
+InsumoRepository insumoRepository(AutoDisposeProviderRef ref) {
   final dbHelper = ref.watch(databaseHelperProvider);
   final unidadMedidaRepo = ref.watch(unidadMedidaRepositoryProvider);
   return InsumoRepository(dbHelper, unidadMedidaRepo);
 }
 
 @riverpod
-CompraRepository compraRepository(CompraRepositoryRef ref) {
+CompraRepository compraRepository(AutoDisposeProviderRef ref) {
   final dbHelper = ref.watch(databaseHelperProvider);
   final proveedorRepo = ref.watch(proveedorRepositoryProvider);
   final insumoRepo = ref.watch(insumoRepositoryProvider);

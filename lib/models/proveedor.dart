@@ -27,6 +27,10 @@ class Proveedor implements BaseModel {
     };
   }
 
+  String getIniciales() {
+    return nombre[0].toUpperCase();
+  }
+
   factory Proveedor.fromMap(Map<String, dynamic> map) {
     return Proveedor(
       id: map['id_proveedor'],

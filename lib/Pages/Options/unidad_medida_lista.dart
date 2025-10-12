@@ -91,7 +91,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                       nombre: _umController.text,
                     );
                     ref
-                        .read(unidadMedidaNotifierProvider.notifier)
+                        .read(unidadMedidaProvider.notifier)
                         .updateUnidadMedida(updateUM)
                         .then((success) {
                           if (success && mounted) {
@@ -103,7 +103,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                         });
                   } else {
                     ref
-                        .read(unidadMedidaNotifierProvider.notifier)
+                        .read(unidadMedidaProvider.notifier)
                         .create(_umController.text)
                         .then((success) {
                           if (success && mounted) {
@@ -129,7 +129,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
 
   void _deleteUM(UnidadMedida um) async {
     try {
-      await ref.read(unidadMedidaNotifierProvider.notifier).delete(um.id!);
+      await ref.read(unidadMedidaProvider.notifier).delete(um.id!);
       if (mounted) {
         _showFeedBackSnackBar(
           message: "La unidad de Medida se elimino correctamente.",
@@ -184,13 +184,13 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    ref.listen<AsyncValue>(unidadMedidaNotifierProvider, (_, state) {
+    ref.listen<AsyncValue>(unidadMedidaProvider, (_, state) {
       if (state is AsyncError) {
         _showFeedBackSnackBar(message: state.error.toString(), isError: true);
       }
     });
 
-    final asyncUM = ref.watch(unidadMedidaNotifierProvider);
+    final asyncUM = ref.watch(unidadMedidaProvider);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(

@@ -147,7 +147,7 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
 
     try {
       await ref
-          .read(proveedorNotifierProvider.notifier)
+          .read(proveedorProvider.notifier)
           .updateProveedor(proveedorModificado);
 
       if (mounted) {
@@ -362,4 +362,3 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
     );
   }
 }
-

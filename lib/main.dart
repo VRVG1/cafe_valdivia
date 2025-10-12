@@ -1,12 +1,13 @@
 import 'package:cafe_valdivia/Components/navigation_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   sqfliteFfiInit();
 
   databaseFactory = databaseFactoryFfi;
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

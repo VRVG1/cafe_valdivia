@@ -43,9 +43,9 @@ class _CrearCompraPageState extends ConsumerState<CrearCompraPage> {
               //  Selector de Proveedor
               Consumer(
                 builder: (context, ref, child) {
-                  final asyncProveedor = ref.watch(proveedorNotifierProvider);
+                  final asyncProveedor = ref.watch(proveedorProvider);
                   final selectedProveedor =
-                      ref.watch(crearCompraNotifierProvider).proveedor;
+                      ref.watch(crearCompraProvider).proveedor;
 
                   return asyncProveedor.when(
                     data: (proveedores) {
@@ -136,7 +136,7 @@ Widget _buildListInsumos(BuildContext context) {
       // Esto evita que el widget se reconstruya si cambia otra
       // cosa, como el proveedor.
       final items = ref.watch(
-        crearCompraNotifierProvider.select((state) => state.items),
+        crearCompraProvider.select((state) => state.items),
       );
       if (items.isEmpty) {
         return Container(
@@ -174,7 +174,7 @@ Widget _buildListInsumos(BuildContext context) {
                   IconButton(
                     onPressed: () {
                       ref
-                          .read(crearCompraNotifierProvider.notifier)
+                          .read(crearCompraProvider.notifier)
                           .eliminarItem(item.idInsumo);
                     },
                     icon: const Icon(Icons.delete_outlined, color: Colors.red),

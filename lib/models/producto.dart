@@ -27,6 +27,10 @@ class Producto implements BaseModel {
     };
   }
 
+  String getIniciales() {
+    return nombre[0].toUpperCase();
+  }
+
   factory Producto.fromMap(Map<String, dynamic> map) {
     return Producto(
       id: map['id_producto'],

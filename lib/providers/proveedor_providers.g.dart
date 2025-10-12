@@ -6,147 +6,95 @@ part of 'proveedor_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$proveedorDetailHash() => r'c7d5a212b2b2c2fc261686e97e917e01ef5d2b9f';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(ProveedorDetail)
+const proveedorDetailProvider = ProveedorDetailFamily._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [proveedorDetail].
-@ProviderFor(proveedorDetail)
-const proveedorDetailProvider = ProveedorDetailFamily();
-
-/// See also [proveedorDetail].
-class ProveedorDetailFamily extends Family<AsyncValue<Proveedor>> {
-  /// See also [proveedorDetail].
-  const ProveedorDetailFamily();
-
-  /// See also [proveedorDetail].
-  ProveedorDetailProvider call(int id) {
-    return ProveedorDetailProvider(id);
-  }
+final class ProveedorDetailProvider
+    extends $AsyncNotifierProvider<ProveedorDetail, Proveedor> {
+  const ProveedorDetailProvider._({
+    required ProveedorDetailFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'proveedorDetailProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  ProveedorDetailProvider getProviderOverride(
-    covariant ProveedorDetailProvider provider,
-  ) {
-    return call(provider.id);
+  String debugGetCreateSourceHash() => _$proveedorDetailHash();
+
+  @override
+  String toString() {
+    return r'proveedorDetailProvider'
+        ''
+        '($argument)';
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
+  @$internal
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'proveedorDetailProvider';
-}
-
-/// See also [proveedorDetail].
-class ProveedorDetailProvider extends AutoDisposeFutureProvider<Proveedor> {
-  /// See also [proveedorDetail].
-  ProveedorDetailProvider(int id)
-    : this._internal(
-        (ref) => proveedorDetail(ref as ProveedorDetailRef, id),
-        from: proveedorDetailProvider,
-        name: r'proveedorDetailProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$proveedorDetailHash,
-        dependencies: ProveedorDetailFamily._dependencies,
-        allTransitiveDependencies:
-            ProveedorDetailFamily._allTransitiveDependencies,
-        id: id,
-      );
-
-  ProveedorDetailProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.id,
-  }) : super.internal();
-
-  final int id;
-
-  @override
-  Override overrideWith(
-    FutureOr<Proveedor> Function(ProveedorDetailRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ProveedorDetailProvider._internal(
-        (ref) => create(ref as ProveedorDetailRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        id: id,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<Proveedor> createElement() {
-    return _ProveedorDetailProviderElement(this);
-  }
+  ProveedorDetail create() => ProveedorDetail();
 
   @override
   bool operator ==(Object other) {
-    return other is ProveedorDetailProvider && other.id == id;
+    return other is ProveedorDetailProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, id.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ProveedorDetailRef on AutoDisposeFutureProviderRef<Proveedor> {
-  /// The parameter `id` of this provider.
-  int get id;
-}
+String _$proveedorDetailHash() => r'32b28c64e4aa6a2cdba6c9469bbcfa10a80987aa';
 
-class _ProveedorDetailProviderElement
-    extends AutoDisposeFutureProviderElement<Proveedor>
-    with ProveedorDetailRef {
-  _ProveedorDetailProviderElement(super.provider);
+final class ProveedorDetailFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          ProveedorDetail,
+          AsyncValue<Proveedor>,
+          Proveedor,
+          FutureOr<Proveedor>,
+          int
+        > {
+  const ProveedorDetailFamily._()
+    : super(
+        retry: null,
+        name: r'proveedorDetailProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ProveedorDetailProvider call(int id) =>
+      ProveedorDetailProvider._(argument: id, from: this);
 
   @override
-  int get id => (origin as ProveedorDetailProvider).id;
+  String toString() => r'proveedorDetailProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$ProveedorDetail extends $AsyncNotifier<Proveedor> {
+  late final _$args = ref.$arg as int;
+  int get id => _$args;
+
+  FutureOr<Proveedor> build(int id);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<Proveedor>, Proveedor>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Proveedor>, Proveedor>,
+              AsyncValue<Proveedor>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

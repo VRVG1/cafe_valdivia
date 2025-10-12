@@ -6,149 +6,96 @@ part of 'unidad_medida_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$unidadMedidaDetailHash() =>
-    r'f212767bd99fa7f7615c65bef72c38ceff770f23';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(UnidadMedidaDetail)
+const unidadMedidaDetailProvider = UnidadMedidaDetailFamily._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [unidadMedidaDetail].
-@ProviderFor(unidadMedidaDetail)
-const unidadMedidaDetailProvider = UnidadMedidaDetailFamily();
-
-/// See also [unidadMedidaDetail].
-class UnidadMedidaDetailFamily extends Family<AsyncValue<UnidadMedida>> {
-  /// See also [unidadMedidaDetail].
-  const UnidadMedidaDetailFamily();
-
-  /// See also [unidadMedidaDetail].
-  UnidadMedidaDetailProvider call(int id) {
-    return UnidadMedidaDetailProvider(id);
-  }
+final class UnidadMedidaDetailProvider
+    extends $AsyncNotifierProvider<UnidadMedidaDetail, UnidadMedida> {
+  const UnidadMedidaDetailProvider._({
+    required UnidadMedidaDetailFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'unidadMedidaDetailProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  UnidadMedidaDetailProvider getProviderOverride(
-    covariant UnidadMedidaDetailProvider provider,
-  ) {
-    return call(provider.id);
+  String debugGetCreateSourceHash() => _$unidadMedidaDetailHash();
+
+  @override
+  String toString() {
+    return r'unidadMedidaDetailProvider'
+        ''
+        '($argument)';
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
+  @$internal
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'unidadMedidaDetailProvider';
-}
-
-/// See also [unidadMedidaDetail].
-class UnidadMedidaDetailProvider
-    extends AutoDisposeFutureProvider<UnidadMedida> {
-  /// See also [unidadMedidaDetail].
-  UnidadMedidaDetailProvider(int id)
-    : this._internal(
-        (ref) => unidadMedidaDetail(ref as UnidadMedidaDetailRef, id),
-        from: unidadMedidaDetailProvider,
-        name: r'unidadMedidaDetailProvider',
-        debugGetCreateSourceHash:
-            const bool.fromEnvironment('dart.vm.product')
-                ? null
-                : _$unidadMedidaDetailHash,
-        dependencies: UnidadMedidaDetailFamily._dependencies,
-        allTransitiveDependencies:
-            UnidadMedidaDetailFamily._allTransitiveDependencies,
-        id: id,
-      );
-
-  UnidadMedidaDetailProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.id,
-  }) : super.internal();
-
-  final int id;
-
-  @override
-  Override overrideWith(
-    FutureOr<UnidadMedida> Function(UnidadMedidaDetailRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: UnidadMedidaDetailProvider._internal(
-        (ref) => create(ref as UnidadMedidaDetailRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        id: id,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeFutureProviderElement<UnidadMedida> createElement() {
-    return _UnidadMedidaDetailProviderElement(this);
-  }
+  UnidadMedidaDetail create() => UnidadMedidaDetail();
 
   @override
   bool operator ==(Object other) {
-    return other is UnidadMedidaDetailProvider && other.id == id;
+    return other is UnidadMedidaDetailProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, id.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin UnidadMedidaDetailRef on AutoDisposeFutureProviderRef<UnidadMedida> {
-  /// The parameter `id` of this provider.
-  int get id;
-}
+String _$unidadMedidaDetailHash() =>
+    r'89907df25fb00fe8ed1da7c50dd12ea8260f5236';
 
-class _UnidadMedidaDetailProviderElement
-    extends AutoDisposeFutureProviderElement<UnidadMedida>
-    with UnidadMedidaDetailRef {
-  _UnidadMedidaDetailProviderElement(super.provider);
+final class UnidadMedidaDetailFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          UnidadMedidaDetail,
+          AsyncValue<UnidadMedida>,
+          UnidadMedida,
+          FutureOr<UnidadMedida>,
+          int
+        > {
+  const UnidadMedidaDetailFamily._()
+    : super(
+        retry: null,
+        name: r'unidadMedidaDetailProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  UnidadMedidaDetailProvider call(int id) =>
+      UnidadMedidaDetailProvider._(argument: id, from: this);
 
   @override
-  int get id => (origin as UnidadMedidaDetailProvider).id;
+  String toString() => r'unidadMedidaDetailProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$UnidadMedidaDetail extends $AsyncNotifier<UnidadMedida> {
+  late final _$args = ref.$arg as int;
+  int get id => _$args;
+
+  FutureOr<UnidadMedida> build(int id);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<UnidadMedida>, UnidadMedida>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<UnidadMedida>, UnidadMedida>,
+              AsyncValue<UnidadMedida>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

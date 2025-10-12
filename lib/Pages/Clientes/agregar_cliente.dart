@@ -75,7 +75,7 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         telefono: _telefonoController.text,
         email: _correoController.text,
       );
-      await ref.read(clienteNotifierProvider.notifier).create(cliente);
+      await ref.read(clienteProvider.notifier).create(cliente);
       // await Future.delayed(const Duration(seconds: 5));
       _mensajeExito();
     }
