@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/models/cliente.dart';
 import 'package:cafe_valdivia/providers/cliente_notifier.dart';
 import 'package:flutter/material.dart';
@@ -31,40 +32,7 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
     _telefonoController.dispose();
     _apellidoController.dispose();
     _nombreController.dispose();
-
     super.dispose();
-  }
-
-  void _mensajeExito() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Cliente guardado exitosamente',
-          style: TextStyle(
-            color: theme.colorScheme.onTertiaryContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.tertiaryContainer,
-      ),
-    );
-  }
-
-  void _mensajeError() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Error al guardar el cliente. Por favor, intente de nuevo',
-          style: TextStyle(
-            color: theme.colorScheme.onErrorContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.errorContainer,
-      ),
-    );
   }
 
   Future<void> _guardarCliente() async {
@@ -75,9 +43,15 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         telefono: _telefonoController.text,
         email: _correoController.text,
       );
-      await ref.read(clienteProvider.notifier).create(cliente);
-      // await Future.delayed(const Duration(seconds: 5));
-      _mensajeExito();
+      create<Cliente>(
+        context: context,
+        ref: ref,
+        provider: clienteProvider,
+        element: cliente,
+        mensajeExito: "El Cliente se guerdo con exito.",
+        mensajeError:
+            "Error al guardar el cliente. Por favor, intente de nuevo.",
+      );
     }
   }
 
@@ -181,16 +155,10 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
                       setState(() {
                         _isLoading = true;
                       });
-
                       try {
                         await _guardarCliente();
-                        if (mounted) {
-                          Navigator.of(context).pop();
-                        }
-                      } catch (e) {
-                        _mensajeError();
                       } finally {
-                        if (mounted) {
+                        if (context.mounted) {
                           setState(() {
                             _isLoading = false;
                           });

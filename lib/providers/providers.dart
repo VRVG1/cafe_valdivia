@@ -18,7 +18,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'providers.g.dart';
 
 @Riverpod(keepAlive: true)
-class DatabaseHelper extends _$DatabaseHelper {
+class DatabaseHelperNotifier extends _$DatabaseHelperNotifier {
   @override
   DatabaseHelper build() {
     return DatabaseHelper();
@@ -27,7 +27,7 @@ class DatabaseHelper extends _$DatabaseHelper {
 
 // Repositories
 @Riverpod(keepAlive: true)
-class ClienteRepository extends _$ClienteRepository {
+class ClienteRepositoryNotifier extends _$ClienteRepositoryNotifier {
   @override
   ClienteRepository build() {
     return ClienteRepository(ref.watch(databaseHelperProvider));
@@ -35,7 +35,7 @@ class ClienteRepository extends _$ClienteRepository {
 }
 
 @Riverpod(keepAlive: true)
-class UnidadMedidaRepository extends _$UnidadMedidaRepository {
+class UnidadMedidaRepositoryNotifier extends _$UnidadMedidaRepositoryNotifier {
   @override
   UnidadMedidaRepository build() {
     return UnidadMedidaRepository(ref.watch(databaseHelperProvider));
@@ -43,7 +43,7 @@ class UnidadMedidaRepository extends _$UnidadMedidaRepository {
 }
 
 @Riverpod(keepAlive: true)
-class ProveedorRepository extends _$ProveedorRepository {
+class ProveedorRepositoryNotifier extends _$ProveedorRepositoryNotifier {
   @override
   ProveedorRepository build() {
     return ProveedorRepository(ref.watch(databaseHelperProvider));
@@ -51,7 +51,7 @@ class ProveedorRepository extends _$ProveedorRepository {
 }
 
 @Riverpod(keepAlive: true)
-class InsumoRepository extends _$InsumoRepository {
+class InsumoRepositoryNotifier extends _$InsumoRepositoryNotifier {
   @override
   InsumoRepository build() {
     return InsumoRepository(
@@ -62,7 +62,8 @@ class InsumoRepository extends _$InsumoRepository {
 }
 
 @Riverpod(keepAlive: true)
-class InsumoProductoRepository extends _$InsumoProductoRepository {
+class InsumoProductoRepositoryNotifier
+    extends _$InsumoProductoRepositoryNotifier {
   @override
   InsumoProductoRepository build() {
     return InsumoProductoRepository(ref.watch(databaseHelperProvider));
@@ -70,7 +71,7 @@ class InsumoProductoRepository extends _$InsumoProductoRepository {
 }
 
 @Riverpod(keepAlive: true)
-class InventarioRepository extends _$InventarioRepository {
+class InventarioRepositoryNotifier extends _$InventarioRepositoryNotifier {
   @override
   InventarioRepository build() {
     return InventarioRepository(ref.watch(databaseHelperProvider));
@@ -78,7 +79,8 @@ class InventarioRepository extends _$InventarioRepository {
 }
 
 @Riverpod(keepAlive: true)
-class MovimientoInventarioRepository extends _$MovimientoInventarioRepository {
+class MovimientoInventarioRepositoryNotifier
+    extends _$MovimientoInventarioRepositoryNotifier {
   @override
   MovimientoInventarioRepository build() {
     return MovimientoInventarioRepository(ref.watch(databaseHelperProvider));
@@ -86,7 +88,7 @@ class MovimientoInventarioRepository extends _$MovimientoInventarioRepository {
 }
 
 @Riverpod(keepAlive: true)
-class ProductoRepository extends _$ProductoRepository {
+class ProductoRepositoryNotifier extends _$ProductoRepositoryNotifier {
   @override
   ProductoRepository build() {
     return ProductoRepository(
@@ -97,7 +99,7 @@ class ProductoRepository extends _$ProductoRepository {
 }
 
 @Riverpod(keepAlive: true)
-class VentaRepository extends _$VentaRepository {
+class VentaRepositoryNotifier extends _$VentaRepositoryNotifier {
   @override
   VentaRepository build() {
     return VentaRepository(
@@ -109,7 +111,7 @@ class VentaRepository extends _$VentaRepository {
 }
 
 @Riverpod(keepAlive: true)
-class CompraRepository extends _$CompraRepository {
+class CompraRepositoryNotifier extends _$CompraRepositoryNotifier {
   @override
   CompraRepository build() {
     return CompraRepository(
@@ -122,7 +124,7 @@ class CompraRepository extends _$CompraRepository {
 
 // Services
 @Riverpod(keepAlive: true)
-class InventarioServicio extends _$InventarioServicio {
+class InventarioServicioNotifier extends _$InventarioServicioNotifier {
   @override
   InventarioServicio build() {
     return InventarioServicio(
@@ -140,7 +142,7 @@ class InventarioServicio extends _$InventarioServicio {
 }
 
 @Riverpod(keepAlive: true)
-class CompraServicio extends _$CompraServicio {
+class CompraServicioNotifier extends _$CompraServicioNotifier {
   @override
   CompraServicio build() {
     return CompraServicio(
@@ -151,7 +153,7 @@ class CompraServicio extends _$CompraServicio {
 }
 
 @Riverpod(keepAlive: true)
-class VentaServicio extends _$VentaServicio {
+class VentaServicioNotifier extends _$VentaServicioNotifier {
   @override
   VentaServicio build() {
     return VentaServicio(
@@ -162,7 +164,7 @@ class VentaServicio extends _$VentaServicio {
 }
 
 @Riverpod(keepAlive: true)
-class ReporteServicio extends _$ReporteServicio {
+class ReporteServicioNotifier extends _$ReporteServicioNotifier {
   @override
   ReporteServicio build() {
     return ReporteServicio(

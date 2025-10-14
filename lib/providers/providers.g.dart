@@ -9,12 +9,12 @@ part of 'providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(DatabaseHelper)
-const databaseHelperProvider = DatabaseHelperProvider._();
+@ProviderFor(DatabaseHelperNotifier)
+const databaseHelperProvider = DatabaseHelperNotifierProvider._();
 
-final class DatabaseHelperProvider
-    extends $NotifierProvider<DatabaseHelper, DatabaseHelper> {
-  const DatabaseHelperProvider._()
+final class DatabaseHelperNotifierProvider
+    extends $NotifierProvider<DatabaseHelperNotifier, DatabaseHelper> {
+  const DatabaseHelperNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -26,11 +26,11 @@ final class DatabaseHelperProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$databaseHelperHash();
+  String debugGetCreateSourceHash() => _$databaseHelperNotifierHash();
 
   @$internal
   @override
-  DatabaseHelper create() => DatabaseHelper();
+  DatabaseHelperNotifier create() => DatabaseHelperNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(DatabaseHelper value) {
@@ -41,9 +41,10 @@ final class DatabaseHelperProvider
   }
 }
 
-String _$databaseHelperHash() => r'79c3dce2d34830ae33f91ec9bec06d29afdf4397';
+String _$databaseHelperNotifierHash() =>
+    r'fe33302dd55325feba5934fd0c9b628fc22a2ff4';
 
-abstract class _$DatabaseHelper extends $Notifier<DatabaseHelper> {
+abstract class _$DatabaseHelperNotifier extends $Notifier<DatabaseHelper> {
   DatabaseHelper build();
   @$mustCallSuper
   @override
@@ -62,12 +63,12 @@ abstract class _$DatabaseHelper extends $Notifier<DatabaseHelper> {
   }
 }
 
-@ProviderFor(ClienteRepository)
-const clienteRepositoryProvider = ClienteRepositoryProvider._();
+@ProviderFor(ClienteRepositoryNotifier)
+const clienteRepositoryProvider = ClienteRepositoryNotifierProvider._();
 
-final class ClienteRepositoryProvider
-    extends $NotifierProvider<ClienteRepository, ClienteRepository> {
-  const ClienteRepositoryProvider._()
+final class ClienteRepositoryNotifierProvider
+    extends $NotifierProvider<ClienteRepositoryNotifier, ClienteRepository> {
+  const ClienteRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -79,11 +80,11 @@ final class ClienteRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$clienteRepositoryHash();
+  String debugGetCreateSourceHash() => _$clienteRepositoryNotifierHash();
 
   @$internal
   @override
-  ClienteRepository create() => ClienteRepository();
+  ClienteRepositoryNotifier create() => ClienteRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ClienteRepository value) {
@@ -94,9 +95,11 @@ final class ClienteRepositoryProvider
   }
 }
 
-String _$clienteRepositoryHash() => r'fba07d74cb8ce97ad3950c2a98ed0343a49121ab';
+String _$clienteRepositoryNotifierHash() =>
+    r'a6d5eda6a5d208562afd50b8580bf57ecbeef511';
 
-abstract class _$ClienteRepository extends $Notifier<ClienteRepository> {
+abstract class _$ClienteRepositoryNotifier
+    extends $Notifier<ClienteRepository> {
   ClienteRepository build();
   @$mustCallSuper
   @override
@@ -115,12 +118,17 @@ abstract class _$ClienteRepository extends $Notifier<ClienteRepository> {
   }
 }
 
-@ProviderFor(UnidadMedidaRepository)
-const unidadMedidaRepositoryProvider = UnidadMedidaRepositoryProvider._();
+@ProviderFor(UnidadMedidaRepositoryNotifier)
+const unidadMedidaRepositoryProvider =
+    UnidadMedidaRepositoryNotifierProvider._();
 
-final class UnidadMedidaRepositoryProvider
-    extends $NotifierProvider<UnidadMedidaRepository, UnidadMedidaRepository> {
-  const UnidadMedidaRepositoryProvider._()
+final class UnidadMedidaRepositoryNotifierProvider
+    extends
+        $NotifierProvider<
+          UnidadMedidaRepositoryNotifier,
+          UnidadMedidaRepository
+        > {
+  const UnidadMedidaRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -132,11 +140,11 @@ final class UnidadMedidaRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$unidadMedidaRepositoryHash();
+  String debugGetCreateSourceHash() => _$unidadMedidaRepositoryNotifierHash();
 
   @$internal
   @override
-  UnidadMedidaRepository create() => UnidadMedidaRepository();
+  UnidadMedidaRepositoryNotifier create() => UnidadMedidaRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(UnidadMedidaRepository value) {
@@ -147,10 +155,10 @@ final class UnidadMedidaRepositoryProvider
   }
 }
 
-String _$unidadMedidaRepositoryHash() =>
-    r'409ca99fd12922bed8f0e90c7dcce78da8e155bf';
+String _$unidadMedidaRepositoryNotifierHash() =>
+    r'5aa14b00997e609cc4f9df22fabc3009a4448b5e';
 
-abstract class _$UnidadMedidaRepository
+abstract class _$UnidadMedidaRepositoryNotifier
     extends $Notifier<UnidadMedidaRepository> {
   UnidadMedidaRepository build();
   @$mustCallSuper
@@ -171,12 +179,13 @@ abstract class _$UnidadMedidaRepository
   }
 }
 
-@ProviderFor(ProveedorRepository)
-const proveedorRepositoryProvider = ProveedorRepositoryProvider._();
+@ProviderFor(ProveedorRepositoryNotifier)
+const proveedorRepositoryProvider = ProveedorRepositoryNotifierProvider._();
 
-final class ProveedorRepositoryProvider
-    extends $NotifierProvider<ProveedorRepository, ProveedorRepository> {
-  const ProveedorRepositoryProvider._()
+final class ProveedorRepositoryNotifierProvider
+    extends
+        $NotifierProvider<ProveedorRepositoryNotifier, ProveedorRepository> {
+  const ProveedorRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -188,11 +197,11 @@ final class ProveedorRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$proveedorRepositoryHash();
+  String debugGetCreateSourceHash() => _$proveedorRepositoryNotifierHash();
 
   @$internal
   @override
-  ProveedorRepository create() => ProveedorRepository();
+  ProveedorRepositoryNotifier create() => ProveedorRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ProveedorRepository value) {
@@ -203,10 +212,11 @@ final class ProveedorRepositoryProvider
   }
 }
 
-String _$proveedorRepositoryHash() =>
-    r'4f1f25147d3743852e1227d07374cae70200b0d2';
+String _$proveedorRepositoryNotifierHash() =>
+    r'57fa77013d1c9d8202a35f7fee772a4e175bc0d6';
 
-abstract class _$ProveedorRepository extends $Notifier<ProveedorRepository> {
+abstract class _$ProveedorRepositoryNotifier
+    extends $Notifier<ProveedorRepository> {
   ProveedorRepository build();
   @$mustCallSuper
   @override
@@ -225,12 +235,12 @@ abstract class _$ProveedorRepository extends $Notifier<ProveedorRepository> {
   }
 }
 
-@ProviderFor(InsumoRepository)
-const insumoRepositoryProvider = InsumoRepositoryProvider._();
+@ProviderFor(InsumoRepositoryNotifier)
+const insumoRepositoryProvider = InsumoRepositoryNotifierProvider._();
 
-final class InsumoRepositoryProvider
-    extends $NotifierProvider<InsumoRepository, InsumoRepository> {
-  const InsumoRepositoryProvider._()
+final class InsumoRepositoryNotifierProvider
+    extends $NotifierProvider<InsumoRepositoryNotifier, InsumoRepository> {
+  const InsumoRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -242,11 +252,11 @@ final class InsumoRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$insumoRepositoryHash();
+  String debugGetCreateSourceHash() => _$insumoRepositoryNotifierHash();
 
   @$internal
   @override
-  InsumoRepository create() => InsumoRepository();
+  InsumoRepositoryNotifier create() => InsumoRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(InsumoRepository value) {
@@ -257,9 +267,10 @@ final class InsumoRepositoryProvider
   }
 }
 
-String _$insumoRepositoryHash() => r'e91cab233a77f9be966e0d191c4d85c7048a2f4c';
+String _$insumoRepositoryNotifierHash() =>
+    r'0577d0a309025f1a7ecbdfb6c03afcdf789993ca';
 
-abstract class _$InsumoRepository extends $Notifier<InsumoRepository> {
+abstract class _$InsumoRepositoryNotifier extends $Notifier<InsumoRepository> {
   InsumoRepository build();
   @$mustCallSuper
   @override
@@ -278,13 +289,17 @@ abstract class _$InsumoRepository extends $Notifier<InsumoRepository> {
   }
 }
 
-@ProviderFor(InsumoProductoRepository)
-const insumoProductoRepositoryProvider = InsumoProductoRepositoryProvider._();
+@ProviderFor(InsumoProductoRepositoryNotifier)
+const insumoProductoRepositoryProvider =
+    InsumoProductoRepositoryNotifierProvider._();
 
-final class InsumoProductoRepositoryProvider
+final class InsumoProductoRepositoryNotifierProvider
     extends
-        $NotifierProvider<InsumoProductoRepository, InsumoProductoRepository> {
-  const InsumoProductoRepositoryProvider._()
+        $NotifierProvider<
+          InsumoProductoRepositoryNotifier,
+          InsumoProductoRepository
+        > {
+  const InsumoProductoRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -296,11 +311,12 @@ final class InsumoProductoRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$insumoProductoRepositoryHash();
+  String debugGetCreateSourceHash() => _$insumoProductoRepositoryNotifierHash();
 
   @$internal
   @override
-  InsumoProductoRepository create() => InsumoProductoRepository();
+  InsumoProductoRepositoryNotifier create() =>
+      InsumoProductoRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(InsumoProductoRepository value) {
@@ -311,10 +327,10 @@ final class InsumoProductoRepositoryProvider
   }
 }
 
-String _$insumoProductoRepositoryHash() =>
-    r'ee154055b3674584dd2490b76b3da813fa1c606e';
+String _$insumoProductoRepositoryNotifierHash() =>
+    r'806b461bd5f33c2bc9b2edfafc768f09de7899c8';
 
-abstract class _$InsumoProductoRepository
+abstract class _$InsumoProductoRepositoryNotifier
     extends $Notifier<InsumoProductoRepository> {
   InsumoProductoRepository build();
   @$mustCallSuper
@@ -335,12 +351,13 @@ abstract class _$InsumoProductoRepository
   }
 }
 
-@ProviderFor(InventarioRepository)
-const inventarioRepositoryProvider = InventarioRepositoryProvider._();
+@ProviderFor(InventarioRepositoryNotifier)
+const inventarioRepositoryProvider = InventarioRepositoryNotifierProvider._();
 
-final class InventarioRepositoryProvider
-    extends $NotifierProvider<InventarioRepository, InventarioRepository> {
-  const InventarioRepositoryProvider._()
+final class InventarioRepositoryNotifierProvider
+    extends
+        $NotifierProvider<InventarioRepositoryNotifier, InventarioRepository> {
+  const InventarioRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -352,11 +369,11 @@ final class InventarioRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$inventarioRepositoryHash();
+  String debugGetCreateSourceHash() => _$inventarioRepositoryNotifierHash();
 
   @$internal
   @override
-  InventarioRepository create() => InventarioRepository();
+  InventarioRepositoryNotifier create() => InventarioRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(InventarioRepository value) {
@@ -367,10 +384,11 @@ final class InventarioRepositoryProvider
   }
 }
 
-String _$inventarioRepositoryHash() =>
-    r'561f022e95526ab238e21c82c41cc9328cb63245';
+String _$inventarioRepositoryNotifierHash() =>
+    r'b354c9854fabeff78758011a191148dc05941f22';
 
-abstract class _$InventarioRepository extends $Notifier<InventarioRepository> {
+abstract class _$InventarioRepositoryNotifier
+    extends $Notifier<InventarioRepository> {
   InventarioRepository build();
   @$mustCallSuper
   @override
@@ -389,17 +407,17 @@ abstract class _$InventarioRepository extends $Notifier<InventarioRepository> {
   }
 }
 
-@ProviderFor(MovimientoInventarioRepository)
+@ProviderFor(MovimientoInventarioRepositoryNotifier)
 const movimientoInventarioRepositoryProvider =
-    MovimientoInventarioRepositoryProvider._();
+    MovimientoInventarioRepositoryNotifierProvider._();
 
-final class MovimientoInventarioRepositoryProvider
+final class MovimientoInventarioRepositoryNotifierProvider
     extends
         $NotifierProvider<
-          MovimientoInventarioRepository,
+          MovimientoInventarioRepositoryNotifier,
           MovimientoInventarioRepository
         > {
-  const MovimientoInventarioRepositoryProvider._()
+  const MovimientoInventarioRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -411,11 +429,13 @@ final class MovimientoInventarioRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$movimientoInventarioRepositoryHash();
+  String debugGetCreateSourceHash() =>
+      _$movimientoInventarioRepositoryNotifierHash();
 
   @$internal
   @override
-  MovimientoInventarioRepository create() => MovimientoInventarioRepository();
+  MovimientoInventarioRepositoryNotifier create() =>
+      MovimientoInventarioRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(MovimientoInventarioRepository value) {
@@ -428,10 +448,10 @@ final class MovimientoInventarioRepositoryProvider
   }
 }
 
-String _$movimientoInventarioRepositoryHash() =>
-    r'737e8ede121ca8d5f862e7d55b8f8b35fd6c724a';
+String _$movimientoInventarioRepositoryNotifierHash() =>
+    r'39b2467cbd6e496e1b5ab105a57f1450079d0c2b';
 
-abstract class _$MovimientoInventarioRepository
+abstract class _$MovimientoInventarioRepositoryNotifier
     extends $Notifier<MovimientoInventarioRepository> {
   MovimientoInventarioRepository build();
   @$mustCallSuper
@@ -459,12 +479,12 @@ abstract class _$MovimientoInventarioRepository
   }
 }
 
-@ProviderFor(ProductoRepository)
-const productoRepositoryProvider = ProductoRepositoryProvider._();
+@ProviderFor(ProductoRepositoryNotifier)
+const productoRepositoryProvider = ProductoRepositoryNotifierProvider._();
 
-final class ProductoRepositoryProvider
-    extends $NotifierProvider<ProductoRepository, ProductoRepository> {
-  const ProductoRepositoryProvider._()
+final class ProductoRepositoryNotifierProvider
+    extends $NotifierProvider<ProductoRepositoryNotifier, ProductoRepository> {
+  const ProductoRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -476,11 +496,11 @@ final class ProductoRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$productoRepositoryHash();
+  String debugGetCreateSourceHash() => _$productoRepositoryNotifierHash();
 
   @$internal
   @override
-  ProductoRepository create() => ProductoRepository();
+  ProductoRepositoryNotifier create() => ProductoRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ProductoRepository value) {
@@ -491,10 +511,11 @@ final class ProductoRepositoryProvider
   }
 }
 
-String _$productoRepositoryHash() =>
-    r'd7e721e67c3e2de4b8c074744cb8eaf6b0ad37dd';
+String _$productoRepositoryNotifierHash() =>
+    r'7f8321e66bb939c7623ce9fa0372a0cd1b01234c';
 
-abstract class _$ProductoRepository extends $Notifier<ProductoRepository> {
+abstract class _$ProductoRepositoryNotifier
+    extends $Notifier<ProductoRepository> {
   ProductoRepository build();
   @$mustCallSuper
   @override
@@ -513,12 +534,12 @@ abstract class _$ProductoRepository extends $Notifier<ProductoRepository> {
   }
 }
 
-@ProviderFor(VentaRepository)
-const ventaRepositoryProvider = VentaRepositoryProvider._();
+@ProviderFor(VentaRepositoryNotifier)
+const ventaRepositoryProvider = VentaRepositoryNotifierProvider._();
 
-final class VentaRepositoryProvider
-    extends $NotifierProvider<VentaRepository, VentaRepository> {
-  const VentaRepositoryProvider._()
+final class VentaRepositoryNotifierProvider
+    extends $NotifierProvider<VentaRepositoryNotifier, VentaRepository> {
+  const VentaRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -530,11 +551,11 @@ final class VentaRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$ventaRepositoryHash();
+  String debugGetCreateSourceHash() => _$ventaRepositoryNotifierHash();
 
   @$internal
   @override
-  VentaRepository create() => VentaRepository();
+  VentaRepositoryNotifier create() => VentaRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(VentaRepository value) {
@@ -545,9 +566,10 @@ final class VentaRepositoryProvider
   }
 }
 
-String _$ventaRepositoryHash() => r'4865d17c09aa2ea39c5c06f26b3d41b0ab02680a';
+String _$ventaRepositoryNotifierHash() =>
+    r'818384302b8f355f040ec8d4c281775f5bc59384';
 
-abstract class _$VentaRepository extends $Notifier<VentaRepository> {
+abstract class _$VentaRepositoryNotifier extends $Notifier<VentaRepository> {
   VentaRepository build();
   @$mustCallSuper
   @override
@@ -566,12 +588,12 @@ abstract class _$VentaRepository extends $Notifier<VentaRepository> {
   }
 }
 
-@ProviderFor(CompraRepository)
-const compraRepositoryProvider = CompraRepositoryProvider._();
+@ProviderFor(CompraRepositoryNotifier)
+const compraRepositoryProvider = CompraRepositoryNotifierProvider._();
 
-final class CompraRepositoryProvider
-    extends $NotifierProvider<CompraRepository, CompraRepository> {
-  const CompraRepositoryProvider._()
+final class CompraRepositoryNotifierProvider
+    extends $NotifierProvider<CompraRepositoryNotifier, CompraRepository> {
+  const CompraRepositoryNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -583,11 +605,11 @@ final class CompraRepositoryProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$compraRepositoryHash();
+  String debugGetCreateSourceHash() => _$compraRepositoryNotifierHash();
 
   @$internal
   @override
-  CompraRepository create() => CompraRepository();
+  CompraRepositoryNotifier create() => CompraRepositoryNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(CompraRepository value) {
@@ -598,9 +620,10 @@ final class CompraRepositoryProvider
   }
 }
 
-String _$compraRepositoryHash() => r'824e44363619365023761bd956e9542f476bea96';
+String _$compraRepositoryNotifierHash() =>
+    r'66f857764729c399138e3a6bb6b0c7b1649c3c3c';
 
-abstract class _$CompraRepository extends $Notifier<CompraRepository> {
+abstract class _$CompraRepositoryNotifier extends $Notifier<CompraRepository> {
   CompraRepository build();
   @$mustCallSuper
   @override
@@ -619,12 +642,12 @@ abstract class _$CompraRepository extends $Notifier<CompraRepository> {
   }
 }
 
-@ProviderFor(InventarioServicio)
-const inventarioServicioProvider = InventarioServicioProvider._();
+@ProviderFor(InventarioServicioNotifier)
+const inventarioServicioProvider = InventarioServicioNotifierProvider._();
 
-final class InventarioServicioProvider
-    extends $NotifierProvider<InventarioServicio, InventarioServicio> {
-  const InventarioServicioProvider._()
+final class InventarioServicioNotifierProvider
+    extends $NotifierProvider<InventarioServicioNotifier, InventarioServicio> {
+  const InventarioServicioNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -636,11 +659,11 @@ final class InventarioServicioProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$inventarioServicioHash();
+  String debugGetCreateSourceHash() => _$inventarioServicioNotifierHash();
 
   @$internal
   @override
-  InventarioServicio create() => InventarioServicio();
+  InventarioServicioNotifier create() => InventarioServicioNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(InventarioServicio value) {
@@ -651,10 +674,11 @@ final class InventarioServicioProvider
   }
 }
 
-String _$inventarioServicioHash() =>
-    r'ef27e53df7ddeab138617f9cb628c637332dc328';
+String _$inventarioServicioNotifierHash() =>
+    r'2b8c28cb938fbdc1dee3b21146b8241e22ff9176';
 
-abstract class _$InventarioServicio extends $Notifier<InventarioServicio> {
+abstract class _$InventarioServicioNotifier
+    extends $Notifier<InventarioServicio> {
   InventarioServicio build();
   @$mustCallSuper
   @override
@@ -673,12 +697,12 @@ abstract class _$InventarioServicio extends $Notifier<InventarioServicio> {
   }
 }
 
-@ProviderFor(CompraServicio)
-const compraServicioProvider = CompraServicioProvider._();
+@ProviderFor(CompraServicioNotifier)
+const compraServicioProvider = CompraServicioNotifierProvider._();
 
-final class CompraServicioProvider
-    extends $NotifierProvider<CompraServicio, CompraServicio> {
-  const CompraServicioProvider._()
+final class CompraServicioNotifierProvider
+    extends $NotifierProvider<CompraServicioNotifier, CompraServicio> {
+  const CompraServicioNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -690,11 +714,11 @@ final class CompraServicioProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$compraServicioHash();
+  String debugGetCreateSourceHash() => _$compraServicioNotifierHash();
 
   @$internal
   @override
-  CompraServicio create() => CompraServicio();
+  CompraServicioNotifier create() => CompraServicioNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(CompraServicio value) {
@@ -705,9 +729,10 @@ final class CompraServicioProvider
   }
 }
 
-String _$compraServicioHash() => r'9816715f0ccbe6e7232c843aedac82ca940d382f';
+String _$compraServicioNotifierHash() =>
+    r'134780d8ba01f5fab20bebaff7663206195934dd';
 
-abstract class _$CompraServicio extends $Notifier<CompraServicio> {
+abstract class _$CompraServicioNotifier extends $Notifier<CompraServicio> {
   CompraServicio build();
   @$mustCallSuper
   @override
@@ -726,12 +751,12 @@ abstract class _$CompraServicio extends $Notifier<CompraServicio> {
   }
 }
 
-@ProviderFor(VentaServicio)
-const ventaServicioProvider = VentaServicioProvider._();
+@ProviderFor(VentaServicioNotifier)
+const ventaServicioProvider = VentaServicioNotifierProvider._();
 
-final class VentaServicioProvider
-    extends $NotifierProvider<VentaServicio, VentaServicio> {
-  const VentaServicioProvider._()
+final class VentaServicioNotifierProvider
+    extends $NotifierProvider<VentaServicioNotifier, VentaServicio> {
+  const VentaServicioNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -743,11 +768,11 @@ final class VentaServicioProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$ventaServicioHash();
+  String debugGetCreateSourceHash() => _$ventaServicioNotifierHash();
 
   @$internal
   @override
-  VentaServicio create() => VentaServicio();
+  VentaServicioNotifier create() => VentaServicioNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(VentaServicio value) {
@@ -758,9 +783,10 @@ final class VentaServicioProvider
   }
 }
 
-String _$ventaServicioHash() => r'1e6af59d2764656fa56c5fd3c60ddbabc38c7518';
+String _$ventaServicioNotifierHash() =>
+    r'fc5d74b38192c3b8d0705f52ab0c854066bbbac2';
 
-abstract class _$VentaServicio extends $Notifier<VentaServicio> {
+abstract class _$VentaServicioNotifier extends $Notifier<VentaServicio> {
   VentaServicio build();
   @$mustCallSuper
   @override
@@ -779,12 +805,12 @@ abstract class _$VentaServicio extends $Notifier<VentaServicio> {
   }
 }
 
-@ProviderFor(ReporteServicio)
-const reporteServicioProvider = ReporteServicioProvider._();
+@ProviderFor(ReporteServicioNotifier)
+const reporteServicioProvider = ReporteServicioNotifierProvider._();
 
-final class ReporteServicioProvider
-    extends $NotifierProvider<ReporteServicio, ReporteServicio> {
-  const ReporteServicioProvider._()
+final class ReporteServicioNotifierProvider
+    extends $NotifierProvider<ReporteServicioNotifier, ReporteServicio> {
+  const ReporteServicioNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -796,11 +822,11 @@ final class ReporteServicioProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$reporteServicioHash();
+  String debugGetCreateSourceHash() => _$reporteServicioNotifierHash();
 
   @$internal
   @override
-  ReporteServicio create() => ReporteServicio();
+  ReporteServicioNotifier create() => ReporteServicioNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ReporteServicio value) {
@@ -811,9 +837,10 @@ final class ReporteServicioProvider
   }
 }
 
-String _$reporteServicioHash() => r'edee92cf7341295d60f3a7b94219b9f854722828';
+String _$reporteServicioNotifierHash() =>
+    r'ef31f84c81ef7f51566cf22a40eb5c9258d1b8ac';
 
-abstract class _$ReporteServicio extends $Notifier<ReporteServicio> {
+abstract class _$ReporteServicioNotifier extends $Notifier<ReporteServicio> {
   ReporteServicio build();
   @$mustCallSuper
   @override

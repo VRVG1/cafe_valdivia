@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/providers/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/cliente_provider.dart';
@@ -10,69 +11,24 @@ class ClienteDetallado extends ConsumerWidget {
   const ClienteDetallado({super.key, required this.clienteId});
 
   void _mostrarDialogoConfirmacion(BuildContext context, WidgetRef ref) {
-    showDialog<void>(
+    mostrarDialogoConfirmacion(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirmar eliminación'),
-          content: const Text(
-            '¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Cierra el diálogo
-              },
-            ),
-            TextButton(
-              child: const Text('Eliminar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Cierra el diálogo
-                _eliminarCliente(context, ref);
-              },
-            ),
-          ],
+      titulo: 'Confirmar eliminacion',
+      contenido:
+          '¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.',
+      textoBotonConfirmacion: "Eliminar",
+      onConfirm: () {
+        delete(
+          context: context,
+          ref: ref,
+          provider: clienteProvider,
+          id: clienteId,
+          mensajeExito: "Cliente eliminado con éxito.",
+          mensajeError:
+              "Error al eliminar el cliente. Por favor, intente de nuevo.",
         );
       },
     );
-  }
-
-  void _eliminarCliente(BuildContext context, WidgetRef ref) async {
-    final ThemeData theme = Theme.of(context);
-    try {
-      await ref.read(clienteProvider.notifier).delete(clienteId);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Cliente eliminado con éxito',
-              style: TextStyle(
-                color: theme.colorScheme.onTertiaryContainer,
-                fontSize: 18,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.tertiaryContainer,
-          ),
-        );
-        Navigator.of(context).pop(); // Regresar a la pantalla anterior
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Error al eliminar el cliente: $e',
-              style: TextStyle(
-                color: theme.colorScheme.onErrorContainer,
-                fontSize: 18,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.errorContainer,
-          ),
-        );
-      }
-    }
   }
 
   @override

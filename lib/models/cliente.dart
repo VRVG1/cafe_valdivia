@@ -31,7 +31,7 @@ class Cliente implements BaseModel {
   }
 
   String getIniciales() {
-    return '${nombre[0].toUpperCase()} ${apellido?[0].toUpperCase()}';
+    return '${nombre[0].toUpperCase()}${apellido?[0].toUpperCase()}';
   }
 
   factory Cliente.fromMap(Map<String, dynamic> map) {

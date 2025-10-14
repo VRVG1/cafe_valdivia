@@ -15,56 +15,28 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   int currentPageIndex = 0;
 
-  void addButton() {
-    if (currentPageIndex == 1) {
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return const Dialog(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [Agregarcliente()],
-            ),
-          );
-        },
-      );
-    } else if (currentPageIndex == 2) {
-      showGeneralDialog(
-        context: context,
-        barrierDismissible: true,
-        barrierLabel: '',
-        transitionDuration: const Duration(milliseconds: 600),
-        pageBuilder: (
-          BuildContext context,
-          Animation<double> animation,
-          Animation<double> secodaryAnimation,
-        ) {
-          return Dialog(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [Agregarcliente()],
-            ),
-          );
-        },
-        transitionBuilder: (context, a1, a2, child) {
-          final curvedAnimation = CurvedAnimation(
-            parent: a1,
-            curve: Curves.easeOutBack,
-          );
-          return ScaleTransition(
-            scale: Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
-            child: child,
-          );
-        },
-      );
-    } else {
-      print("Almacen");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+
+    Widget? addButton() {
+      switch (currentPageIndex) {
+        case 1:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => Agregarcliente(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        default:
+          return null;
+      }
+    }
 
     final List<Widget> pages = [
       Card(
@@ -118,14 +90,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
         label: Text("Insumos"),
       ),
     ];
+
     return Scaffold(
-      floatingActionButton:
-          currentPageIndex != 0
-              ? FloatingActionButton(
-                onPressed: addButton,
-                child: const Icon(Icons.add),
-              )
-              : null,
+      floatingActionButton: addButton(),
       appBar: AppBar(
         title: const Text("Cafe Valdivia"),
         centerTitle: true,
@@ -147,4 +114,3 @@ class _NavigationScreenState extends State<NavigationScreen> {
     );
   }
 }
-
