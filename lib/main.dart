@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:cafe_valdivia/Components/navigation_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
-  sqfliteFfiInit();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    sqfliteFfiInit();
 
-  databaseFactory = databaseFactoryFfi;
+    databaseFactory = databaseFactoryFfi;
+  }
   runApp(const ProviderScope(child: MyApp()));
 }
 

@@ -4,14 +4,14 @@ import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void mostrarDialogoConfirmacion({
+Future<bool> mostrarDialogoConfirmacion({
   required BuildContext context,
   required String titulo,
   required String contenido,
   required String textoBotonConfirmacion,
   required VoidCallback onConfirm,
 }) {
-  showDialog<void>(
+  return showDialog<void>(
     context: context,
     builder: (BuildContext dialogContext) {
       return AlertDialog(

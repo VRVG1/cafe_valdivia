@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_detallado.dart';
 import 'package:cafe_valdivia/models/cliente.dart';
@@ -65,6 +66,25 @@ class Clientelista extends ConsumerWidget {
                     ),
                   },
               },
+          onDeleteDismissed: (cliente) async {
+            final confirmacion =
+                mostrarDialogoConfirmacion(
+                  context: context,
+                  titulo: "Seguo que quiere eliminar este cliente?",
+                  contenido: "Esta accion no se puede desasher",
+                  textoBotonConfirmacion: "Eliminar",
+                  onConfirm: delete(
+                    context: context,
+                    ref: ref,
+                    provider: clienteProvider,
+                    id: cliente.id!,
+                    mensajeExito: "El cliente se a borrado con exito",
+                    mensajeError:
+                        "Error al eliminar el cliente, intete de neuvo",
+                  ),
+                ) ??
+                false;
+          },
         );
       },
       error: (err, stack) => Center(child: Text('Error: $err')),
