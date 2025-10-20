@@ -77,10 +77,9 @@ class InusmoListaPage extends ConsumerWidget {
                 false;
 
             if (confirmar) {
-              // ref.read(insumoNotifierProvider.notifier).remove(insumo);
-              return true; // Se elimina el widget visualmente
+              return true;
             }
-            return false; // Se mantiene
+            return false;
           },
         );
       },

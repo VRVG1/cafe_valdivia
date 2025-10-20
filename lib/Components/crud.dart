@@ -4,14 +4,14 @@ import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-Future<bool> mostrarDialogoConfirmacion({
+Future<bool?> mostrarDialogoConfirmacion({
   required BuildContext context,
   required String titulo,
   required String contenido,
   required String textoBotonConfirmacion,
   required VoidCallback onConfirm,
 }) {
-  return showDialog<void>(
+  return showDialog<bool>(
     context: context,
     builder: (BuildContext dialogContext) {
       return AlertDialog(
@@ -21,7 +21,7 @@ Future<bool> mostrarDialogoConfirmacion({
           TextButton(
             child: const Text('Cancelar'),
             onPressed: () {
-              Navigator.of(dialogContext).pop(); // Cierra el diálogo
+              Navigator.of(dialogContext).pop(false); // Cierra el diálogo
             },
           ),
           TextButton(
@@ -37,8 +37,8 @@ Future<bool> mostrarDialogoConfirmacion({
               elevation: 0,
             ),
             onPressed: () {
-              Navigator.of(dialogContext).pop(); // Cierra el diálogo
               onConfirm();
+              Navigator.of(dialogContext).pop(true); // Cierra el diálogo
             },
             child: Text(textoBotonConfirmacion),
           ),
@@ -48,7 +48,7 @@ Future<bool> mostrarDialogoConfirmacion({
   );
 }
 
-void delete({
+Future<bool> delete({
   required BuildContext context,
   required WidgetRef ref,
   required provider,
@@ -60,12 +60,14 @@ void delete({
     await ref.read(provider.notifier).delete(id);
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
-      Navigator.of(context).pop(); // Regresar a la pantalla anterior
+      //Navigator.of(context).pop(); // Regresar a la pantalla anterior
     }
+    return true;
   } catch (e) {
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeError);
     }
+    return false;
   }
 }
 

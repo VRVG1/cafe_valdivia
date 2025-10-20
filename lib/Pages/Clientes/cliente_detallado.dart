@@ -77,9 +77,28 @@ class ClienteDetallado extends ConsumerWidget {
                 ),
                 PopupMenuButton<String>(
                   icon: const Icon(Icons.more_vert_rounded),
-                  onSelected: (String result) {
+                  onSelected: (String result) async {
                     if (result == 'eliminar') {
-                      _mostrarDialogoConfirmacion(context, ref);
+                      mostrarDialogoConfirmacion(
+                        context: context,
+                        titulo: "Seguro que quiere eliminar este cliente?",
+                        contenido: "Esta accion no se puede deshacer",
+                        textoBotonConfirmacion: "Eliminar",
+                        onConfirm: () async {
+                          final bool exito = await delete(
+                            context: context,
+                            ref: ref,
+                            provider: clienteProvider,
+                            id: cliente.id!,
+                            mensajeExito: "El cliente se ha borrado con exito",
+                            mensajeError:
+                                "Error al eliminar el cliente,Por favor, intente de nuevo",
+                          );
+                          if (exito && context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      );
                     }
                   },
                   itemBuilder:
