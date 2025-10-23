@@ -33,7 +33,7 @@ final class ProveedorNotifierProvider
   ProveedorNotifier create() => ProveedorNotifier();
 }
 
-String _$proveedorNotifierHash() => r'8dd5250f283e544614f5e4919844e585ce03797c';
+String _$proveedorNotifierHash() => r'8c0171a1b3f5a02fee0ace46afc9a8187248d853';
 
 abstract class _$ProveedorNotifier extends $AsyncNotifier<List<Proveedor>> {
   FutureOr<List<Proveedor>> build();

@@ -44,7 +44,7 @@ class ProveedorDetallado extends ConsumerWidget {
 
   void _eliminar(BuildContext context, WidgetRef ref, ThemeData theme) async {
     try {
-      await ref.read(proveedorProvider.notifier).deleteProveedor(proveedorId);
+      await ref.read(proveedorProvider.notifier).delete(proveedorId);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -167,7 +167,7 @@ class ProveedorDetallado extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  proveedor.toString(),
+                  proveedor.nombre,
                   style: theme.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.onSurface,

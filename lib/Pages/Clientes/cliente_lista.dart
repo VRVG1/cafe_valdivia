@@ -78,6 +78,7 @@ class Clientelista extends ConsumerWidget {
                 ),
               ).then((_) => ref.invalidate(clienteDetailProvider(cliente.id!)));
             }
+            return null;
           },
           onDeleteDismissed: (cliente) async {
             final bool confirmacion =

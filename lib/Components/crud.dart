@@ -64,8 +64,13 @@ Future<bool> delete({
     }
     return true;
   } catch (e) {
+    appLogger.e(e);
     if (context.mounted) {
-      showCustomSnackBar(context: context, mensaje: mensajeError);
+      showCustomSnackBar(
+        context: context,
+        mensaje: mensajeError,
+        isError: true,
+      );
     }
     return false;
   }

@@ -1,4 +1,3 @@
-
 import 'package:cafe_valdivia/providers/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,8 +9,9 @@ class UnidadMedidaNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUnidadMedida =
-        ref.watch(unidadMedidaDetailProvider(unidadMedidaId));
+    final asyncUnidadMedida = ref.watch(
+      unidadMedidaDetailProvider(unidadMedidaId),
+    );
 
     return asyncUnidadMedida.when(
       data: (unidadMedida) => Text(unidadMedida.nombre),

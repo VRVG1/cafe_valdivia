@@ -1,5 +1,10 @@
+import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/detail_element.dart';
+import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
+import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/providers/insumo_notifier.dart';
 import 'package:cafe_valdivia/providers/insumo_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +51,28 @@ class InsumoDetalladoPage extends ConsumerWidget {
                   onSelected: (String result) {
                     if (result == 'eliminar') {
                       _mostrarDialogoConfirmacion(context, ref, insumo);
+                      mostrarDialogoConfirmacion(
+                        context: context,
+                        titulo: "Eliminar Insumo",
+                        contenido: "Esta accion no se puede revertir",
+                        textoBotonConfirmacion: "Eliminar",
+                        onConfirm: () async {
+                          final bool exito = await delete(
+                            context: context,
+                            ref: ref,
+                            provider: insumoProvider,
+                            id: insumo.id!,
+                            mensajeExito: "El cliente se ha borrado con exito",
+                            mensajeError:
+                                "Error al eliminar el cliente,Por favor, intente de nuevo",
+                          );
+                          if (exito && context.mounted) {
+                            //TODO: No se porque tengo que poner aqui dos pop
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      );
                     }
                   },
                   itemBuilder:
@@ -90,31 +117,27 @@ class InsumoDetalladoPage extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 48),
-                  _buildInfoSection(
-                    context: context,
+                  DetailsContainer(
                     title: "Detalles",
-                    children: [
-                      _buildDataTile(
-                        context: context,
-                        icon: Icons.label_rounded,
-                        label: "Nombre",
-                        value: insumo.nombre,
+                    elements: [
+                      DetailElement(
+                        icon: Icon(Icons.label_rounded),
+                        title: Text("Nombre"),
+                        description: Text(insumo.nombre),
                       ),
-                      const SizedBox(height: 16),
-                      _buildDataTile(
-                        context: context,
-                        icon: Icons.description_rounded,
-                        label: "Descripcion",
-                        value: insumo.descripcion ?? 'No especificado',
+                      DetailElement(
+                        icon: Icon(Icons.balance_rounded),
+                        title: Text("Unidad de Medida"),
+                        description: UnidadMedidaNombre(
+                          unidadMedidaId: insumo.idUnidad,
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      _buildDataTile(
-                        context: context,
-                        icon:
-                            Icons
-                                .straight_rounded, // o el ícono que mejor represente unidades
-                        label: "Unidad de Medida",
-                        value: 'No especificada',
+                      DetailElement(
+                        icon: Icon(Icons.description_rounded),
+                        title: Text("Descripcion"),
+                        description: Text(
+                          insumo.descripcion ?? "No especificado",
+                        ),
                       ),
                     ],
                   ),
@@ -192,78 +215,5 @@ void _mostrarDialogoConfirmacion(
         ],
       );
     },
-  );
-}
-
-Widget _buildDataTile({
-  required BuildContext context,
-  required IconData icon,
-  required String label,
-  required String value,
-}) {
-  final ThemeData theme = Theme.of(context);
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-      const SizedBox(width: 16),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface,
-              ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
-Widget _buildInfoSection({
-  required BuildContext context,
-  required String title,
-  required List<Widget> children,
-}) {
-  final ThemeData theme = Theme.of(context);
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsetsGeometry.only(left: 8.0, right: 12.0),
-        child: Text(
-          title,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ),
-      const SizedBox(height: 8),
-      Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(children: children),
-        ),
-      ),
-    ],
   );
 }

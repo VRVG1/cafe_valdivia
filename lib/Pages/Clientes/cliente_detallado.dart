@@ -10,27 +10,6 @@ class ClienteDetallado extends ConsumerWidget {
 
   const ClienteDetallado({super.key, required this.clienteId});
 
-  void _mostrarDialogoConfirmacion(BuildContext context, WidgetRef ref) {
-    mostrarDialogoConfirmacion(
-      context: context,
-      titulo: 'Confirmar eliminacion',
-      contenido:
-          '¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.',
-      textoBotonConfirmacion: "Eliminar",
-      onConfirm: () {
-        delete(
-          context: context,
-          ref: ref,
-          provider: clienteProvider,
-          id: clienteId,
-          mensajeExito: "Cliente eliminado con éxito.",
-          mensajeError:
-              "Error al eliminar el cliente. Por favor, intente de nuevo.",
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);

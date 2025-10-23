@@ -17,12 +17,12 @@ class ProveedorNotifier extends _$ProveedorNotifier {
     ref.invalidateSelf();
   }
 
-  Future<void> updateProveedor(Proveedor proveedor) async {
+  Future<void> updateObject(Proveedor proveedor) async {
     await ref.read(proveedorRepositoryProvider).update(proveedor);
     ref.invalidateSelf();
   }
 
-  Future<void> deleteProveedor(int id) async {
+  Future<void> delete(int id) async {
     await ref.read(proveedorRepositoryProvider).delete(id);
     ref.invalidateSelf();
   }

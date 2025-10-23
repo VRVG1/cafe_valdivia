@@ -1,23 +1,22 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/models/cliente.dart';
-import 'package:cafe_valdivia/providers/cliente_notifier.dart';
+import 'package:cafe_valdivia/models/producto.dart';
+import 'package:cafe_valdivia/providers/producto_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Agregarcliente extends ConsumerStatefulWidget {
-  const Agregarcliente({super.key});
+class ProductoAgregarPage extends ConsumerStatefulWidget {
+  const ProductoAgregarPage({super.key});
 
   @override
-  AgregarClienteState createState() => AgregarClienteState();
+  ProductoAgregarPageState createState() => ProductoAgregarPageState();
 }
 
-class AgregarClienteState extends ConsumerState<Agregarcliente> {
-  final TextEditingController _correoController = TextEditingController();
-  final TextEditingController _telefonoController = TextEditingController();
-  final TextEditingController _apellidoController = TextEditingController();
+class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
+  final TextEditingController _precioController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
 
@@ -28,43 +27,39 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
 
   @override
   void dispose() {
-    _correoController.dispose();
-    _telefonoController.dispose();
-    _apellidoController.dispose();
+    _precioController.dispose();
+    _descripcionController.dispose();
     _nombreController.dispose();
     super.dispose();
   }
 
-  Future<void> _guardarCliente() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final cliente = Cliente(
-        nombre: _nombreController.text,
-        apellido: _apellidoController.text,
-        telefono: _telefonoController.text,
-        email: _correoController.text,
-      );
-      create<Cliente>(
-        context: context,
-        ref: ref,
-        provider: clienteProvider,
-        element: cliente,
-        mensajeExito: "El Cliente se guerdo con exito.",
-        mensajeError:
-            "Error al guardar el cliente. Por favor, intente de nuevo.",
-      );
-    }
+  void _crearProducto() {
+    final Producto producto = Producto(
+      nombre: _nombreController.text,
+      descripcion: _descripcionController.text,
+      precioVenta: double.parse(_precioController.text),
+    );
+    create(
+      context: context,
+      ref: ref,
+      provider: productoProvider,
+      element: producto,
+      mensajeExito: "Producto creado con exito",
+      mensajeError: "Error al crear el producto, Por favor, intente de nuevo",
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Agregar Cliente",
-          style: theme.textTheme.headlineSmall?.copyWith(
+          "Agregar Producto",
+          style: textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onPrimaryContainer,
+            color: colorScheme.onPrimaryContainer,
           ),
         ),
         leading: IconButton(
@@ -91,25 +86,35 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
               _buildTextField(
                 text: "Nombre",
                 controller: _nombreController,
-                icon: Icons.person_outline,
+                icon: Icons.tag_rounded,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
-                text: "Apellido",
-                controller: _apellidoController,
-                icon: Icons.person_outline,
+              TextFormField(
+                keyboardType: TextInputType.number,
+                enabled: !_isLoading,
+                controller: _precioController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, ingrese el Precio';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  labelText: "Precio de venta",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.attach_money_rounded),
+                ),
               ),
               const SizedBox(height: 16),
-              _buildTextField(
-                text: "Telefono",
-                controller: _telefonoController,
-                icon: Icons.phone_outlined,
-              ),
-              const SizedBox(height: 16),
-              _buildTextField(
-                text: "Correo",
-                controller: _correoController,
-                icon: Icons.mail_outlined,
+              TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: _descripcionController,
+                decoration: InputDecoration(
+                  hintText: "Descripcion",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.description_rounded),
+                ),
               ),
             ],
           ),
@@ -156,7 +161,7 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
                         _isLoading = true;
                       });
                       try {
-                        await _guardarCliente();
+                        _crearProducto();
                       } finally {
                         if (context.mounted) {
                           setState(() {

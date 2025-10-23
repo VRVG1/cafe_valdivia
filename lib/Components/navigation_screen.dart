@@ -1,6 +1,11 @@
 import 'package:cafe_valdivia/Pages/Clientes/agregar_cliente.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_lista.dart';
+import 'package:cafe_valdivia/Pages/Insumos/agregar_insumos_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/inusmo_lista_page.dart';
+import 'package:cafe_valdivia/Pages/Options/options_list.dart';
+import 'package:cafe_valdivia/Pages/Producto/producto_agregar_page.dart';
+import 'package:cafe_valdivia/Pages/Producto/producto_lista_page.dart';
+import 'package:cafe_valdivia/Pages/Proveedor/proveedor_agregar.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/proveedor_lista.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +38,42 @@ class _NavigationScreenState extends State<NavigationScreen> {
             },
             child: const Icon(Icons.add),
           );
+        case 2:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProveedorAgregar(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        case 3:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AgregarInsumosPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        case 4:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductoAgregarPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
         default:
           return null;
       }
@@ -52,6 +93,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       Clientelista(),
       ProveedorLista(),
       InusmoListaPage(),
+      ProductoListaPage(),
     ];
 
     final List<Widget> destinos = [
@@ -80,16 +122,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
         label: Text("Clientes"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.account_circle),
-        icon: Icon(Icons.account_circle_outlined),
+        selectedIcon: Icon(Icons.local_shipping_rounded),
+        icon: Icon(Icons.local_shipping_outlined),
         label: Text("Proveedor"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.account_circle),
-        icon: Icon(Icons.account_circle_outlined),
+        selectedIcon: Icon(Icons.trolley),
+        icon: Icon(Icons.trolley),
         label: Text("Insumos"),
       ),
+      NavigationDrawerDestination(
+        selectedIcon: Icon(Icons.coffee_rounded),
+        icon: Icon(Icons.coffee_outlined),
+        label: Text("Producto"),
+      ),
     ];
+
+    void openOptions() {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => OptionsList(),
+          fullscreenDialog: true,
+        ),
+      );
+    }
 
     return Scaffold(
       floatingActionButton: addButton(),
@@ -97,7 +153,12 @@ class _NavigationScreenState extends State<NavigationScreen> {
         title: const Text("Cafe Valdivia"),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              openOptions();
+            },
+          ),
         ],
       ),
       drawer: NavigationDrawer(
