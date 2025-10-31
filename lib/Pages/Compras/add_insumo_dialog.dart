@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/providers/crear_compra_notifier.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
 import 'package:flutter/material.dart';
@@ -57,13 +57,12 @@ class _AddInsumoDialogState extends ConsumerState<AddInsumoDialog> {
                   return DropdownMenu<Insumos>(
                     label: const Text('Insumo'),
                     expandedInsets: EdgeInsets.zero,
-                    dropdownMenuEntries:
-                        insumos.map((insumo) {
-                          return DropdownMenuEntry<Insumos>(
-                            value: insumo,
-                            label: insumo.nombre,
-                          );
-                        }).toList(),
+                    dropdownMenuEntries: insumos.map((insumo) {
+                      return DropdownMenuEntry<Insumos>(
+                        value: insumo,
+                        label: insumo.nombre,
+                      );
+                    }).toList(),
                     onSelected: (insumo) {
                       setState(() {
                         _selectedInsumo = insumo;

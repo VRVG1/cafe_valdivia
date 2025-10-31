@@ -92,7 +92,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                     );
                     ref
                         .read(unidadMedidaProvider.notifier)
-                        .updateUnidadMedida(updateUM)
+                        .updateElement(updateUM)
                         .then((success) {
                           if (success && mounted) {
                             _showFeedBackSnackBar(

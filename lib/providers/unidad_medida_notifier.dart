@@ -26,7 +26,7 @@ class UnidadMedidaNotifier extends _$UnidadMedidaNotifier {
     }
   }
 
-  Future<bool> updateUnidadMedida(UnidadMedida unidadMedida) async {
+  Future<bool> updateElement(UnidadMedida unidadMedida) async {
     state = const AsyncValue.loading();
     try {
       ref.read(unidadMedidaRepositoryProvider).update(unidadMedida);

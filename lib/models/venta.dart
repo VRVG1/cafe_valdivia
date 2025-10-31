@@ -1,10 +1,25 @@
-import 'package:cafe_valdivia/models/base_model.dart';
-import 'package:cafe_valdivia/models/cliente.dart';
-import 'package:cafe_valdivia/models/detalle_venta.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'venta.freezed.dart';
+part 'venta.g.dart';
+
+@freezed
+abstract class Venta with _$Venta {
+  const factory Venta({
+    @JsonKey(name: 'id_venta') int? id,
+    required int idCliente,
+    required DateTime fecha,
+    String? detalles,
+    bool? pagado,
+    String? estado,
+  }) = _Venta;
+
+  factory Venta.fromJson(Map<String, dynamic> json) => _$VentaFromJson(json);
+}
 
 enum VentaEstado {
-  completa('Completa'),
-  anulada('Anulada');
+  pendiente('pendiente'),
+  completa('completado'),
+  cancelado('cancelado');
 
   final String value;
   const VentaEstado(this.value);
@@ -13,60 +28,6 @@ enum VentaEstado {
     return VentaEstado.values.firstWhere(
       (e) => e.value == value,
       orElse: () => throw ArgumentError('Estado de venta desconocido: $value'),
-    );
-  }
-}
-
-class Venta implements BaseModel {
-  @override
-  int? id;
-  final int idCliente;
-  final DateTime fecha;
-  final String? detalles;
-  final bool pagado;
-  final VentaEstado estado;
-  Cliente? cliente; // Relacion cargada
-  List<DetalleVenta> detallesVenta = []; // Relacion cargada
-
-  Venta({
-    this.id,
-    required this.idCliente,
-    required this.fecha,
-    this.detalles,
-    this.pagado = false,
-    this.estado = VentaEstado.completa,
-    this.cliente,
-    List<DetalleVenta>? detallesVenta,
-  }) : detallesVenta = detallesVenta ?? [];
-
-  double get total => detallesVenta.fold(
-    0,
-    (sum, detalle) => sum + (detalle.cantidad * detalle.precioUnitarioVenta),
-  );
-
-  // Convertir un Cliente a un Map para insertarlo en la BD.
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'id_venta': id,
-      'id_cliente': idCliente,
-      'fecha': fecha.toIso8601String(),
-      'detalles': detalles,
-      'pagado': pagado ? 1 : 0,
-      'estado': estado.value,
-    };
-  }
-
-  factory Venta.fromMap(Map<String, dynamic> map) {
-    return Venta(
-      id: map['id_venta'],
-      idCliente: map['id_cliente'],
-      fecha: DateTime.parse(map['fecha']), // Parsear String a DateTime
-      detalles: map['detalles'],
-      pagado: map['pagado'] == 1, // Convertir int a bool
-      estado: VentaEstado.fromValue(
-        map['estado'] ?? VentaEstado.completa.value,
-      ),
     );
   }
 }

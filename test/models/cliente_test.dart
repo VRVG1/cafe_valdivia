@@ -12,7 +12,7 @@ void main() {
     };
 
     test("FromMap crea un instancia correcta", () {
-      final cliente = Cliente.fromMap(testMap);
+      final cliente = Cliente.fromJson(testMap);
 
       expect(cliente.id, 1);
       expect(cliente.nombre, 'Alonso');
@@ -30,7 +30,7 @@ void main() {
         email: 'manito@panzas.com',
       );
 
-      final map = cliente.toMap();
+      final map = cliente.toJson();
 
       expect(map['id_cliente'], cliente.id);
       expect(map['nombre'], cliente.nombre);
@@ -62,7 +62,7 @@ void main() {
           telefono: '1212121212',
         );
 
-        final map = cliente.toMap();
+        final map = cliente.toJson();
 
         expect(map['id_cliente'], isNull);
         expect(map['nombre'], cliente.nombre);

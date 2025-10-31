@@ -148,7 +148,7 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
     try {
       await ref
           .read(proveedorProvider.notifier)
-          .updateObject(proveedorModificado);
+          .updateElement(proveedorModificado);
 
       if (mounted) {
         Navigator.of(dialogContext).pop(); // Close dialog

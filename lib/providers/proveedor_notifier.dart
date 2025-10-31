@@ -17,7 +17,7 @@ class ProveedorNotifier extends _$ProveedorNotifier {
     ref.invalidateSelf();
   }
 
-  Future<void> updateObject(Proveedor proveedor) async {
+  Future<void> updateElement(Proveedor proveedor) async {
     await ref.read(proveedorRepositoryProvider).update(proveedor);
     ref.invalidateSelf();
   }

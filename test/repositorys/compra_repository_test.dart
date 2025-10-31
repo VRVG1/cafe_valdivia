@@ -9,7 +9,7 @@ import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/detalle_compra.dart';
 
 void main() {
@@ -55,28 +55,28 @@ void main() {
 
       return paid
           ? Compra(
-            idProveedor: proveedorId,
-            fecha: DateTime.now(),
-            pagado: true,
-            detallesCompra: [
-              DetalleCompra(
-                idInsumo: insumoId,
-                cantidad: 10,
-                precioUnitarioCompra: 5.99,
-              ),
-            ],
-          )
+              idProveedor: proveedorId,
+              fecha: DateTime.now(),
+              pagado: true,
+              detallesCompra: [
+                DetalleCompra(
+                  idInsumo: insumoId,
+                  cantidad: 10,
+                  precioUnitarioCompra: 5.99,
+                ),
+              ],
+            )
           : Compra(
-            idProveedor: proveedorId,
-            fecha: DateTime.now(),
-            detallesCompra: [
-              DetalleCompra(
-                idInsumo: insumoId,
-                cantidad: 10,
-                precioUnitarioCompra: 5.99,
-              ),
-            ],
-          );
+              idProveedor: proveedorId,
+              fecha: DateTime.now(),
+              detallesCompra: [
+                DetalleCompra(
+                  idInsumo: insumoId,
+                  cantidad: 10,
+                  precioUnitarioCompra: 5.99,
+                ),
+              ],
+            );
     }
 
     setUp(() async {

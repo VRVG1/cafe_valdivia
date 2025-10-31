@@ -34,7 +34,7 @@ final class UnidadMedidaNotifierProvider
 }
 
 String _$unidadMedidaNotifierHash() =>
-    r'2db0dc6da00ab7894dcee968eab06c55afd9b064';
+    r'a561f0cb268265f4942277da9da711d491955953';
 
 abstract class _$UnidadMedidaNotifier
     extends $AsyncNotifier<List<UnidadMedida>> {

@@ -1,56 +1,16 @@
-import 'package:cafe_valdivia/models/base_model.dart';
-import 'package:cafe_valdivia/models/insumo_producto.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'producto.freezed.dart';
+part 'producto.g.dart';
 
-class Producto implements BaseModel {
-  @override
-  int? id;
-  final String nombre;
-  final String? descripcion;
-  final double precioVenta;
-  List<InsumoProducto>? insumos; // Relacion cargada
-
-  Producto({
-    this.id,
-    required this.nombre,
-    this.descripcion,
-    this.precioVenta = 0.0,
-    this.insumos,
-  });
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'id_producto': id,
-      'nombre': nombre,
-      'descripcion': descripcion,
-      'precio_venta': precioVenta,
-    };
-  }
-
-  String getIniciales() {
-    return nombre[0].toUpperCase();
-  }
-
-  factory Producto.fromMap(Map<String, dynamic> map) {
-    return Producto(
-      id: map['id_producto'],
-      nombre: map['nombre'],
-      descripcion: map['descripcion'],
-      precioVenta: map['precio_venta']?.toDouble() ?? 0.0,
-    );
-  }
-
-  Producto copyWith({
-    int? id,
-    String? nombre,
+@freezed
+abstract class Producto with _$Producto {
+  const factory Producto({
+    @JsonKey(name: 'id_producto') int? id,
+    required String nombre,
     String? descripcion,
-    double? precioVenta,
-  }) {
-    return Producto(
-      id: id ?? this.id,
-      nombre: nombre ?? this.nombre,
-      descripcion: descripcion ?? this.descripcion,
-      precioVenta: precioVenta ?? this.precioVenta,
-    );
-  }
+    required String precioVenta,
+  }) = _Producto;
+
+  factory Producto.fromJson(Map<String, dynamic> json) =>
+      _$ProductoFromJson(json);
 }

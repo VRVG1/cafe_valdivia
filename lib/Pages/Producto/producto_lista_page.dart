@@ -1,4 +1,7 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Pages/Producto/producto_detalle_page.dart';
+import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
 import 'package:cafe_valdivia/models/producto.dart';
 import 'package:cafe_valdivia/providers/producto_notifier.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +22,7 @@ class ProductoListaPage extends ConsumerWidget {
         if (prodcutos.isEmpty) {
           return const Center(child: Text('No hay Productoes para mostrar.'));
         }
-        return ListviewCustom(
+        return ListviewCustom<Producto>(
           keyBuilder: (Producto proveedor) {
             return ValueKey(
               proveedor.id != null
@@ -33,6 +36,72 @@ class ProductoListaPage extends ConsumerWidget {
                   producto.nombre.isEmpty
                       ? Text('Jane Doe')
                       : Text(producto.nombre),
+          subtitleBuilder:
+              (producto) =>
+                  producto.descripcion != null
+                      ? Text(producto.descripcion!)
+                      : null,
+          leadingBuilder: (Producto prodcutos) => Icon(Icons.coffee_rounded),
+          //TODO: Poner en el trailingBuilder el numero de stock que tiene el producto
+          trailingBuilder: (Producto producto) => Text("1"),
+          onEditDismissed: (Producto producto) async {
+            if (producto.id != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductoEditarPage(producto: producto),
+                ),
+              );
+            }
+            return false;
+          },
+          onDeleteDismissed: (Producto producto) async {
+            final bool confirmacion =
+                await mostrarDialogoConfirmacion(
+                  context: context,
+                  titulo: "Seguro que quiere eliminar este cliente?",
+                  contenido: "Esta accion no se puede deshacer",
+                  textoBotonConfirmacion: "Eliminar",
+                  onConfirm:
+                      () => {
+                        delete(
+                          context: context,
+                          ref: ref,
+                          provider: productoProvider,
+                          id: producto.id!,
+                          mensajeExito: "El cliente se ha borrado con exito",
+                          mensajeError:
+                              "Error al eliminar el cliente,Por favor, intente de nuevo",
+                        ),
+                      },
+                ) ??
+                false;
+            if (confirmacion == true) {
+              return true;
+            }
+            return false;
+          },
+          onTapCallback: (Producto producto) async {
+            if (producto.id != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductoDetallePage(id: producto.id!),
+                ),
+              );
+            }
+          },
+          // onEditDismissed: (insumo) async {
+          //   if (insumo.id != null) {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => EditarInsumoPage(insumo: insumo),
+          //       ),
+          //     );
+          //   }
+          //   return false;
+          // },
         );
       },
       error: (err, stack) => Center(child: Text('Error: $err')),

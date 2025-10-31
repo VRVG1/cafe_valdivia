@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
 import 'package:cafe_valdivia/providers/unidad_medida_notifier.dart';
@@ -82,7 +82,7 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
         idUnidad: unidadFinal.id!,
       );
 
-      await ref.read(insumoProvider.notifier).updateInsumo(updatedInsumo);
+      await ref.read(insumoProvider.notifier).updateElement(updatedInsumo);
       _mensajeExito();
     }
   }
@@ -95,13 +95,11 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     );
 
     return unidadMedidaAsync.when(
-      loading:
-          () =>
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error:
-          (e, _) => Scaffold(
-            body: Center(child: Text('Error cargando unidad de medida: $e')),
-          ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(
+        body: Center(child: Text('Error cargando unidad de medida: $e')),
+      ),
       data: (unidadInicial) {
         return Scaffold(
           appBar: AppBar(
@@ -193,13 +191,12 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
               _unidadSeleccionada = unidadMedida;
             });
           },
-          dropdownMenuEntries:
-              ums.map((unidadMedida) {
-                return DropdownMenuEntry<UnidadMedida>(
-                  value: unidadMedida,
-                  label: unidadMedida.nombre,
-                );
-              }).toList(),
+          dropdownMenuEntries: ums.map((unidadMedida) {
+            return DropdownMenuEntry<UnidadMedida>(
+              value: unidadMedida,
+              label: unidadMedida.nombre,
+            );
+          }).toList(),
         );
       },
       error: (err, stack) => Center(child: Text("Error: $err")),
@@ -211,33 +208,31 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     final theme = Theme.of(context);
 
     return FilledButton(
-      onPressed:
-          _isLoading
-              ? null
-              : () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  setState(() => _isLoading = true);
-                  try {
-                    await _update(unidadInicial);
-                    if (mounted) Navigator.of(context).pop();
-                  } catch (_) {
-                    _mensajeError();
-                  } finally {
-                    if (mounted) setState(() => _isLoading = false);
-                  }
+      onPressed: _isLoading
+          ? null
+          : () async {
+              if (_formKey.currentState?.validate() ?? false) {
+                setState(() => _isLoading = true);
+                try {
+                  await _update(unidadInicial);
+                  if (mounted) Navigator.of(context).pop();
+                } catch (_) {
+                  _mensajeError();
+                } finally {
+                  if (mounted) setState(() => _isLoading = false);
                 }
-              },
-      child:
-          _isLoading
-              ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: theme.colorScheme.onSecondaryContainer,
-                  strokeWidth: 2,
-                ),
-              )
-              : const Text("Guardar"),
+              }
+            },
+      child: _isLoading
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: theme.colorScheme.onSecondaryContainer,
+                strokeWidth: 2,
+              ),
+            )
+          : const Text("Guardar"),
     );
   }
 }

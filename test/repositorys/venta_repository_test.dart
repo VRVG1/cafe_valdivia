@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/models/cliente.dart';
 import 'package:cafe_valdivia/models/detalle_venta.dart';
 import 'package:cafe_valdivia/models/insumo_producto.dart';
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/producto.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/models/venta.dart';
@@ -96,8 +96,8 @@ void main() {
       database = await openDatabase(
         path,
         version: 2,
-        onCreate:
-            (db, version) async => await DatabaseHelper().testOnCreate(db),
+        onCreate: (db, version) async =>
+            await DatabaseHelper().testOnCreate(db),
         onConfigure: (db) async => await DatabaseHelper().testOnConfigure(db),
       );
 

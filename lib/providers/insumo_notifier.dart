@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,7 +17,7 @@ class InsumoNotifier extends _$InsumoNotifier {
     ref.invalidateSelf();
   }
 
-  Future<void> updateInsumo(Insumos insumo) async {
+  Future<void> updateElement(Insumos insumo) async {
     await ref.read(insumoRepositoryProvider).update(insumo);
     ref.invalidateSelf();
   }

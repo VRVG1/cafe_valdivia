@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';

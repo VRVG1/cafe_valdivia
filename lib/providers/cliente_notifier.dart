@@ -17,7 +17,7 @@ class ClienteNotifier extends _$ClienteNotifier {
     ref.invalidateSelf();
   }
 
-  Future<void> updateCliente(Cliente cliente) async {
+  Future<void> updateElement(Cliente cliente) async {
     await ref.read(clienteRepositoryProvider).update(cliente);
     ref.invalidateSelf();
   }

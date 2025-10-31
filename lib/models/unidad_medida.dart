@@ -1,22 +1,14 @@
-import 'package:cafe_valdivia/models/base_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'unidad_medida.freezed.dart';
+part 'unidad_medida.g.dart';
 
-class UnidadMedida implements BaseModel {
-  @override
-  int? id;
-  final String nombre;
+@freezed
+abstract class UnidadMedida with _$UnidadMedida {
+  const factory UnidadMedida({
+    @JsonKey(name: 'id_unidad') int? id,
+    required String nombre,
+  }) = _UnidadMedida;
 
-  UnidadMedida({this.id, required this.nombre});
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {'id_unidad': id, 'nombre': nombre};
-  }
-
-  factory UnidadMedida.fromMap(Map<String, dynamic> map) {
-    return UnidadMedida(id: map['id_unidad'], nombre: map['nombre']);
-  }
-
-  UnidadMedida copyWith({int? id, String? nombre}) {
-    return UnidadMedida(id: id ?? this.id, nombre: nombre ?? this.nombre);
-  }
+  factory UnidadMedida.fromJson(Map<String, dynamic> json) =>
+      _$UnidadMedidaFromJson(json);
 }

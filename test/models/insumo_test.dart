@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

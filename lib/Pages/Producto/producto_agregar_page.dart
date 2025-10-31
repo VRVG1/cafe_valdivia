@@ -86,7 +86,7 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
               _buildTextField(
                 text: "Nombre",
                 controller: _nombreController,
-                icon: Icons.tag_rounded,
+                icon: Icons.category_rounded,
               ),
               const SizedBox(height: 16),
               TextFormField(

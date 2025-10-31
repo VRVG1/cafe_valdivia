@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/insumo_detallado_page.dart';
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
 import 'package:flutter/material.dart';
@@ -28,15 +28,15 @@ class InusmoListaPage extends ConsumerWidget {
           },
           leadingBuilder: (insumo) => const Icon(Icons.inventory_2_rounded),
           titleBuilder: (insumo) => Text(insumo.nombre),
-          subtitleBuilder:
-              (insumo) => UnidadMedidaNombre(unidadMedidaId: insumo.idUnidad),
+          subtitleBuilder: (insumo) =>
+              UnidadMedidaNombre(unidadMedidaId: insumo.idUnidad),
           onTapCallback: (insumo) {
             if (insumo.id != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => InsumoDetalladoPage(insumoId: insumo.id!),
+                  builder: (context) =>
+                      InsumoDetalladoPage(insumoId: insumo.id!),
                 ),
               );
             }
@@ -56,23 +56,22 @@ class InusmoListaPage extends ConsumerWidget {
             final bool confirmar =
                 await showDialog<bool>(
                   context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: const Text('Confirmar Eliminación'),
-                        content: Text(
-                          '¿Estás seguro de que quieres eliminar ${insumo.nombre}?',
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            child: const Text('Cancelar'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, true),
-                            child: const Text('Eliminar'),
-                          ),
-                        ],
+                  builder: (context) => AlertDialog(
+                    title: const Text('Confirmar Eliminación'),
+                    content: Text(
+                      '¿Estás seguro de que quieres eliminar ${insumo.nombre}?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancelar'),
                       ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Eliminar'),
+                      ),
+                    ],
+                  ),
                 ) ??
                 false;
 

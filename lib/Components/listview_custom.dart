@@ -5,7 +5,7 @@ class ListviewCustom<T> extends ConsumerWidget {
   final List<T> data;
 
   final Widget Function(T element) titleBuilder;
-  final Widget Function(T element)? subtitleBuilder;
+  final Widget? Function(T element)? subtitleBuilder;
   final Widget Function(T element)? leadingBuilder;
   final Widget Function(T element)? trailingBuilder;
   final Key Function(T element) keyBuilder;

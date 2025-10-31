@@ -1,59 +1,17 @@
-import 'package:cafe_valdivia/models/base_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'proveedor.freezed.dart';
+part 'proveedor.g.dart';
 
-class Proveedor implements BaseModel {
-  @override
-  int? id;
-  final String nombre;
-  final String? telefono;
-  final String? email;
-  final String? direccion;
-
-  Proveedor({
-    this.id,
-    required this.nombre,
-    this.telefono,
-    this.email,
-    this.direccion,
-  });
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'id_proveedor': id,
-      'nombre': nombre,
-      'telefono': telefono,
-      'email': email,
-      'direccion': direccion,
-    };
-  }
-
-  String getIniciales() {
-    return nombre[0].toUpperCase();
-  }
-
-  factory Proveedor.fromMap(Map<String, dynamic> map) {
-    return Proveedor(
-      id: map['id_proveedor'],
-      nombre: map['nombre'],
-      telefono: map['telefono'],
-      email: map['email'],
-      direccion: map['direccion'],
-    );
-  }
-
-  Proveedor copyWith({
-    int? id,
-    String? nombre,
-    String? telefono,
+@freezed
+abstract class Proveedor with _$Proveedor {
+  const factory Proveedor({
+    @JsonKey(name: 'id_proveedor') int? id,
+    required String nombre,
+    required String telefono,
     String? email,
     String? direccion,
-  }) {
-    return Proveedor(
-      id: id ?? this.id,
-      nombre: nombre ?? this.nombre,
-      telefono: telefono ?? this.telefono,
-      email: email ?? this.email,
-      direccion: direccion ?? this.direccion,
-    );
-  }
+  }) = _Proveedor;
+
+  factory Proveedor.fromJson(Map<String, dynamic> json) =>
+      _$ProveedorFromJson(json);
 }

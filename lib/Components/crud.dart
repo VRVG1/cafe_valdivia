@@ -90,24 +90,48 @@ void create<T extends BaseModel>({
       showCustomSnackBar(context: context, mensaje: mensajeExito);
       Navigator.of(context).pop(); // Regresar a la pantalla anterior
     }
-  } catch (e) {
-    appLogger.e("Error al crear ${element.runtimeType}: ${e.toString()}");
+  } catch (e, st) {
+    appLogger.e(
+      "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
+    );
 
     if (context.mounted) {
-      showCustomSnackBar(context: context, mensaje: mensajeError);
+      showCustomSnackBar(
+        context: context,
+        mensaje: mensajeError,
+        isError: true,
+      );
     }
   }
 }
-  // Future<void> _guardarCliente() async {
-  //   if (_formKey.currentState?.validate() ?? false) {
-  //     final cliente = Cliente(
-  //       nombre: _nombreController.text,
-  //       apellido: _apellidoController.text,
-  //       telefono: _telefonoController.text,
-  //       email: _correoController.text,
-  //     );
-  //     await ref.read(clienteProvider.notifier).create(cliente);
-  //     // await Future.delayed(const Duration(seconds: 5));
-  //     _mensajeExito();
-  //   }
-  // }
+
+Future<bool> update<T extends BaseModel>({
+  required BuildContext context,
+  required WidgetRef ref,
+  required provider,
+  required T element,
+  required String mensajeExito,
+  required String mensajeError,
+}) async {
+  try {
+    await ref.read(provider.notifier).updateElement(element);
+    if (context.mounted) {
+      showCustomSnackBar(context: context, mensaje: mensajeExito);
+      Navigator.of(context).pop(); // Regresar a la pantalla anterior
+    }
+    return true;
+  } catch (e, st) {
+    appLogger.e(
+      "Error al actualizar ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
+    );
+    if (context.mounted) {
+      showCustomSnackBar(
+        context: context,
+        mensaje: mensajeError,
+        isError: true,
+      );
+    }
+
+    return false;
+  }
+}

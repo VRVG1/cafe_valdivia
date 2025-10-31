@@ -17,7 +17,7 @@ class ProductoNotifier extends _$ProductoNotifier {
     ref.invalidateSelf();
   }
 
-  Future<void> updateProducto(Producto producto) async {
+  Future<void> updateElement(Producto producto) async {
     await ref.read(productoRepositoryProvider).update(producto);
     ref.invalidateSelf();
   }

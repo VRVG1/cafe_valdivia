@@ -152,7 +152,7 @@ class EditarClienteDetalladoState
       email: email,
     );
 
-    await ref.read(clienteProvider.notifier).updateCliente(clienteModificado);
+    await ref.read(clienteProvider.notifier).updateElement(clienteModificado);
 
     if (mounted) {
       Navigator.of(dialogContext).pop(); // Close dialog

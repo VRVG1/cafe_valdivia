@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/insumos.dart';
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cafe_valdivia/models/detalle_compra.dart';
 import 'package:cafe_valdivia/models/proveedor.dart';
@@ -60,8 +60,9 @@ class CrearCompraNotifier extends _$CrearCompraNotifier {
   }
 
   void eliminarItem(int insumoId) {
-    final nuevosItems =
-        state.items.where((item) => item.idInsumo != insumoId).toList();
+    final nuevosItems = state.items
+        .where((item) => item.idInsumo != insumoId)
+        .toList();
     final nuevoTotal = _calcularTotal(nuevosItems);
 
     state = state.copyWith(items: nuevosItems, total: nuevoTotal);
