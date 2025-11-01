@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Compra {
 
-@JsonKey(name: 'id_compra') int? get id; int get id_proveedor; DateTime get fecha; String? get detalles; bool? get pagado;
+ int? get id; int get idProveedor; DateTime get fecha; String? get detalles; bool? get pagado;
 /// Create a copy of Compra
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CompraCopyWith<Compra> get copyWith => _$CompraCopyWithImpl<Compra>(this as Com
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Compra&&(identical(other.id, id) || other.id == id)&&(identical(other.id_proveedor, id_proveedor) || other.id_proveedor == id_proveedor)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Compra&&(identical(other.id, id) || other.id == id)&&(identical(other.idProveedor, idProveedor) || other.idProveedor == idProveedor)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,id_proveedor,fecha,detalles,pagado);
+int get hashCode => Object.hash(runtimeType,id,idProveedor,fecha,detalles,pagado);
 
 @override
 String toString() {
-  return 'Compra(id: $id, id_proveedor: $id_proveedor, fecha: $fecha, detalles: $detalles, pagado: $pagado)';
+  return 'Compra(id: $id, idProveedor: $idProveedor, fecha: $fecha, detalles: $detalles, pagado: $pagado)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CompraCopyWith<$Res>  {
   factory $CompraCopyWith(Compra value, $Res Function(Compra) _then) = _$CompraCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_compra') int? id, int id_proveedor, DateTime fecha, String? detalles, bool? pagado
+ int? id, int idProveedor, DateTime fecha, String? detalles, bool? pagado
 });
 
 
@@ -65,10 +65,10 @@ class _$CompraCopyWithImpl<$Res>
 
 /// Create a copy of Compra
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? id_proveedor = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? idProveedor = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,id_proveedor: null == id_proveedor ? _self.id_proveedor : id_proveedor // ignore: cast_nullable_to_non_nullable
+as int?,idProveedor: null == idProveedor ? _self.idProveedor : idProveedor // ignore: cast_nullable_to_non_nullable
 as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_non_nullable
 as DateTime,detalles: freezed == detalles ? _self.detalles : detalles // ignore: cast_nullable_to_non_nullable
 as String?,pagado: freezed == pagado ? _self.pagado : pagado // ignore: cast_nullable_to_non_nullable
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_compra')  int? id,  int id_proveedor,  DateTime fecha,  String? detalles,  bool? pagado)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int idProveedor,  DateTime fecha,  String? detalles,  bool? pagado)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Compra() when $default != null:
-return $default(_that.id,_that.id_proveedor,_that.fecha,_that.detalles,_that.pagado);case _:
+return $default(_that.id,_that.idProveedor,_that.fecha,_that.detalles,_that.pagado);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.id,_that.id_proveedor,_that.fecha,_that.detalles,_that.pag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_compra')  int? id,  int id_proveedor,  DateTime fecha,  String? detalles,  bool? pagado)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int idProveedor,  DateTime fecha,  String? detalles,  bool? pagado)  $default,) {final _that = this;
 switch (_that) {
 case _Compra():
-return $default(_that.id,_that.id_proveedor,_that.fecha,_that.detalles,_that.pagado);case _:
+return $default(_that.id,_that.idProveedor,_that.fecha,_that.detalles,_that.pagado);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.id,_that.id_proveedor,_that.fecha,_that.detalles,_that.pag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_compra')  int? id,  int id_proveedor,  DateTime fecha,  String? detalles,  bool? pagado)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int idProveedor,  DateTime fecha,  String? detalles,  bool? pagado)?  $default,) {final _that = this;
 switch (_that) {
 case _Compra() when $default != null:
-return $default(_that.id,_that.id_proveedor,_that.fecha,_that.detalles,_that.pagado);case _:
+return $default(_that.id,_that.idProveedor,_that.fecha,_that.detalles,_that.pagado);case _:
   return null;
 
 }
@@ -213,11 +213,11 @@ return $default(_that.id,_that.id_proveedor,_that.fecha,_that.detalles,_that.pag
 @JsonSerializable()
 
 class _Compra implements Compra {
-  const _Compra({@JsonKey(name: 'id_compra') this.id, required this.id_proveedor, required this.fecha, this.detalles, this.pagado});
+  const _Compra({this.id, required this.idProveedor, required this.fecha, this.detalles, this.pagado});
   factory _Compra.fromJson(Map<String, dynamic> json) => _$CompraFromJson(json);
 
-@override@JsonKey(name: 'id_compra') final  int? id;
-@override final  int id_proveedor;
+@override final  int? id;
+@override final  int idProveedor;
 @override final  DateTime fecha;
 @override final  String? detalles;
 @override final  bool? pagado;
@@ -235,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Compra&&(identical(other.id, id) || other.id == id)&&(identical(other.id_proveedor, id_proveedor) || other.id_proveedor == id_proveedor)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Compra&&(identical(other.id, id) || other.id == id)&&(identical(other.idProveedor, idProveedor) || other.idProveedor == idProveedor)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,id_proveedor,fecha,detalles,pagado);
+int get hashCode => Object.hash(runtimeType,id,idProveedor,fecha,detalles,pagado);
 
 @override
 String toString() {
-  return 'Compra(id: $id, id_proveedor: $id_proveedor, fecha: $fecha, detalles: $detalles, pagado: $pagado)';
+  return 'Compra(id: $id, idProveedor: $idProveedor, fecha: $fecha, detalles: $detalles, pagado: $pagado)';
 }
 
 
@@ -255,7 +255,7 @@ abstract mixin class _$CompraCopyWith<$Res> implements $CompraCopyWith<$Res> {
   factory _$CompraCopyWith(_Compra value, $Res Function(_Compra) _then) = __$CompraCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_compra') int? id, int id_proveedor, DateTime fecha, String? detalles, bool? pagado
+ int? id, int idProveedor, DateTime fecha, String? detalles, bool? pagado
 });
 
 
@@ -272,10 +272,10 @@ class __$CompraCopyWithImpl<$Res>
 
 /// Create a copy of Compra
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? id_proveedor = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? idProveedor = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,}) {
   return _then(_Compra(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,id_proveedor: null == id_proveedor ? _self.id_proveedor : id_proveedor // ignore: cast_nullable_to_non_nullable
+as int?,idProveedor: null == idProveedor ? _self.idProveedor : idProveedor // ignore: cast_nullable_to_non_nullable
 as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_non_nullable
 as DateTime,detalles: freezed == detalles ? _self.detalles : detalles // ignore: cast_nullable_to_non_nullable
 as String?,pagado: freezed == pagado ? _self.pagado : pagado // ignore: cast_nullable_to_non_nullable

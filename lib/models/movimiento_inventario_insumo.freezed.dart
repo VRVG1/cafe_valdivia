@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MovimientoInventarioInsumo {
 
-@JsonKey(name: 'id_movimiento_inventario_insumo') int? get id; int get idInsumo; String? get tipo; int get cantidad; DateTime get fecha; int get idDetalleCompra; int get idDetalleProduccion; String? get motivo;
+ int? get id; int get idInsumo; String? get tipo; int get cantidad; DateTime get fecha; int get idDetalleCompra; int get idDetalleProduccion; String? get motivo;
 /// Create a copy of MovimientoInventarioInsumo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $MovimientoInventarioInsumoCopyWith<$Res>  {
   factory $MovimientoInventarioInsumoCopyWith(MovimientoInventarioInsumo value, $Res Function(MovimientoInventarioInsumo) _then) = _$MovimientoInventarioInsumoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_movimiento_inventario_insumo') int? id, int idInsumo, String? tipo, int cantidad, DateTime fecha, int idDetalleCompra, int idDetalleProduccion, String? motivo
+ int? id, int idInsumo, String? tipo, int cantidad, DateTime fecha, int idDetalleCompra, int idDetalleProduccion, String? motivo
 });
 
 
@@ -160,7 +160,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_movimiento_inventario_insumo')  int? id,  int idInsumo,  String? tipo,  int cantidad,  DateTime fecha,  int idDetalleCompra,  int idDetalleProduccion,  String? motivo)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int idInsumo,  String? tipo,  int cantidad,  DateTime fecha,  int idDetalleCompra,  int idDetalleProduccion,  String? motivo)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MovimientoInventarioInsumo() when $default != null:
 return $default(_that.id,_that.idInsumo,_that.tipo,_that.cantidad,_that.fecha,_that.idDetalleCompra,_that.idDetalleProduccion,_that.motivo);case _:
@@ -181,7 +181,7 @@ return $default(_that.id,_that.idInsumo,_that.tipo,_that.cantidad,_that.fecha,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_movimiento_inventario_insumo')  int? id,  int idInsumo,  String? tipo,  int cantidad,  DateTime fecha,  int idDetalleCompra,  int idDetalleProduccion,  String? motivo)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int idInsumo,  String? tipo,  int cantidad,  DateTime fecha,  int idDetalleCompra,  int idDetalleProduccion,  String? motivo)  $default,) {final _that = this;
 switch (_that) {
 case _MovimientoInventarioInsumo():
 return $default(_that.id,_that.idInsumo,_that.tipo,_that.cantidad,_that.fecha,_that.idDetalleCompra,_that.idDetalleProduccion,_that.motivo);case _:
@@ -201,7 +201,7 @@ return $default(_that.id,_that.idInsumo,_that.tipo,_that.cantidad,_that.fecha,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_movimiento_inventario_insumo')  int? id,  int idInsumo,  String? tipo,  int cantidad,  DateTime fecha,  int idDetalleCompra,  int idDetalleProduccion,  String? motivo)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int idInsumo,  String? tipo,  int cantidad,  DateTime fecha,  int idDetalleCompra,  int idDetalleProduccion,  String? motivo)?  $default,) {final _that = this;
 switch (_that) {
 case _MovimientoInventarioInsumo() when $default != null:
 return $default(_that.id,_that.idInsumo,_that.tipo,_that.cantidad,_that.fecha,_that.idDetalleCompra,_that.idDetalleProduccion,_that.motivo);case _:
@@ -216,10 +216,10 @@ return $default(_that.id,_that.idInsumo,_that.tipo,_that.cantidad,_that.fecha,_t
 @JsonSerializable()
 
 class _MovimientoInventarioInsumo implements MovimientoInventarioInsumo {
-  const _MovimientoInventarioInsumo({@JsonKey(name: 'id_movimiento_inventario_insumo') this.id, required this.idInsumo, this.tipo, required this.cantidad, required this.fecha, required this.idDetalleCompra, required this.idDetalleProduccion, this.motivo});
+  const _MovimientoInventarioInsumo({this.id, required this.idInsumo, this.tipo, required this.cantidad, required this.fecha, required this.idDetalleCompra, required this.idDetalleProduccion, this.motivo});
   factory _MovimientoInventarioInsumo.fromJson(Map<String, dynamic> json) => _$MovimientoInventarioInsumoFromJson(json);
 
-@override@JsonKey(name: 'id_movimiento_inventario_insumo') final  int? id;
+@override final  int? id;
 @override final  int idInsumo;
 @override final  String? tipo;
 @override final  int cantidad;
@@ -261,7 +261,7 @@ abstract mixin class _$MovimientoInventarioInsumoCopyWith<$Res> implements $Movi
   factory _$MovimientoInventarioInsumoCopyWith(_MovimientoInventarioInsumo value, $Res Function(_MovimientoInventarioInsumo) _then) = __$MovimientoInventarioInsumoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_movimiento_inventario_insumo') int? id, int idInsumo, String? tipo, int cantidad, DateTime fecha, int idDetalleCompra, int idDetalleProduccion, String? motivo
+ int? id, int idInsumo, String? tipo, int cantidad, DateTime fecha, int idDetalleCompra, int idDetalleProduccion, String? motivo
 });
 
 

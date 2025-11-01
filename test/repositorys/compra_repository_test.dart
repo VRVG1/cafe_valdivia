@@ -246,7 +246,7 @@ void main() {
         // 1. Insertar compras principales
         for (int i = 0; i < recordCount; i++) {
           batch.insert('Compra', {
-            'id_proveedor': proveedorId,
+            'idProveedor': proveedorId,
             'fecha': DateTime.now().toIso8601String(),
             'pagado': 0,
           });
@@ -309,7 +309,7 @@ void main() {
 
         // 3. Crear compra principal
         final compraId = await database.insert('Compra', {
-          'id_proveedor': proveedorId,
+          'idProveedor': proveedorId,
           'fecha': DateTime.now().toIso8601String(),
           'pagado': 0,
           'detalles': null,

@@ -5,7 +5,7 @@ part 'producto.g.dart';
 @freezed
 abstract class Producto with _$Producto {
   const factory Producto({
-    @JsonKey(name: 'id_producto') int? id,
+    int? id,
     required String nombre,
     String? descripcion,
     required String precioVenta,

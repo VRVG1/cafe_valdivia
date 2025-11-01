@@ -61,7 +61,7 @@ void main() {
   group('InventarioServicio Tests', () {
     final compra = Compra(
       id: 1,
-      idProveedor: 1,
+      id_proveedor: 1,
       fecha: DateTime.now(),
       detallesCompra: [
         DetalleCompra(

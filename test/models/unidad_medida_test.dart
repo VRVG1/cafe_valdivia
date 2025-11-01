@@ -7,17 +7,17 @@ void main() {
 
     final objeto = UnidadMedida(nombre: "Pieza");
 
-    test('fromMap creates correct instance', () {
-      final frommap = UnidadMedida.fromMap(testMap);
+    test('fromJson creates correct instance', () {
+      final frommap = UnidadMedida.fromJson(testMap);
 
       expect(frommap.nombre, 'Kilogramo');
       expect(frommap.id, 1);
     });
 
-    test('toMap creates correct map', () {
-      final toMap = objeto.toMap();
+    test('toJson creates correct map', () {
+      final toJson = objeto.toJson();
 
-      expect(toMap['nombre'], 'Pieza');
+      expect(toJson['nombre'], 'Pieza');
     });
   });
 }

@@ -6,7 +6,7 @@ part 'movimiento_inventario_producto.g.dart';
 abstract class MovimientoInventarioProducto
     with _$MovimientoInventarioProducto {
   const factory MovimientoInventarioProducto({
-    @JsonKey(name: 'id_movimiento_inventario_producto') int? id,
+    int? id,
     required int idProducto,
     String? tipo,
     required int cantidad,

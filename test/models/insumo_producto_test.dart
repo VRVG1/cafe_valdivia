@@ -7,27 +7,29 @@ void main() {
       idInsumo: 10,
       idProducto: 20,
       cantidadRequerida: 8,
+      nombre: "Bolita",
     );
     final insumoProducoMap = {
-      'id_insumo': 10,
-      'id_producto': 50,
-      'cantidad_requerida': 9,
+      'idInsumo': 10,
+      'idProducto': 50,
+      'cantidadRequerida': 9,
+      'nombre': "Cordoba",
     };
 
-    test("fromMap works correctly?", () {
-      final objeto = InsumoProducto.fromMap(insumoProducoMap);
+    test("fromJson works correctly?", () {
+      final objeto = InsumoProducto.fromJson(insumoProducoMap);
 
       expect(objeto.idInsumo, 10);
       expect(objeto.idProducto, 50);
       expect(objeto.cantidadRequerida, 9);
     });
 
-    test('toMap works correctly?', () {
-      final mapa = insumoProductoObjeto.toMap();
+    test('toJson works correctly?', () {
+      final mapa = insumoProductoObjeto.toJson();
 
-      expect(mapa['id_insumo'], 10);
-      expect(mapa['id_producto'], 20);
-      expect(mapa['cantidad_requerida'], 8);
+      expect(mapa['idInsumo'], 10);
+      expect(mapa['idProducto'], 20);
+      expect(mapa['cantidadRequerida'], 8);
     });
   });
 }

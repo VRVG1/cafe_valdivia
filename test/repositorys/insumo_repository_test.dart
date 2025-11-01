@@ -133,11 +133,11 @@ void main() {
         });
 
         final compraId1 = await database.insert('Compra', {
-          'id_proveedor': proveedorId,
+          'idProveedor': proveedorId,
           'fecha': DateTime.now().toIso8601String(),
         });
         final compraId2 = await database.insert('Compra', {
-          'id_proveedor': proveedorId,
+          'idProveedor': proveedorId,
           'fecha': DateTime.now().toIso8601String(),
         });
 

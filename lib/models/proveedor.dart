@@ -5,7 +5,7 @@ part 'proveedor.g.dart';
 @freezed
 abstract class Proveedor with _$Proveedor {
   const factory Proveedor({
-    @JsonKey(name: 'id_proveedor') int? id,
+    int? id,
     required String nombre,
     required String telefono,
     String? email,

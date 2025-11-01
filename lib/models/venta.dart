@@ -2,15 +2,26 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'venta.freezed.dart';
 part 'venta.g.dart';
 
+VentaEstado? ventaEstadoFromJson(String? estado) {
+  if (estado == null) return null;
+  return VentaEstado.fromValue(estado);
+}
+
+String? ventaEstadoToJson(VentaEstado? estado) {
+  return estado?.value;
+}
+
 @freezed
 abstract class Venta with _$Venta {
   const factory Venta({
-    @JsonKey(name: 'id_venta') int? id,
+    int? id,
     required int idCliente,
     required DateTime fecha,
     String? detalles,
     bool? pagado,
-    String? estado,
+    @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)
+    @Default(VentaEstado.pendiente)
+    VentaEstado? estado,
   }) = _Venta;
 
   factory Venta.fromJson(Map<String, dynamic> json) => _$VentaFromJson(json);

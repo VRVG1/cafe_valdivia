@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UnidadMedida {
 
-@JsonKey(name: 'id_unidad') int? get id; String get nombre;
+ int? get id; String get nombre;
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UnidadMedidaCopyWith<$Res>  {
   factory $UnidadMedidaCopyWith(UnidadMedida value, $Res Function(UnidadMedida) _then) = _$UnidadMedidaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_unidad') int? id, String nombre
+ int? id, String nombre
 });
 
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad')  int? id,  String nombre)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String nombre)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UnidadMedida() when $default != null:
 return $default(_that.id,_that.nombre);case _:
@@ -175,7 +175,7 @@ return $default(_that.id,_that.nombre);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad')  int? id,  String nombre)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String nombre)  $default,) {final _that = this;
 switch (_that) {
 case _UnidadMedida():
 return $default(_that.id,_that.nombre);case _:
@@ -195,7 +195,7 @@ return $default(_that.id,_that.nombre);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_unidad')  int? id,  String nombre)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String nombre)?  $default,) {final _that = this;
 switch (_that) {
 case _UnidadMedida() when $default != null:
 return $default(_that.id,_that.nombre);case _:
@@ -210,10 +210,10 @@ return $default(_that.id,_that.nombre);case _:
 @JsonSerializable()
 
 class _UnidadMedida implements UnidadMedida {
-  const _UnidadMedida({@JsonKey(name: 'id_unidad') this.id, required this.nombre});
+  const _UnidadMedida({this.id, required this.nombre});
   factory _UnidadMedida.fromJson(Map<String, dynamic> json) => _$UnidadMedidaFromJson(json);
 
-@override@JsonKey(name: 'id_unidad') final  int? id;
+@override final  int? id;
 @override final  String nombre;
 
 /// Create a copy of UnidadMedida
@@ -249,7 +249,7 @@ abstract mixin class _$UnidadMedidaCopyWith<$Res> implements $UnidadMedidaCopyWi
   factory _$UnidadMedidaCopyWith(_UnidadMedida value, $Res Function(_UnidadMedida) _then) = __$UnidadMedidaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_unidad') int? id, String nombre
+ int? id, String nombre
 });
 
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetalleProduccionInsumo {
 
-@JsonKey(name: 'id_detalle_produccion_insumo') int? get id; int get idOrdenProduccion; int get idInsumo; String get costoInsumoMomento;
+ int? get id; int get idOrdenProduccion; int get idInsumo; String get costoInsumoMomento;
 /// Create a copy of DetalleProduccionInsumo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DetalleProduccionInsumoCopyWith<$Res>  {
   factory $DetalleProduccionInsumoCopyWith(DetalleProduccionInsumo value, $Res Function(DetalleProduccionInsumo) _then) = _$DetalleProduccionInsumoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_produccion_insumo') int? id, int idOrdenProduccion, int idInsumo, String costoInsumoMomento
+ int? id, int idOrdenProduccion, int idInsumo, String costoInsumoMomento
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion_insumo')  int? id,  int idOrdenProduccion,  int idInsumo,  String costoInsumoMomento)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int idOrdenProduccion,  int idInsumo,  String costoInsumoMomento)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo() when $default != null:
 return $default(_that.id,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsumoMomento);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsum
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion_insumo')  int? id,  int idOrdenProduccion,  int idInsumo,  String costoInsumoMomento)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int idOrdenProduccion,  int idInsumo,  String costoInsumoMomento)  $default,) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo():
 return $default(_that.id,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsumoMomento);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsum
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_produccion_insumo')  int? id,  int idOrdenProduccion,  int idInsumo,  String costoInsumoMomento)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int idOrdenProduccion,  int idInsumo,  String costoInsumoMomento)?  $default,) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo() when $default != null:
 return $default(_that.id,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsumoMomento);case _:
@@ -212,10 +212,10 @@ return $default(_that.id,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsum
 @JsonSerializable()
 
 class _DetalleProduccionInsumo implements DetalleProduccionInsumo {
-  const _DetalleProduccionInsumo({@JsonKey(name: 'id_detalle_produccion_insumo') this.id, required this.idOrdenProduccion, required this.idInsumo, required this.costoInsumoMomento});
+  const _DetalleProduccionInsumo({this.id, required this.idOrdenProduccion, required this.idInsumo, required this.costoInsumoMomento});
   factory _DetalleProduccionInsumo.fromJson(Map<String, dynamic> json) => _$DetalleProduccionInsumoFromJson(json);
 
-@override@JsonKey(name: 'id_detalle_produccion_insumo') final  int? id;
+@override final  int? id;
 @override final  int idOrdenProduccion;
 @override final  int idInsumo;
 @override final  String costoInsumoMomento;
@@ -253,7 +253,7 @@ abstract mixin class _$DetalleProduccionInsumoCopyWith<$Res> implements $Detalle
   factory _$DetalleProduccionInsumoCopyWith(_DetalleProduccionInsumo value, $Res Function(_DetalleProduccionInsumo) _then) = __$DetalleProduccionInsumoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_produccion_insumo') int? id, int idOrdenProduccion, int idInsumo, String costoInsumoMomento
+ int? id, int idOrdenProduccion, int idInsumo, String costoInsumoMomento
 });
 
 

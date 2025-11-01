@@ -1,53 +1,62 @@
 import 'package:cafe_valdivia/models/detalle_compra.dart';
+import 'package:cafe_valdivia/models/detalle_compra_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DetalleCompra Model Tests', () {
     final testMap = {
       'id_detalle_compra': 1,
-      'id_compra': 100,
-      'id_insumo': 200,
-      'cantidad': 5.0,
-      'precio_unitario_compra': 2.5,
+      'idCompra': 100,
+      'idInsumo': 200,
+      'cantidad': 5,
+      'precioUnitarioCompra': "2.5",
     };
 
-    test('fromMap creates correct instance', () {
-      final detalle = DetalleCompra.fromMap(testMap);
+    test('fromJson creates correct instance', () {
+      final detalle = DetalleCompra.fromJson(testMap);
 
       expect(detalle.id, 1);
       expect(detalle.idCompra, 100);
       expect(detalle.idInsumo, 200);
       expect(detalle.cantidad, 5.0);
-      expect(detalle.precioUnitarioCompra, 2.5);
+      expect(detalle.precioUnitarioCompra, "2.5");
     });
 
-    test('toMap returns correct structure', () {
+    test('toJson returns correct structure', () {
       final detalle = DetalleCompra(
         id: 1,
         idCompra: 100,
         idInsumo: 200,
-        cantidad: 5.0,
-        precioUnitarioCompra: 2.5,
+        cantidad: 5,
+        precioUnitarioCompra: "2.5",
       );
 
-      final map = detalle.toMap();
+      final map = detalle.toJson();
 
       expect(map['id_detalle_compra'], 1);
-      expect(map['id_compra'], 100);
-      expect(map['id_insumo'], 200);
+      expect(map['idCompra'], 100);
+      expect(map['idInsumo'], 200);
       expect(map['cantidad'], 5.0);
-      expect(map['precio_unitario_compra'], 2.5);
+      expect(map['precioUnitarioCompra'], "2.5");
     });
 
     test('subtotal calculates correctly', () {
       final detalle = DetalleCompra(
         cantidad: 4,
-        precioUnitarioCompra: 3.25,
+        precioUnitarioCompra: "3.25",
         idCompra: 1,
         idInsumo: 1,
       );
 
-      expect(detalle.subtotal, 13.0); // 4 * 3.25 = 13.0
+      final detalle2 = DetalleCompra(
+        cantidad: 9,
+        precioUnitarioCompra: "3.15",
+        idCompra: 1,
+        idInsumo: 1,
+      );
+
+      expect(detalle.subTotalFormateado, "13.00");
+      expect(detalle2.subTotalFormateado, "28.35");
     });
   });
 }

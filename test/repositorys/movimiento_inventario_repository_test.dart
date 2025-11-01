@@ -72,7 +72,7 @@ void main() {
 
       // 6. Compra (requerida por Detalle_Compra)
       await database.insert('Compra', {
-        'id_proveedor': 1, // Relacionado con Proveedor
+        'idProveedor': 1, // Relacionado con Proveedor
         'fecha': DateTime.now().toIso8601String(),
       });
 

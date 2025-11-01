@@ -9,7 +9,7 @@ part of 'detalle_produccion_insumo.dart';
 _DetalleProduccionInsumo _$DetalleProduccionInsumoFromJson(
   Map<String, dynamic> json,
 ) => _DetalleProduccionInsumo(
-  id: (json['id_detalle_produccion_insumo'] as num?)?.toInt(),
+  id: (json['id'] as num?)?.toInt(),
   idOrdenProduccion: (json['idOrdenProduccion'] as num).toInt(),
   idInsumo: (json['idInsumo'] as num).toInt(),
   costoInsumoMomento: json['costoInsumoMomento'] as String,
@@ -18,7 +18,7 @@ _DetalleProduccionInsumo _$DetalleProduccionInsumoFromJson(
 Map<String, dynamic> _$DetalleProduccionInsumoToJson(
   _DetalleProduccionInsumo instance,
 ) => <String, dynamic>{
-  'id_detalle_produccion_insumo': instance.id,
+  'id': instance.id,
   'idOrdenProduccion': instance.idOrdenProduccion,
   'idInsumo': instance.idInsumo,
   'costoInsumoMomento': instance.costoInsumoMomento,

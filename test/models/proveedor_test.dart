@@ -19,7 +19,7 @@ void main() {
       direccion: 'Su casa',
     );
     test('FromMap crea una instancia correcta', () {
-      final proveedor = Proveedor.fromMap(testMap);
+      final proveedor = Proveedor.fromJson(testMap);
 
       expect(proveedor.id, 1);
       expect(proveedor.nombre, 'Cocacola');
@@ -28,8 +28,8 @@ void main() {
       expect(proveedor.direccion, 'Avenida las garzas');
     });
 
-    test('toMap regresa un mapa correcto', () {
-      final proveedorMap = proveedorObject.toMap();
+    test('toJson regresa un mapa correcto', () {
+      final proveedorMap = proveedorObject.toJson();
 
       expect(proveedorMap['id_proveedor'], proveedorObject.id);
       expect(proveedorMap['nombre'], proveedorObject.nombre);
@@ -39,11 +39,14 @@ void main() {
     });
 
     test('Crear un proveiedor sin los valores obligatorios si funciona', () {
-      final proveedorIncompleto = Proveedor(nombre: "Pene");
+      final proveedorIncompleto = Proveedor(
+        nombre: "Pene",
+        telefono: "1231231231",
+      );
 
       expect(proveedorIncompleto.id, isNull);
       expect(proveedorIncompleto.nombre, 'Pene');
-      expect(proveedorIncompleto.telefono, isNull);
+      expect(proveedorIncompleto.telefono, "1231231231");
       expect(proveedorIncompleto.email, isNull);
       expect(proveedorIncompleto.direccion, isNull);
     });
@@ -51,14 +54,17 @@ void main() {
     test(
       'Crear  un provvedor sin los valores obligatorios y hacerlo un map funciona',
       () {
-        final proveedorIncompleto = Proveedor(nombre: "Pene");
-        final proveedorIncompletoMap = proveedorIncompleto.toMap();
+        final proveedorIncompleto = Proveedor(
+          nombre: "Pene",
+          telefono: "09876543211",
+        );
+        final proveedorIncompletoJson = proveedorIncompleto.toJson();
 
-        expect(proveedorIncompletoMap['id_proveedor'], isNull);
-        expect(proveedorIncompletoMap['nombre'], 'Pene');
-        expect(proveedorIncompletoMap['telefono'], isNull);
-        expect(proveedorIncompletoMap['email'], isNull);
-        expect(proveedorIncompletoMap['direccion'], isNull);
+        expect(proveedorIncompletoJson['idProveedor'], isNull);
+        expect(proveedorIncompletoJson['nombre'], 'Pene');
+        expect(proveedorIncompletoJson['telefono'], "09876543211");
+        expect(proveedorIncompletoJson['email'], isNull);
+        expect(proveedorIncompletoJson['direccion'], isNull);
       },
     );
   });

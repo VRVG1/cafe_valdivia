@@ -9,7 +9,7 @@ part of 'movimiento_inventario_insumo.dart';
 _MovimientoInventarioInsumo _$MovimientoInventarioInsumoFromJson(
   Map<String, dynamic> json,
 ) => _MovimientoInventarioInsumo(
-  id: (json['id_movimiento_inventario_insumo'] as num?)?.toInt(),
+  id: (json['id'] as num?)?.toInt(),
   idInsumo: (json['idInsumo'] as num).toInt(),
   tipo: json['tipo'] as String?,
   cantidad: (json['cantidad'] as num).toInt(),
@@ -22,7 +22,7 @@ _MovimientoInventarioInsumo _$MovimientoInventarioInsumoFromJson(
 Map<String, dynamic> _$MovimientoInventarioInsumoToJson(
   _MovimientoInventarioInsumo instance,
 ) => <String, dynamic>{
-  'id_movimiento_inventario_insumo': instance.id,
+  'id': instance.id,
   'idInsumo': instance.idInsumo,
   'tipo': instance.tipo,
   'cantidad': instance.cantidad,

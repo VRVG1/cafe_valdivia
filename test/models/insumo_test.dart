@@ -3,31 +3,35 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group("Insumo model Test", () {
-    final insumoObjeto = Insumos(
+    final insumoObjeto = Insumo(
       nombre: "CafeValdivia",
       idUnidad: 1,
       descripcion: 'El mejor',
+      costoUnitario: "20.00",
     );
     final insumoMapa = {
       'nombre': 'Caca',
-      'id_unidad': 10,
+      'idUnidad': 10,
       'descripcion': 'El peor',
+      'costoUnitario': "20.00",
     };
 
-    test('fromMap works correctly?', () {
-      final objeto = Insumos.fromMap(insumoMapa);
+    test('fromJson works correctly?', () {
+      final objeto = Insumo.fromJson(insumoMapa);
 
       expect(objeto.nombre, 'Caca');
       expect(objeto.idUnidad, 10);
       expect(objeto.descripcion, 'El peor');
+      expect(objeto.costoUnitario, "20.00");
     });
 
-    test('toMap works correctly?', () {
-      final mapa = insumoObjeto.toMap();
+    test('toJson works correctly?', () {
+      final mapa = insumoObjeto.toJson();
 
       expect(mapa['nombre'], 'CafeValdivia');
-      expect(mapa['id_unidad'], 1);
+      expect(mapa['idUnidad'], 1);
       expect(mapa['descripcion'], 'El mejor');
+      expect(mapa['costoUnitario'], "20.00");
     });
   });
 }

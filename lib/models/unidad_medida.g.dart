@@ -8,9 +8,9 @@ part of 'unidad_medida.dart';
 
 _UnidadMedida _$UnidadMedidaFromJson(Map<String, dynamic> json) =>
     _UnidadMedida(
-      id: (json['id_unidad'] as num?)?.toInt(),
+      id: (json['id'] as num?)?.toInt(),
       nombre: json['nombre'] as String,
     );
 
 Map<String, dynamic> _$UnidadMedidaToJson(_UnidadMedida instance) =>
-    <String, dynamic>{'id_unidad': instance.id, 'nombre': instance.nombre};
+    <String, dynamic>{'id': instance.id, 'nombre': instance.nombre};

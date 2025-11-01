@@ -21,7 +21,7 @@ void main() {
       expect(cliente.email, 'alonsoPerez@correo.com');
     });
 
-    test('toMap regresa un mapa correcto', () {
+    test('toJson regresa un mapa correcto', () {
       final cliente = Cliente(
         id: 2,
         nombre: 'Manito',

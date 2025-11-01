@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Proveedor {
 
-@JsonKey(name: 'id_proveedor') int? get id; String get nombre; String get telefono; String? get email; String? get direccion;
+ int? get id; String get nombre; String get telefono; String? get email; String? get direccion;
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ProveedorCopyWith<$Res>  {
   factory $ProveedorCopyWith(Proveedor value, $Res Function(Proveedor) _then) = _$ProveedorCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_proveedor') int? id, String nombre, String telefono, String? email, String? direccion
+ int? id, String nombre, String telefono, String? email, String? direccion
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? id,  String nombre,  String telefono,  String? email,  String? direccion)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String nombre,  String telefono,  String? email,  String? direccion)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Proveedor() when $default != null:
 return $default(_that.id,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
@@ -178,7 +178,7 @@ return $default(_that.id,_that.nombre,_that.telefono,_that.email,_that.direccion
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? id,  String nombre,  String telefono,  String? email,  String? direccion)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String nombre,  String telefono,  String? email,  String? direccion)  $default,) {final _that = this;
 switch (_that) {
 case _Proveedor():
 return $default(_that.id,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.nombre,_that.telefono,_that.email,_that.direccion
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_proveedor')  int? id,  String nombre,  String telefono,  String? email,  String? direccion)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String nombre,  String telefono,  String? email,  String? direccion)?  $default,) {final _that = this;
 switch (_that) {
 case _Proveedor() when $default != null:
 return $default(_that.id,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
@@ -213,10 +213,10 @@ return $default(_that.id,_that.nombre,_that.telefono,_that.email,_that.direccion
 @JsonSerializable()
 
 class _Proveedor implements Proveedor {
-  const _Proveedor({@JsonKey(name: 'id_proveedor') this.id, required this.nombre, required this.telefono, this.email, this.direccion});
+  const _Proveedor({this.id, required this.nombre, required this.telefono, this.email, this.direccion});
   factory _Proveedor.fromJson(Map<String, dynamic> json) => _$ProveedorFromJson(json);
 
-@override@JsonKey(name: 'id_proveedor') final  int? id;
+@override final  int? id;
 @override final  String nombre;
 @override final  String telefono;
 @override final  String? email;
@@ -255,7 +255,7 @@ abstract mixin class _$ProveedorCopyWith<$Res> implements $ProveedorCopyWith<$Re
   factory _$ProveedorCopyWith(_Proveedor value, $Res Function(_Proveedor) _then) = __$ProveedorCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_proveedor') int? id, String nombre, String telefono, String? email, String? direccion
+ int? id, String nombre, String telefono, String? email, String? direccion
 });
 
 

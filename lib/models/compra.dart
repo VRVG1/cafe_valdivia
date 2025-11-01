@@ -5,8 +5,8 @@ part 'compra.g.dart';
 @freezed
 abstract class Compra with _$Compra {
   const factory Compra({
-    @JsonKey(name: 'id_compra') int? id,
-    required int id_proveedor,
+    int? id,
+    required int idProveedor,
     required DateTime fecha,
     String? detalles,
     bool? pagado,

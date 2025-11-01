@@ -7,7 +7,7 @@ part of 'proveedor.dart';
 // **************************************************************************
 
 _Proveedor _$ProveedorFromJson(Map<String, dynamic> json) => _Proveedor(
-  id: (json['id_proveedor'] as num?)?.toInt(),
+  id: (json['id'] as num?)?.toInt(),
   nombre: json['nombre'] as String,
   telefono: json['telefono'] as String,
   email: json['email'] as String?,
@@ -16,7 +16,7 @@ _Proveedor _$ProveedorFromJson(Map<String, dynamic> json) => _Proveedor(
 
 Map<String, dynamic> _$ProveedorToJson(_Proveedor instance) =>
     <String, dynamic>{
-      'id_proveedor': instance.id,
+      'id': instance.id,
       'nombre': instance.nombre,
       'telefono': instance.telefono,
       'email': instance.email,

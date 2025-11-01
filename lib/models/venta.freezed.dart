@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Venta {
 
-@JsonKey(name: 'id_venta') int? get id; int get idCliente; DateTime get fecha; String? get detalles; bool? get pagado; String? get estado;
+ int? get id; int get idCliente; DateTime get fecha; String? get detalles; bool? get pagado;@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? get estado;
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $VentaCopyWith<$Res>  {
   factory $VentaCopyWith(Venta value, $Res Function(Venta) _then) = _$VentaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_venta') int? id, int idCliente, DateTime fecha, String? detalles, bool? pagado, String? estado
+ int? id, int idCliente, DateTime fecha, String? detalles, bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
 });
 
 
@@ -73,7 +73,7 @@ as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_no
 as DateTime,detalles: freezed == detalles ? _self.detalles : detalles // ignore: cast_nullable_to_non_nullable
 as String?,pagado: freezed == pagado ? _self.pagado : pagado // ignore: cast_nullable_to_non_nullable
 as bool?,estado: freezed == estado ? _self.estado : estado // ignore: cast_nullable_to_non_nullable
-as String?,
+as VentaEstado?,
   ));
 }
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? id,  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado,  String? estado)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Venta() when $default != null:
 return $default(_that.id,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.idCliente,_that.fecha,_that.detalles,_that.pagado
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? id,  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado,  String? estado)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)  $default,) {final _that = this;
 switch (_that) {
 case _Venta():
 return $default(_that.id,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.idCliente,_that.fecha,_that.detalles,_that.pagado
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_venta')  int? id,  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado,  String? estado)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,) {final _that = this;
 switch (_that) {
 case _Venta() when $default != null:
 return $default(_that.id,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
@@ -214,15 +214,15 @@ return $default(_that.id,_that.idCliente,_that.fecha,_that.detalles,_that.pagado
 @JsonSerializable()
 
 class _Venta implements Venta {
-  const _Venta({@JsonKey(name: 'id_venta') this.id, required this.idCliente, required this.fecha, this.detalles, this.pagado, this.estado});
+  const _Venta({this.id, required this.idCliente, required this.fecha, this.detalles, this.pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) this.estado = VentaEstado.pendiente});
   factory _Venta.fromJson(Map<String, dynamic> json) => _$VentaFromJson(json);
 
-@override@JsonKey(name: 'id_venta') final  int? id;
+@override final  int? id;
 @override final  int idCliente;
 @override final  DateTime fecha;
 @override final  String? detalles;
 @override final  bool? pagado;
-@override final  String? estado;
+@override@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) final  VentaEstado? estado;
 
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
@@ -257,7 +257,7 @@ abstract mixin class _$VentaCopyWith<$Res> implements $VentaCopyWith<$Res> {
   factory _$VentaCopyWith(_Venta value, $Res Function(_Venta) _then) = __$VentaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_venta') int? id, int idCliente, DateTime fecha, String? detalles, bool? pagado, String? estado
+ int? id, int idCliente, DateTime fecha, String? detalles, bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
 });
 
 
@@ -282,7 +282,7 @@ as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_no
 as DateTime,detalles: freezed == detalles ? _self.detalles : detalles // ignore: cast_nullable_to_non_nullable
 as String?,pagado: freezed == pagado ? _self.pagado : pagado // ignore: cast_nullable_to_non_nullable
 as bool?,estado: freezed == estado ? _self.estado : estado // ignore: cast_nullable_to_non_nullable
-as String?,
+as VentaEstado?,
   ));
 }
 

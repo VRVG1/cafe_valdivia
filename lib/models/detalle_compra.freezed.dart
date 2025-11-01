@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetalleCompra {
 
-@JsonKey(name: 'id_detalle_compra') int? get id; String get nombre; String? get apellido; String? get telefono; String? get email;
+ int? get id; int get idCompra; int get idInsumo; int get cantidad; String get precioUnitarioCompra;
 /// Create a copy of DetalleCompra
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DetalleCompraCopyWith<DetalleCompra> get copyWith => _$DetalleCompraCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetalleCompra&&(identical(other.id, id) || other.id == id)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.apellido, apellido) || other.apellido == apellido)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetalleCompra&&(identical(other.id, id) || other.id == id)&&(identical(other.idCompra, idCompra) || other.idCompra == idCompra)&&(identical(other.idInsumo, idInsumo) || other.idInsumo == idInsumo)&&(identical(other.cantidad, cantidad) || other.cantidad == cantidad)&&(identical(other.precioUnitarioCompra, precioUnitarioCompra) || other.precioUnitarioCompra == precioUnitarioCompra));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nombre,apellido,telefono,email);
+int get hashCode => Object.hash(runtimeType,id,idCompra,idInsumo,cantidad,precioUnitarioCompra);
 
 @override
 String toString() {
-  return 'DetalleCompra(id: $id, nombre: $nombre, apellido: $apellido, telefono: $telefono, email: $email)';
+  return 'DetalleCompra(id: $id, idCompra: $idCompra, idInsumo: $idInsumo, cantidad: $cantidad, precioUnitarioCompra: $precioUnitarioCompra)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DetalleCompraCopyWith<$Res>  {
   factory $DetalleCompraCopyWith(DetalleCompra value, $Res Function(DetalleCompra) _then) = _$DetalleCompraCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_compra') int? id, String nombre, String? apellido, String? telefono, String? email
+ int? id, int idCompra, int idInsumo, int cantidad, String precioUnitarioCompra
 });
 
 
@@ -65,14 +65,14 @@ class _$DetalleCompraCopyWithImpl<$Res>
 
 /// Create a copy of DetalleCompra
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? idCompra = null,Object? idInsumo = null,Object? cantidad = null,Object? precioUnitarioCompra = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,apellido: freezed == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
-as String?,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
-as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String?,
+as int?,idCompra: null == idCompra ? _self.idCompra : idCompra // ignore: cast_nullable_to_non_nullable
+as int,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
+as int,cantidad: null == cantidad ? _self.cantidad : cantidad // ignore: cast_nullable_to_non_nullable
+as int,precioUnitarioCompra: null == precioUnitarioCompra ? _self.precioUnitarioCompra : precioUnitarioCompra // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_compra')  int? id,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int idCompra,  int idInsumo,  int cantidad,  String precioUnitarioCompra)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetalleCompra() when $default != null:
-return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
+return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.precioUnitarioCompra);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_compra')  int? id,  String nombre,  String? apellido,  String? telefono,  String? email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int idCompra,  int idInsumo,  int cantidad,  String precioUnitarioCompra)  $default,) {final _that = this;
 switch (_that) {
 case _DetalleCompra():
-return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
+return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.precioUnitarioCompra);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_compra')  int? id,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int idCompra,  int idInsumo,  int cantidad,  String precioUnitarioCompra)?  $default,) {final _that = this;
 switch (_that) {
 case _DetalleCompra() when $default != null:
-return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
+return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.precioUnitarioCompra);case _:
   return null;
 
 }
@@ -213,14 +213,14 @@ return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email)
 @JsonSerializable()
 
 class _DetalleCompra implements DetalleCompra {
-  const _DetalleCompra({@JsonKey(name: 'id_detalle_compra') this.id, required this.nombre, this.apellido, this.telefono, this.email});
+  const _DetalleCompra({this.id, required this.idCompra, required this.idInsumo, required this.cantidad, required this.precioUnitarioCompra});
   factory _DetalleCompra.fromJson(Map<String, dynamic> json) => _$DetalleCompraFromJson(json);
 
-@override@JsonKey(name: 'id_detalle_compra') final  int? id;
-@override final  String nombre;
-@override final  String? apellido;
-@override final  String? telefono;
-@override final  String? email;
+@override final  int? id;
+@override final  int idCompra;
+@override final  int idInsumo;
+@override final  int cantidad;
+@override final  String precioUnitarioCompra;
 
 /// Create a copy of DetalleCompra
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetalleCompra&&(identical(other.id, id) || other.id == id)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.apellido, apellido) || other.apellido == apellido)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetalleCompra&&(identical(other.id, id) || other.id == id)&&(identical(other.idCompra, idCompra) || other.idCompra == idCompra)&&(identical(other.idInsumo, idInsumo) || other.idInsumo == idInsumo)&&(identical(other.cantidad, cantidad) || other.cantidad == cantidad)&&(identical(other.precioUnitarioCompra, precioUnitarioCompra) || other.precioUnitarioCompra == precioUnitarioCompra));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nombre,apellido,telefono,email);
+int get hashCode => Object.hash(runtimeType,id,idCompra,idInsumo,cantidad,precioUnitarioCompra);
 
 @override
 String toString() {
-  return 'DetalleCompra(id: $id, nombre: $nombre, apellido: $apellido, telefono: $telefono, email: $email)';
+  return 'DetalleCompra(id: $id, idCompra: $idCompra, idInsumo: $idInsumo, cantidad: $cantidad, precioUnitarioCompra: $precioUnitarioCompra)';
 }
 
 
@@ -255,7 +255,7 @@ abstract mixin class _$DetalleCompraCopyWith<$Res> implements $DetalleCompraCopy
   factory _$DetalleCompraCopyWith(_DetalleCompra value, $Res Function(_DetalleCompra) _then) = __$DetalleCompraCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_compra') int? id, String nombre, String? apellido, String? telefono, String? email
+ int? id, int idCompra, int idInsumo, int cantidad, String precioUnitarioCompra
 });
 
 
@@ -272,14 +272,14 @@ class __$DetalleCompraCopyWithImpl<$Res>
 
 /// Create a copy of DetalleCompra
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? idCompra = null,Object? idInsumo = null,Object? cantidad = null,Object? precioUnitarioCompra = null,}) {
   return _then(_DetalleCompra(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,apellido: freezed == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
-as String?,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
-as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String?,
+as int?,idCompra: null == idCompra ? _self.idCompra : idCompra // ignore: cast_nullable_to_non_nullable
+as int,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
+as int,cantidad: null == cantidad ? _self.cantidad : cantidad // ignore: cast_nullable_to_non_nullable
+as int,precioUnitarioCompra: null == precioUnitarioCompra ? _self.precioUnitarioCompra : precioUnitarioCompra // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
