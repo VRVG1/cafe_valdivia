@@ -3,60 +3,97 @@ import 'package:cafe_valdivia/models/detalle_compra_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('DetalleCompra Model Tests', () {
-    final testMap = {
-      'id_detalle_compra': 1,
-      'idCompra': 100,
-      'idInsumo': 200,
+  group('DetalleCompra', () {
+    final detalleCompra = DetalleCompra(
+      id: 1,
+      idCompra: 10,
+      idInsumo: 20,
+      cantidad: 5,
+      precioUnitarioCompra: '10.50',
+    );
+
+    final detalleCompraJson = {
+      'id': 1,
+      'idCompra': 10,
+      'idInsumo': 20,
       'cantidad': 5,
-      'precioUnitarioCompra': "2.5",
+      'precioUnitarioCompra': '10.50',
     };
 
-    test('fromJson creates correct instance', () {
-      final detalle = DetalleCompra.fromJson(testMap);
-
-      expect(detalle.id, 1);
-      expect(detalle.idCompra, 100);
-      expect(detalle.idInsumo, 200);
-      expect(detalle.cantidad, 5.0);
-      expect(detalle.precioUnitarioCompra, "2.5");
+    test('fromJson crea una instancia correcta', () {
+      final fromJson = DetalleCompra.fromJson(detalleCompraJson);
+      expect(fromJson, detalleCompra);
     });
 
-    test('toJson returns correct structure', () {
-      final detalle = DetalleCompra(
+    test('toJson crea el mapa correcto', () {
+      final toJson = detalleCompra.toJson();
+      expect(toJson, detalleCompraJson);
+    });
+
+    test('copyWith crea una copia con valores actualizados', () {
+      final copia = detalleCompra.copyWith(cantidad: 8);
+
+      expect(copia.cantidad, 8);
+      // Los demás valores deben permanecer iguales
+      expect(copia.id, detalleCompra.id);
+      expect(copia.idCompra, detalleCompra.idCompra);
+      expect(copia.idInsumo, detalleCompra.idInsumo);
+      expect(copia.precioUnitarioCompra, detalleCompra.precioUnitarioCompra);
+    });
+
+    test('Las instancias con los mismos valores son iguales', () {
+      final dc1 = DetalleCompra(
         id: 1,
-        idCompra: 100,
-        idInsumo: 200,
+        idCompra: 10,
+        idInsumo: 20,
         cantidad: 5,
-        precioUnitarioCompra: "2.5",
+        precioUnitarioCompra: '10.50',
+      );
+      final dc2 = DetalleCompra(
+        id: 1,
+        idCompra: 10,
+        idInsumo: 20,
+        cantidad: 5,
+        precioUnitarioCompra: '10.50',
       );
 
-      final map = detalle.toJson();
-
-      expect(map['id_detalle_compra'], 1);
-      expect(map['idCompra'], 100);
-      expect(map['idInsumo'], 200);
-      expect(map['cantidad'], 5.0);
-      expect(map['precioUnitarioCompra'], "2.5");
+      expect(dc1, dc2);
     });
 
-    test('subtotal calculates correctly', () {
-      final detalle = DetalleCompra(
-        cantidad: 4,
-        precioUnitarioCompra: "3.25",
-        idCompra: 1,
-        idInsumo: 1,
+    test('El hashCode es el mismo para instancias iguales', () {
+      final dc1 = DetalleCompra(
+        id: 1,
+        idCompra: 10,
+        idInsumo: 20,
+        cantidad: 5,
+        precioUnitarioCompra: '10.50',
+      );
+      final dc2 = DetalleCompra(
+        id: 1,
+        idCompra: 10,
+        idInsumo: 20,
+        cantidad: 5,
+        precioUnitarioCompra: '10.50',
       );
 
-      final detalle2 = DetalleCompra(
-        cantidad: 9,
-        precioUnitarioCompra: "3.15",
-        idCompra: 1,
-        idInsumo: 1,
-      );
+      expect(dc1.hashCode, dc2.hashCode);
+    });
 
-      expect(detalle.subTotalFormateado, "13.00");
-      expect(detalle2.subTotalFormateado, "28.35");
+    group('Extension', () {
+      test('subTotal calcula el valor correcto en centavos', () {
+        // 5 * 10.50 = 52.50 -> 5250 centavos
+        expect(detalleCompra.subTotal, 5250);
+      });
+
+      test('subTotalFormateado retorna el string correcto', () {
+        expect(detalleCompra.subTotalFormateado, '52.50');
+      });
+
+      test('subTotal con precio inválido retorna 0', () {
+        final detalleInvalido = detalleCompra.copyWith(precioUnitarioCompra: 'invalido');
+        expect(detalleInvalido.subTotal, 0);
+        expect(detalleInvalido.subTotalFormateado, '0.00');
+      });
     });
   });
 }

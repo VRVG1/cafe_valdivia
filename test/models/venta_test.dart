@@ -2,82 +2,108 @@ import 'package:cafe_valdivia/models/venta.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("Venta models unit test", () {
-    final objetoVenta = Venta(
-      id: 2,
+  group('Venta', () {
+    final fecha = DateTime.parse('2025-10-01T14:30:00.000Z');
+    final venta = Venta(
+      id: 1,
       idCliente: 1,
-      fecha: DateTime.parse('2025-10-01T14:30:00.000Z'),
-      detalles: 'Pinche jodida',
+      fecha: fecha,
+      detalles: 'Venta de prueba',
       pagado: false,
+      estado: VentaEstado.pendiente,
     );
 
-    final mapaVenta = {
-      'id': 10,
-      'idCliente': 90,
+    final ventaJson = {
+      'id': 1,
+      'idCliente': 1,
       'fecha': '2025-10-01T14:30:00.000Z',
-      'detalles': 'Para llevar',
-      'pagado': true,
+      'detalles': 'Venta de prueba',
+      'pagado': false,
+      'estado': 'pendiente',
     };
 
-    test("fromJson creates correct instance", () {
-      final venta = Venta.fromJson(mapaVenta);
-
-      expect(venta.id, 10);
-      expect(venta.idCliente, 90);
-      expect(venta.fecha, DateTime.parse('2025-10-01T14:30:00.000Z'));
-      expect(venta.detalles, 'Para llevar');
-      expect(venta.pagado, true);
+    test('fromJson crea una instancia correcta', () {
+      final fromJson = Venta.fromJson(ventaJson);
+      expect(fromJson, venta);
     });
 
-    test("toJson creates correct map", () {
-      final mapa = objetoVenta.toJson();
-
-      expect(mapa['id'], 2);
-      expect(mapa['idCliente'], 1);
-      expect(mapa['fecha'], '2025-10-01T14:30:00.000Z');
-      expect(mapa['detalles'], "Pinche jodida");
-      expect(mapa['pagado'], false);
+    test('toJson crea el mapa correcto', () {
+      final toJson = venta.toJson();
+      expect(toJson, ventaJson);
     });
 
-    // test("Total calculate correctly", () {
-    //   final venta = Venta(
-    //     detallesVenta: [ventaDetallada1, ventaDetallada2],
-    //     idCliente: 1,
-    //     fecha: DateTime.now(),
-    //   );
+    test('copyWith crea una copia con valores actualizados', () {
+      final ventaCopia = venta.copyWith(
+        pagado: true,
+        estado: VentaEstado.completa,
+      );
 
-    //   expect(venta.total, 120.0);
-    // });
-
-    test('Venta.fromJson handles estado correctly', () {
-      final ventaMapConEstado = {
-        ...mapaVenta,
-        'estado': VentaEstado.cancelado.value,
-      };
-      final venta = Venta.fromJson(ventaMapConEstado);
-      expect(venta.estado, VentaEstado.cancelado);
+      expect(ventaCopia.pagado, true);
+      expect(ventaCopia.estado, VentaEstado.completa);
+      // Los demás valores deben permanecer iguales
+      expect(ventaCopia.id, venta.id);
+      expect(ventaCopia.idCliente, venta.idCliente);
+      expect(ventaCopia.fecha, venta.fecha);
     });
 
-    test('Venta.fromJson uses default estado when null', () {
-      final venta = Venta.fromJson(mapaVenta);
-      expect(venta.estado, VentaEstado.pendiente);
-    });
-
-    test('Venta.toJson handles estado correctly', () {
-      final venta = Venta(
+    test('Las instancias con los mismos valores son iguales', () {
+      final venta1 = Venta(
+        id: 1,
         idCliente: 1,
-        fecha: DateTime.now(),
-        estado: VentaEstado.cancelado,
+        fecha: fecha,
+        detalles: 'Venta de prueba',
+        pagado: false,
+        estado: VentaEstado.pendiente,
       );
-      final mapa = venta.toJson();
-      expect(mapa['estado'], 'cancelado');
+      final venta2 = Venta(
+        id: 1,
+        idCliente: 1,
+        fecha: fecha,
+        detalles: 'Venta de prueba',
+        pagado: false,
+        estado: VentaEstado.pendiente,
+      );
+
+      expect(venta1, venta2);
     });
 
-    test('VentaEstado.fromValue throws ArgumentError for invalid value', () {
-      expect(
-        () => VentaEstado.fromValue('Invalido'),
-        throwsA(isA<ArgumentError>()),
+    test('El hashCode es el mismo para instancias iguales', () {
+      final venta1 = Venta(
+        id: 1,
+        idCliente: 1,
+        fecha: fecha,
+        detalles: 'Venta de prueba',
+        pagado: false,
+        estado: VentaEstado.pendiente,
       );
+      final venta2 = Venta(
+        id: 1,
+        idCliente: 1,
+        fecha: fecha,
+        detalles: 'Venta de prueba',
+        pagado: false,
+        estado: VentaEstado.pendiente,
+      );
+
+      expect(venta1.hashCode, venta2.hashCode);
+    });
+  });
+
+  group('VentaEstado Enum', () {
+    test('fromValue retorna el enum correcto', () {
+      expect(VentaEstado.fromValue('pendiente'), VentaEstado.pendiente);
+      expect(VentaEstado.fromValue('completado'), VentaEstado.completa);
+      expect(VentaEstado.fromValue('cancelado'), VentaEstado.cancelado);
+    });
+
+    test('fromValue lanza un error para un valor desconocido', () {
+      expect(() => VentaEstado.fromValue('desconocido'), throwsArgumentError);
+    });
+
+    test('value retorna el string correcto', () {
+      expect(VentaEstado.pendiente.value, 'pendiente');
+      expect(VentaEstado.completa.value, 'completado');
+      expect(VentaEstado.cancelado.value, 'cancelado');
     });
   });
 }

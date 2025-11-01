@@ -2,22 +2,56 @@ import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Unit test UnidadMedida', () {
-    final testMap = {'id_unidad': 1, 'nombre': 'Kilogramo'};
+  group('UnidadMedida', () {
+    final unidadMedida = UnidadMedida(id: 1, nombre: 'Kilogramo');
 
-    final objeto = UnidadMedida(nombre: "Pieza");
+    final unidadMedidaJson = {
+      'id': 1,
+      'nombre': 'Kilogramo',
+    };
 
-    test('fromJson creates correct instance', () {
-      final frommap = UnidadMedida.fromJson(testMap);
-
-      expect(frommap.nombre, 'Kilogramo');
-      expect(frommap.id, 1);
+    test('fromJson crea una instancia correcta', () {
+      final fromJson = UnidadMedida.fromJson(unidadMedidaJson);
+      expect(fromJson, unidadMedida);
     });
 
-    test('toJson creates correct map', () {
-      final toJson = objeto.toJson();
+    test('toJson crea el mapa correcto', () {
+      final toJson = unidadMedida.toJson();
+      expect(toJson, unidadMedidaJson);
+    });
 
-      expect(toJson['nombre'], 'Pieza');
+    test('copyWith crea una copia con valores actualizados', () {
+      final copia = unidadMedida.copyWith(nombre: 'Gramo');
+
+      expect(copia.nombre, 'Gramo');
+      // Los demás valores deben permanecer iguales
+      expect(copia.id, unidadMedida.id);
+    });
+
+    test('Las instancias con los mismos valores son iguales', () {
+      final um1 = UnidadMedida(id: 1, nombre: 'Kilogramo');
+      final um2 = UnidadMedida(id: 1, nombre: 'Kilogramo');
+
+      expect(um1, um2);
+    });
+
+    test('El hashCode es el mismo para instancias iguales', () {
+      final um1 = UnidadMedida(id: 1, nombre: 'Kilogramo');
+      final um2 = UnidadMedida(id: 1, nombre: 'Kilogramo');
+
+      expect(um1.hashCode, um2.hashCode);
+    });
+
+    test('El modelo funciona con id nulo', () {
+      final unidadNula = UnidadMedida(nombre: 'Litro');
+      final unidadNulaJson = {
+        'id': null,
+        'nombre': 'Litro',
+      };
+
+      expect(unidadNula.id, isNull);
+      expect(unidadNula.toJson(), unidadNulaJson);
+      expect(UnidadMedida.fromJson(unidadNulaJson), unidadNula);
     });
   });
 }

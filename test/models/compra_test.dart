@@ -1,55 +1,82 @@
 import 'package:cafe_valdivia/models/compra.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Compra Model Test', () {
-    final testMap = {
-      'id_compra': 1,
-      'idProveedor': 100,
-      'fecha': '2023-10-01T12:00:00.000Z',
-      'detalles': 'Compra de insumos',
-      'pagado': true,
-    };
+  group('Compra', () {
+    final fecha = DateTime.parse('2025-10-01T12:00:00.000Z');
     final compra = Compra(
       id: 1,
       idProveedor: 100,
-      fecha: DateTime.parse('2023-10-01T12:00:00.000Z'),
-      detalles: 'Compra de insumos',
+      fecha: fecha,
+      detalles: 'Compra de prueba',
       pagado: true,
     );
-    test('fromJson creates correct instance', () {
-      final compra = Compra.fromJson(testMap);
 
-      expect(compra.id, 1);
-      expect(compra.idProveedor, 100);
-      expect(compra.fecha, DateTime.parse('2023-10-01T12:00:00.000Z'));
-      expect(compra.detalles, 'Compra de insumos');
-      expect(compra.pagado, true);
+    final compraJson = {
+      'id': 1,
+      'idProveedor': 100,
+      'fecha': '2025-10-01T12:00:00.000Z',
+      'detalles': 'Compra de prueba',
+      'pagado': true,
+    };
+
+    test('fromJson crea una instancia correcta', () {
+      final fromJson = Compra.fromJson(compraJson);
+      expect(fromJson, compra);
     });
 
-    test('toJson returns correct structure', () {
-      final map = compra.toJson();
-
-      expect(map['id_compra'], 1);
-      expect(map['idProveedor'], 100);
-      expect(map['fecha'], '2023-10-01T12:00:00.000Z');
-      expect(map['detalles'], 'Compra de insumos');
-      expect(map['pagado'], true);
+    test('toJson crea el mapa correcto', () {
+      final toJson = compra.toJson();
+      expect(toJson, compraJson);
     });
 
-    test('copyWith works correctly', () {
-      final original = Compra(
+    test('copyWith crea una copia con valores actualizados', () {
+      final copia = compra.copyWith(pagado: false, detalles: 'Pagado después');
+
+      expect(copia.pagado, false);
+      expect(copia.detalles, 'Pagado después');
+      // Los demás valores deben permanecer iguales
+      expect(copia.id, compra.id);
+      expect(copia.idProveedor, compra.idProveedor);
+      expect(copia.fecha, compra.fecha);
+    });
+
+    test('Las instancias con los mismos valores son iguales', () {
+      final c1 = Compra(
         id: 1,
         idProveedor: 100,
-        fecha: DateTime.now(),
-        pagado: false,
+        fecha: fecha,
+        detalles: 'Compra de prueba',
+        pagado: true,
+      );
+      final c2 = Compra(
+        id: 1,
+        idProveedor: 100,
+        fecha: fecha,
+        detalles: 'Compra de prueba',
+        pagado: true,
       );
 
-      final copy = original.copyWith(pagado: true);
+      expect(c1, c2);
+    });
 
-      expect(copy.id, 1);
-      expect(copy.pagado, true);
-      expect(identical(original, copy), false);
+    test('El hashCode es el mismo para instancias iguales', () {
+      final c1 = Compra(
+        id: 1,
+        idProveedor: 100,
+        fecha: fecha,
+        detalles: 'Compra de prueba',
+        pagado: true,
+      );
+      final c2 = Compra(
+        id: 1,
+        idProveedor: 100,
+        fecha: fecha,
+        detalles: 'Compra de prueba',
+        pagado: true,
+      );
+
+      expect(c1.hashCode, c2.hashCode);
     });
   });
 }

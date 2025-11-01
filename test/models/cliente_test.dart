@@ -2,74 +2,99 @@ import 'package:cafe_valdivia/models/cliente.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("Cliente Model Test", () {
-    final testMap = {
+  group('Cliente', () {
+    final cliente = Cliente(
+      id: 1,
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      telefono: '123456789',
+      email: 'juan.perez@example.com',
+    );
+
+    final clienteJson = {
       'id_cliente': 1,
-      'nombre': 'Alonso',
-      'apellido': 'Perez',
-      'telefono': '9203651780',
-      'email': 'alonsoPerez@correo.com',
+      'nombre': 'Juan',
+      'apellido': 'Pérez',
+      'telefono': '123456789',
+      'email': 'juan.perez@example.com',
     };
 
-    test("FromMap crea un instancia correcta", () {
-      final cliente = Cliente.fromJson(testMap);
-
-      expect(cliente.id, 1);
-      expect(cliente.nombre, 'Alonso');
-      expect(cliente.apellido, 'Perez');
-      expect(cliente.telefono, '9203651780');
-      expect(cliente.email, 'alonsoPerez@correo.com');
+    test('fromJson crea una instancia correcta', () {
+      final fromJson = Cliente.fromJson(clienteJson);
+      expect(fromJson, cliente);
     });
 
-    test('toJson regresa un mapa correcto', () {
-      final cliente = Cliente(
-        id: 2,
-        nombre: 'Manito',
-        apellido: 'Panzas',
-        telefono: '1212121212',
-        email: 'manito@panzas.com',
+    test('toJson crea el mapa correcto', () {
+      final toJson = cliente.toJson();
+      expect(toJson, clienteJson);
+    });
+
+    test('copyWith crea una copia con valores actualizados', () {
+      final copia = cliente.copyWith(
+        nombre: 'Juanito',
+        email: 'juanito@example.com',
       );
 
-      final map = cliente.toJson();
-
-      expect(map['id_cliente'], cliente.id);
-      expect(map['nombre'], cliente.nombre);
-      expect(map['apellido'], cliente.apellido);
-      expect(map['telefono'], cliente.telefono);
-      expect(map['email'], cliente.email);
+      expect(copia.nombre, 'Juanito');
+      expect(copia.email, 'juanito@example.com');
+      // Los demás valores deben permanecer iguales
+      expect(copia.id, cliente.id);
+      expect(copia.apellido, cliente.apellido);
+      expect(copia.telefono, cliente.telefono);
     });
 
-    test('Crear un cliente con valores no requidos funciona', () {
-      final cliente = Cliente(
-        nombre: 'Pinto',
-        apellido: 'Panzas',
-        telefono: '1212121212',
+    test('Las instancias con los mismos valores son iguales', () {
+      final c1 = Cliente(
+        id: 1,
+        nombre: 'Juan',
+        apellido: 'Pérez',
+        telefono: '123456789',
+        email: 'juan.perez@example.com',
+      );
+      final c2 = Cliente(
+        id: 1,
+        nombre: 'Juan',
+        apellido: 'Pérez',
+        telefono: '123456789',
+        email: 'juan.perez@example.com',
       );
 
-      expect(cliente.id, isNull);
-      expect(cliente.nombre, 'Pinto');
-      expect(cliente.apellido, 'Panzas');
-      expect(cliente.telefono, '1212121212');
-      expect(cliente.email, isNull);
+      expect(c1, c2);
     });
 
-    test(
-      'Crear un cliente con valores no requidos y convertirlo a un mapa funciona',
-      () {
-        final cliente = Cliente(
-          nombre: 'Pinto',
-          apellido: 'Panzas',
-          telefono: '1212121212',
-        );
+    test('El hashCode es el mismo para instancias iguales', () {
+      final c1 = Cliente(
+        id: 1,
+        nombre: 'Juan',
+        apellido: 'Pérez',
+        telefono: '123456789',
+        email: 'juan.perez@example.com',
+      );
+      final c2 = Cliente(
+        id: 1,
+        nombre: 'Juan',
+        apellido: 'Pérez',
+        telefono: '123456789',
+        email: 'juan.perez@example.com',
+      );
 
-        final map = cliente.toJson();
+      expect(c1.hashCode, c2.hashCode);
+    });
 
-        expect(map['id_cliente'], isNull);
-        expect(map['nombre'], cliente.nombre);
-        expect(map['apellido'], cliente.apellido);
-        expect(map['telefono'], cliente.telefono);
-        expect(map['email'], isNull);
-      },
-    );
+    test('El modelo funciona con campos nulos', () {
+      final clienteNulo = Cliente(nombre: 'Solo Nombre');
+      final clienteNuloJson = {
+        'id_cliente': null,
+        'nombre': 'Solo Nombre',
+        'apellido': null,
+        'telefono': null,
+        'email': null,
+      };
+
+      expect(clienteNulo.id, isNull);
+      expect(clienteNulo.apellido, isNull);
+      expect(clienteNulo.toJson(), clienteNuloJson);
+      expect(Cliente.fromJson(clienteNuloJson), clienteNulo);
+    });
   });
 }

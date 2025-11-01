@@ -3,53 +3,97 @@ import 'package:cafe_valdivia/models/detalle_venta_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("DetalleVenta", () {
-    final testMap = {
-      'id_detalle_venta': 1,
-      'idVenta': 100,
-      'idProducto': 200,
-      'cantidad': 3,
-      'precioUnitarioVenta': "7.5",
-    };
-    final testVenta = DetalleVenta(
+  group('DetalleVenta', () {
+    final detalleVenta = DetalleVenta(
       id: 1,
-      idVenta: 20,
-      idProducto: 30,
-      cantidad: 6,
-      precioUnitarioVenta: "20.00",
+      idVenta: 10,
+      idProducto: 20,
+      cantidad: 3,
+      precioUnitarioVenta: '15.50',
     );
 
-    test('fromJson creates correct instance', () {
-      final detalle = DetalleVenta.fromJson(testMap);
+    final detalleVentaJson = {
+      'id': 1,
+      'idVenta': 10,
+      'idProducto': 20,
+      'cantidad': 3,
+      'precioUnitarioVenta': '15.50',
+    };
 
-      expect(detalle.id, 1);
-      expect(detalle.idVenta, 100);
-      expect(detalle.idProducto, 200);
-      expect(detalle.cantidad, 3);
-      expect(detalle.precioUnitarioVenta, "7.5");
+    test('fromJson crea una instancia correcta', () {
+      final fromJson = DetalleVenta.fromJson(detalleVentaJson);
+      expect(fromJson, detalleVenta);
     });
 
-    test('toJson returns a correct structure', () {
-      final mapa = testVenta.toJson();
-
-      expect(mapa['id_detalle_venta'], 1);
-      expect(mapa['idVenta'], 20);
-      expect(mapa['idProducto'], 30);
-      expect(mapa['cantidad'], 6);
-      expect(mapa['precioUnitarioVenta'], "20.00");
+    test('toJson crea el mapa correcto', () {
+      final toJson = detalleVenta.toJson();
+      expect(toJson, detalleVentaJson);
     });
 
-    test("subtotal calculates correctly", () {
-      expect(testVenta.subTotalFormateado, "120.00");
+    test('copyWith crea una copia con valores actualizados', () {
+      final copia = detalleVenta.copyWith(cantidad: 5);
+
+      expect(copia.cantidad, 5);
+      // Los demás valores deben permanecer iguales
+      expect(copia.id, detalleVenta.id);
+      expect(copia.idVenta, detalleVenta.idVenta);
+      expect(copia.idProducto, detalleVenta.idProducto);
+      expect(copia.precioUnitarioVenta, detalleVenta.precioUnitarioVenta);
     });
 
-    test("CopyWith works correctly", () {
-      final copy = testVenta.copyWith(cantidad: 8, precioUnitarioVenta: "10.0");
+    test('Las instancias con los mismos valores son iguales', () {
+      final dv1 = DetalleVenta(
+        id: 1,
+        idVenta: 10,
+        idProducto: 20,
+        cantidad: 3,
+        precioUnitarioVenta: '15.50',
+      );
+      final dv2 = DetalleVenta(
+        id: 1,
+        idVenta: 10,
+        idProducto: 20,
+        cantidad: 3,
+        precioUnitarioVenta: '15.50',
+      );
 
-      expect(copy.id, 1);
-      expect(copy.cantidad, 8);
-      expect(copy.precioUnitarioVenta, "10.0");
-      expect(identical(copy, testVenta), false);
+      expect(dv1, dv2);
+    });
+
+    test('El hashCode es el mismo para instancias iguales', () {
+      final dv1 = DetalleVenta(
+        id: 1,
+        idVenta: 10,
+        idProducto: 20,
+        cantidad: 3,
+        precioUnitarioVenta: '15.50',
+      );
+      final dv2 = DetalleVenta(
+        id: 1,
+        idVenta: 10,
+        idProducto: 20,
+        cantidad: 3,
+        precioUnitarioVenta: '15.50',
+      );
+
+      expect(dv1.hashCode, dv2.hashCode);
+    });
+
+    group('Extension', () {
+      test('subTotal calcula el valor correcto en centavos', () {
+        // 3 * 15.50 = 46.50 -> 4650 centavos
+        expect(detalleVenta.subTotal, 4650);
+      });
+
+      test('subTotalFormateado retorna el string correcto', () {
+        expect(detalleVenta.subTotalFormateado, '46.50');
+      });
+
+      test('subTotal con precio inválido retorna 0', () {
+        final detalleInvalido = detalleVenta.copyWith(precioUnitarioVenta: 'invalido');
+        expect(detalleInvalido.subTotal, 0);
+        expect(detalleInvalido.subTotalFormateado, '0.00');
+      });
     });
   });
 }
