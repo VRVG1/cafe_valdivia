@@ -7,17 +7,17 @@ part 'insumo_notifier.g.dart';
 @riverpod
 class InsumoNotifier extends _$InsumoNotifier {
   @override
-  Future<List<Insumos>> build() async {
+  Future<List<Insumo>> build() async {
     final repo = ref.watch(insumoRepositoryProvider);
     return repo.getAll();
   }
 
-  Future<void> create(Insumos insumo) async {
+  Future<void> create(Insumo insumo) async {
     await ref.read(insumoRepositoryProvider).create(insumo);
     ref.invalidateSelf();
   }
 
-  Future<void> updateElement(Insumos insumo) async {
+  Future<void> updateElement(Insumo insumo) async {
     await ref.read(insumoRepositoryProvider).update(insumo);
     ref.invalidateSelf();
   }

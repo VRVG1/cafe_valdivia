@@ -8,18 +8,18 @@ part of 'insumo_producto.dart';
 
 _InsumoProducto _$InsumoProductoFromJson(Map<String, dynamic> json) =>
     _InsumoProducto(
-      id: (json['id'] as num?)?.toInt(),
-      idInsumo: (json['idInsumo'] as num).toInt(),
-      idProducto: (json['idProducto'] as num).toInt(),
+      idInsumoProducto: (json['id_insumo_producto'] as num?)?.toInt(),
+      idInsumo: (json['id_insumo'] as num).toInt(),
+      idProducto: (json['id_producto'] as num).toInt(),
       nombre: json['nombre'] as String,
-      cantidadRequerida: (json['cantidadRequerida'] as num).toDouble(),
+      cantidadRequerida: (json['cantidad_requerida'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$InsumoProductoToJson(_InsumoProducto instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'idInsumo': instance.idInsumo,
-      'idProducto': instance.idProducto,
+      'id_insumo_producto': instance.idInsumoProducto,
+      'id_insumo': instance.idInsumo,
+      'id_producto': instance.idProducto,
       'nombre': instance.nombre,
-      'cantidadRequerida': instance.cantidadRequerida,
+      'cantidad_requerida': instance.cantidadRequerida,
     };

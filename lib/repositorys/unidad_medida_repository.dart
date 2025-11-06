@@ -13,15 +13,15 @@ class UnidadMedidaRepository implements BaseRepository<UnidadMedida> {
   UnidadMedidaRepository(this.dbHelper);
 
   @override
-  UnidadMedida fromMap(Map<String, dynamic> map) => UnidadMedida.fromMap(map);
+  UnidadMedida fromJson(Map<String, dynamic> map) => UnidadMedida.fromJson(map);
 
   @override
-  Map<String, dynamic> toMap(UnidadMedida entity) => entity.toMap();
+  Map<String, dynamic> toJson(UnidadMedida entity) => entity.toJson();
 
   @override
   Future<int> create(UnidadMedida entity) async {
     final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toMap());
+    return await db.insert(tableName, entity.toJson());
   }
 
   @override
@@ -40,7 +40,7 @@ class UnidadMedidaRepository implements BaseRepository<UnidadMedida> {
       where: where,
       whereArgs: whereArgs,
     );
-    return result.map(fromMap).toList();
+    return result.map(fromJson).toList();
   }
 
   @override
@@ -52,17 +52,17 @@ class UnidadMedidaRepository implements BaseRepository<UnidadMedida> {
       limit: 1,
     );
     if (result.isEmpty) throw Exception('Unidad no encontrada');
-    return fromMap(result.first);
+    return fromJson(result.first);
   }
 
   @override
   Future<int> update(UnidadMedida entity) async {
-    if (entity.id == null) throw Exception('ID no puede ser nulo');
+    if (entity.idUnidadMedida == null) throw Exception('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
-      toMap(entity),
+      toJson(entity),
       where: '$idColumn = ?',
-      whereArgs: [entity.id],
+      whereArgs: [entity.idUnidadMedida],
     );
   }
 }

@@ -5,14 +5,14 @@ import 'package:cafe_valdivia/providers/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AgregarInsumosPage extends ConsumerStatefulWidget {
-  const AgregarInsumosPage({super.key});
+class AgregarInsumoPage extends ConsumerStatefulWidget {
+  const AgregarInsumoPage({super.key});
 
   @override
-  AgregarInsumosPageState createState() => AgregarInsumosPageState();
+  AgregarInsumoPageState createState() => AgregarInsumoPageState();
 }
 
-class AgregarInsumosPageState extends ConsumerState<AgregarInsumosPage> {
+class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
   final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
   UnidadMedida? _selectedUnidadMedidad;
@@ -69,7 +69,7 @@ class AgregarInsumosPageState extends ConsumerState<AgregarInsumosPage> {
   Future<void> _guardarCliente() async {
     if ((_formKey.currentState?.validate() ?? false) &&
         _selectedUnidadMedidad != null) {
-      final insumo = Insumos(
+      final insumo = Insumo(
         nombre: _nombreController.text,
         descripcion: _descripcionController.text,
         idUnidad: _selectedUnidadMedidad!.id!,

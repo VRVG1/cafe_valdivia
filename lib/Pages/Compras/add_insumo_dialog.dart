@@ -13,7 +13,7 @@ class AddInsumoDialog extends ConsumerStatefulWidget {
 
 class _AddInsumoDialogState extends ConsumerState<AddInsumoDialog> {
   final _formKey = GlobalKey<FormState>();
-  Insumos? _selectedInsumo;
+  Insumo? _selectedInsumo;
   final _cantidadController = TextEditingController();
   final _precioController = TextEditingController();
 
@@ -40,7 +40,7 @@ class _AddInsumoDialogState extends ConsumerState<AddInsumoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncInsumos = ref.watch(insumoProvider);
+    final asyncInsumo = ref.watch(insumoProvider);
 
     return AlertDialog(
       title: const Text('Añadir Insumo'),
@@ -50,15 +50,15 @@ class _AddInsumoDialogState extends ConsumerState<AddInsumoDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              asyncInsumos.when(
+              asyncInsumo.when(
                 loading: () => const CircularProgressIndicator(),
                 error: (err, stack) => Text('Error: $err'),
                 data: (insumos) {
-                  return DropdownMenu<Insumos>(
+                  return DropdownMenu<Insumo>(
                     label: const Text('Insumo'),
                     expandedInsets: EdgeInsets.zero,
                     dropdownMenuEntries: insumos.map((insumo) {
-                      return DropdownMenuEntry<Insumos>(
+                      return DropdownMenuEntry<Insumo>(
                         value: insumo,
                         label: insumo.nombre,
                       );

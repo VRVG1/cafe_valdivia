@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Insumo {
 
- int? get id; String get nombre; String? get descripcion; int get idUnidad; String get costoUnitario;
+ int? get id; String get nombre; String? get descripcion;@JsonKey(name: 'id_unidad') int get idUnidad;@JsonKey(name: 'consto_unitario') String get costoUnitario;
 /// Create a copy of Insumo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $InsumoCopyWith<$Res>  {
   factory $InsumoCopyWith(Insumo value, $Res Function(Insumo) _then) = _$InsumoCopyWithImpl;
 @useResult
 $Res call({
- int? id, String nombre, String? descripcion, int idUnidad, String costoUnitario
+ int? id, String nombre, String? descripcion,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'consto_unitario') String costoUnitario
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String nombre,  String? descripcion,  int idUnidad,  String costoUnitario)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String nombre,  String? descripcion, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'consto_unitario')  String costoUnitario)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Insumo() when $default != null:
 return $default(_that.id,_that.nombre,_that.descripcion,_that.idUnidad,_that.costoUnitario);case _:
@@ -178,7 +178,7 @@ return $default(_that.id,_that.nombre,_that.descripcion,_that.idUnidad,_that.cos
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String nombre,  String? descripcion,  int idUnidad,  String costoUnitario)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String nombre,  String? descripcion, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'consto_unitario')  String costoUnitario)  $default,) {final _that = this;
 switch (_that) {
 case _Insumo():
 return $default(_that.id,_that.nombre,_that.descripcion,_that.idUnidad,_that.costoUnitario);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.nombre,_that.descripcion,_that.idUnidad,_that.cos
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String nombre,  String? descripcion,  int idUnidad,  String costoUnitario)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String nombre,  String? descripcion, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'consto_unitario')  String costoUnitario)?  $default,) {final _that = this;
 switch (_that) {
 case _Insumo() when $default != null:
 return $default(_that.id,_that.nombre,_that.descripcion,_that.idUnidad,_that.costoUnitario);case _:
@@ -213,14 +213,14 @@ return $default(_that.id,_that.nombre,_that.descripcion,_that.idUnidad,_that.cos
 @JsonSerializable()
 
 class _Insumo implements Insumo {
-  const _Insumo({this.id, required this.nombre, this.descripcion, required this.idUnidad, required this.costoUnitario});
+  const _Insumo({this.id, required this.nombre, this.descripcion, @JsonKey(name: 'id_unidad') required this.idUnidad, @JsonKey(name: 'consto_unitario') required this.costoUnitario});
   factory _Insumo.fromJson(Map<String, dynamic> json) => _$InsumoFromJson(json);
 
 @override final  int? id;
 @override final  String nombre;
 @override final  String? descripcion;
-@override final  int idUnidad;
-@override final  String costoUnitario;
+@override@JsonKey(name: 'id_unidad') final  int idUnidad;
+@override@JsonKey(name: 'consto_unitario') final  String costoUnitario;
 
 /// Create a copy of Insumo
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$InsumoCopyWith<$Res> implements $InsumoCopyWith<$Res> {
   factory _$InsumoCopyWith(_Insumo value, $Res Function(_Insumo) _then) = __$InsumoCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String nombre, String? descripcion, int idUnidad, String costoUnitario
+ int? id, String nombre, String? descripcion,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'consto_unitario') String costoUnitario
 });
 
 

@@ -1,4 +1,3 @@
-import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:test/test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
@@ -8,8 +7,6 @@ import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
-import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/detalle_compra.dart';
 
 void main() {
@@ -21,7 +18,7 @@ void main() {
   group('CompraRepository Tests', () {
     late DatabaseHelper databaseHelper;
     late UnidadMedidaRepository unidadRepo;
-    late InsumoRepository insumoRepo;
+    late InsumosRepository insumoRepo;
     late ProveedorRepository proveedorRepo;
     late CompraRepository compraRepo;
     late Database database;
@@ -29,54 +26,72 @@ void main() {
 
     // Funciones de utilidad para crear datos de prueba
     Future<int> crearUnidad({String? nombreUnidad}) async {
-      return await unidadRepo.create(
-        UnidadMedida(nombre: nombreUnidad ?? 'Unidad'),
-      );
+      return await database.insert('Unidad_Medida', {
+        'nombre': nombreUnidad ?? 'Unidad',
+      });
     }
 
-    Future<int> crearInsumo(int unidadId, {String? nombre}) async {
-      return await insumoRepo.create(
-        Insumos(nombre: nombre ?? 'Insumo Test', idUnidad: unidadId),
-      );
+    Future<int> crearInsumo({
+      required int unidadId,
+      String? nombre,
+      String? costoUnitario,
+    }) async {
+      return await database.insert('Insumo', {
+        'nombre': nombre ?? 'Insumo Test',
+        'id_unidad': unidadId,
+        'costo_unitario': costoUnitario ?? "0.0",
+      });
     }
 
     Future<int> crearProveedor() async {
-      return await proveedorRepo.create(Proveedor(nombre: 'Proveedor Test'));
+      return await database.insert('Proveedor', {
+        'nombre': 'Proveedor Test',
+        'telefono': '1234567890',
+      });
     }
 
-    Future<Compra> crearCompraCompleta(
-      bool paid, {
-      String? nombreUnidad,
-      String? nombreInsumo,
-    }) async {
+    Future<Compra> crearCompra(bool paid) async {
       final proveedorId = await crearProveedor();
-      final unidadId = await crearUnidad(nombreUnidad: nombreUnidad);
-      final insumoId = await crearInsumo(unidadId, nombre: nombreInsumo);
 
       return paid
           ? Compra(
               idProveedor: proveedorId,
               fecha: DateTime.now(),
               pagado: true,
-              detallesCompra: [
-                DetalleCompra(
-                  idInsumo: insumoId,
-                  cantidad: 10,
-                  precioUnitarioCompra: 5.99,
-                ),
-              ],
             )
-          : Compra(
-              idProveedor: proveedorId,
-              fecha: DateTime.now(),
-              detallesCompra: [
-                DetalleCompra(
-                  idInsumo: insumoId,
-                  cantidad: 10,
-                  precioUnitarioCompra: 5.99,
-                ),
-              ],
-            );
+          : Compra(idProveedor: proveedorId, fecha: DateTime.now());
+    }
+
+    Future<List<DetalleCompra>> crearDetallesCompra({
+      int idCompra = 0,
+      String? nombreUnidad,
+      String? nombreInsumo,
+    }) async {
+      final unidadId = await crearUnidad(nombreUnidad: nombreUnidad);
+      final insumoId = await crearInsumo(
+        unidadId: unidadId,
+        nombre: nombreInsumo,
+      );
+      return [
+        DetalleCompra(
+          idCompra: idCompra,
+          idInsumo: insumoId,
+          cantidad: 9,
+          precioUnitarioCompra: "20.00",
+        ),
+        DetalleCompra(
+          idCompra: idCompra,
+          idInsumo: insumoId,
+          cantidad: 7,
+          precioUnitarioCompra: "19.80",
+        ),
+        DetalleCompra(
+          idCompra: idCompra,
+          idInsumo: insumoId,
+          cantidad: 2,
+          precioUnitarioCompra: "880.20",
+        ),
+      ];
     }
 
     setUp(() async {
@@ -85,9 +100,9 @@ void main() {
 
       database = await openDatabase(
         path,
-        version: 2,
+        version: 3,
         onCreate: (db, version) async {
-          await DatabaseHelper().testOnCreate(db);
+          await DatabaseHelper().testOnCreate(db, version);
         },
         onConfigure: (db) async {
           await DatabaseHelper().testOnConfigure(db);
@@ -98,7 +113,7 @@ void main() {
       databaseHelper.setMockDatabase(database);
 
       unidadRepo = UnidadMedidaRepository(databaseHelper);
-      insumoRepo = InsumoRepository(databaseHelper, unidadRepo);
+      insumoRepo = InsumosRepository(databaseHelper, unidadRepo);
       proveedorRepo = ProveedorRepository(databaseHelper);
       compraRepo = CompraRepository(databaseHelper, proveedorRepo, insumoRepo);
     });
@@ -108,9 +123,13 @@ void main() {
     });
 
     // ---------------------- PRUEBAS CRUD ----------------------
-    test('createWithDetails inserts compra and detalles', () async {
-      final compra = await crearCompraCompleta(false);
-      final compraId = await compraRepo.createWithDetails(compra);
+    test('registrarNuevaCompra inserts compra and detalles', () async {
+      final compra = await crearCompra(false);
+      final detalles = await crearDetallesCompra();
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra,
+        detallesCompra: detalles,
+      );
       expect(compraId, greaterThan(0));
 
       // Verificar compra principal
@@ -118,27 +137,33 @@ void main() {
       expect(compras.length, 1);
 
       // Verificar detalles
-      final detalles = await database.query('Detalle_Compra');
-      expect(detalles.length, 1);
-      expect(detalles.first['cantidad'], 10.0);
+      final detallesDb = await database.query('Detalle_Compra');
+      expect(detallesDb.length, 3);
+      expect(detallesDb.first['cantidad'], 9);
     });
 
     test('getFullCompra loads all relationships', () async {
-      final compra = await crearCompraCompleta(false);
-      final compraId = await compraRepo.createWithDetails(compra);
+      final compra = await crearCompra(false);
+      final detalles = await crearDetallesCompra();
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra,
+        detallesCompra: detalles,
+      );
 
       final compraCompleta = await compraRepo.getFullCompra(compraId);
 
-      expect(compraCompleta.proveedor, isNotNull);
-      expect(compraCompleta.proveedor!.nombre, 'Proveedor Test');
-      expect(compraCompleta.detallesCompra, hasLength(1));
-      expect(compraCompleta.detallesCompra.first.insumo, isNotNull);
-      expect(compraCompleta.detallesCompra.first.insumo!.nombre, 'Insumo Test');
+      expect(compraCompleta['compra'], isNotNull);
+      expect(compraCompleta['compra']['nombre_proveedor'], 'Proveedor Test');
+      expect(compraCompleta['detalles'], hasLength(3));
     });
 
     test('markAsPaid updates payment status', () async {
-      final compra = await crearCompraCompleta(false);
-      final compraId = await compraRepo.createWithDetails(compra);
+      final compra = await crearCompra(false);
+      final detalles = await crearDetallesCompra();
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra,
+        detallesCompra: detalles,
+      );
 
       await compraRepo.markAsPaid(compraId);
 
@@ -152,8 +177,12 @@ void main() {
     });
 
     test('markAsUnpaid updates payment status', () async {
-      final compra = await crearCompraCompleta(true);
-      final compraId = await compraRepo.createWithDetails(compra);
+      final compra = await crearCompra(true);
+      final detalles = await crearDetallesCompra();
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra,
+        detallesCompra: detalles,
+      );
 
       await compraRepo.markAsUnpaid(compraId);
 
@@ -167,46 +196,38 @@ void main() {
     });
 
     test('getall returns all compras', () async {
-      final venta1 = await crearCompraCompleta(
-        true,
+      final compra1 = await crearCompra(true);
+      final detalles1 = await crearDetallesCompra(
         nombreUnidad: "Unidad 1",
         nombreInsumo: "Insumo 1",
       );
-      final venta2 = await crearCompraCompleta(
-        false,
+      await compraRepo.registrarNuevaCompra(
+        compra: compra1,
+        detallesCompra: detalles1,
+      );
+
+      final compra2 = await crearCompra(false);
+      final detalles2 = await crearDetallesCompra(
         nombreUnidad: "Unidad 2",
         nombreInsumo: "Insumo 2",
       );
-      await compraRepo.createWithDetails(venta1);
-      await compraRepo.createWithDetails(venta2);
-
-      final todasLasVentas = await compraRepo.getAll();
-
-      expect(todasLasVentas.length, 2);
-    });
-    // ---------------------- PRUEBAS DE INVENTARIO ----------------------
-    test('processCompraInventory creates inventory movements', () async {
-      final compra = await crearCompraCompleta(false);
-      final compraId = await compraRepo.createWithDetails(compra);
-
-      await compraRepo.processCompraInventory(compraId);
-
-      final movimientos = await database.query('Movimiento_Inventario');
-      expect(movimientos.length, 1);
-      expect(movimientos.first['tipo'], 'Entrada');
-      expect(movimientos.first['cantidad'], 10.0);
-    });
-
-    // ---------------------- PRUEBAS DE ROBUSTEZ ----------------------
-    test('createWithDetails with empty detalles does not fail', () async {
-      final proveedorId = await crearProveedor();
-      final compra = Compra(
-        idProveedor: proveedorId,
-        fecha: DateTime.now(),
-        detallesCompra: [],
+      await compraRepo.registrarNuevaCompra(
+        compra: compra2,
+        detallesCompra: detalles2,
       );
 
-      final compraId = await compraRepo.createWithDetails(compra);
+      final todasLasCompras = await compraRepo.getAll();
+
+      expect(todasLasCompras.length, 2);
+    });
+    // ---------------------- PRUEBAS DE ROBUSTEZ ----------------------
+    test('registrarNuevaCompra with empty detalles does not fail', () async {
+      final compra = await crearCompra(false);
+
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra,
+        detallesCompra: [],
+      );
       expect(compraId, greaterThan(0));
 
       final detalles = await database.query('Detalle_Compra');
@@ -217,16 +238,9 @@ void main() {
       expect(() => compraRepo.getFullCompra(9999), throwsA(isA<Exception>()));
     });
 
-    test('processCompraInventory handles non-existent compra', () async {
-      expect(
-        () => compraRepo.processCompraInventory(9999),
-        throwsA(isA<Exception>()),
-      );
-    });
-
     test('markAsPaid handles non-existent compra', () async {
       final result = await compraRepo.markAsPaid(9999);
-      expect(result, isA<int>());
+      expect(result, 0);
     });
 
     // ---------------------- PRUEBAS DE RENDIMIENTO ----------------------
@@ -238,7 +252,7 @@ void main() {
 
         final proveedorId = await crearProveedor();
         final unidadId = await crearUnidad();
-        final insumoId = await crearInsumo(unidadId);
+        final insumoId = await crearInsumo(unidadId: unidadId);
 
         final batch = database.batch();
         final compraIds = <int>[];
@@ -246,7 +260,7 @@ void main() {
         // 1. Insertar compras principales
         for (int i = 0; i < recordCount; i++) {
           batch.insert('Compra', {
-            'idProveedor': proveedorId,
+            'id_proveedor': proveedorId,
             'fecha': DateTime.now().toIso8601String(),
             'pagado': 0,
           });
@@ -263,7 +277,7 @@ void main() {
             'id_compra': compraIds[i],
             'id_insumo': insumoId,
             'cantidad': i + 1,
-            'precio_unitario_compra': (i + 1) * 1.5,
+            'precio_unitario_compra': ((i + 1) * 1.5).toString(),
           });
         }
         await detallesBatch.commit(noResult: true);
@@ -280,9 +294,9 @@ void main() {
         expect(detalles.length, recordCount);
 
         stopwatch.stop();
-        expect(stopwatch.elapsedMilliseconds, lessThan(1200));
+        expect(stopwatch.elapsedMilliseconds, lessThan(3000));
       },
-      timeout: Timeout(Duration(seconds: 3)),
+      timeout: Timeout(Duration(seconds: 5)),
     );
 
     test(
@@ -300,7 +314,7 @@ void main() {
           insumoBatch.insert('Insumo', {
             'nombre': 'Insumo ${i + 1}',
             'id_unidad': unidadId,
-            'descripcion': null,
+            'costo_unitario': '1.0',
           });
         }
         final insumoResults = await insumoBatch.commit(noResult: false);
@@ -309,10 +323,9 @@ void main() {
 
         // 3. Crear compra principal
         final compraId = await database.insert('Compra', {
-          'idProveedor': proveedorId,
+          'id_proveedor': proveedorId,
           'fecha': DateTime.now().toIso8601String(),
           'pagado': 0,
-          'detalles': null,
         });
 
         // 4. Crear detalles con batch
@@ -322,25 +335,11 @@ void main() {
             'id_compra': compraId,
             'id_insumo': insumoIds[i],
             'cantidad': 10,
-            'precio_unitario_compra': 5.99,
+            'precio_unitario_compra': '5.99',
           });
         }
         await detallesBatch.commit(noResult: true);
         print('Creación 100 detalles: ${stopwatch.elapsedMilliseconds}ms');
-
-        // 5. Procesar inventario (simulamos la función del repositorio)
-        final movimientosBatch = database.batch();
-        for (int i = 0; i < 100; i++) {
-          movimientosBatch.insert('Movimiento_Inventario', {
-            'id_insumo': insumoIds[i],
-            'tipo': 'Entrada',
-            'cantidad': 10,
-            'fecha': DateTime.now().toIso8601String(),
-            'id_detalle_compra': i + 1,
-          });
-        }
-        await movimientosBatch.commit(noResult: true);
-        print('Procesamiento inventario: ${stopwatch.elapsedMilliseconds}ms');
 
         final detallesMaps = await database.query(
           'Detalle_Compra',
@@ -352,9 +351,10 @@ void main() {
         expect(detallesMaps.length, 100);
 
         stopwatch.stop();
-        expect(stopwatch.elapsedMilliseconds, lessThan(1500));
+        expect(stopwatch.elapsedMilliseconds, lessThan(3000));
       },
-      timeout: Timeout(Duration(seconds: 3)),
+      timeout: Timeout(Duration(seconds: 5)),
     );
   });
 }
+

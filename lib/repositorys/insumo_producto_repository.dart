@@ -8,16 +8,18 @@ class InsumoProductoRepository {
   InsumoProductoRepository(this.dbHelper);
 
   Future<int> create(InsumoProducto relacion) async {
-    return await dbHelper.insert(tableName, relacion.toMap());
+    return await dbHelper.insert(tableName, relacion.toJson());
   }
 
   Future<int> update(InsumoProducto relacion) async {
-    if (relacion.id == null) throw Exception('ID no puede ser nulo');
+    if (relacion.idInsumoProducto == null) {
+      throw Exception('ID no puede ser nulo');
+    }
     return await dbHelper.update(
       tableName,
-      relacion.toMap(),
+      relacion.toJson(),
       where: 'id_insumo_producto = ?',
-      whereArgs: [relacion.id],
+      whereArgs: [relacion.idInsumoProducto],
     );
   }
 
@@ -27,7 +29,7 @@ class InsumoProductoRepository {
       where: 'id_producto = ?',
       whereArgs: [productoId],
     );
-    return result.map((map) => InsumoProducto.fromMap(map)).toList();
+    return result.map((map) => InsumoProducto.fromJson(map)).toList();
   }
 
   Future<List<InsumoProducto>> getAll({
@@ -39,7 +41,7 @@ class InsumoProductoRepository {
       where: where,
       whereArgs: whereArgs,
     );
-    return result.map(InsumoProducto.fromMap).toList();
+    return result.map(InsumoProducto.fromJson).toList();
   }
 
   Future<InsumoProducto> getById(int insumoProductoId) async {
@@ -49,7 +51,7 @@ class InsumoProductoRepository {
       whereArgs: [insumoProductoId],
     );
     if (result.isEmpty) throw Exception('Unidad no encontrada');
-    return InsumoProducto.fromMap(result.first);
+    return InsumoProducto.fromJson(result.first);
   }
 
   Future<int> deleteByProducto(int productoId) async {

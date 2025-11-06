@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EditarInsumoPage extends ConsumerStatefulWidget {
-  final Insumos insumo;
+  final Insumo insumo;
   const EditarInsumoPage({super.key, required this.insumo});
 
   @override

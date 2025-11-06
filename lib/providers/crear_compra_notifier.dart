@@ -45,7 +45,7 @@ class CrearCompraNotifier extends _$CrearCompraNotifier {
     state = state.copyWith(proveedor: proveedor);
   }
 
-  void agregarItem(Insumos insumo, double cantidad, double precio) {
+  void agregarItem(Insumo insumo, double cantidad, double precio) {
     final nuevoDetalle = DetalleCompra(
       idInsumo: insumo.id!,
       insumo: insumo,

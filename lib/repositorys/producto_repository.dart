@@ -1,5 +1,4 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/insumo_producto.dart';
 import 'package:cafe_valdivia/models/producto.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
@@ -12,20 +11,20 @@ class ProductoRepository implements BaseRepository<Producto> {
   @override
   final String idColumn = 'id_producto';
 
-  final InsumoRepository insumoRepo;
+  final InsumosRepository insumoRepo;
 
   ProductoRepository(this.dbHelper, this.insumoRepo);
 
   @override
-  Producto fromMap(Map<String, dynamic> map) => Producto.fromMap(map);
+  Producto fromJson(Map<String, dynamic> map) => Producto.fromJson(map);
 
   @override
-  Map<String, dynamic> toMap(Producto entity) => entity.toMap();
+  Map<String, dynamic> toJson(Producto entity) => entity.toJson();
 
   @override
   Future<int> create(Producto entity) async {
     final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toMap());
+    return await db.insert(tableName, entity.toJson());
   }
 
   @override
@@ -44,7 +43,7 @@ class ProductoRepository implements BaseRepository<Producto> {
       where: where,
       whereArgs: whereArgs,
     );
-    return result.map(fromMap).toList();
+    return result.map(fromJson).toList();
   }
 
   @override
@@ -56,35 +55,35 @@ class ProductoRepository implements BaseRepository<Producto> {
       limit: 1,
     );
     if (result.isEmpty) throw Exception('Unidad no encontrada');
-    return fromMap(result.first);
+    return fromJson(result.first);
   }
 
   @override
   Future<int> update(Producto entity) async {
-    if (entity.id == null) throw Exception('ID no puede ser nulo');
+    if (entity.idProducto == null) throw Exception('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
-      toMap(entity),
+      toJson(entity),
       where: '$idColumn = ?',
-      whereArgs: [entity.id],
+      whereArgs: [entity.idProducto],
     );
   }
 
-  Future<Producto> getWithInsumo(int id) async {
-    final producto = await getById(id);
-    final relaciones = await dbHelper.query(
-      'Insumo_Producto',
-      where: '$idColumn = ?',
-      whereArgs: [id],
-    );
+  //TODO:// Future<Producto> getWithInsumo(int id) async {
+  //   final producto = await getById(id);
+  //   final relaciones = await dbHelper.query(
+  //     'Insumo_Producto',
+  //     where: '$idColumn = ?',
+  //     whereArgs: [id],
+  //   );
 
-    producto.insumos = await Future.wait(
-      relaciones.map((relacionesMap) async {
-        final relacion = InsumoProducto.fromMap(relacionesMap);
-        relacion.insumo = await insumoRepo.getById(relacion.idInsumo);
-        return relacion;
-      }),
-    );
-    return producto;
-  }
+  //   producto.insumos = await Future.wait(
+  //     relaciones.map((relacionesMap) async {
+  //       final relacion = InsumoProducto.fromJson(relacionesMap);
+  //       relacion.insumo = await insumoRepo.getById(relacion.idInsumo);
+  //       return relacion;
+  //     }),
+  //   );
+  //   return producto;
+  // }
 }

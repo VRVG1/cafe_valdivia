@@ -15,12 +15,13 @@ String? tipoMovimientoToJson(TipoMovimiento? tipo) {
 abstract class MovimientoInventarioProducto
     with _$MovimientoInventarioProducto {
   const factory MovimientoInventarioProducto({
-    int? id,
-    required int idProducto,
+    @JsonKey(name: 'id_movimiento_inventario_producto')
+    int? idMovimientoInventarioProducto,
+    @JsonKey(name: 'id_producto') required int idProducto,
     required int cantidad,
     required DateTime fecha,
-    required int idDetalleVenta,
-    required int idDetalleProduccion,
+    @JsonKey(name: 'id_detalle_venta') required int idDetalleVenta,
+    @JsonKey(name: 'id_detalle_produccion') required int idDetalleProduccion,
     @JsonKey(fromJson: tipoMovimientoFromJson, toJson: tipoMovimientoToJson)
     TipoMovimiento? tipo,
     String? motivo,

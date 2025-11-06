@@ -209,7 +209,7 @@ class DatabaseHelper {
         fecha DATETIME NOT NULL,
         detalles TEXT,
         pagado BOOLEAN DEFAULT 0,
-        estado TEXT NOT NULL DEFAULT 'pendiente' CHECK (estado IN ('pendiente', 'completado', 'cancelado'))
+        estado TEXT NOT NULL DEFAULT 'pendiente' CHECK (estado IN ('pendiente', 'completado', 'cancelado')),
         FOREIGN KEY (id_cliente) REFERENCES Cliente (id_cliente) ON DELETE RESTRICT
       )
     ''');
@@ -222,7 +222,7 @@ class DatabaseHelper {
         cantidad INTEGER NOT NULL,
         precio_unitario_venta TEXT NOT NULL,
         FOREIGN KEY (id_venta) REFERENCES Venta (id_venta),
-        FOREIGN KEY (id_producto) REFERENCES Producto (id_producto)
+        FOREIGN KEY (id_producto) REFERENCES Producto (id_producto),
         UNIQUE(id_venta, id_producto)
       )
     ''');
@@ -252,7 +252,7 @@ class DatabaseHelper {
       )
       ''');
 
-    // Inventario de Insumos (SOLO MOVIMIENTOS)
+    // Inventario de Insumo (SOLO MOVIMIENTOS)
     await db.execute('''
       CREATE TABLE Movimiento_Inventario_Insumo (
         id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -359,6 +359,138 @@ class DatabaseHelper {
       p.id_producto, p.nombre, p.precio_venta
     ''');
 
+    await db.execute('''
+      CREATE VIEW V_Compra_Detallada AS 
+      SELECT
+        c.id_compra,
+        c.fecha,
+        c.detalles AS detalles_compra,
+        c.pagado,
+        p.id_proveedor,
+        p.nombre AS nombre_proveedor,
+        dc.id_detalle_compra,
+        dc.cantidad,
+        dc.precio_unitario_compra,
+        i.id_insumo,
+        i.nombre AS nombre_insumo,
+        (CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS subtotal
+      FROM
+        Compra AS c
+      JOIN
+        Proveedor AS p ON c.id_proveedor = p.id_proveedor
+      JOIN
+        Detalle_Compra as dc ON c.id_compra = dc.id_compra
+      JOIN
+        Insumo as i ON dc.id_insumo = i.id_insumo
+      ''');
+
+    await db.execute('''
+      CREATE VIEW V_Venta_Detallada AS 
+      SELECT
+        v.id_venta,
+        v.fecha,
+        v.detalles AS detalles_venta,
+        v.pagado,
+        c.id_cliente,
+        c.nombre AS nombre_cliente,
+        dv.id_detalle_venta,
+        dv.cantidad,
+        dv.precio_unitario_venta,
+        p.id_producto,
+        p.nombre AS nombre_producto,
+        (CAST(dv.cantidad AS REAL) * CAST(dv.precio_unitario_venta AS REAL)) AS subtotal
+      FROM
+        Venta AS v
+      JOIN
+        Cliente AS c ON v.id_cliente = c.id_cliente
+      JOIN
+        Detalle_Venta as dv ON v.id_venta = dv.id_venta
+      JOIN
+        Producto as p ON dv.id_producto = p.id_producto
+      ''');
+
+    await db.execute('''
+      CREATE VIEW V_Orden_Produccion_Detallada AS
+      SELECT
+          op.id_orden_produccion,
+          op.fecha,
+          op.cantidad_producida,
+          op.costo_total_produccion,
+          op.notas,
+          p.id_producto,
+          p.nombre AS nombre_producto,
+          dpi.id_detalle_produccion,
+          dpi.cantidad_usada,
+          dpi.costo_insumo_momento,
+          i.id_insumo,
+          i.nombre AS nombre_insumo,
+          (CAST(dpi.cantidad_usada AS REAL) * CAST(dpi.costo_insumo_momento AS REAL)) AS subtotal_linea_costo
+      FROM
+          Orden_Produccion AS op
+      JOIN
+          Producto AS p ON op.id_producto = p.id_producto
+      JOIN
+          Detalle_Produccion_Insumo AS dpi ON op.id_orden_produccion = dpi.id_orden_produccion
+      JOIN
+          Insumo AS i ON dpi.id_insumo = i.id_insumo;
+      ''');
+
+    await db.execute('''
+      CREATE VIEW V_Movimiento_Insumo_Detallado AS
+      SELECT
+          mi.id_movimiento,
+          mi.fecha,
+          mi.tipo,
+          mi.cantidad,
+          mi.motivo,
+          i.id_insumo,
+          i.nombre AS nombre_insumo,
+          -- Origen del movimiento (Compra, Producción o Ajuste)
+          CASE
+              WHEN mi.id_detalle_compra IS NOT NULL THEN 'Compra ID: ' || c.id_compra
+              WHEN mi.id_detalle_produccion IS NOT NULL THEN 'Producción ID: ' || op.id_orden_produccion
+              ELSE 'Ajuste Manual'
+          END AS origen_movimiento
+      FROM
+          Movimiento_Inventario_Insumo AS mi
+      JOIN
+          Insumo AS i ON mi.id_insumo = i.id_insumo
+      LEFT JOIN
+          Detalle_Produccion_Insumo AS dpi ON mi.id_detalle_produccion = dpi.id_detalle_produccion
+      LEFT JOIN
+          Orden_Produccion AS op ON dpi.idOrdenProduccion = op.id_orden_produccion
+      LEFT JOIN
+          Detalle_Compra AS dc ON mi.id_detalle_compra = dc.id_detalle_compra
+      LEFT JOIN
+          Compra AS c ON dc.idCompra = c.id_compra;
+      ''');
+
+    await db.execute('''
+      CREATE VIEW V_Movimiento_Producto_Detallado AS
+      SELECT
+          mp.id_movimiento_producto,
+          mp.fecha,
+          mp.tipo,
+          mp.cantidad,
+          mp.motivo,
+          p.id_producto,
+          p.nombre AS nombre_producto,
+          -- Origen del movimiento (Venta, Producción o Ajuste)
+          CASE
+              WHEN mp.id_detalle_venta IS NOT NULL THEN 'Venta ID: ' || v.id_venta
+              WHEN mp.id_orden_produccion IS NOT NULL THEN 'Producción ID: ' || mp.id_orden_produccion
+              ELSE 'Ajuste Manual'
+          END AS origen_movimiento
+      FROM
+          Movimiento_Inventario_Producto AS mp
+      JOIN
+          Producto AS p ON mp.id_producto = p.id_producto
+      LEFT JOIN
+          Detalle_Venta AS dv ON mp.id_detalle_venta = dv.id_detalle_venta
+      LEFT JOIN
+          Venta AS v ON dv.idVenta = v.id_venta;
+      ''');
+
     //TRIGGERS
     await db.execute('''
       CREATE TRIGGER trg_compra_insumo
@@ -388,7 +520,7 @@ class DatabaseHelper {
         NEW.id_insumo,
         'salida',
         -NEW.cantidad_usada,
-        (SELECT fecha FROM Orden_Produccion WHERE id_orden_produccion = NEW.id_orden_produccion)
+        (SELECT fecha FROM Orden_Produccion WHERE id_orden_produccion = NEW.id_orden_produccion),
         NEW.id_detalle_produccion,
         'Produccion'
         );

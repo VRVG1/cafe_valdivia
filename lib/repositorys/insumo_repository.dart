@@ -3,7 +3,7 @@ import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 
-class InsumoRepository implements BaseRepository<Insumos> {
+class InsumosRepository implements BaseRepository<Insumo> {
   @override
   final DatabaseHelper dbHelper;
   @override
@@ -13,18 +13,18 @@ class InsumoRepository implements BaseRepository<Insumos> {
 
   final UnidadMedidaRepository unidadRepo;
 
-  InsumoRepository(this.dbHelper, this.unidadRepo);
+  InsumosRepository(this.dbHelper, this.unidadRepo);
 
   @override
-  Insumos fromMap(Map<String, dynamic> map) => Insumos.fromMap(map);
+  Insumo fromJson(Map<String, dynamic> map) => Insumo.fromJson(map);
 
   @override
-  Map<String, dynamic> toMap(Insumos entity) => entity.toMap();
+  Map<String, dynamic> toJson(Insumo entity) => entity.toJson();
 
   @override
-  Future<int> create(Insumos entity) async {
+  Future<int> create(Insumo entity) async {
     final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toMap());
+    return await db.insert(tableName, entity.toJson());
   }
 
   @override
@@ -34,20 +34,17 @@ class InsumoRepository implements BaseRepository<Insumos> {
   }
 
   @override
-  Future<List<Insumos>> getAll({
-    String? where,
-    List<Object?>? whereArgs,
-  }) async {
+  Future<List<Insumo>> getAll({String? where, List<Object?>? whereArgs}) async {
     final result = await dbHelper.query(
       tableName,
       where: where,
       whereArgs: whereArgs,
     );
-    return result.map(fromMap).toList();
+    return result.map(fromJson).toList();
   }
 
   @override
-  Future<Insumos> getById(int id) async {
+  Future<Insumo> getById(int id) async {
     final result = await dbHelper.query(
       tableName,
       where: '$idColumn = ?',
@@ -55,25 +52,25 @@ class InsumoRepository implements BaseRepository<Insumos> {
       limit: 1,
     );
     if (result.isEmpty) throw Exception('Unidad no encontrada');
-    return fromMap(result.first);
+    return fromJson(result.first);
   }
 
   @override
-  Future<int> update(Insumos entity) async {
+  Future<int> update(Insumo entity) async {
     if (entity.id == null) throw Exception('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
-      toMap(entity),
+      toJson(entity),
       where: '$idColumn = ?',
       whereArgs: [entity.id],
     );
   }
 
-  Future<Insumos> getWithUnidad(int id) async {
-    final insumo = await getById(id);
-    insumo.unidad = await unidadRepo.getById(insumo.idUnidad);
-    return insumo;
-  }
+  //TODO: //  Future<Insumo> getWithUnidad(int id) async {
+  //    final insumo = await getById(id);
+  //    insumo.unidad = await unidadRepo.getById(insumo.idUnidad);
+  //    return insumo;
+  //  }
 
   Future<double> getCostoPromedio(int insumoId) async {
     final db = await dbHelper.database;

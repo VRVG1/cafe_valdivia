@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/models/detalle_venta.dart';
 import 'package:cafe_valdivia/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
+import 'package:sqflite/sqflite.dart';
 
 class VentaRepository {
   final DatabaseHelper dbHelper;
@@ -14,82 +15,74 @@ class VentaRepository {
 
   VentaRepository(this.dbHelper, this.productoRepo, this.clienteRepo);
 
-  Future<int> createWithDetails(Venta venta) async {
+  Future<int> registrarNuevaVenta({
+    required Venta venta,
+    required List<DetalleVenta> detallesVenta,
+  }) async {
     return await dbHelper.transaction<int>((txn) async {
       // Insert venta principal
-      final ventaMap = venta.toMap();
-      ventaMap.remove('detalleVenta');
-      final ventaId = await txn.insert(tableName, ventaMap);
+      final ventaMap = venta.toJson();
+      final ventaId = await txn.insert(
+        tableName,
+        ventaMap,
+        conflictAlgorithm: ConflictAlgorithm.rollback,
+      );
 
       //Insert detalleVenta
-      for (final detalle in venta.detallesVenta) {
-        await txn.insert('Detalle_Venta', {
-          ...detalle.toMap(),
-          'id_venta': ventaId,
-        });
+      for (final DetalleVenta detalle in detallesVenta) {
+        final Map<String, dynamic> copyDetalleVenta = detalle.toJson();
+        copyDetalleVenta['idVenta'] = ventaId;
+
+        await txn.insert(
+          'Detalle_Venta',
+          copyDetalleVenta,
+          conflictAlgorithm: ConflictAlgorithm.rollback,
+        );
       }
       return ventaId;
     });
   }
 
-  Future<Venta> getFullVenta(int id) async {
+  Future<Map<String, dynamic>> getFullVenta({required int ventaId}) async {
     final db = await dbHelper.database;
-    // Obtener venta principal
-    final ventaList = (await db.query(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-      limit: 1,
-    ));
-    if (ventaList.isEmpty) {
-      throw Exception('Venta con ID $id no encontrada');
-    }
-    final ventaMap = ventaList.first;
-    final venta = Venta.fromMap(ventaMap);
 
-    // Obtener cliente
-    venta.cliente = await clienteRepo.getById(venta.idCliente);
-
-    // Obtener detalles
-    final detalles = await db.query(
-      'Detalle_Venta',
+    final List<Map<String, dynamic>> result = await db.query(
+      "V_Venta_Detallada",
       where: 'id_venta = ?',
-      whereArgs: [id],
+      whereArgs: [ventaId],
     );
 
-    venta.detallesVenta = await Future.wait(
-      detalles.map((detMap) async {
-        final detalle = DetalleVenta.fromMap(detMap);
-        detalle.producto = await productoRepo.getById(detalle.idProducto);
-        return detalle;
-      }),
+    if (result.isEmpty) {
+      throw Exception("No se encontro la venta con el ID: $ventaId");
+    }
+
+    double total = result.fold(
+      0.0,
+      (sum, subtotal) => sum + double.parse(subtotal['subtotal']),
     );
 
-    return venta;
+    final infoVenta = {
+      'id_venta': result.first['id_venta'],
+      'fecha': result.first['fecha'],
+      'detalles': result.first['detalles_venta'],
+      'pagado': result.first['pagado'],
+      'id_cliente': result.first['id_cliente'],
+      'nombre_cliente': result.first['nombre_cliente'],
+    };
+    //TODO: Ver una manera de obtener todas las cantidades, precio_unitario_compra y su relacion para una muestra mas detallada valgame dios
+
+    return <String, dynamic>{
+      'venta': infoVenta,
+      'detalles': result,
+      'total': total.toStringAsFixed(2),
+    };
   }
 
-  Future<List<Venta>> getAll() async {
+  Future<List<Map<String, dynamic>>> getAll() async {
     final maps = await dbHelper.query(tableName, orderBy: 'fecha DESC');
     return await Future.wait(
       maps.map((map) async {
-        return await getFullVenta(map['id_venta'] as int);
-      }),
-    );
-  }
-
-  Future<List<Venta>> getVentasByCliente(int clienteId) async {
-    final ventas = await dbHelper.query(
-      tableName,
-      where: 'id_cliente = ?',
-      whereArgs: [clienteId],
-      orderBy: 'fecha DESC',
-    );
-
-    return await Future.wait(
-      ventas.map((map) async {
-        final venta = Venta.fromMap(map);
-        venta.cliente = await clienteRepo.getById(clienteId);
-        return venta;
+        return await getFullVenta(ventaId: map['id_venta'] as int);
       }),
     );
   }
@@ -97,7 +90,7 @@ class VentaRepository {
   Future<int> markAsNulled(int ventaId) async {
     return await dbHelper.update(
       tableName,
-      {'estado': VentaEstado.anulada.value},
+      {'estado': VentaEstado.cancelado.value},
       where: '$idColumn = ?',
       whereArgs: [ventaId],
     );

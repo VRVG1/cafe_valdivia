@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetalleCompra {
 
- int? get id; int get idCompra; int get idInsumo; int get cantidad; String get precioUnitarioCompra;
+@JsonKey(name: 'id_detalle_compra') int? get id;@JsonKey(name: 'id_compra') int get idCompra;@JsonKey(name: 'id_insumo') int get idInsumo; int get cantidad;@JsonKey(name: 'precio_unitario_compra') String get precioUnitarioCompra;
 /// Create a copy of DetalleCompra
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DetalleCompraCopyWith<$Res>  {
   factory $DetalleCompraCopyWith(DetalleCompra value, $Res Function(DetalleCompra) _then) = _$DetalleCompraCopyWithImpl;
 @useResult
 $Res call({
- int? id, int idCompra, int idInsumo, int cantidad, String precioUnitarioCompra
+@JsonKey(name: 'id_detalle_compra') int? id,@JsonKey(name: 'id_compra') int idCompra,@JsonKey(name: 'id_insumo') int idInsumo, int cantidad,@JsonKey(name: 'precio_unitario_compra') String precioUnitarioCompra
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int idCompra,  int idInsumo,  int cantidad,  String precioUnitarioCompra)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_compra')  int? id, @JsonKey(name: 'id_compra')  int idCompra, @JsonKey(name: 'id_insumo')  int idInsumo,  int cantidad, @JsonKey(name: 'precio_unitario_compra')  String precioUnitarioCompra)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetalleCompra() when $default != null:
 return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.precioUnitarioCompra);case _:
@@ -178,7 +178,7 @@ return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.prec
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int idCompra,  int idInsumo,  int cantidad,  String precioUnitarioCompra)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_compra')  int? id, @JsonKey(name: 'id_compra')  int idCompra, @JsonKey(name: 'id_insumo')  int idInsumo,  int cantidad, @JsonKey(name: 'precio_unitario_compra')  String precioUnitarioCompra)  $default,) {final _that = this;
 switch (_that) {
 case _DetalleCompra():
 return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.precioUnitarioCompra);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.prec
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int idCompra,  int idInsumo,  int cantidad,  String precioUnitarioCompra)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_compra')  int? id, @JsonKey(name: 'id_compra')  int idCompra, @JsonKey(name: 'id_insumo')  int idInsumo,  int cantidad, @JsonKey(name: 'precio_unitario_compra')  String precioUnitarioCompra)?  $default,) {final _that = this;
 switch (_that) {
 case _DetalleCompra() when $default != null:
 return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.precioUnitarioCompra);case _:
@@ -213,14 +213,14 @@ return $default(_that.id,_that.idCompra,_that.idInsumo,_that.cantidad,_that.prec
 @JsonSerializable()
 
 class _DetalleCompra implements DetalleCompra {
-  const _DetalleCompra({this.id, required this.idCompra, required this.idInsumo, required this.cantidad, required this.precioUnitarioCompra});
+  const _DetalleCompra({@JsonKey(name: 'id_detalle_compra') this.id, @JsonKey(name: 'id_compra') required this.idCompra, @JsonKey(name: 'id_insumo') required this.idInsumo, required this.cantidad, @JsonKey(name: 'precio_unitario_compra') required this.precioUnitarioCompra});
   factory _DetalleCompra.fromJson(Map<String, dynamic> json) => _$DetalleCompraFromJson(json);
 
-@override final  int? id;
-@override final  int idCompra;
-@override final  int idInsumo;
+@override@JsonKey(name: 'id_detalle_compra') final  int? id;
+@override@JsonKey(name: 'id_compra') final  int idCompra;
+@override@JsonKey(name: 'id_insumo') final  int idInsumo;
 @override final  int cantidad;
-@override final  String precioUnitarioCompra;
+@override@JsonKey(name: 'precio_unitario_compra') final  String precioUnitarioCompra;
 
 /// Create a copy of DetalleCompra
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$DetalleCompraCopyWith<$Res> implements $DetalleCompraCopy
   factory _$DetalleCompraCopyWith(_DetalleCompra value, $Res Function(_DetalleCompra) _then) = __$DetalleCompraCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int idCompra, int idInsumo, int cantidad, String precioUnitarioCompra
+@JsonKey(name: 'id_detalle_compra') int? id,@JsonKey(name: 'id_compra') int idCompra,@JsonKey(name: 'id_insumo') int idInsumo, int cantidad,@JsonKey(name: 'precio_unitario_compra') String precioUnitarioCompra
 });
 
 

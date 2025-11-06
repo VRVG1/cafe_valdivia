@@ -24,7 +24,7 @@ void main() {
 
       database = await openDatabase(
         path,
-        version: 2,
+        version: 3,
         onCreate: (db, version) async {
           await DatabaseHelper().testOnCreate(db);
         },
@@ -47,7 +47,7 @@ void main() {
     });
 
     final cliente = Cliente(
-      id: 1,
+      idCliente: 1,
       nombre: 'Pedro',
       apellido: 'Orderp',
       telefono: '3333333333',
@@ -57,13 +57,13 @@ void main() {
       nombre: 'Manito',
       apellido: 'Otinam',
       telefono: '1111111111',
-      email: 'ejemplo@ejemplo.com',
+      email: 'ejemplo2@ejemplo.com',
     );
     final cliente3 = Cliente(
       nombre: 'Sicaru',
       apellido: 'Uracis',
       telefono: '9999999999',
-      email: 'ejemplo@ejemplo.com',
+      email: 'ejemplo3@ejemplo.com',
     );
 
     test('Create client and getById', () async {
@@ -123,7 +123,6 @@ void main() {
     test('Search client returns correct clientes', () async {
       await clienteRepository.create(cliente);
       await clienteRepository.create(cliente2);
-      await clienteRepository.create(cliente2);
       await clienteRepository.create(cliente3);
 
       var resultados = await clienteRepository.search('Sicaru');
@@ -131,7 +130,7 @@ void main() {
       expect(resultados.first.nombre, 'Sicaru');
 
       resultados = await clienteRepository.search('1111111111');
-      expect(resultados.length, 2);
+      expect(resultados.length, 1);
 
       resultados = await clienteRepository.search('Nada');
       expect(resultados, isEmpty);

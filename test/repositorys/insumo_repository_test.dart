@@ -58,7 +58,7 @@ void main() {
       final unidadId = await unidadMedidaRespository.create(
         UnidadMedida(nombre: 'Kilogramo'),
       );
-      final nuevoInsumo = Insumos(nombre: 'Café en Grano', idUnidad: unidadId);
+      final nuevoInsumo = Insumo(nombre: 'Café en Grano', idUnidad: unidadId);
 
       final insumoId = await insumoRepository.create(nuevoInsumo);
       expect(insumoId, isA<int>());
@@ -91,20 +91,20 @@ void main() {
         UnidadMedida(nombre: 'Kilogramos'),
       );
       await insumoRepository.create(
-        Insumos(nombre: 'Insumo A', idUnidad: unidadId),
+        Insumo(nombre: 'Insumo A', idUnidad: unidadId),
       );
       await insumoRepository.create(
-        Insumos(nombre: 'Insumo B', idUnidad: unidadId),
+        Insumo(nombre: 'Insumo B', idUnidad: unidadId),
       );
       await insumoRepository.create(
-        Insumos(nombre: 'Insumo C', idUnidad: unidadId),
+        Insumo(nombre: 'Insumo C', idUnidad: unidadId),
       );
 
-      final todosLosInsumos = await insumoRepository.getAll();
+      final todosLosInsumo = await insumoRepository.getAll();
 
-      expect(todosLosInsumos.length, 3);
-      expect(todosLosInsumos.any((i) => i.nombre == 'Insumo B'), isTrue);
-      expect(todosLosInsumos.last.nombre, 'Insumo C');
+      expect(todosLosInsumo.length, 3);
+      expect(todosLosInsumo.any((i) => i.nombre == 'Insumo B'), isTrue);
+      expect(todosLosInsumo.last.nombre, 'Insumo C');
     });
 
     test('getWithUnidad correctly populates the unidad field', () async {
@@ -113,7 +113,7 @@ void main() {
         UnidadMedida(nombre: 'Litro'),
       );
       final insumoId = await insumoRepository.create(
-        Insumos(nombre: 'Leche', idUnidad: unidadId),
+        Insumo(nombre: 'Leche', idUnidad: unidadId),
       );
 
       // ACT
@@ -145,7 +145,7 @@ void main() {
           UnidadMedida(nombre: 'Unidad'),
         );
         final insumoId = await insumoRepository.create(
-          Insumos(nombre: 'Vaso Desechable', idUnidad: unidadId),
+          Insumo(nombre: 'Vaso Desechable', idUnidad: unidadId),
         );
 
         await database.insert('Detalle_Compra', {
@@ -173,7 +173,7 @@ void main() {
     });
 
     test('Robustness: update throws exception for null ID', () {
-      final insumoSinId = Insumos(nombre: 'Insumo Fantasma', idUnidad: 1);
+      final insumoSinId = Insumo(nombre: 'Insumo Fantasma', idUnidad: 1);
       expect(
         () => insumoRepository.update(insumoSinId),
         throwsA(isA<Exception>()),
@@ -187,7 +187,7 @@ void main() {
 
     test('Robustness: create fails with foreign key violation', () async {
       // ARRANGE: Crea un insumo que apunta a un id_unidad que no existe.
-      final insumoInvalido = Insumos(nombre: 'Insumo Roto', idUnidad: 999);
+      final insumoInvalido = Insumo(nombre: 'Insumo Roto', idUnidad: 999);
 
       // ACT & ASSERT: Esperamos una DatabaseException por la restricción de clave foránea.
       expect(
@@ -222,15 +222,15 @@ void main() {
         );
 
         // 2. Lectura masiva
-        final allInsumos = await insumoRepository.getAll();
-        expect(allInsumos.length, recordCount);
+        final allInsumo = await insumoRepository.getAll();
+        expect(allInsumo.length, recordCount);
         print(
           'Lectura de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
         );
 
         // 3. Borrado masivo
         final deleteBatch = database.batch();
-        for (final insumo in allInsumos) {
+        for (final insumo in allInsumo) {
           deleteBatch.delete(
             'Insumo',
             where: 'id_insumo = ?',

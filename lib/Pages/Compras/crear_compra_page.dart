@@ -71,10 +71,10 @@ class _CrearCompraPageState extends ConsumerState<CrearCompraPage> {
               ),
               const SizedBox(height: 24),
 
-              //  Lista de Insumos Agregados
-              Text('Insumos', style: theme.textTheme.titleLarge),
+              //  Lista de Insumo Agregados
+              Text('Insumo', style: theme.textTheme.titleLarge),
               const SizedBox(height: 8),
-              _buildListInsumos(context),
+              _buildListInsumo(context),
               const SizedBox(height: 16),
 
               //  Botón para añadir insumos
@@ -129,7 +129,7 @@ Widget _buildActionButtons(BuildContext context) {
   );
 }
 
-Widget _buildListInsumos(BuildContext context) {
+Widget _buildListInsumo(BuildContext context) {
   return Consumer(
     builder: (context, ref, child) {
       // Usar .slect para solo observar la lista de items.

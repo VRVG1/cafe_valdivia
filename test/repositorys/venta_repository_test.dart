@@ -35,7 +35,7 @@ void main() {
     // Funciones de utilidad para crear datos de prueba
     Future<int> _crearInsumo(int unidadId, {String? nombre}) async {
       return await insumoRepo.create(
-        Insumos(nombre: nombre ?? 'Café en Grano', idUnidad: unidadId),
+        Insumo(nombre: nombre ?? 'Café en Grano', idUnidad: unidadId),
       );
     }
 

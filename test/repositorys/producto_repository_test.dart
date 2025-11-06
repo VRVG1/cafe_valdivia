@@ -30,7 +30,7 @@ void main() {
 
     Future<int> crearInsumo(int unidadId) async {
       return await insumoRepository.create(
-        Insumos(nombre: 'Insumo Test', idUnidad: unidadId),
+        Insumo(nombre: 'Insumo Test', idUnidad: unidadId),
       );
     }
 
@@ -96,7 +96,7 @@ void main() {
       );
     });
 
-    test('getWithInsumos loads relationships correctly', () async {
+    test('getWithInsumo loads relationships correctly', () async {
       // Crear datos relacionados
       final unidadId = await crearUnidad();
       final insumoId = await crearInsumo(unidadId);

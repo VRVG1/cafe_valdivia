@@ -8,8 +8,8 @@ abstract class Insumo with _$Insumo {
     int? id,
     required String nombre,
     String? descripcion,
-    required int idUnidad,
-    required String costoUnitario,
+    @JsonKey(name: 'id_unidad') required int idUnidad,
+    @JsonKey(name: 'consto_unitario') required String costoUnitario,
   }) = _Insumo;
 
   factory Insumo.fromJson(Map<String, dynamic> json) => _$InsumoFromJson(json);

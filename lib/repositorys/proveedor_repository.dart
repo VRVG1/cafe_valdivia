@@ -13,15 +13,15 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
   ProveedorRepository(this.dbHelper);
 
   @override
-  Proveedor fromMap(Map<String, dynamic> map) => Proveedor.fromMap(map);
+  Proveedor fromJson(Map<String, dynamic> map) => Proveedor.fromJson(map);
 
   @override
-  Map<String, dynamic> toMap(Proveedor entity) => entity.toMap();
+  Map<String, dynamic> toJson(Proveedor entity) => entity.toJson();
 
   @override
   Future<int> create(Proveedor entity) async {
     final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toMap());
+    return await db.insert(tableName, entity.toJson());
   }
 
   @override
@@ -40,7 +40,7 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
       where: where,
       whereArgs: whereArgs,
     );
-    return result.map(fromMap).toList();
+    return result.map(fromJson).toList();
   }
 
   @override
@@ -52,17 +52,17 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
       limit: 1,
     );
     if (result.isEmpty) throw Exception('Unidad no encontrada');
-    return fromMap(result.first);
+    return fromJson(result.first);
   }
 
   @override
   Future<int> update(Proveedor entity) async {
-    if (entity.id == null) throw Exception('ID no puede ser nulo');
+    if (entity.idProveedor == null) throw Exception('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
-      toMap(entity),
+      toJson(entity),
       where: '$idColumn = ?',
-      whereArgs: [entity.id],
+      whereArgs: [entity.idProveedor],
     );
   }
 

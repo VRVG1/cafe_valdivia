@@ -5,7 +5,7 @@ part 'cliente.g.dart';
 @freezed
 abstract class Cliente with _$Cliente {
   const factory Cliente({
-    @JsonKey(name: 'id_cliente') int? id,
+    @JsonKey(name: 'id_cliente') int? idCliente,
     required String nombre,
     String? apellido,
     String? telefono,

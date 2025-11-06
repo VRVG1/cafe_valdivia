@@ -7,7 +7,7 @@ part 'insumo_providers.g.dart';
 @riverpod
 class InsumoDetail extends _$InsumoDetail {
   @override
-  Future<Insumos> build(int id) async {
+  Future<Insumo> build(int id) async {
     final repo = ref.watch(insumoRepositoryProvider);
     return repo.getById(id);
   }

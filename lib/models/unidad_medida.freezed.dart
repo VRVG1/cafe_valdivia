@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UnidadMedida {
 
- int? get id; String get nombre;
+@JsonKey(name: 'id_unidad_medida') int? get idUnidadMedida; String get nombre;
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UnidadMedidaCopyWith<UnidadMedida> get copyWith => _$UnidadMedidaCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnidadMedida&&(identical(other.id, id) || other.id == id)&&(identical(other.nombre, nombre) || other.nombre == nombre));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnidadMedida&&(identical(other.idUnidadMedida, idUnidadMedida) || other.idUnidadMedida == idUnidadMedida)&&(identical(other.nombre, nombre) || other.nombre == nombre));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nombre);
+int get hashCode => Object.hash(runtimeType,idUnidadMedida,nombre);
 
 @override
 String toString() {
-  return 'UnidadMedida(id: $id, nombre: $nombre)';
+  return 'UnidadMedida(idUnidadMedida: $idUnidadMedida, nombre: $nombre)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UnidadMedidaCopyWith<$Res>  {
   factory $UnidadMedidaCopyWith(UnidadMedida value, $Res Function(UnidadMedida) _then) = _$UnidadMedidaCopyWithImpl;
 @useResult
 $Res call({
- int? id, String nombre
+@JsonKey(name: 'id_unidad_medida') int? idUnidadMedida, String nombre
 });
 
 
@@ -65,9 +65,9 @@ class _$UnidadMedidaCopyWithImpl<$Res>
 
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? nombre = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idUnidadMedida = freezed,Object? nombre = null,}) {
   return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+idUnidadMedida: freezed == idUnidadMedida ? _self.idUnidadMedida : idUnidadMedida // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -154,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String nombre)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad_medida')  int? idUnidadMedida,  String nombre)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UnidadMedida() when $default != null:
-return $default(_that.id,_that.nombre);case _:
+return $default(_that.idUnidadMedida,_that.nombre);case _:
   return orElse();
 
 }
@@ -175,10 +175,10 @@ return $default(_that.id,_that.nombre);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String nombre)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad_medida')  int? idUnidadMedida,  String nombre)  $default,) {final _that = this;
 switch (_that) {
 case _UnidadMedida():
-return $default(_that.id,_that.nombre);case _:
+return $default(_that.idUnidadMedida,_that.nombre);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +195,10 @@ return $default(_that.id,_that.nombre);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String nombre)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_unidad_medida')  int? idUnidadMedida,  String nombre)?  $default,) {final _that = this;
 switch (_that) {
 case _UnidadMedida() when $default != null:
-return $default(_that.id,_that.nombre);case _:
+return $default(_that.idUnidadMedida,_that.nombre);case _:
   return null;
 
 }
@@ -210,10 +210,10 @@ return $default(_that.id,_that.nombre);case _:
 @JsonSerializable()
 
 class _UnidadMedida implements UnidadMedida {
-  const _UnidadMedida({this.id, required this.nombre});
+  const _UnidadMedida({@JsonKey(name: 'id_unidad_medida') this.idUnidadMedida, required this.nombre});
   factory _UnidadMedida.fromJson(Map<String, dynamic> json) => _$UnidadMedidaFromJson(json);
 
-@override final  int? id;
+@override@JsonKey(name: 'id_unidad_medida') final  int? idUnidadMedida;
 @override final  String nombre;
 
 /// Create a copy of UnidadMedida
@@ -229,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UnidadMedida&&(identical(other.id, id) || other.id == id)&&(identical(other.nombre, nombre) || other.nombre == nombre));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UnidadMedida&&(identical(other.idUnidadMedida, idUnidadMedida) || other.idUnidadMedida == idUnidadMedida)&&(identical(other.nombre, nombre) || other.nombre == nombre));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nombre);
+int get hashCode => Object.hash(runtimeType,idUnidadMedida,nombre);
 
 @override
 String toString() {
-  return 'UnidadMedida(id: $id, nombre: $nombre)';
+  return 'UnidadMedida(idUnidadMedida: $idUnidadMedida, nombre: $nombre)';
 }
 
 
@@ -249,7 +249,7 @@ abstract mixin class _$UnidadMedidaCopyWith<$Res> implements $UnidadMedidaCopyWi
   factory _$UnidadMedidaCopyWith(_UnidadMedida value, $Res Function(_UnidadMedida) _then) = __$UnidadMedidaCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String nombre
+@JsonKey(name: 'id_unidad_medida') int? idUnidadMedida, String nombre
 });
 
 
@@ -266,9 +266,9 @@ class __$UnidadMedidaCopyWithImpl<$Res>
 
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? nombre = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idUnidadMedida = freezed,Object? nombre = null,}) {
   return _then(_UnidadMedida(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+idUnidadMedida: freezed == idUnidadMedida ? _self.idUnidadMedida : idUnidadMedida // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,
   ));

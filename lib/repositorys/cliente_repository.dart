@@ -13,15 +13,15 @@ class ClienteRepository implements BaseRepository<Cliente> {
   ClienteRepository(this.dbHelper);
 
   @override
-  Cliente fromMap(Map<String, dynamic> map) => Cliente.fromMap(map);
+  Cliente fromJson(Map<String, dynamic> map) => Cliente.fromJson(map);
 
   @override
-  Map<String, dynamic> toMap(Cliente entity) => entity.toMap();
+  Map<String, dynamic> toJson(Cliente entity) => entity.toJson();
 
   @override
   Future<int> create(Cliente entity) async {
     final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toMap());
+    return await db.insert(tableName, entity.toJson());
   }
 
   @override
@@ -40,7 +40,7 @@ class ClienteRepository implements BaseRepository<Cliente> {
       where: where,
       whereArgs: whereArgs,
     );
-    return result.map(fromMap).toList();
+    return result.map(fromJson).toList();
   }
 
   @override
@@ -52,17 +52,17 @@ class ClienteRepository implements BaseRepository<Cliente> {
       limit: 1,
     );
     if (result.isEmpty) throw Exception('Cliente no encontrada');
-    return fromMap(result.first);
+    return fromJson(result.first);
   }
 
   @override
   Future<int> update(Cliente entity) async {
-    if (entity.id == null) throw Exception('ID no puede ser nulo');
+    if (entity.idCliente == null) throw Exception('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
-      toMap(entity),
+      toJson(entity),
       where: '$idColumn = ?',
-      whereArgs: [entity.id],
+      whereArgs: [entity.idCliente],
     );
   }
 

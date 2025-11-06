@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Cliente {
 
-@JsonKey(name: 'id_cliente') int? get id; String get nombre; String? get apellido; String? get telefono; String? get email;
+@JsonKey(name: 'id_cliente') int? get idCliente; String get nombre; String? get apellido; String? get telefono; String? get email;
 /// Create a copy of Cliente
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ClienteCopyWith<Cliente> get copyWith => _$ClienteCopyWithImpl<Cliente>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Cliente&&(identical(other.id, id) || other.id == id)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.apellido, apellido) || other.apellido == apellido)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Cliente&&(identical(other.idCliente, idCliente) || other.idCliente == idCliente)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.apellido, apellido) || other.apellido == apellido)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nombre,apellido,telefono,email);
+int get hashCode => Object.hash(runtimeType,idCliente,nombre,apellido,telefono,email);
 
 @override
 String toString() {
-  return 'Cliente(id: $id, nombre: $nombre, apellido: $apellido, telefono: $telefono, email: $email)';
+  return 'Cliente(idCliente: $idCliente, nombre: $nombre, apellido: $apellido, telefono: $telefono, email: $email)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ClienteCopyWith<$Res>  {
   factory $ClienteCopyWith(Cliente value, $Res Function(Cliente) _then) = _$ClienteCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_cliente') int? id, String nombre, String? apellido, String? telefono, String? email
+@JsonKey(name: 'id_cliente') int? idCliente, String nombre, String? apellido, String? telefono, String? email
 });
 
 
@@ -65,9 +65,9 @@ class _$ClienteCopyWithImpl<$Res>
 
 /// Create a copy of Cliente
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idCliente = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
   return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+idCliente: freezed == idCliente ? _self.idCliente : idCliente // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,apellido: freezed == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
 as String?,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? id,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Cliente() when $default != null:
-return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
+return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? id,  String nombre,  String? apellido,  String? telefono,  String? email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String? apellido,  String? telefono,  String? email)  $default,) {final _that = this;
 switch (_that) {
 case _Cliente():
-return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
+return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_cliente')  int? id,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,) {final _that = this;
 switch (_that) {
 case _Cliente() when $default != null:
-return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
+return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
   return null;
 
 }
@@ -213,10 +213,10 @@ return $default(_that.id,_that.nombre,_that.apellido,_that.telefono,_that.email)
 @JsonSerializable()
 
 class _Cliente implements Cliente {
-  const _Cliente({@JsonKey(name: 'id_cliente') this.id, required this.nombre, this.apellido, this.telefono, this.email});
+  const _Cliente({@JsonKey(name: 'id_cliente') this.idCliente, required this.nombre, this.apellido, this.telefono, this.email});
   factory _Cliente.fromJson(Map<String, dynamic> json) => _$ClienteFromJson(json);
 
-@override@JsonKey(name: 'id_cliente') final  int? id;
+@override@JsonKey(name: 'id_cliente') final  int? idCliente;
 @override final  String nombre;
 @override final  String? apellido;
 @override final  String? telefono;
@@ -235,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Cliente&&(identical(other.id, id) || other.id == id)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.apellido, apellido) || other.apellido == apellido)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Cliente&&(identical(other.idCliente, idCliente) || other.idCliente == idCliente)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.apellido, apellido) || other.apellido == apellido)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,nombre,apellido,telefono,email);
+int get hashCode => Object.hash(runtimeType,idCliente,nombre,apellido,telefono,email);
 
 @override
 String toString() {
-  return 'Cliente(id: $id, nombre: $nombre, apellido: $apellido, telefono: $telefono, email: $email)';
+  return 'Cliente(idCliente: $idCliente, nombre: $nombre, apellido: $apellido, telefono: $telefono, email: $email)';
 }
 
 
@@ -255,7 +255,7 @@ abstract mixin class _$ClienteCopyWith<$Res> implements $ClienteCopyWith<$Res> {
   factory _$ClienteCopyWith(_Cliente value, $Res Function(_Cliente) _then) = __$ClienteCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_cliente') int? id, String nombre, String? apellido, String? telefono, String? email
+@JsonKey(name: 'id_cliente') int? idCliente, String nombre, String? apellido, String? telefono, String? email
 });
 
 
@@ -272,9 +272,9 @@ class __$ClienteCopyWithImpl<$Res>
 
 /// Create a copy of Cliente
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idCliente = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
   return _then(_Cliente(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+idCliente: freezed == idCliente ? _self.idCliente : idCliente // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,apellido: freezed == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
 as String?,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable

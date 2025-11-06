@@ -1,8 +1,8 @@
 import 'package:cafe_valdivia/Components/listview_custom.dart';
-import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
-import 'package:cafe_valdivia/Pages/Insumos/insumo_detallado_page.dart';
+import 'package:cafe_valdivia/Pages/Insumo/editar_insumo_page.dart';
+import 'package:cafe_valdivia/Pages/Insumo/insumo_detallado_page.dart';
 import 'package:cafe_valdivia/models/insumo.dart';
-import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/Pages/Insumo/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,14 +12,14 @@ class InusmoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncInsumos = ref.watch(insumoProvider);
+    final asyncInsumo = ref.watch(insumoProvider);
 
-    return asyncInsumos.when(
+    return asyncInsumo.when(
       data: (insumos) {
         if (insumos.isEmpty) {
           return const Center(child: Text('No hay insumos para mostrar.'));
         }
-        return ListviewCustom<Insumos>(
+        return ListviewCustom<Insumo>(
           data: insumos,
           keyBuilder: (insumo) {
             return ValueKey(

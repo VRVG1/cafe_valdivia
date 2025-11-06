@@ -8,18 +8,18 @@ part of 'detalle_venta.dart';
 
 _DetalleVenta _$DetalleVentaFromJson(Map<String, dynamic> json) =>
     _DetalleVenta(
-      id: (json['id'] as num?)?.toInt(),
-      idVenta: (json['idVenta'] as num).toInt(),
-      idProducto: (json['idProducto'] as num).toInt(),
+      idDetalleVenta: (json['id_detalle_venta'] as num?)?.toInt(),
+      idVenta: (json['id_venta'] as num).toInt(),
+      idProducto: (json['id_producto'] as num).toInt(),
       cantidad: (json['cantidad'] as num).toInt(),
-      precioUnitarioVenta: json['precioUnitarioVenta'] as String,
+      precioUnitarioVenta: json['precio_unitario_venta'] as String,
     );
 
 Map<String, dynamic> _$DetalleVentaToJson(_DetalleVenta instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'idVenta': instance.idVenta,
-      'idProducto': instance.idProducto,
+      'id_detalle_venta': instance.idDetalleVenta,
+      'id_venta': instance.idVenta,
+      'id_producto': instance.idProducto,
       'cantidad': instance.cantidad,
-      'precioUnitarioVenta': instance.precioUnitarioVenta,
+      'precio_unitario_venta': instance.precioUnitarioVenta,
     };

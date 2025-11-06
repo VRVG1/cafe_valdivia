@@ -13,6 +13,6 @@ abstract class BaseRepository<T> {
   Future<int> update(T entity);
   Future<int> delete(int id);
 
-  T fromMap(Map<String, dynamic> map);
-  Map<String, dynamic> toMap(T entity);
+  T fromJson(Map<String, dynamic> map);
+  Map<String, dynamic> toJson(T entity);
 }

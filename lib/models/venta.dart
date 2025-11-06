@@ -14,8 +14,8 @@ String? ventaEstadoToJson(VentaEstado? estado) {
 @freezed
 abstract class Venta with _$Venta {
   const factory Venta({
-    int? id,
-    required int idCliente,
+    @JsonKey(name: 'id_venta') int? idVenta,
+    @JsonKey(name: 'id_cliente') required int idCliente,
     required DateTime fecha,
     String? detalles,
     bool? pagado,
