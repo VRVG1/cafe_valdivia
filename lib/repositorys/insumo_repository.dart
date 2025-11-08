@@ -1,7 +1,9 @@
+import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
+import 'package:cafe_valdivia/utils/logger.dart';
 
 class InsumosRepository implements BaseRepository<Insumo> {
   @override
@@ -66,11 +68,18 @@ class InsumosRepository implements BaseRepository<Insumo> {
     );
   }
 
-  //TODO: //  Future<Insumo> getWithUnidad(int id) async {
-  //    final insumo = await getById(id);
-  //    insumo.unidad = await unidadRepo.getById(insumo.idUnidad);
-  //    return insumo;
-  //  }
+  Future<(UnidadMedida, List<Insumo>)> getInsumoByIdUnidad({
+    required int idUnidad,
+  }) async {
+    final List<Map<String, dynamic>> result = await dbHelper.query(
+      tableName,
+      where: "id_unidad = ?",
+      whereArgs: [idUnidad],
+    );
+    final UnidadMedida unidad = await unidadRepo.getById(idUnidad);
+    final List<Insumo> lista = result.map(fromJson).toList();
+    return (unidad, lista);
+  }
 
   Future<double> getCostoPromedio(int insumoId) async {
     final db = await dbHelper.database;

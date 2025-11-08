@@ -148,7 +148,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Insumo (
         id_insumo INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE,
+        nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
         descripcion TEXT,
         id_unidad INTEGER NOT NULL,
         costo_unitario TEXT DEFAULT 0.0,

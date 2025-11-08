@@ -5,11 +5,11 @@ part 'insumo.g.dart';
 @freezed
 abstract class Insumo with _$Insumo {
   const factory Insumo({
-    int? id,
+    @JsonKey(name: 'id_insumo') int? id,
     required String nombre,
     String? descripcion,
     @JsonKey(name: 'id_unidad') required int idUnidad,
-    @JsonKey(name: 'consto_unitario') required String costoUnitario,
+    @JsonKey(name: 'costo_unitario') required String costoUnitario,
   }) = _Insumo;
 
   factory Insumo.fromJson(Map<String, dynamic> json) => _$InsumoFromJson(json);

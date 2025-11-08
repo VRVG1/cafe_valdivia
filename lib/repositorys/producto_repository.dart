@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/producto.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
@@ -69,21 +70,26 @@ class ProductoRepository implements BaseRepository<Producto> {
     );
   }
 
-  //TODO:// Future<Producto> getWithInsumo(int id) async {
-  //   final producto = await getById(id);
-  //   final relaciones = await dbHelper.query(
-  //     'Insumo_Producto',
-  //     where: '$idColumn = ?',
-  //     whereArgs: [id],
-  //   );
+  Future<(Insumo, List<Producto>)> getProductoByInsumoId({
+    required int idInsumo,
+    int? idProducto,
+  }) async {
+    List<String?> whereInicial = ["idInsumo = ?"];
+    List<int?> whereArgs = [idInsumo];
 
-  //   producto.insumos = await Future.wait(
-  //     relaciones.map((relacionesMap) async {
-  //       final relacion = InsumoProducto.fromJson(relacionesMap);
-  //       relacion.insumo = await insumoRepo.getById(relacion.idInsumo);
-  //       return relacion;
-  //     }),
-  //   );
-  //   return producto;
-  // }
+    if (idProducto != null) {
+      whereArgs.add(idProducto);
+      whereInicial.add("idProducto = ?");
+    }
+    final String where = whereInicial.join("AND");
+
+    final List<Map<String, dynamic>> result = await dbHelper.query(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+    );
+    final Insumo insumo = await insumoRepo.getById(idInsumo);
+    final List<Producto> lista = result.map(fromJson).toList();
+    return (insumo, lista);
+  }
 }

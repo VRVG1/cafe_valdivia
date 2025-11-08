@@ -93,6 +93,7 @@ void main() {
         idInsumo: insumoId1,
         idProducto: productoId1,
         cantidadRequerida: 10,
+        nombre: "Cafe",
       );
       final id = await repo.create(relacion1);
       expect(id, isNotNull);
@@ -108,16 +109,19 @@ void main() {
           idInsumo: insumoId1,
           idProducto: productoId1,
           cantidadRequerida: 10,
+          nombre: "Tortilla",
         );
         final relacion2 = InsumoProducto(
           idInsumo: insumoId1,
           idProducto: productoId2,
           cantidadRequerida: 20,
+          nombre: "Aguacate",
         );
         final relacion3 = InsumoProducto(
           idInsumo: insumoId2,
           idProducto: insumoId1,
           cantidadRequerida: 30,
+          nombre: "Huevos",
         );
         await repo.create(relacion1);
         await repo.create(relacion2);
@@ -135,18 +139,19 @@ void main() {
         idInsumo: insumoId1,
         idProducto: productoId2,
         cantidadRequerida: 20,
+        nombre: "Patacuas",
       );
       final id = await repo.create(relacion2);
 
       final relacionActualizada = relacion2.copyWith(
-        id: id,
+        idProducto: id,
         cantidadRequerida: 99,
         idInsumo: 2,
       );
       final idUpdated = await repo.update(relacionActualizada);
       final getUpdatedRelation = await repo.getById(idUpdated);
 
-      expect(getUpdatedRelation.id, id);
+      expect(getUpdatedRelation.idProducto, id);
       expect(getUpdatedRelation.cantidadRequerida, 99);
       expect(getUpdatedRelation.idInsumo, 2);
     });
@@ -157,16 +162,19 @@ void main() {
           idInsumo: insumoId1,
           idProducto: productoId1,
           cantidadRequerida: 10,
+          nombre: "Panzas",
         );
         final relacion2 = InsumoProducto(
           idInsumo: insumoId1,
           idProducto: productoId2,
           cantidadRequerida: 20,
+          nombre: "Manito",
         );
         final relacion3 = InsumoProducto(
           idInsumo: insumoId2,
           idProducto: productoId2,
           cantidadRequerida: 30,
+          nombre: "Chimpis",
         );
         final idToDelete = await repo.create(relacion1);
         await repo.create(relacion2);

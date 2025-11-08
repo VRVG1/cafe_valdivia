@@ -5,7 +5,7 @@ part 'unidad_medida.g.dart';
 @freezed
 abstract class UnidadMedida with _$UnidadMedida {
   const factory UnidadMedida({
-    @JsonKey(name: 'id_unidad_medida') int? idUnidadMedida,
+    @JsonKey(name: 'id_unidad') int? idUnidadMedida,
     required String nombre,
   }) = _UnidadMedida;
 
