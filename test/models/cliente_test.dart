@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Cliente', () {
     final cliente = Cliente(
-      id: 1,
+      idCliente: 1,
       nombre: 'Juan',
       apellido: 'Pérez',
       telefono: '123456789',
@@ -37,22 +37,21 @@ void main() {
 
       expect(copia.nombre, 'Juanito');
       expect(copia.email, 'juanito@example.com');
-      // Los demás valores deben permanecer iguales
-      expect(copia.id, cliente.id);
+      expect(copia.idCliente, cliente.idCliente);
       expect(copia.apellido, cliente.apellido);
       expect(copia.telefono, cliente.telefono);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final c1 = Cliente(
-        id: 1,
+        idCliente: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
         email: 'juan.perez@example.com',
       );
       final c2 = Cliente(
-        id: 1,
+        idCliente: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
@@ -64,14 +63,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final c1 = Cliente(
-        id: 1,
+        idCliente: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
         email: 'juan.perez@example.com',
       );
       final c2 = Cliente(
-        id: 1,
+        idCliente: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
@@ -91,10 +90,11 @@ void main() {
         'email': null,
       };
 
-      expect(clienteNulo.id, isNull);
+      expect(clienteNulo.idCliente, isNull);
       expect(clienteNulo.apellido, isNull);
       expect(clienteNulo.toJson(), clienteNuloJson);
       expect(Cliente.fromJson(clienteNuloJson), clienteNulo);
     });
   });
 }
+

@@ -4,17 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('DetalleProduccionInsumo', () {
     final dpi = DetalleProduccionInsumo(
-      id: 1,
+      idDetalleProduccionInsumo: 1,
       idOrdenProduccion: 100,
       idInsumo: 200,
       costoInsumoMomento: '15.75',
     );
 
     final dpiJson = {
-      'id': 1,
-      'idOrdenProduccion': 100,
-      'idInsumo': 200,
-      'costoInsumoMomento': '15.75',
+      'id_detalle_produccion_insumo': 1,
+      'id_orden_produccion': 100,
+      'id_insumo': 200,
+      'costo_insumo_momento': '15.75',
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -28,26 +28,24 @@ void main() {
     });
 
     test('copyWith crea una copia con valores actualizados', () {
-      final dpiCopia = dpi.copyWith(
-        costoInsumoMomento: '20.00',
-      );
+      final dpiCopia = dpi.copyWith(costoInsumoMomento: '20.00');
 
       expect(dpiCopia.costoInsumoMomento, '20.00');
       // Los demás valores deben permanecer iguales
-      expect(dpiCopia.id, dpi.id);
+      expect(dpiCopia.idOrdenProduccion, dpi.idOrdenProduccion);
       expect(dpiCopia.idOrdenProduccion, dpi.idOrdenProduccion);
       expect(dpiCopia.idInsumo, dpi.idInsumo);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final dpi1 = DetalleProduccionInsumo(
-        id: 1,
+        idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
         costoInsumoMomento: '15.75',
       );
       final dpi2 = DetalleProduccionInsumo(
-        id: 1,
+        idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
         costoInsumoMomento: '15.75',
@@ -58,13 +56,13 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final dpi1 = DetalleProduccionInsumo(
-        id: 1,
+        idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
         costoInsumoMomento: '15.75',
       );
       final dpi2 = DetalleProduccionInsumo(
-        id: 1,
+        idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
         costoInsumoMomento: '15.75',

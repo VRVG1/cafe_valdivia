@@ -5,7 +5,7 @@ void main() {
   group('Venta', () {
     final fecha = DateTime.parse('2025-10-01T14:30:00.000Z');
     final venta = Venta(
-      id: 1,
+      idVenta: 1,
       idCliente: 1,
       fecha: fecha,
       detalles: 'Venta de prueba',
@@ -14,8 +14,8 @@ void main() {
     );
 
     final ventaJson = {
-      'id': 1,
-      'idCliente': 1,
+      'id_venta': 1,
+      'id_cliente': 1,
       'fecha': '2025-10-01T14:30:00.000Z',
       'detalles': 'Venta de prueba',
       'pagado': false,
@@ -41,14 +41,14 @@ void main() {
       expect(ventaCopia.pagado, true);
       expect(ventaCopia.estado, VentaEstado.completa);
       // Los demás valores deben permanecer iguales
-      expect(ventaCopia.id, venta.id);
+      expect(ventaCopia.idVenta, venta.idVenta);
       expect(ventaCopia.idCliente, venta.idCliente);
       expect(ventaCopia.fecha, venta.fecha);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final venta1 = Venta(
-        id: 1,
+        idVenta: 1,
         idCliente: 1,
         fecha: fecha,
         detalles: 'Venta de prueba',
@@ -56,7 +56,7 @@ void main() {
         estado: VentaEstado.pendiente,
       );
       final venta2 = Venta(
-        id: 1,
+        idVenta: 1,
         idCliente: 1,
         fecha: fecha,
         detalles: 'Venta de prueba',
@@ -69,7 +69,7 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final venta1 = Venta(
-        id: 1,
+        idVenta: 1,
         idCliente: 1,
         fecha: fecha,
         detalles: 'Venta de prueba',
@@ -77,7 +77,7 @@ void main() {
         estado: VentaEstado.pendiente,
       );
       final venta2 = Venta(
-        id: 1,
+        idVenta: 1,
         idCliente: 1,
         fecha: fecha,
         detalles: 'Venta de prueba',

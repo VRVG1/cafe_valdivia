@@ -5,7 +5,7 @@ part 'insumo.g.dart';
 @freezed
 abstract class Insumo with _$Insumo {
   const factory Insumo({
-    @JsonKey(name: 'id_insumo') int? id,
+    @JsonKey(name: 'id_insumo') int? idInsumo,
     required String nombre,
     String? descripcion,
     @JsonKey(name: 'id_unidad') required int idUnidad,

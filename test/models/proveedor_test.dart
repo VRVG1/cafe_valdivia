@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Proveedor', () {
     final proveedor = Proveedor(
-      id: 1,
+      idProveedor: 1,
       nombre: 'Proveedor de Café',
       telefono: '123456789',
       email: 'contacto@proveedor.com',
@@ -12,7 +12,7 @@ void main() {
     );
 
     final proveedorJson = {
-      'id': 1,
+      'id_proveedor': 1,
       'nombre': 'Proveedor de Café',
       'telefono': '123456789',
       'email': 'contacto@proveedor.com',
@@ -33,8 +33,7 @@ void main() {
       final copia = proveedor.copyWith(nombre: 'Nuevo Proveedor');
 
       expect(copia.nombre, 'Nuevo Proveedor');
-      // Los demás valores deben permanecer iguales
-      expect(copia.id, proveedor.id);
+      expect(copia.idProveedor, proveedor.idProveedor);
       expect(copia.telefono, proveedor.telefono);
       expect(copia.email, proveedor.email);
       expect(copia.direccion, proveedor.direccion);
@@ -42,14 +41,14 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final p1 = Proveedor(
-        id: 1,
+        idProveedor: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
         direccion: 'Calle Falsa 123',
       );
       final p2 = Proveedor(
-        id: 1,
+        idProveedor: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
@@ -61,14 +60,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final p1 = Proveedor(
-        id: 1,
+        idProveedor: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
         direccion: 'Calle Falsa 123',
       );
       final p2 = Proveedor(
-        id: 1,
+        idProveedor: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
@@ -79,16 +78,19 @@ void main() {
     });
 
     test('El modelo funciona con campos nulos', () {
-      final proveedorNulo = Proveedor(nombre: 'Otro Proveedor', telefono: '987654321');
+      final proveedorNulo = Proveedor(
+        nombre: 'Otro Proveedor',
+        telefono: '987654321',
+      );
       final proveedorNuloJson = {
-        'id': null,
+        'id_proveedor': null,
         'nombre': 'Otro Proveedor',
         'telefono': '987654321',
         'email': null,
         'direccion': null,
       };
 
-      expect(proveedorNulo.id, isNull);
+      expect(proveedorNulo.idProveedor, isNull);
       expect(proveedorNulo.email, isNull);
       expect(proveedorNulo.toJson(), proveedorNuloJson);
       expect(Proveedor.fromJson(proveedorNuloJson), proveedorNulo);

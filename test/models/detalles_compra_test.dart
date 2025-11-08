@@ -14,10 +14,10 @@ void main() {
 
     final detalleCompraJson = {
       'id': 1,
-      'idCompra': 10,
-      'idInsumo': 20,
+      'id_compra': 10,
+      'id_insumo': 20,
       'cantidad': 5,
-      'precioUnitarioCompra': '10.50',
+      'precio_unitario_compra': '10.50',
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -90,10 +90,13 @@ void main() {
       });
 
       test('subTotal con precio inválido retorna 0', () {
-        final detalleInvalido = detalleCompra.copyWith(precioUnitarioCompra: 'invalido');
+        final detalleInvalido = detalleCompra.copyWith(
+          precioUnitarioCompra: 'invalido',
+        );
         expect(detalleInvalido.subTotal, 0);
         expect(detalleInvalido.subTotalFormateado, '0.00');
       });
     });
   });
 }
+

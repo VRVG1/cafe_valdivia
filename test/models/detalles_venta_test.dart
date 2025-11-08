@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('DetalleVenta', () {
     final detalleVenta = DetalleVenta(
-      id: 1,
+      idDetalleVenta: 1,
       idVenta: 10,
       idProducto: 20,
       cantidad: 3,
@@ -13,11 +13,11 @@ void main() {
     );
 
     final detalleVentaJson = {
-      'id': 1,
-      'idVenta': 10,
-      'idProducto': 20,
+      'id_detalle_venta': 1,
+      'id_venta': 10,
+      'id_producto': 20,
       'cantidad': 3,
-      'precioUnitarioVenta': '15.50',
+      'precio_unitario_venta': '15.50',
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -35,7 +35,7 @@ void main() {
 
       expect(copia.cantidad, 5);
       // Los demás valores deben permanecer iguales
-      expect(copia.id, detalleVenta.id);
+      expect(copia.idVenta, detalleVenta.idVenta);
       expect(copia.idVenta, detalleVenta.idVenta);
       expect(copia.idProducto, detalleVenta.idProducto);
       expect(copia.precioUnitarioVenta, detalleVenta.precioUnitarioVenta);
@@ -43,14 +43,14 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final dv1 = DetalleVenta(
-        id: 1,
+        idDetalleVenta: 1,
         idVenta: 10,
         idProducto: 20,
         cantidad: 3,
         precioUnitarioVenta: '15.50',
       );
       final dv2 = DetalleVenta(
-        id: 1,
+        idDetalleVenta: 1,
         idVenta: 10,
         idProducto: 20,
         cantidad: 3,
@@ -62,14 +62,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final dv1 = DetalleVenta(
-        id: 1,
+        idDetalleVenta: 1,
         idVenta: 10,
         idProducto: 20,
         cantidad: 3,
         precioUnitarioVenta: '15.50',
       );
       final dv2 = DetalleVenta(
-        id: 1,
+        idDetalleVenta: 1,
         idVenta: 10,
         idProducto: 20,
         cantidad: 3,
@@ -90,7 +90,9 @@ void main() {
       });
 
       test('subTotal con precio inválido retorna 0', () {
-        final detalleInvalido = detalleVenta.copyWith(precioUnitarioVenta: 'invalido');
+        final detalleInvalido = detalleVenta.copyWith(
+          precioUnitarioVenta: 'invalido',
+        );
         expect(detalleInvalido.subTotal, 0);
         expect(detalleInvalido.subTotalFormateado, '0.00');
       });

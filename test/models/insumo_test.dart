@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Insumo', () {
     final insumo = Insumo(
-      id: 1,
+      idInsumo: 1,
       nombre: 'Café en grano',
       descripcion: 'Grano de café de altura',
       idUnidad: 1,
@@ -12,11 +12,11 @@ void main() {
     );
 
     final insumoJson = {
-      'id': 1,
+      'id_insumo': 1,
       'nombre': 'Café en grano',
       'descripcion': 'Grano de café de altura',
-      'idUnidad': 1,
-      'costoUnitario': '25.50',
+      'id_unidad': 1,
+      'costo_unitario': '25.50',
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -34,7 +34,7 @@ void main() {
 
       expect(copia.costoUnitario, '28.00');
       // Los demás valores deben permanecer iguales
-      expect(copia.id, insumo.id);
+      expect(copia.idInsumo, insumo.idInsumo);
       expect(copia.nombre, insumo.nombre);
       expect(copia.descripcion, insumo.descripcion);
       expect(copia.idUnidad, insumo.idUnidad);
@@ -42,14 +42,14 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final i1 = Insumo(
-        id: 1,
+        idInsumo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
         costoUnitario: '25.50',
       );
       final i2 = Insumo(
-        id: 1,
+        idInsumo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
@@ -61,14 +61,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final i1 = Insumo(
-        id: 1,
+        idInsumo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
         costoUnitario: '25.50',
       );
       final i2 = Insumo(
-        id: 1,
+        idInsumo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
@@ -79,3 +79,4 @@ void main() {
     });
   });
 }
+

@@ -5,7 +5,7 @@ void main() {
   group('MovimientoInventarioProducto', () {
     final fecha = DateTime.parse('2025-10-01T14:30:00.000Z');
     final mip = MovimientoInventarioProducto(
-      id: 1,
+      idMovimientoInventarioProducto: 1,
       cantidad: 10,
       fecha: fecha,
       idDetalleVenta: 1,
@@ -16,12 +16,12 @@ void main() {
     );
 
     final mipJson = {
-      'id': 1,
-      'idProducto': 10,
+      'id_movimiento_inventario_producto': 1,
+      'id_producto': 10,
       'cantidad': 10,
       'fecha': '2025-10-01T14:30:00.000Z',
-      'idDetalleVenta': 1,
-      'idDetalleProduccion': 10,
+      'id_detalle_venta': 1,
+      'id_detalle_produccion': 10,
       'tipo': 'entrada',
       'motivo': 'Compra a proveedor',
     };
@@ -47,14 +47,17 @@ void main() {
       expect(mipCopia.tipo, TipoMovimiento.salida);
       expect(mipCopia.motivo, 'Venta a cliente');
       // Los demás valores deben permanecer iguales
-      expect(mipCopia.id, mip.id);
+      expect(
+        mipCopia.idMovimientoInventarioProducto,
+        mip.idMovimientoInventarioProducto,
+      );
       expect(mipCopia.idProducto, mip.idProducto);
       expect(mipCopia.fecha, mip.fecha);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final mip1 = MovimientoInventarioProducto(
-        id: 1,
+        idMovimientoInventarioProducto: 1,
         cantidad: 10,
         fecha: fecha,
         idDetalleVenta: 1,
@@ -64,7 +67,7 @@ void main() {
         motivo: 'Compra a proveedor',
       );
       final mip2 = MovimientoInventarioProducto(
-        id: 1,
+        idMovimientoInventarioProducto: 1,
         cantidad: 10,
         fecha: fecha,
         idDetalleVenta: 1,
@@ -79,7 +82,7 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final mip1 = MovimientoInventarioProducto(
-        id: 1,
+        idMovimientoInventarioProducto: 1,
         cantidad: 10,
         fecha: fecha,
         idDetalleVenta: 1,
@@ -89,7 +92,7 @@ void main() {
         motivo: 'Compra a proveedor',
       );
       final mip2 = MovimientoInventarioProducto(
-        id: 1,
+        idMovimientoInventarioProducto: 1,
         cantidad: 10,
         fecha: fecha,
         idDetalleVenta: 1,
@@ -111,8 +114,10 @@ void main() {
     });
 
     test('fromValue lanza un error para un valor desconocido', () {
-      expect(() => TipoMovimiento.fromValue('desconocido'),
-          throwsArgumentError);
+      expect(
+        () => TipoMovimiento.fromValue('desconocido'),
+        throwsArgumentError,
+      );
     });
 
     test('value retorna el string correcto', () {

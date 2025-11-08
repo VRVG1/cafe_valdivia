@@ -5,7 +5,7 @@ void main() {
   group('OrdenProduccion', () {
     final fecha = DateTime.parse('2025-11-01T12:00:00.000Z');
     final op = OrdenProduccion(
-      id: 1,
+      idOrdenProduccion: 1,
       idProducto: 5,
       cantidadProducida: 50,
       fecha: fecha,
@@ -14,11 +14,11 @@ void main() {
     );
 
     final opJson = {
-      'id': 1,
-      'idProducto': 5,
-      'cantidadProducida': 50,
+      'id_orden_produccion': 1,
+      'id_producto': 5,
+      'cantidad_producida': 50,
       'fecha': '2025-11-01T12:00:00.000Z',
-      'costoTotalProduccion': '1250.50',
+      'costo_total_produccion': '1250.50',
       'notas': 'Producción para stock',
     };
 
@@ -41,7 +41,7 @@ void main() {
       expect(opCopia.cantidadProducida, 60);
       expect(opCopia.notas, 'Producción urgente');
       // Los demás valores deben permanecer iguales
-      expect(opCopia.id, op.id);
+      expect(opCopia.idOrdenProduccion, op.idOrdenProduccion);
       expect(opCopia.idProducto, op.idProducto);
       expect(opCopia.fecha, op.fecha);
       expect(opCopia.costoTotalProduccion, op.costoTotalProduccion);
@@ -49,7 +49,7 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final op1 = OrdenProduccion(
-        id: 1,
+        idOrdenProduccion: 1,
         idProducto: 5,
         cantidadProducida: 50,
         fecha: fecha,
@@ -57,7 +57,7 @@ void main() {
         notas: 'Producción para stock',
       );
       final op2 = OrdenProduccion(
-        id: 1,
+        idOrdenProduccion: 1,
         idProducto: 5,
         cantidadProducida: 50,
         fecha: fecha,
@@ -70,7 +70,7 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final op1 = OrdenProduccion(
-        id: 1,
+        idOrdenProduccion: 1,
         idProducto: 5,
         cantidadProducida: 50,
         fecha: fecha,
@@ -78,7 +78,7 @@ void main() {
         notas: 'Producción para stock',
       );
       final op2 = OrdenProduccion(
-        id: 1,
+        idOrdenProduccion: 1,
         idProducto: 5,
         cantidadProducida: 50,
         fecha: fecha,

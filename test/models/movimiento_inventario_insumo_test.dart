@@ -5,7 +5,7 @@ void main() {
   group('MovimientoInventarioInsumo', () {
     final fecha = DateTime.parse('2025-11-01T10:00:00.000Z');
     final mii = MovimientoInventarioInsumo(
-      id: 1,
+      idMovimientoInventarioInsumo: 1,
       idInsumo: 10,
       tipo: 'entrada',
       cantidad: 100,
@@ -16,13 +16,13 @@ void main() {
     );
 
     final miiJson = {
-      'id': 1,
-      'idInsumo': 10,
+      'id_movimiento_inventario_insumo': 1,
+      'id_insumo': 10,
       'tipo': 'entrada',
       'cantidad': 100,
       'fecha': '2025-11-01T10:00:00.000Z',
-      'idDetalleCompra': 20,
-      'idDetalleProduccion': 30,
+      'id_detalle_compra': 20,
+      'id_detalle_produccion': 30,
       'motivo': 'Compra inicial',
     };
 
@@ -46,15 +46,17 @@ void main() {
       expect(miiCopia.cantidad, 150);
       expect(miiCopia.tipo, 'salida');
       expect(miiCopia.motivo, 'Uso en producción');
-      // Los demás valores deben permanecer iguales
-      expect(miiCopia.id, mii.id);
+      expect(
+        miiCopia.idMovimientoInventarioInsumo,
+        mii.idMovimientoInventarioInsumo,
+      );
       expect(miiCopia.idInsumo, mii.idInsumo);
       expect(miiCopia.fecha, mii.fecha);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final mii1 = MovimientoInventarioInsumo(
-        id: 1,
+        idMovimientoInventarioInsumo: 1,
         idInsumo: 10,
         tipo: 'entrada',
         cantidad: 100,
@@ -64,7 +66,7 @@ void main() {
         motivo: 'Compra inicial',
       );
       final mii2 = MovimientoInventarioInsumo(
-        id: 1,
+        idMovimientoInventarioInsumo: 1,
         idInsumo: 10,
         tipo: 'entrada',
         cantidad: 100,
@@ -79,7 +81,7 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final mii1 = MovimientoInventarioInsumo(
-        id: 1,
+        idMovimientoInventarioInsumo: 1,
         idInsumo: 10,
         tipo: 'entrada',
         cantidad: 100,
@@ -89,7 +91,7 @@ void main() {
         motivo: 'Compra inicial',
       );
       final mii2 = MovimientoInventarioInsumo(
-        id: 1,
+        idMovimientoInventarioInsumo: 1,
         idInsumo: 10,
         tipo: 'entrada',
         cantidad: 100,
