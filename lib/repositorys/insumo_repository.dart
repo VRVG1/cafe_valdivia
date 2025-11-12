@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
 
 class InsumosRepository implements BaseRepository<Insumo> {
   @override
@@ -59,12 +58,12 @@ class InsumosRepository implements BaseRepository<Insumo> {
 
   @override
   Future<int> update(Insumo entity) async {
-    if (entity.id == null) throw Exception('ID no puede ser nulo');
+    if (entity.idInsumo == null) throw Exception('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
       toJson(entity),
       where: '$idColumn = ?',
-      whereArgs: [entity.id],
+      whereArgs: [entity.idInsumo],
     );
   }
 

@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/models/compra.dart';
 import 'package:cafe_valdivia/models/detalle_compra.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 class CompraRepository {

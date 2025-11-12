@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetalleProduccionInsumo {
 
-@JsonKey(name: 'id_detalle_produccion_insumo') int? get idDetalleProduccionInsumo;@JsonKey(name: 'id_orden_produccion') int get idOrdenProduccion;@JsonKey(name: 'id_insumo') int get idInsumo;@JsonKey(name: 'costo_insumo_momento') String get costoInsumoMomento;
+@JsonKey(name: 'id_detalle_produccion') int? get idDetalleProduccionInsumo;@JsonKey(name: 'id_orden_produccion') int? get idOrdenProduccion;@JsonKey(name: 'id_insumo') int get idInsumo;@JsonKey(name: 'cantidad_usada') double get cantidadUsada;@JsonKey(name: 'costo_insumo_momento') String get costoInsumoMomento;
 /// Create a copy of DetalleProduccionInsumo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DetalleProduccionInsumoCopyWith<DetalleProduccionInsumo> get copyWith => _$Deta
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetalleProduccionInsumo&&(identical(other.idDetalleProduccionInsumo, idDetalleProduccionInsumo) || other.idDetalleProduccionInsumo == idDetalleProduccionInsumo)&&(identical(other.idOrdenProduccion, idOrdenProduccion) || other.idOrdenProduccion == idOrdenProduccion)&&(identical(other.idInsumo, idInsumo) || other.idInsumo == idInsumo)&&(identical(other.costoInsumoMomento, costoInsumoMomento) || other.costoInsumoMomento == costoInsumoMomento));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetalleProduccionInsumo&&(identical(other.idDetalleProduccionInsumo, idDetalleProduccionInsumo) || other.idDetalleProduccionInsumo == idDetalleProduccionInsumo)&&(identical(other.idOrdenProduccion, idOrdenProduccion) || other.idOrdenProduccion == idOrdenProduccion)&&(identical(other.idInsumo, idInsumo) || other.idInsumo == idInsumo)&&(identical(other.cantidadUsada, cantidadUsada) || other.cantidadUsada == cantidadUsada)&&(identical(other.costoInsumoMomento, costoInsumoMomento) || other.costoInsumoMomento == costoInsumoMomento));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idDetalleProduccionInsumo,idOrdenProduccion,idInsumo,costoInsumoMomento);
+int get hashCode => Object.hash(runtimeType,idDetalleProduccionInsumo,idOrdenProduccion,idInsumo,cantidadUsada,costoInsumoMomento);
 
 @override
 String toString() {
-  return 'DetalleProduccionInsumo(idDetalleProduccionInsumo: $idDetalleProduccionInsumo, idOrdenProduccion: $idOrdenProduccion, idInsumo: $idInsumo, costoInsumoMomento: $costoInsumoMomento)';
+  return 'DetalleProduccionInsumo(idDetalleProduccionInsumo: $idDetalleProduccionInsumo, idOrdenProduccion: $idOrdenProduccion, idInsumo: $idInsumo, cantidadUsada: $cantidadUsada, costoInsumoMomento: $costoInsumoMomento)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DetalleProduccionInsumoCopyWith<$Res>  {
   factory $DetalleProduccionInsumoCopyWith(DetalleProduccionInsumo value, $Res Function(DetalleProduccionInsumo) _then) = _$DetalleProduccionInsumoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_produccion_insumo') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
+@JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'cantidad_usada') double cantidadUsada,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
 });
 
 
@@ -65,12 +65,13 @@ class _$DetalleProduccionInsumoCopyWithImpl<$Res>
 
 /// Create a copy of DetalleProduccionInsumo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idDetalleProduccionInsumo = freezed,Object? idOrdenProduccion = null,Object? idInsumo = null,Object? costoInsumoMomento = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idDetalleProduccionInsumo = freezed,Object? idOrdenProduccion = freezed,Object? idInsumo = null,Object? cantidadUsada = null,Object? costoInsumoMomento = null,}) {
   return _then(_self.copyWith(
 idDetalleProduccionInsumo: freezed == idDetalleProduccionInsumo ? _self.idDetalleProduccionInsumo : idDetalleProduccionInsumo // ignore: cast_nullable_to_non_nullable
-as int?,idOrdenProduccion: null == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
-as int,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
-as int,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
+as int?,idOrdenProduccion: freezed == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
+as int?,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
+as int,cantidadUsada: null == cantidadUsada ? _self.cantidadUsada : cantidadUsada // ignore: cast_nullable_to_non_nullable
+as double,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion_insumo')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  double cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo() when $default != null:
-return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsumoMomento);case _:
+return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.cantidadUsada,_that.costoInsumoMomento);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.id
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion_insumo')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  double cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)  $default,) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo():
-return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsumoMomento);case _:
+return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.cantidadUsada,_that.costoInsumoMomento);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.id
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_produccion_insumo')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  double cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo() when $default != null:
-return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.costoInsumoMomento);case _:
+return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.cantidadUsada,_that.costoInsumoMomento);case _:
   return null;
 
 }
@@ -212,12 +213,13 @@ return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.id
 @JsonSerializable()
 
 class _DetalleProduccionInsumo implements DetalleProduccionInsumo {
-  const _DetalleProduccionInsumo({@JsonKey(name: 'id_detalle_produccion_insumo') this.idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion') required this.idOrdenProduccion, @JsonKey(name: 'id_insumo') required this.idInsumo, @JsonKey(name: 'costo_insumo_momento') required this.costoInsumoMomento});
+  const _DetalleProduccionInsumo({@JsonKey(name: 'id_detalle_produccion') this.idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion') this.idOrdenProduccion, @JsonKey(name: 'id_insumo') required this.idInsumo, @JsonKey(name: 'cantidad_usada') required this.cantidadUsada, @JsonKey(name: 'costo_insumo_momento') required this.costoInsumoMomento});
   factory _DetalleProduccionInsumo.fromJson(Map<String, dynamic> json) => _$DetalleProduccionInsumoFromJson(json);
 
-@override@JsonKey(name: 'id_detalle_produccion_insumo') final  int? idDetalleProduccionInsumo;
-@override@JsonKey(name: 'id_orden_produccion') final  int idOrdenProduccion;
+@override@JsonKey(name: 'id_detalle_produccion') final  int? idDetalleProduccionInsumo;
+@override@JsonKey(name: 'id_orden_produccion') final  int? idOrdenProduccion;
 @override@JsonKey(name: 'id_insumo') final  int idInsumo;
+@override@JsonKey(name: 'cantidad_usada') final  double cantidadUsada;
 @override@JsonKey(name: 'costo_insumo_momento') final  String costoInsumoMomento;
 
 /// Create a copy of DetalleProduccionInsumo
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetalleProduccionInsumo&&(identical(other.idDetalleProduccionInsumo, idDetalleProduccionInsumo) || other.idDetalleProduccionInsumo == idDetalleProduccionInsumo)&&(identical(other.idOrdenProduccion, idOrdenProduccion) || other.idOrdenProduccion == idOrdenProduccion)&&(identical(other.idInsumo, idInsumo) || other.idInsumo == idInsumo)&&(identical(other.costoInsumoMomento, costoInsumoMomento) || other.costoInsumoMomento == costoInsumoMomento));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetalleProduccionInsumo&&(identical(other.idDetalleProduccionInsumo, idDetalleProduccionInsumo) || other.idDetalleProduccionInsumo == idDetalleProduccionInsumo)&&(identical(other.idOrdenProduccion, idOrdenProduccion) || other.idOrdenProduccion == idOrdenProduccion)&&(identical(other.idInsumo, idInsumo) || other.idInsumo == idInsumo)&&(identical(other.cantidadUsada, cantidadUsada) || other.cantidadUsada == cantidadUsada)&&(identical(other.costoInsumoMomento, costoInsumoMomento) || other.costoInsumoMomento == costoInsumoMomento));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idDetalleProduccionInsumo,idOrdenProduccion,idInsumo,costoInsumoMomento);
+int get hashCode => Object.hash(runtimeType,idDetalleProduccionInsumo,idOrdenProduccion,idInsumo,cantidadUsada,costoInsumoMomento);
 
 @override
 String toString() {
-  return 'DetalleProduccionInsumo(idDetalleProduccionInsumo: $idDetalleProduccionInsumo, idOrdenProduccion: $idOrdenProduccion, idInsumo: $idInsumo, costoInsumoMomento: $costoInsumoMomento)';
+  return 'DetalleProduccionInsumo(idDetalleProduccionInsumo: $idDetalleProduccionInsumo, idOrdenProduccion: $idOrdenProduccion, idInsumo: $idInsumo, cantidadUsada: $cantidadUsada, costoInsumoMomento: $costoInsumoMomento)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$DetalleProduccionInsumoCopyWith<$Res> implements $Detalle
   factory _$DetalleProduccionInsumoCopyWith(_DetalleProduccionInsumo value, $Res Function(_DetalleProduccionInsumo) _then) = __$DetalleProduccionInsumoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_produccion_insumo') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
+@JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'cantidad_usada') double cantidadUsada,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
 });
 
 
@@ -270,12 +272,13 @@ class __$DetalleProduccionInsumoCopyWithImpl<$Res>
 
 /// Create a copy of DetalleProduccionInsumo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idDetalleProduccionInsumo = freezed,Object? idOrdenProduccion = null,Object? idInsumo = null,Object? costoInsumoMomento = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idDetalleProduccionInsumo = freezed,Object? idOrdenProduccion = freezed,Object? idInsumo = null,Object? cantidadUsada = null,Object? costoInsumoMomento = null,}) {
   return _then(_DetalleProduccionInsumo(
 idDetalleProduccionInsumo: freezed == idDetalleProduccionInsumo ? _self.idDetalleProduccionInsumo : idDetalleProduccionInsumo // ignore: cast_nullable_to_non_nullable
-as int?,idOrdenProduccion: null == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
-as int,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
-as int,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
+as int?,idOrdenProduccion: freezed == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
+as int?,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
+as int,cantidadUsada: null == cantidadUsada ? _self.cantidadUsada : cantidadUsada // ignore: cast_nullable_to_non_nullable
+as double,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

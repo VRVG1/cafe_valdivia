@@ -344,7 +344,7 @@ void main() {
               'Insumo',
               {'costo_unitario': '2.0'},
               where: 'id_insumo = ?',
-              whereArgs: [insumo.id],
+              whereArgs: [insumo.idInsumo],
             );
           }
           await updateBatch.commit(noResult: true);
@@ -357,7 +357,7 @@ void main() {
             deleteBatch.delete(
               'Insumo',
               where: 'id_insumo = ?',
-              whereArgs: [insumo.id],
+              whereArgs: [insumo.idInsumo],
             );
           }
           await deleteBatch.commit(noResult: true);

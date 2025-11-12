@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 class OrdenProduccionRepository {
   final DatabaseHelper databaseHelper;
   final String tableName = 'Orden_Produccion';
+  final String detalleProduccionInsumoTableName = 'Detalle_Produccion_Insumo';
   final String idColumn = 'id_orden_produccion';
 
   OrdenProduccionRepository(this.databaseHelper);
@@ -28,7 +29,7 @@ class OrdenProduccionRepository {
         copyDetalle['id_orden_produccion'] = ordenProduccionId;
 
         await txn.insert(
-          tableName,
+          detalleProduccionInsumoTableName,
           copyDetalle,
           conflictAlgorithm: ConflictAlgorithm.rollback,
         );
@@ -43,7 +44,7 @@ class OrdenProduccionRepository {
     final Database db = await databaseHelper.database;
 
     final List<Map<String, dynamic>> result = await db.query(
-      tableName,
+      'V_Orden_Produccion_Detallada',
       where: 'id_orden_produccion = ?',
       whereArgs: [idOrdenProduccion],
     );
@@ -54,7 +55,7 @@ class OrdenProduccionRepository {
 
     double total = result.fold(
       0.0,
-      (sum, subtotal) => sum + double.parse(subtotal['subtotal']),
+      (sum, subtotal) => sum + (subtotal['subtotal_linea_costo'] as double),
     ); // Extraemos la info de la orden (será la misma en todas las filas)
 
     final infoOrden = {

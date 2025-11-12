@@ -7,13 +7,15 @@ void main() {
       idDetalleProduccionInsumo: 1,
       idOrdenProduccion: 100,
       idInsumo: 200,
+      cantidadUsada: 5.0,
       costoInsumoMomento: '15.75',
     );
 
     final dpiJson = {
-      'id_detalle_produccion_insumo': 1,
+      'id_detalle_produccion': 1,
       'id_orden_produccion': 100,
       'id_insumo': 200,
+      'cantidad_usada': 5.0,
       'costo_insumo_momento': '15.75',
     };
 
@@ -33,8 +35,8 @@ void main() {
       expect(dpiCopia.costoInsumoMomento, '20.00');
       // Los demás valores deben permanecer iguales
       expect(dpiCopia.idOrdenProduccion, dpi.idOrdenProduccion);
-      expect(dpiCopia.idOrdenProduccion, dpi.idOrdenProduccion);
       expect(dpiCopia.idInsumo, dpi.idInsumo);
+      expect(dpiCopia.cantidadUsada, dpi.cantidadUsada);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
@@ -42,12 +44,14 @@ void main() {
         idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
+        cantidadUsada: 5.0,
         costoInsumoMomento: '15.75',
       );
       final dpi2 = DetalleProduccionInsumo(
         idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
+        cantidadUsada: 5.0,
         costoInsumoMomento: '15.75',
       );
 
@@ -59,12 +63,14 @@ void main() {
         idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
+        cantidadUsada: 5.0,
         costoInsumoMomento: '15.75',
       );
       final dpi2 = DetalleProduccionInsumo(
         idDetalleProduccionInsumo: 1,
         idOrdenProduccion: 100,
         idInsumo: 200,
+        cantidadUsada: 5.0,
         costoInsumoMomento: '15.75',
       );
 

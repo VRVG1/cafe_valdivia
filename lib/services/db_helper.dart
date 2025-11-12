@@ -121,15 +121,15 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Unidad_Medida (
         id_unidad INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE
+        nombre TEXT NOT NULL UNIQUE CHECK(nombre != '')
       )
     ''');
 
     await db.execute('''
       CREATE TABLE Cliente (
         id_cliente INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        apellido TEXT,
+        nombre TEXT NOT NULL CHECK(nombre != ''),
+        apellido TEXT NOT NULL CHECK(apellido != ''),
         telefono TEXT,
         email TEXT UNIQUE
       )
@@ -138,7 +138,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Proveedor (
         id_proveedor INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
+        nombre TEXT NOT NULL CHECK(nombre != ''),
         telefono TEXT,
         email TEXT UNIQUE,
         direccion TEXT
@@ -159,7 +159,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Producto (
         id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE,
+        nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
         descripcion TEXT,
         precio_venta TEXT DEFAULT 0.0
       )
@@ -246,6 +246,7 @@ class DatabaseHelper {
         id_detalle_produccion INTEGER PRIMARY KEY AUTOINCREMENT,
         id_orden_produccion INTEGER NOT NULL,
         id_insumo INTEGER NOT NULL,
+        cantidad_usada REAL DEFAULT 0.0,
         costo_insumo_momento TEXT DEFAULT '0.0',
         FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion (id_orden_produccion),
         FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)

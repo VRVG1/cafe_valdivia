@@ -49,47 +49,69 @@ void main() {
     final unidadMedida1 = UnidadMedida(nombre: 'KG');
     final unidadMedida2 = UnidadMedida(nombre: 'Pieza');
 
-    test('Agregando una unidad de medida y obtenerlo (getById)', () async {
-      final id = await respository.create(unidadMedida1);
-      expect(id, isNotNull);
+    Future<int> _crearUnidad(String nombre) async {
+      return await respository.create(UnidadMedida(nombre: nombre));
+    }
 
-      final umgetbyid = await respository.getById(id);
-      expect(umgetbyid.nombre, 'KG');
-    });
+    group("CRUD Operations", () {
+      test(
+        "Create, GetById, Update and Delete an UnidadMedida successfully",
+        () async {
+          final unidadId = await _crearUnidad("Sicaru");
 
-    test('Agregando 2 unidad de medida y obtener todos', () async {
-      await respository.create(unidadMedida1);
-      await respository.create(unidadMedida2);
+          expect(unidadId, isA<int>());
 
-      final listUnidadMedida = await respository.getAll();
-      expect(listUnidadMedida.length, 2);
-      expect(listUnidadMedida.first.nombre, 'KG');
-      expect(listUnidadMedida.last.nombre, 'Pieza');
-    });
+          var unidadRecuperada = await respository.getById(unidadId);
+          expect(unidadRecuperada.nombre, "Sicaru");
+          expect(unidadRecuperada.idUnidadMedida, unidadId);
 
-    test(
-      'Eliminar unidad de medida y deberia lanzar un error al buscar una unidad de medida que no existe',
-      () async {
-        final id = await respository.create(unidadMedida1);
-        expect(id, isNotNull);
-        final rows = await respository.delete(id);
-        expect(rows, 1);
+          final unidadActualizada = unidadRecuperada.copyWith(nombre: "Manito");
+          final filasAfectadas = respository.update(unidadActualizada);
+          expect(filasAfectadas, 1);
 
-        expect(() => respository.getById(id), throwsA(isA<Exception>()));
-      },
-    );
+          unidadRecuperada = await respository.getById(unidadId);
+          expect(unidadRecuperada.nombre, "Manito");
 
-    test('Actualizar una unidad de medida', () async {
-      final id = await respository.create(unidadMedida1);
-      expect(id, isNotNull);
-      final unidadMedidaActualziado = unidadMedida1.copyWith(
-        id: id,
-        nombre: "Sergio Pendejo",
+          final filasAfectadasEliminacion = await respository.delete(unidadId);
+          expect(filasAfectadasEliminacion, 1);
+          expect(
+            () => respository.getById(unidadId),
+            throwsA(isA<Exception>()),
+          );
+        },
       );
-      final rows = await respository.update(unidadMedidaActualziado);
-      expect(rows, 1);
-      final unidadMediadActualizadoBaseDeDatos = await respository.getById(id);
-      expect(unidadMediadActualizadoBaseDeDatos.nombre, "Sergio Pendejo");
+      test("getAll returns a list of all Unidad de Medida", () async {
+        await _crearUnidad("Unidad 1");
+        await _crearUnidad("Unidad 2");
+        await _crearUnidad("Unidad 3");
+        await _crearUnidad("Unidad 4");
+
+        final List<UnidadMedida> todasLasUnidades = await respository.getAll();
+
+        expect(todasLasUnidades.length, 4);
+        expect(todasLasUnidades.any((i) => i.nombre == "Unidad 3"), isTrue);
+      });
+      test('getAll with "where" clause filters correctly', () async {
+        await _crearUnidad("Bolsas");
+        await _crearUnidad("Bolsas Grandes");
+        await _crearUnidad("Botella");
+        await _crearUnidad("Bolasas Medianas");
+
+        final List<UnidadMedida> resultado = await respository.getAll(
+          where: 'nombre LIKE ?',
+          whereArgs: ["%bolsas%"],
+        );
+
+        expect(resultado.length, 3);
+        expect(
+          resultado.any((element) => element.nombre == 'Bolsas Grandes'),
+          isTrue,
+        );
+      });
     });
+
+    group("Business Logic", () {});
+    group("Robustness and Edge Cases", () {});
+    group("Performance Tests", () {});
   });
 }

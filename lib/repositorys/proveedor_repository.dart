@@ -68,8 +68,8 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
 
   Future<List<Proveedor>> search(String query) async {
     return getAll(
-      where: 'nombre LIKE ? OR direccion LIKE ? OR telefono LIKE ?',
-      whereArgs: ['%$query%', '%$query%', '%$query%'],
+      where: 'LOWER(nombre) LIKE ? OR LOWER(direccion) LIKE ? OR LOWER(telefono) LIKE ? OR LOWER(email) LIKE ?',
+      whereArgs: ['%${query.toLowerCase()}%', '%${query.toLowerCase()}%', '%${query.toLowerCase()}%', '%${query.toLowerCase()}%'],
     );
   }
 }
