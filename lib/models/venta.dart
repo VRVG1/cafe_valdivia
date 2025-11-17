@@ -2,6 +2,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'venta.freezed.dart';
 part 'venta.g.dart';
 
+class BoolToIntConverter implements JsonConverter<bool?, int?> {
+  const BoolToIntConverter();
+
+  @override
+  bool? fromJson(int? json) => json == null ? null : json == 1;
+
+  @override
+  int? toJson(bool? object) => object == null ? null : (object ? 1 : 0);
+}
+
 VentaEstado? ventaEstadoFromJson(String? estado) {
   if (estado == null) return null;
   return VentaEstado.fromValue(estado);
@@ -18,7 +28,7 @@ abstract class Venta with _$Venta {
     @JsonKey(name: 'id_cliente') required int idCliente,
     required DateTime fecha,
     String? detalles,
-    bool? pagado,
+    @BoolToIntConverter() bool? pagado,
     @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)
     @Default(VentaEstado.pendiente)
     VentaEstado? estado,

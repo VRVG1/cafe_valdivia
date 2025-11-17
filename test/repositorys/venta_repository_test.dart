@@ -1,9 +1,6 @@
 import 'package:cafe_valdivia/models/cliente.dart';
 import 'package:cafe_valdivia/models/detalle_venta.dart';
-import 'package:cafe_valdivia/models/insumo_producto.dart';
-import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/producto.dart';
-import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
@@ -11,11 +8,14 @@ import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
+import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
+  // Inicializar FFI para sqflite en el entorno de prueba (no móvil)
   setUpAll(() {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
@@ -26,267 +26,465 @@ void main() {
     late VentaRepository ventaRepo;
     late ClienteRepository clienteRepo;
     late ProductoRepository productoRepo;
-    late InsumoRepository insumoRepo;
-    late UnidadMedidaRepository unidadRepo;
     late Database database;
-    late String path;
-    late int unidadId;
 
-    // Funciones de utilidad para crear datos de prueba
-    Future<int> _crearInsumo(int unidadId, {String? nombre}) async {
-      return await insumoRepo.create(
-        Insumo(nombre: nombre ?? 'Café en Grano', idUnidad: unidadId),
-      );
-    }
-
-    Future<int> _crearProducto(
-      List<InsumoProducto> insumos, {
-      String? nombreProducto,
-    }) async {
-      final productoId = await productoRepo.create(
-        Producto(nombre: nombreProducto ?? 'Café Americano', precioVenta: 2.50),
-      );
-      for (var insumoRelacion in insumos) {
-        await database.insert('Insumo_Producto', {
-          'id_producto': productoId,
-          'id_insumo': insumoRelacion.idInsumo,
-          'cantidad_requerida': insumoRelacion.cantidadRequerida,
-        });
-      }
-      return productoId;
-    }
-
-    Future<int> _crearCliente() async {
-      return await clienteRepo.create(
-        Cliente(nombre: 'Juan', apellido: 'Perez', telefono: '123456789'),
-      );
-    }
-
-    Future<Venta> _crearVentaCompleta({
-      String? nombre,
-      String? nombreProducto,
-    }) async {
-      final clienteId = await _crearCliente();
-      final insumoId = await _crearInsumo(unidadId, nombre: nombre);
-      final productoId = await _crearProducto([
-        InsumoProducto(
-          idInsumo: insumoId,
-          idProducto: 0,
-          cantidadRequerida: 20,
-        ), // idProducto es dummy
-      ], nombreProducto: nombreProducto);
-
-      return Venta(
-        idCliente: clienteId,
-        fecha: DateTime.now(),
-        detallesVenta: [
-          DetalleVenta(
-            idProducto: productoId,
-            cantidad: 2,
-            precioUnitarioVenta: 2.50,
-          ),
-        ],
-      );
-    }
+    // Datos de prueba reutilizables
+    late int clienteId;
+    late int productoId1;
+    late int productoId2;
 
     setUp(() async {
-      path = p.join(inMemoryDatabasePath, 'test_venta_repository.db');
+      // Usar una base de datos en memoria para cada prueba
+      final path = p.join(inMemoryDatabasePath, 'test_venta_repo.db');
       await databaseFactory.deleteDatabase(path);
 
       database = await openDatabase(
         path,
-        version: 2,
-        onCreate: (db, version) async =>
-            await DatabaseHelper().testOnCreate(db),
-        onConfigure: (db) async => await DatabaseHelper().testOnConfigure(db),
+        version: 3,
+        onCreate: (db, version) async {
+          await DatabaseHelper().testOnCreate(db, version);
+        },
+        onConfigure: (db) async {
+          await DatabaseHelper().testOnConfigure(db);
+        },
       );
 
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      // Inicialización de repositorios en el orden de dependencia correcto
-      unidadRepo = UnidadMedidaRepository(databaseHelper);
-      insumoRepo = InsumoRepository(databaseHelper, unidadRepo);
+      // Inicializar repositorios
+      final unidadRepo = UnidadMedidaRepository(databaseHelper);
+      final insumoRepo = InsumosRepository(databaseHelper, unidadRepo);
       productoRepo = ProductoRepository(databaseHelper, insumoRepo);
       clienteRepo = ClienteRepository(databaseHelper);
       ventaRepo = VentaRepository(databaseHelper, productoRepo, clienteRepo);
 
-      unidadId = await unidadRepo.create(UnidadMedida(nombre: 'Gramos'));
+      // Crear datos de prueba comunes
+      clienteId = await clienteRepo.create(
+        Cliente(
+          nombre: 'Cliente',
+          apellido: 'Prueba',
+          telefono: '123456789',
+          email: 'cliente@test.com',
+        ),
+      );
+      productoId1 = await productoRepo.create(
+        Producto(nombre: 'Café Especial', precioVenta: '15.50'),
+      );
+      productoId2 = await productoRepo.create(
+        Producto(nombre: 'Pastel de Chocolate', precioVenta: '8.00'),
+      );
     });
+
+    Future<int> crearCliente() async {
+      return await clienteRepo.create(
+        Cliente(nombre: "Cliente", apellido: "Prueba"),
+      );
+    }
+
+    Future<int> crearProducto(String nombre, String precio) async {
+      final producto = Producto(nombre: nombre, precioVenta: precio);
+      return await productoRepo.create(producto);
+    }
 
     tearDown(() async {
       if (database.isOpen) await database.close();
     });
 
-    // ====================== PRUEBAS CRUD ======================
-    test('createWithDetails inserts venta and its detalles', () async {
-      // ARRANGE: Crear una venta completa con sus detalles
-      final venta = await _crearVentaCompleta();
+    group('CRUD and Core Logic', () {
+      test('should register a new sale with details', () async {
+        final venta = Venta(idCliente: clienteId, fecha: DateTime.now());
+        final List<DetalleVenta> detalles = [
+          DetalleVenta(
+            idVenta: 0,
+            idProducto: productoId1,
+            cantidad: 2,
+            precioUnitarioVenta: '15.50',
+          ), // 31.0
+          DetalleVenta(
+            idVenta: 0,
+            idProducto: productoId2,
+            cantidad: 1,
+            precioUnitarioVenta: '8.00',
+          ), // 8.0
+        ];
 
-      // ACT: Ejecutar el método para crear la venta en la BD
-      final ventaId = await ventaRepo.createWithDetails(venta);
-
-      // ASSERT: Verificar que la venta y sus detalles se crearon correctamente
-      expect(ventaId, greaterThan(0));
-      final ventas = await database.query('Venta');
-      expect(ventas.length, 1);
-      final detalles = await database.query('Detalle_Venta');
-      expect(detalles.length, 1);
-      expect(detalles.first['cantidad'], 2);
-    });
-
-    test('getFullVenta loads all relationships correctly', () async {
-      // ARRANGE: Crear una venta completa y guardarla
-      final venta = await _crearVentaCompleta();
-      final ventaId = await ventaRepo.createWithDetails(venta);
-
-      // ACT: Obtener la venta completa con sus relaciones
-      final ventaCompleta = await ventaRepo.getFullVenta(ventaId);
-
-      // ASSERT: Verificar que todas las relaciones se cargaron
-      expect(ventaCompleta.cliente, isNotNull);
-      expect(ventaCompleta.cliente!.nombre, 'Juan');
-      expect(ventaCompleta.detallesVenta, hasLength(1));
-      expect(ventaCompleta.detallesVenta.first.producto, isNotNull);
-      expect(
-        ventaCompleta.detallesVenta.first.producto!.nombre,
-        'Café Americano',
-      );
-    });
-
-    test(
-      'getVentasByCliente returns all ventas for a specific client',
-      () async {
-        // ARRANGE: Crear dos ventas para el mismo cliente
-        final venta1 = await _crearVentaCompleta();
-        await ventaRepo.createWithDetails(venta1);
-        await ventaRepo.createWithDetails(
-          venta1,
-        ); // Crear otra venta para el mismo cliente
-
-        // ACT: Obtener las ventas por ID de cliente
-        final ventasCliente = await ventaRepo.getVentasByCliente(
-          venta1.idCliente,
+        final ventaId = await ventaRepo.registrarNuevaVenta(
+          venta: venta,
+          detallesVenta: detalles,
         );
 
-        // ASSERT: Verificar que se retornen las dos ventas
-        expect(ventasCliente, hasLength(2));
-        expect(ventasCliente.first.idCliente, venta1.idCliente);
-      },
-    );
+        expect(ventaId, greaterThan(0));
 
-    // ====================== PRUEBAS DE ROBUSTEZ ======================
-    test('createWithDetails with empty detalles does not fail', () async {
-      // ARRANGE: Crear una venta sin detalles
-      final clienteId = await _crearCliente();
-      final venta = Venta(
-        idCliente: clienteId,
-        fecha: DateTime.now(),
-        detallesVenta: [],
+        final ventaDb = await database.query(
+          'Venta',
+          where: 'id_venta = ?',
+          whereArgs: [ventaId],
+        );
+        expect(ventaDb.first['id_cliente'], clienteId);
+
+        final detallesDb = await database.query(
+          'Detalle_Venta',
+          where: 'id_venta = ?',
+          whereArgs: [ventaId],
+        );
+        expect(detallesDb, hasLength(2));
+        expect(detallesDb.first['id_producto'], productoId1);
+        expect(detallesDb.first['cantidad'], 2);
+      });
+
+      test(
+        'should get a full sale with all details and correct total',
+        () async {
+          final venta = Venta(idCliente: clienteId, fecha: DateTime.now());
+          final List<DetalleVenta> detalles = [
+            DetalleVenta(
+              idVenta: 0,
+              idProducto: productoId1,
+              cantidad: 2,
+              precioUnitarioVenta: '15.50',
+            ), // 31.0
+            DetalleVenta(
+              idVenta: 0,
+              idProducto: productoId2,
+              cantidad: 1,
+              precioUnitarioVenta: '8.00',
+            ), // 8.0
+          ];
+          final ventaId = await ventaRepo.registrarNuevaVenta(
+            venta: venta,
+            detallesVenta: detalles,
+          );
+
+          final ventaCompleta = await ventaRepo.getFullVenta(ventaId: ventaId);
+
+          expect(ventaCompleta['venta'], isNotNull);
+          expect(ventaCompleta['venta']['nombre_cliente'], 'Cliente');
+          expect(ventaCompleta['venta']['apellido_cliente'], 'Prueba');
+          expect(ventaCompleta['detalles'], hasLength(2));
+          expect(ventaCompleta['total'], '39.00');
+        },
       );
 
-      // ACT: Intentar crear la venta
-      final ventaId = await ventaRepo.createWithDetails(venta);
+      test('should get all sales', () async {
+        // Venta 1
+        await ventaRepo.registrarNuevaVenta(
+          venta: Venta(idCliente: clienteId, fecha: DateTime.now()),
+          detallesVenta: [
+            DetalleVenta(
+              idVenta: 0,
+              idProducto: productoId1,
+              cantidad: 1,
+              precioUnitarioVenta: '15.50',
+            ),
+          ],
+        );
+        // Venta 2
+        await ventaRepo.registrarNuevaVenta(
+          venta: Venta(idCliente: clienteId, fecha: DateTime.now()),
+          detallesVenta: [
+            DetalleVenta(
+              idVenta: 0,
+              idProducto: productoId2,
+              cantidad: 2,
+              precioUnitarioVenta: '8.00',
+            ),
+          ],
+        );
 
-      // ASSERT: Verificar que la venta se creó y no hay detalles
-      expect(ventaId, greaterThan(0));
-      final detalles = await database.query('Detalle_Venta');
-      expect(detalles, isEmpty);
-    });
+        final todasLasVentas = await ventaRepo.getAll();
 
-    test('getFullVenta throws for non-existent id', () async {
-      // ASSERT: Esperar que una llamada con un ID inexistente lance una excepción
-      expect(() => ventaRepo.getFullVenta(9999), throwsA(isA<Exception>()));
-    });
+        expect(todasLasVentas, hasLength(2));
+        expect(todasLasVentas.first['total'], '16.00');
+        expect(todasLasVentas.last['total'], '15.50');
+      });
 
-    test(
-      'getVentasByCliente returns empty list for client with no ventas',
-      () async {
-        // ARRANGE: Crear un cliente sin ventas
-        final clienteId = await _crearCliente();
-
-        // ACT: Obtener ventas para ese cliente
-        final ventas = await ventaRepo.getVentasByCliente(clienteId);
-
-        // ASSERT: Verificar que la lista esté vacía
-        expect(ventas, isEmpty);
-      },
-    );
-
-    test('getAll returns all ventas', () async {
-      final venta1 = await _crearVentaCompleta(
-        nombre: "Insumo 1",
-        nombreProducto: "Producto 1",
-      );
-      final venta2 = await _crearVentaCompleta(
-        nombre: "Insumo 2",
-        nombreProducto: "Producto 2",
-      );
-      await ventaRepo.createWithDetails(venta1);
-      await ventaRepo.createWithDetails(venta2);
-
-      final todasLasVentas = await ventaRepo.getAll();
-
-      expect(todasLasVentas.length, 2);
-    });
-
-    // ====================== PRUEBAS DE RENDIMIENTO ======================
-    test(
-      'Performance: Bulk venta creation with batch',
-      () async {
-        const recordCount = 1000;
-        final stopwatch = Stopwatch()..start();
-
-        // ARRANGE: Crear datos base
-        final clienteId = await _crearCliente();
-        //final unidadId = await _crearUnidad();
-        final insumoId = await _crearInsumo(unidadId, nombre: "Cafe el chido");
-        final productoId = await _crearProducto([
-          InsumoProducto(
-            idInsumo: insumoId,
-            idProducto: 0,
-            cantidadRequerida: 1,
+      test('should mark a sale as paid', () async {
+        final ventaId = await ventaRepo.registrarNuevaVenta(
+          venta: Venta(
+            idCliente: clienteId,
+            fecha: DateTime.now(),
+            pagado: false,
           ),
-        ]);
-
-        final batch = database.batch();
-        final ventaIds = <int>[];
-
-        // ACT: Crear N ventas y sus detalles en batch
-        for (int i = 0; i < recordCount; i++) {
-          batch.insert('Venta', {
-            'id_cliente': clienteId,
-            'fecha': DateTime.now().toIso8601String(),
-            'pagado': 0,
-          });
-        }
-        final results = await batch.commit(noResult: false);
-        ventaIds.addAll(results.cast<int>());
-
-        final detallesBatch = database.batch();
-        for (int i = 0; i < recordCount; i++) {
-          detallesBatch.insert('Detalle_Venta', {
-            'id_venta': ventaIds[i],
-            'id_producto': productoId,
-            'cantidad': 1,
-            'precio_unitario_venta': 2.50,
-          });
-        }
-        await detallesBatch.commit(noResult: true);
-
-        stopwatch.stop();
-        print(
-          'Creación de $recordCount ventas en batch: ${stopwatch.elapsedMilliseconds}ms',
+          detallesVenta: [],
         );
 
-        // ASSERT: Verificar que se crearon todos los registros
-        final ventas = await database.query('Venta');
-        expect(ventas.length, recordCount);
-        final detalles = await database.query('Detalle_Venta');
-        expect(detalles.length, recordCount);
-        expect(stopwatch.elapsedMilliseconds, lessThan(5000));
-      },
-      timeout: Timeout(Duration(seconds: 10)),
-    );
+        final result = await ventaRepo.markAsPaid(ventaId);
+        expect(result, 1);
+
+        final ventaDb = await database.query(
+          'Venta',
+          where: 'id_venta = ?',
+          whereArgs: [ventaId],
+        );
+        expect(ventaDb.first['pagado'], 1);
+      });
+
+      test('should mark a sale as unpaid', () async {
+        final ventaId = await ventaRepo.registrarNuevaVenta(
+          venta: Venta(
+            idCliente: clienteId,
+            fecha: DateTime.now(),
+            pagado: true,
+          ),
+          detallesVenta: [],
+        );
+
+        final result = await ventaRepo.markAsUnpaid(ventaId);
+        expect(result, 1);
+
+        final ventaDb = await database.query(
+          'Venta',
+          where: 'id_venta = ?',
+          whereArgs: [ventaId],
+        );
+        expect(ventaDb.first['pagado'], 0);
+      });
+
+      test('should mark a sale as nulled (cancelled)', () async {
+        final ventaId = await ventaRepo.registrarNuevaVenta(
+          venta: Venta(idCliente: clienteId, fecha: DateTime.now()),
+          detallesVenta: [],
+        );
+
+        final result = await ventaRepo.markAsNulled(ventaId);
+        expect(result, 1);
+
+        final ventaDb = await database.query(
+          'Venta',
+          where: 'id_venta = ?',
+          whereArgs: [ventaId],
+        );
+        // VentaEstado.cancelado.value se asume como 2. Verificar en el modelo.
+        expect(ventaDb.first['estado'], VentaEstado.cancelado.value);
+      });
+    });
+
+    group('Robustness and Error Handling', () {
+      test(
+        'registrarNuevaVenta should rollback transaction if a detail is invalid',
+        () async {
+          final venta = Venta(idCliente: clienteId, fecha: DateTime.now());
+          final List<DetalleVenta> detallesInvalidos = [
+            DetalleVenta(
+              idVenta: 0,
+              idProducto: 9999, // ID de producto no existente
+              cantidad: 1,
+              precioUnitarioVenta: '10.0',
+            ),
+          ];
+
+          await expectLater(
+            () => ventaRepo.registrarNuevaVenta(
+              venta: venta,
+              detallesVenta: detallesInvalidos,
+            ),
+            throwsA(isA<DatabaseException>()),
+          );
+
+          final ventas = await database.query('Venta');
+          expect(
+            ventas,
+            isEmpty,
+            reason: 'La venta no debería haberse insertado',
+          );
+        },
+      );
+
+      test(
+        'registrarNuevaVenta should succeed with an empty details list',
+        () async {
+          final venta = Venta(idCliente: clienteId, fecha: DateTime.now());
+          final ventaId = await ventaRepo.registrarNuevaVenta(
+            venta: venta,
+            detallesVenta: [],
+          );
+
+          expect(ventaId, greaterThan(0));
+          final detallesDb = await database.query(
+            'Detalle_Venta',
+            where: 'id_venta = ?',
+            whereArgs: [ventaId],
+          );
+          expect(detallesDb, isEmpty);
+        },
+      );
+
+      test(
+        'getFullVenta should throw an exception for a non-existent sale ID',
+        () async {
+          await expectLater(
+            () => ventaRepo.getFullVenta(ventaId: 9999),
+            throwsA(
+              isA<Exception>().having(
+                (e) => e.toString(),
+                'message',
+                'Exception: No se encontro la venta con el ID: 9999',
+              ),
+            ),
+          );
+        },
+      );
+
+      test('getAll should return an empty list when no sales exist', () async {
+        final ventas = await ventaRepo.getAll();
+        expect(ventas, isEmpty);
+      });
+
+      test(
+        'update methods should handle non-existent sale IDs gracefully',
+        () async {
+          final nonExistentId = 9999;
+          final paidResult = await ventaRepo.markAsPaid(nonExistentId);
+          final unpaidResult = await ventaRepo.markAsUnpaid(nonExistentId);
+          final nulledResult = await ventaRepo.markAsNulled(nonExistentId);
+
+          expect(paidResult, 0);
+          expect(unpaidResult, 0);
+          expect(nulledResult, 0);
+        },
+      );
+    });
+
+    group('Performance Tests', () {
+      final recordCount = 1000;
+      test(
+        'should handle registering a large number of sales',
+        () async {
+          final stopwatch = Stopwatch()..start();
+
+          final int clienteId = await crearCliente();
+          final int productoId = await crearProducto("Producto", "12");
+
+          final Batch batch = database.batch();
+
+          for (int i = 0; i < recordCount; i++) {
+            batch.insert("Venta", {
+              'id_cliente': clienteId,
+              'fecha': DateTime.now().toIso8601String(),
+              'pagado': 0,
+            });
+          }
+
+          final results = await batch.commit(noResult: false);
+          final ventaIds = results.cast<int>();
+
+          final Batch detallesBatch = database.batch();
+          for (int i = 0; i < recordCount; i++) {
+            detallesBatch.insert('Detalle_Venta', {
+              'id_venta': ventaIds[i],
+              'id_producto': productoId,
+              'cantidad': i + 1,
+              'precio_unitario_venta': ((i + 1) * 1.5).toString(),
+            });
+          }
+          await detallesBatch.commit(noResult: true);
+          appLogger.i(
+            "Creación de $recordCount ventas: ${stopwatch.elapsedMilliseconds}ms",
+          );
+
+          final ventas = await database.query("Venta");
+          expect(ventas.length, recordCount);
+
+          final detalles = await database.query('Detalle_Venta');
+          expect(detalles.length, recordCount);
+
+          stopwatch.stop();
+
+          expect(stopwatch.elapsed.inSeconds, lessThan(5));
+        },
+        timeout: const Timeout(Duration(seconds: 30)),
+      );
+
+      test(
+        'should handle registering a sale with many details',
+        () async {
+          const detailCount = 200;
+          final stopwatch = Stopwatch()..start();
+
+          final int clienteId = await crearCliente();
+
+          final Batch productoBatch = database.batch();
+          for (int i = 0; i < detailCount; i++) {
+            productoBatch.insert("Producto", {'nombre': 'Producto $i'});
+          }
+
+          final productoResults = await productoBatch.commit(noResult: false);
+          final productoIds = productoResults.cast<int>();
+          appLogger.i(
+            "Creacuion de $recordCount productos en ${stopwatch.elapsedMilliseconds} ms",
+          );
+
+          final int ventaId = await database.insert('Venta', {
+            'id_cliente': clienteId,
+            'pagado': 0,
+            'fecha': DateTime.now().toIso8601String(),
+          });
+
+          final Batch detalleBatch = database.batch();
+          for (var i = 0; i < detailCount; i++) {
+            detalleBatch.insert("Detalle_Venta", {
+              'id_venta': ventaId,
+              'id_producto': productoIds[i],
+              'cantidad': 10,
+              'precio_unitario_venta': '8.00',
+            });
+          }
+
+          await detalleBatch.commit(noResult: true);
+          appLogger.i(
+            "Creacion $detailCount detalles: ${stopwatch.elapsedMilliseconds} ms",
+          );
+
+          final detallesmap = await database.query(
+            'Detalle_Venta',
+            whereArgs: [ventaId],
+            where: "id_venta = ?",
+          );
+
+          appLogger.i(
+            "Obtención venta completa: ${stopwatch.elapsedMilliseconds} ms",
+          );
+          expect(detallesmap.length, detailCount);
+
+          stopwatch.stop();
+          expect(stopwatch.elapsed.inSeconds, lessThan(5));
+        },
+        timeout: const Timeout(Duration(seconds: 30)),
+      );
+
+      test(
+        'getAll should perform reasonably with a large number of sales',
+        () async {
+          const recordCount = 100;
+          for (int i = 0; i < recordCount; i++) {
+            await ventaRepo.registrarNuevaVenta(
+              venta: Venta(idCliente: clienteId, fecha: DateTime.now()),
+              detallesVenta: [
+                DetalleVenta(
+                  idVenta: 0,
+                  idProducto: productoId1,
+                  cantidad: 1,
+                  precioUnitarioVenta: '10.0',
+                ),
+              ],
+            );
+          }
+
+          final stopwatch = Stopwatch()..start();
+          final allVentas = await ventaRepo.getAll();
+          stopwatch.stop();
+
+          print(
+            'Rendimiento: getAll con $recordCount ventas: ${stopwatch.elapsedMilliseconds}ms',
+          );
+
+          expect(allVentas, hasLength(recordCount));
+          // `getAll` es costoso por diseño (N+1 queries). Este test establece una línea base.
+          expect(stopwatch.elapsedMilliseconds, lessThan(4000));
+        },
+        timeout: const Timeout(Duration(seconds: 30)),
+      );
+    });
   });
 }
