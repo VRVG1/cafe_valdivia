@@ -11,7 +11,9 @@ _Venta _$VentaFromJson(Map<String, dynamic> json) => _Venta(
   idCliente: (json['id_cliente'] as num).toInt(),
   fecha: DateTime.parse(json['fecha'] as String),
   detalles: json['detalles'] as String?,
-  pagado: json['pagado'] as bool?,
+  pagado: const BoolToIntConverter().fromJson(
+    (json['pagado'] as num?)?.toInt(),
+  ),
   estado: json['estado'] == null
       ? VentaEstado.pendiente
       : ventaEstadoFromJson(json['estado'] as String?),
@@ -22,6 +24,6 @@ Map<String, dynamic> _$VentaToJson(_Venta instance) => <String, dynamic>{
   'id_cliente': instance.idCliente,
   'fecha': instance.fecha.toIso8601String(),
   'detalles': instance.detalles,
-  'pagado': instance.pagado,
+  'pagado': const BoolToIntConverter().toJson(instance.pagado),
   'estado': ventaEstadoToJson(instance.estado),
 };

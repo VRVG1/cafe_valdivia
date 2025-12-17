@@ -31,7 +31,7 @@ class VentaRepository {
       //Insert detalleVenta
       for (final DetalleVenta detalle in detallesVenta) {
         final Map<String, dynamic> copyDetalleVenta = detalle.toJson();
-        copyDetalleVenta['idVenta'] = ventaId;
+        copyDetalleVenta['id_venta'] = ventaId;
 
         await txn.insert(
           'Detalle_Venta',
@@ -58,7 +58,7 @@ class VentaRepository {
 
     double total = result.fold(
       0.0,
-      (sum, subtotal) => sum + double.parse(subtotal['subtotal']),
+      (sum, subtotal) => sum + (subtotal['subtotal'] as num),
     );
 
     final infoVenta = {
@@ -68,6 +68,7 @@ class VentaRepository {
       'pagado': result.first['pagado'],
       'id_cliente': result.first['id_cliente'],
       'nombre_cliente': result.first['nombre_cliente'],
+      'apellido_cliente': result.first['apellido_cliente'],
     };
     //TODO: Ver una manera de obtener todas las cantidades, precio_unitario_compra y su relacion para una muestra mas detallada valgame dios
 
@@ -84,6 +85,24 @@ class VentaRepository {
       maps.map((map) async {
         return await getFullVenta(ventaId: map['id_venta'] as int);
       }),
+    );
+  }
+
+  Future<int> markAsPaid(int ventaId) async {
+    return await dbHelper.update(
+      tableName,
+      {'pagado': 1},
+      where: '$idColumn = ?',
+      whereArgs: [ventaId],
+    );
+  }
+
+  Future<int> markAsUnpaid(int ventaId) async {
+    return await dbHelper.update(
+      tableName,
+      {'pagado': 0},
+      where: '$idColumn = ?',
+      whereArgs: [ventaId],
     );
   }
 

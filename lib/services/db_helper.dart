@@ -394,6 +394,7 @@ class DatabaseHelper {
         v.pagado,
         c.id_cliente,
         c.nombre AS nombre_cliente,
+        c.apellido AS apellido_cliente,
         dv.id_detalle_venta,
         dv.cantidad,
         dv.precio_unitario_venta,

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Venta {
 
-@JsonKey(name: 'id_venta') int? get idVenta;@JsonKey(name: 'id_cliente') int get idCliente; DateTime get fecha; String? get detalles; bool? get pagado;@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? get estado;
+@JsonKey(name: 'id_venta') int? get idVenta;@JsonKey(name: 'id_cliente') int get idCliente; DateTime get fecha; String? get detalles;@BoolToIntConverter() bool? get pagado;@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? get estado;
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $VentaCopyWith<$Res>  {
   factory $VentaCopyWith(Venta value, $Res Function(Venta) _then) = _$VentaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles, bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
+@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles,@BoolToIntConverter() bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
 });
 
 
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Venta() when $default != null:
 return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
@@ -179,7 +179,7 @@ return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)  $default,) {final _that = this;
 switch (_that) {
 case _Venta():
 return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
@@ -199,7 +199,7 @@ return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles,  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,) {final _that = this;
 switch (_that) {
 case _Venta() when $default != null:
 return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
@@ -214,14 +214,14 @@ return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.p
 @JsonSerializable()
 
 class _Venta implements Venta {
-  const _Venta({@JsonKey(name: 'id_venta') this.idVenta, @JsonKey(name: 'id_cliente') required this.idCliente, required this.fecha, this.detalles, this.pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) this.estado = VentaEstado.pendiente});
+  const _Venta({@JsonKey(name: 'id_venta') this.idVenta, @JsonKey(name: 'id_cliente') required this.idCliente, required this.fecha, this.detalles, @BoolToIntConverter() this.pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) this.estado = VentaEstado.pendiente});
   factory _Venta.fromJson(Map<String, dynamic> json) => _$VentaFromJson(json);
 
 @override@JsonKey(name: 'id_venta') final  int? idVenta;
 @override@JsonKey(name: 'id_cliente') final  int idCliente;
 @override final  DateTime fecha;
 @override final  String? detalles;
-@override final  bool? pagado;
+@override@BoolToIntConverter() final  bool? pagado;
 @override@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) final  VentaEstado? estado;
 
 /// Create a copy of Venta
@@ -257,7 +257,7 @@ abstract mixin class _$VentaCopyWith<$Res> implements $VentaCopyWith<$Res> {
   factory _$VentaCopyWith(_Venta value, $Res Function(_Venta) _then) = __$VentaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles, bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
+@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles,@BoolToIntConverter() bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
 });
 
 

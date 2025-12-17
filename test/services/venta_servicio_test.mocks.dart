@@ -165,6 +165,22 @@ class MockVentaRepository extends _i1.Mock implements _i7.VentaRepository {
           as _i9.Future<List<Map<String, dynamic>>>);
 
   @override
+  _i9.Future<int> markAsPaid(int? ventaId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markAsPaid, [ventaId]),
+            returnValue: _i9.Future<int>.value(0),
+          )
+          as _i9.Future<int>);
+
+  @override
+  _i9.Future<int> markAsUnpaid(int? ventaId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markAsUnpaid, [ventaId]),
+            returnValue: _i9.Future<int>.value(0),
+          )
+          as _i9.Future<int>);
+
+  @override
   _i9.Future<int> markAsNulled(int? ventaId) =>
       (super.noSuchMethod(
             Invocation.method(#markAsNulled, [ventaId]),
