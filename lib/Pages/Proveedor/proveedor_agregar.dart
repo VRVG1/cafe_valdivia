@@ -1,5 +1,7 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/models/proveedor.dart';
 import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,68 +30,23 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     super.dispose();
   }
 
-  void _mensajeExito() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Proveedor guardado exitosamente',
-          style: TextStyle(
-            color: theme.colorScheme.onTertiaryContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.tertiaryContainer,
-      ),
-    );
-  }
-
-  void _mensajeError() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Error al guardar el proveedor. Por favor, intente de nuevo',
-          style: TextStyle(
-            color: theme.colorScheme.onErrorContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.errorContainer,
-      ),
-    );
-  }
-
   Future<void> _guardar() async {
-    if (!(_formKey.currentState?.validate() ?? false)) {
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    final proveedor = Proveedor(
-      nombre: _nombreController.text,
-      telefono: _telefonoController.text,
-      email: _correoController.text,
-      direccion: _direccionController.text,
-    );
-
-    try {
-      await ref.read(proveedorProvider.notifier).create(proveedor);
-      _mensajeExito();
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      _mensajeError();
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+    if (_formKey.currentState?.validate() ?? false) {
+      final Proveedor proveedor = Proveedor(
+        nombre: _nombreController.text,
+        telefono: _telefonoController.text,
+        email: _correoController.text,
+        direccion: _direccionController.text,
+      );
+      create<Proveedor>(
+        context: context,
+        ref: ref,
+        provider: proveedorProvider,
+        element: proveedor,
+        mensajeExito: "El Proveedor se guardo con exito",
+        mensajeError:
+            "Error al guardar el proveedor. Por favor, intente de nuevo.",
+      );
     }
   }
 
@@ -146,7 +103,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
                 text: "Correo",
                 controller: _correoController,
                 icon: Icons.mail_outlined,
-                esObligatorio: false,
+                esObligatorio: true,
               ),
               const SizedBox(height: 16),
               _buildTextField(
@@ -171,15 +128,27 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     return TextFormField(
       enabled: !_isLoading,
       controller: controller,
-      validator:
-          esObligatorio
-              ? (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Por favor, ingrese el $text';
-                }
-                return null;
+      validator: esObligatorio
+          ? (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor, ingrese el $text';
               }
-              : null,
+              if (controller.hashCode == _correoController.hashCode) {
+                if (!EmailValidator.validate(value)) {
+                  return "Ingere un correo valido";
+                }
+              }
+              if (controller.hashCode == _telefonoController.hashCode) {
+                if (int.tryParse(value) == null) {
+                  return "Numero de telefono no valido";
+                }
+                if (value.length != 10) {
+                  return "El numero no tiene que ser de 10 digitos";
+                }
+              }
+              return null;
+            }
+          : null,
       decoration: InputDecoration(
         labelText: text,
         border: const OutlineInputBorder(),
@@ -192,17 +161,16 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     final theme = Theme.of(context);
     return FilledButton(
       onPressed: _isLoading ? null : _guardar,
-      child:
-          _isLoading
-              ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: theme.colorScheme.onSecondaryContainer,
-                  strokeWidth: 2,
-                ),
-              )
-              : const Text("Guardar"),
+      child: _isLoading
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: theme.colorScheme.onSecondaryContainer,
+                strokeWidth: 2,
+              ),
+            )
+          : const Text("Guardar"),
     );
   }
 }

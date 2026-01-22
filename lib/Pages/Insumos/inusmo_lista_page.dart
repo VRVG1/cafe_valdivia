@@ -1,8 +1,9 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
-import 'package:cafe_valdivia/Pages/Insumo/editar_insumo_page.dart';
-import 'package:cafe_valdivia/Pages/Insumo/insumo_detallado_page.dart';
+import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
+import 'package:cafe_valdivia/Pages/Insumos/insumo_detallado_page.dart';
 import 'package:cafe_valdivia/models/insumo.dart';
-import 'package:cafe_valdivia/Pages/Insumo/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +24,9 @@ class InusmoListaPage extends ConsumerWidget {
           data: insumos,
           keyBuilder: (insumo) {
             return ValueKey(
-              insumo.id != null ? 'insumo-${insumo.id}' : insumo.hashCode,
+              insumo.idInsumo != null
+                  ? 'insumo-${insumo.idInsumo}'
+                  : insumo.hashCode,
             );
           },
           leadingBuilder: (insumo) => const Icon(Icons.inventory_2_rounded),
@@ -31,18 +34,18 @@ class InusmoListaPage extends ConsumerWidget {
           subtitleBuilder: (insumo) =>
               UnidadMedidaNombre(unidadMedidaId: insumo.idUnidad),
           onTapCallback: (insumo) {
-            if (insumo.id != null) {
+            if (insumo.idInsumo != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      InsumoDetalladoPage(insumoId: insumo.id!),
+                      InsumoDetalladoPage(insumoId: insumo.idInsumo!),
                 ),
               );
             }
           },
           onEditDismissed: (insumo) async {
-            if (insumo.id != null) {
+            if (insumo.idInsumo != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -54,24 +57,23 @@ class InusmoListaPage extends ConsumerWidget {
           },
           onDeleteDismissed: (insumo) async {
             final bool confirmar =
-                await showDialog<bool>(
+                await mostrarDialogoConfirmacion(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Confirmar Eliminación'),
-                    content: Text(
-                      '¿Estás seguro de que quieres eliminar ${insumo.nombre}?',
+                  titulo: "Seguro que quiere eliminar este cliente?",
+                  contenido: "Esta accion no se puede deshacer",
+                  textoBotonConfirmacion: "Eliminar",
+                  onConfirm: () => {
+                    delete(
+                      context: context,
+                      ref: ref,
+                      provider: insumoProvider,
+                      id: insumo.idInsumo!,
+                      mensajeExito: "El insumo se ha borrado con exito",
+                      detalle: false,
+                      mensajeError:
+                          "Error al eliminar el Insumo, Por favor, intente de nuevo.",
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Cancelar'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Eliminar'),
-                      ),
-                    ],
-                  ),
+                  },
                 ) ??
                 false;
 

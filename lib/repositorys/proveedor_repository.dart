@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/models/proveedor.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
+import 'package:cafe_valdivia/utils/logger.dart';
 
 class ProveedorRepository implements BaseRepository<Proveedor> {
   @override
@@ -20,8 +21,17 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
 
   @override
   Future<int> create(Proveedor entity) async {
-    final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toJson());
+    try {
+      final db = await dbHelper.database;
+      return await db.insert(tableName, entity.toJson());
+    } catch (e) {
+      // Verificamos si es un error de restricción de base de datos
+      if (e.toString().contains('UNIQUE constraint failed')) {
+        appLogger.e(e);
+        throw Exception('El proveedor ya existe.');
+      }
+      throw Exception('Error desconocido al guardar.');
+    }
   }
 
   @override
@@ -68,8 +78,14 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
 
   Future<List<Proveedor>> search(String query) async {
     return getAll(
-      where: 'LOWER(nombre) LIKE ? OR LOWER(direccion) LIKE ? OR LOWER(telefono) LIKE ? OR LOWER(email) LIKE ?',
-      whereArgs: ['%${query.toLowerCase()}%', '%${query.toLowerCase()}%', '%${query.toLowerCase()}%', '%${query.toLowerCase()}%'],
+      where:
+          'LOWER(nombre) LIKE ? OR LOWER(direccion) LIKE ? OR LOWER(telefono) LIKE ? OR LOWER(email) LIKE ?',
+      whereArgs: [
+        '%${query.toLowerCase()}%',
+        '%${query.toLowerCase()}%',
+        '%${query.toLowerCase()}%',
+        '%${query.toLowerCase()}%',
+      ],
     );
   }
 }

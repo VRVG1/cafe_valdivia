@@ -58,7 +58,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
                         context: context,
                         ref: ref,
                         provider: insumoProvider,
-                        id: insumo.id!,
+                        id: insumo.idInsumo!, //TODO: es idInsumo o idUnidad??
                         mensajeExito: "El cliente se ha borrado con exito",
                         mensajeError:
                             "Error al eliminar el cliente,Por favor, intente de nuevo",
@@ -180,7 +180,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
 void _mostrarDialogoConfirmacion(
   BuildContext context,
   WidgetRef ref,
-  Insumos insumo,
+  Insumo insumo,
 ) {
   showDialog(
     context: context,
@@ -195,7 +195,7 @@ void _mostrarDialogoConfirmacion(
           ),
           TextButton(
             onPressed: () {
-              ref.read(insumoDetailProvider(insumo.id!).future).then((_) {
+              ref.read(insumoDetailProvider(insumo.idInsumo!).future).then((_) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               });

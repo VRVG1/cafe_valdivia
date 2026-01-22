@@ -86,7 +86,7 @@ void main() {
 
           var productoRecuperado = await productoRepository.getById(productoId);
           expect(productoRecuperado.nombre, 'Café Americano');
-          expect(productoRecuperado.precioVenta, 45.0);
+          expect(productoRecuperado.precioVenta, '45.0');
 
           final productoActualizado = productoRecuperado.copyWith(
             nombre: 'Café Espresso',
@@ -99,7 +99,7 @@ void main() {
 
           productoRecuperado = await productoRepository.getById(productoId);
           expect(productoRecuperado.nombre, 'Café Espresso');
-          expect(productoRecuperado.precioVenta, 50.0);
+          expect(productoRecuperado.precioVenta, "50.0");
 
           final rowsAffectedDelete = await productoRepository.delete(
             productoId,

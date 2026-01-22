@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
@@ -30,54 +31,25 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
   void dispose() {
     _descripcionController.dispose();
     _nombreController.dispose();
-
     super.dispose();
   }
 
-  void _mensajeExito() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Insumo guardado exitosamente',
-          style: TextStyle(
-            color: theme.colorScheme.onTertiaryContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.tertiaryContainer,
-      ),
+  Future<void> _guardar() async {
+    final Insumo insumo = Insumo(
+      nombre: _nombreController.text,
+      descripcion: _descripcionController.text,
+      idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
+      costoUnitario:
+          "99999", //TODO: Ver aqui que pedo con el costo costoUnitario, de donde sale
     );
-  }
-
-  void _mensajeError() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Error al guardar el insumo. Por favor, intente de nuevo',
-          style: TextStyle(
-            color: theme.colorScheme.onErrorContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.errorContainer,
-      ),
+    create<Insumo>(
+      context: context,
+      ref: ref,
+      provider: insumoProvider,
+      element: insumo,
+      mensajeExito: "El Insumo se guardo con exito",
+      mensajeError: "Error al guardar el Insumo. Por favor, inente de nuevo.",
     );
-  }
-
-  Future<void> _guardarCliente() async {
-    if ((_formKey.currentState?.validate() ?? false) &&
-        _selectedUnidadMedidad != null) {
-      final insumo = Insumo(
-        nombre: _nombreController.text,
-        descripcion: _descripcionController.text,
-        idUnidad: _selectedUnidadMedidad!.id!,
-      );
-      await ref.read(insumoProvider.notifier).create(insumo);
-      // await Future.delayed(const Duration(seconds: 5));
-      _mensajeExito();
-    }
   }
 
   @override
@@ -155,6 +127,7 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
     );
   }
 
+  //TODO: Hay que refactorizar esta funcion, ya que esta elaborada con las patas.
   Widget _buildDropDownMenu() {
     return Consumer(
       builder: (context, ref, child) {
@@ -162,22 +135,49 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
 
         return asyncUM.when(
           data: (ums) {
-            return DropdownMenu<UnidadMedida>(
-              label: const Text("Unidad de Medida"),
-              leadingIcon: const Icon(Icons.balance_rounded),
-              expandedInsets: EdgeInsets.zero,
-              initialSelection: _selectedUnidadMedidad,
-              onSelected: (UnidadMedida? unidadMedida) {
-                setState(() {
-                  _selectedUnidadMedidad = unidadMedida;
-                });
+            return FormField<UnidadMedida>(
+              validator: (value) {
+                if (_selectedUnidadMedidad == null) {
+                  return 'Por favor, selecciona una unidad';
+                }
+                return null;
               },
-              dropdownMenuEntries: ums.map((unidadMedida) {
-                return DropdownMenuEntry<UnidadMedida>(
-                  value: unidadMedida,
-                  label: unidadMedida.nombre,
+              builder: (FormFieldState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownMenu<UnidadMedida>(
+                      label: const Text("Unidad de Medida"),
+                      leadingIcon: const Icon(Icons.balance_rounded),
+                      expandedInsets: EdgeInsets.zero,
+                      initialSelection: _selectedUnidadMedidad,
+                      onSelected: (UnidadMedida? unidadMedida) {
+                        setState(() {
+                          _selectedUnidadMedidad = unidadMedida;
+                          FormFieldState.didChange(unidadMedida);
+                        });
+                      },
+                      dropdownMenuEntries: ums.map((unidadMedida) {
+                        return DropdownMenuEntry<UnidadMedida>(
+                          value: unidadMedida,
+                          label: unidadMedida.nombre,
+                        );
+                      }).toList(),
+                    ),
+                    if (FormFieldState.hasError)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, top: 8),
+                        child: Text(
+                          FormFieldState.errorText!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
                 );
-              }).toList(),
+              },
             );
           },
           error: (err, stack) => Center(child: Text("Error: $err")),
@@ -201,16 +201,10 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
                     setState(() {
                       _isLoading = true;
                     });
-
                     try {
-                      await _guardarCliente();
-                      if (mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    } catch (e) {
-                      _mensajeError();
+                      await _guardar();
                     } finally {
-                      if (mounted) {
+                      if (context.mounted) {
                         setState(() {
                           _isLoading = false;
                         });

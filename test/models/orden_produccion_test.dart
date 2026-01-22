@@ -7,7 +7,7 @@ void main() {
     final op = OrdenProduccion(
       idOrdenProduccion: 1,
       idProducto: 5,
-      cantidadProducida: 50,
+      cantidadProducida: "50",
       fecha: fecha,
       costoTotalProduccion: '1250.50',
       notas: 'Producción para stock',
@@ -16,7 +16,7 @@ void main() {
     final opJson = {
       'id_orden_produccion': 1,
       'id_producto': 5,
-      'cantidad_producida': 50,
+      'cantidad_producida': "50",
       'fecha': '2025-11-01T12:00:00.000Z',
       'costo_total_produccion': '1250.50',
       'notas': 'Producción para stock',
@@ -34,11 +34,11 @@ void main() {
 
     test('copyWith crea una copia con valores actualizados', () {
       final opCopia = op.copyWith(
-        cantidadProducida: 60,
+        cantidadProducida: "60",
         notas: 'Producción urgente',
       );
 
-      expect(opCopia.cantidadProducida, 60);
+      expect(opCopia.cantidadProducida, "60");
       expect(opCopia.notas, 'Producción urgente');
       // Los demás valores deben permanecer iguales
       expect(opCopia.idOrdenProduccion, op.idOrdenProduccion);
@@ -51,7 +51,7 @@ void main() {
       final op1 = OrdenProduccion(
         idOrdenProduccion: 1,
         idProducto: 5,
-        cantidadProducida: 50,
+        cantidadProducida: "50",
         fecha: fecha,
         costoTotalProduccion: '1250.50',
         notas: 'Producción para stock',
@@ -59,7 +59,7 @@ void main() {
       final op2 = OrdenProduccion(
         idOrdenProduccion: 1,
         idProducto: 5,
-        cantidadProducida: 50,
+        cantidadProducida: "50",
         fecha: fecha,
         costoTotalProduccion: '1250.50',
         notas: 'Producción para stock',
@@ -72,7 +72,7 @@ void main() {
       final op1 = OrdenProduccion(
         idOrdenProduccion: 1,
         idProducto: 5,
-        cantidadProducida: 50,
+        cantidadProducida: "50",
         fecha: fecha,
         costoTotalProduccion: '1250.50',
         notas: 'Producción para stock',
@@ -80,7 +80,7 @@ void main() {
       final op2 = OrdenProduccion(
         idOrdenProduccion: 1,
         idProducto: 5,
-        cantidadProducida: 50,
+        cantidadProducida: "50",
         fecha: fecha,
         costoTotalProduccion: '1250.50',
         notas: 'Producción para stock',

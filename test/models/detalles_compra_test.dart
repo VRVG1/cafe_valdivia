@@ -13,7 +13,7 @@ void main() {
     );
 
     final detalleCompraJson = {
-      'id': 1,
+      'id_detalle_compra': 1,
       'id_compra': 10,
       'id_insumo': 20,
       'cantidad': 5,
@@ -99,4 +99,3 @@ void main() {
     });
   });
 }
-

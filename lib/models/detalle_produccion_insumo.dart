@@ -8,7 +8,7 @@ abstract class DetalleProduccionInsumo with _$DetalleProduccionInsumo {
     @JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,
     @JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,
     @JsonKey(name: 'id_insumo') required int idInsumo,
-    @JsonKey(name: 'cantidad_usada') required double cantidadUsada,
+    @JsonKey(name: 'cantidad_usada') required String cantidadUsada,
     @JsonKey(name: 'costo_insumo_momento') required String costoInsumoMomento,
   }) = _DetalleProduccionInsumo;
 

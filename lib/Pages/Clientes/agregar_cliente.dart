@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/models/cliente.dart';
 import 'package:cafe_valdivia/providers/cliente_notifier.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -130,6 +131,19 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         if (value == null || value.isEmpty) {
           return 'Por favor, ingrese el $text';
         }
+        if (controller.hashCode == _correoController.hashCode) {
+          if (!EmailValidator.validate(value)) {
+            return "Ingrese un correo valido";
+          }
+        }
+        if (controller.hashCode == _telefonoController.hashCode) {
+          if (int.tryParse(value) == null) {
+            return "Numero de telefono no valido";
+          }
+          if (value.length != 10) {
+            return "El numero no tiene que ser de 10 digitos";
+          }
+        }
         return null;
       },
       decoration: InputDecoration(
@@ -147,36 +161,34 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
       children: [
         FilledButton(
           // El botón se deshabilita si el formulario no es válido
-          onPressed:
-              _isLoading
-                  ? null
-                  : () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      try {
-                        await _guardarCliente();
-                      } finally {
-                        if (context.mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
+          onPressed: _isLoading
+              ? null
+              : () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    try {
+                      await _guardarCliente();
+                    } finally {
+                      if (context.mounted) {
+                        setState(() {
+                          _isLoading = false;
+                        });
                       }
                     }
-                  },
-          child:
-              _isLoading
-                  ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.onSecondaryContainer,
-                      strokeWidth: 2,
-                    ),
-                  )
-                  : const Text("Guardar"),
+                  }
+                },
+          child: _isLoading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: theme.colorScheme.onSecondaryContainer,
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Text("Guardar"),
         ),
       ],
     );

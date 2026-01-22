@@ -31,17 +31,15 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
         content: Text(
           message,
           style: TextStyle(
-            color:
-                isError
-                    ? colorScheme.onErrorContainer
-                    : colorScheme.onTertiaryContainer,
+            color: isError
+                ? colorScheme.onErrorContainer
+                : colorScheme.onTertiaryContainer,
             fontSize: 16,
           ),
         ),
-        backgroundColor:
-            isError
-                ? colorScheme.errorContainer
-                : colorScheme.tertiaryContainer,
+        backgroundColor: isError
+            ? colorScheme.errorContainer
+            : colorScheme.tertiaryContainer,
       ),
     );
   }
@@ -87,7 +85,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                 if (_formKey.currentState?.validate() ?? false) {
                   if (isEditing) {
                     final UnidadMedida updateUM = um.copyWith(
-                      id: um.id,
+                      idUnidadMedida: um.idUnidadMedida,
                       nombre: _umController.text,
                     );
                     ref
@@ -129,7 +127,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
 
   void _deleteUM(UnidadMedida um) async {
     try {
-      await ref.read(unidadMedidaProvider.notifier).delete(um.id!);
+      await ref.read(unidadMedidaProvider.notifier).delete(um.idUnidadMedida!);
       if (mounted) {
         _showFeedBackSnackBar(
           message: "La unidad de Medida se elimino correctamente.",
@@ -241,7 +239,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                 ),
                 shape: RoundedRectangleBorder(borderRadius: borderRadius),
                 child: Dismissible(
-                  key: ValueKey(um.id),
+                  key: ValueKey(um.idUnidadMedida),
                   direction: DismissDirection.horizontal,
                   dismissThresholds: const {
                     DismissDirection.startToEnd: 0.25,

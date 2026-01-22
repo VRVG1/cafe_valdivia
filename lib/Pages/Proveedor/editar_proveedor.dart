@@ -1,5 +1,7 @@
 import 'package:cafe_valdivia/models/proveedor.dart';
+import 'package:cafe_valdivia/models/proveedor_extension.dart';
 import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -38,8 +40,8 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
       text: widget.proveedor.telefono,
     );
     _emailController = TextEditingController(text: widget.proveedor.email);
-    acronimo = widget.proveedor.getIniciales();
-    _id = widget.proveedor.id;
+    acronimo = widget.proveedor.iniciales;
+    _id = widget.proveedor.idProveedor;
 
     _initialNombre = widget.proveedor.nombre;
     _initialDireccion = widget.proveedor.direccion ?? '';
@@ -66,53 +68,54 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
   Future<bool> _showExitConfirmDialog(BuildContext context) async {
     return await showDialog<bool>(
           context: context,
-          builder:
-              (context) => AlertDialog(
-                title: const Text('¿Descartar cambios?'),
-                content: const Text(
-                  'Hay cambios sin guardar. Si sales, se perderán.',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('Cancelar'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('Descartar'),
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: const Text('¿Descartar cambios?'),
+            content: const Text(
+              'Hay cambios sin guardar. Si sales, se perderán.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
               ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Descartar'),
+              ),
+            ],
+          ),
         ) ??
         false;
   }
 
   void dialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirmar Modificación'),
-          content: const Text(
-            '¿Estás seguro de que deseas modificar los datos de este proveedor?',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text('Cancelar'),
+    if (_formKey.currentState?.validate() ?? false) {
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: const Text('Confirmar Modificación'),
+            content: const Text(
+              '¿Estás seguro de que deseas modificar los datos de este proveedor?',
             ),
-            TextButton(
-              onPressed: () {
-                _saveChanges(dialogContext);
-              },
-              child: const Text('Modificar'),
-            ),
-          ],
-        );
-      },
-    );
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  _saveChanges(dialogContext);
+                },
+                child: const Text('Modificar'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void _saveChanges(BuildContext dialogContext) async {
@@ -137,36 +140,48 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
       _isLoading = true;
     });
 
-    final proveedorModificado = Proveedor(
-      id: _id,
+    final Proveedor proveedorModificado = Proveedor(
+      idProveedor: _id,
       nombre: _nombreController.text,
       direccion: _direccionController.text,
       telefono: _telefonoController.text,
       email: _emailController.text,
     );
 
-    try {
-      await ref
-          .read(proveedorProvider.notifier)
-          .updateElement(proveedorModificado);
+    await ref
+        .read(proveedorProvider.notifier)
+        .updateElement(proveedorModificado);
 
-      if (mounted) {
-        Navigator.of(dialogContext).pop(); // Close dialog
-        Navigator.of(context).pop(); // Close edit screen
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al guardar los cambios: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+    if (mounted) {
+      Navigator.of(dialogContext).pop();
+      Navigator.of(context).pop();
+      setState(() {
+        _isLoading = false;
+      });
     }
+
+    // try {
+    //   await ref
+    //       .read(proveedorProvider.notifier)
+    //       .updateElement(proveedorModificado);
+
+    //   if (mounted) {
+    //     Navigator.of(dialogContext).pop(); // Close dialog
+    //     Navigator.of(context).pop(); // Close edit screen
+    //   }
+    // } catch (e) {
+    //   if (mounted) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text('Error al guardar los cambios: $e')),
+    //     );
+    //   }
+    // } finally {
+    //   if (mounted) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   }
+    // }
   }
 
   @override
@@ -196,26 +211,24 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
             Padding(
               padding: const EdgeInsets.only(right: 24.0),
               child: FilledButton(
-                onPressed:
-                    _isLoading
-                        ? null
-                        : () {
-                          dialog(context);
-                        },
-                child:
-                    _isLoading
-                        ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                        : Text(
-                          "Guardar",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.onPrimary,
-                          ),
+                onPressed: _isLoading
+                    ? null
+                    : () {
+                        dialog(context);
+                      },
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(
+                        "Guardar",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onPrimary,
                         ),
+                      ),
               ),
             ),
           ],
@@ -235,7 +248,16 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
                   style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 24),
-                _buildTextField(label: "Nombre", controller: _nombreController),
+                _buildTextField(
+                  label: "Nombre",
+                  controller: _nombreController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, ingrese el Nombre';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 24),
                 _buildTextField(
                   label: "Direccion",
@@ -248,12 +270,33 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
                   label: "Telefono",
                   icon: Icons.phone_android_rounded,
                   controller: _telefonoController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, ingrese el Telefono';
+                    }
+                    if (int.tryParse(value) == null) {
+                      return "Numero de telefono no valido";
+                    }
+                    if (value.length != 10) {
+                      return "El numero no tiene que ser de 10 digitos";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
                 _buildTextField(
                   label: "Email",
                   icon: Icons.email_rounded,
                   controller: _emailController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, ingrese el Correo';
+                    }
+                    if (!EmailValidator.validate(value)) {
+                      return "Ingere un correo valido";
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
@@ -315,45 +358,32 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
         labelStyle: theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
         ),
-        prefixIcon:
-            icon != null
-                ? Padding(
-                  padding: const EdgeInsetsGeometry.symmetric(horizontal: 10.0),
-                  child: Icon(icon, color: theme.colorScheme.primary),
-                )
-                : null,
+        prefixIcon: icon != null
+            ? Padding(
+                padding: const EdgeInsetsGeometry.symmetric(horizontal: 10.0),
+                child: Icon(icon, color: theme.colorScheme.primary),
+              )
+            : null,
         suffixText: suffixText,
         suffixStyle: theme.textTheme.bodySmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.primary,
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24.0),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24.0),
-          borderSide: BorderSide.none,
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24.0)),
+        enabledBorder: OutlineInputBorder(),
         errorBorder: OutlineInputBorder(
           // Borde en caso de error
-          borderRadius: BorderRadius.circular(24.0),
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.error,
             width: 2.0,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24.0),
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.error,
             width: 2.0,
           ),
         ),
-        filled: true,
-        fillColor: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHigh.withAlpha(178),
         contentPadding: const EdgeInsetsGeometry.symmetric(
           horizontal: 20.0,
           vertical: 16.0,

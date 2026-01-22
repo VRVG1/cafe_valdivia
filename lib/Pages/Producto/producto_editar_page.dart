@@ -45,27 +45,26 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
 
   void _update() async {
     final productoUpdate = widget.producto.copyWith(
-      id: widget.producto.id,
+      idProducto: widget.producto.idProducto,
       nombre: _nombreController.text,
       descripcion: _descriptionController.text,
-      precioVenta: double.parse(_precioController.text),
+      precioVenta: _precioController.text,
     );
     mostrarDialogoConfirmacion(
       context: context,
       titulo: "Seguro que desea actualizar el Producto",
       contenido: "Se actualizaran los cambios el Producto",
       textoBotonConfirmacion: "Actualizar",
-      onConfirm:
-          () => {
-            update<Producto>(
-              context: context,
-              ref: ref,
-              provider: productoProvider,
-              element: productoUpdate,
-              mensajeExito: "El Producto se a actualizado correctamente",
-              mensajeError: "Erro al actualizar el Producto, intente de nuevo",
-            ),
-          },
+      onConfirm: () => {
+        update<Producto>(
+          context: context,
+          ref: ref,
+          provider: productoProvider,
+          element: productoUpdate,
+          mensajeExito: "El Producto se a actualizado correctamente",
+          mensajeError: "Erro al actualizar el Producto, intente de nuevo",
+        ),
+      },
     );
   }
 
@@ -74,17 +73,15 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
     final AsyncValue<Producto> asyncValue = ref.watch(
-      productoDetailProvider(widget.producto.id!),
+      productoDetailProvider(widget.producto.idProducto!),
     );
 
     return asyncValue.when(
-      loading:
-          () =>
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error:
-          (e, _) => Scaffold(
-            body: Center(child: Text('Error cargando unidad de medida: $e')),
-          ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (e, _) => Scaffold(
+        body: Center(child: Text('Error cargando unidad de medida: $e')),
+      ),
       data: (Producto producto) {
         return Scaffold(
           appBar: AppBar(
@@ -121,7 +118,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                     enabled: !_isLoading,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return "Por favor, ingrese el Precio";
+                        return "Por favor, ingrese el Nombre";
                       }
                       return null;
                     },
@@ -139,6 +136,12 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, ingrese el Precio';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Ingresar un valor monetario correcto';
+                      }
+                      if ((double.tryParse(value) ?? 0.0) <= 0.0) {
+                        return "El valor del producto no puede ser 0 o menor";
                       }
                       return null;
                     },
@@ -172,38 +175,36 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
     final theme = Theme.of(context);
 
     return FilledButton(
-      onPressed:
-          _isLoading
-              ? null
-              : () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  setState(() => _isLoading = true);
-                  try {
-                    if (mounted) {
-                      _update();
-                    }
-                  } catch (e, st) {
-                    appLogger.e(
-                      "Error al actualizar el producto",
-                      error: e,
-                      stackTrace: st,
-                    );
-                  } finally {
-                    if (mounted) setState(() => _isLoading = false);
+      onPressed: _isLoading
+          ? null
+          : () async {
+              if (_formKey.currentState?.validate() ?? false) {
+                setState(() => _isLoading = true);
+                try {
+                  if (mounted) {
+                    _update();
                   }
+                } catch (e, st) {
+                  appLogger.e(
+                    "Error al actualizar el producto",
+                    error: e,
+                    stackTrace: st,
+                  );
+                } finally {
+                  if (mounted) setState(() => _isLoading = false);
                 }
-              },
-      child:
-          _isLoading
-              ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: theme.colorScheme.onSecondaryContainer,
-                  strokeWidth: 2,
-                ),
-              )
-              : const Text("Guardar"),
+              }
+            },
+      child: _isLoading
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                color: theme.colorScheme.onSecondaryContainer,
+                strokeWidth: 2,
+              ),
+            )
+          : const Text("Guardar"),
     );
   }
 }

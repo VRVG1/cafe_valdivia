@@ -1,9 +1,7 @@
-import 'package:cafe_valdivia/models/base_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AppBarDetalles<T extends BaseModel> extends ConsumerWidget
-    implements PreferredSizeWidget {
+class AppBarDetalles<T> extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
   final T? model;
   final VoidCallback? onEditPressed;
@@ -43,17 +41,16 @@ class AppBarDetalles<T extends BaseModel> extends ConsumerWidget
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert_rounded),
           onSelected: (String result) async {
-            if (result == 'eliminar') {
-              onDeletePressed;
+            if (result == 'Eliminar') {
+              onDeletePressed?.call();
             }
           },
-          itemBuilder:
-              (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'eliminar',
-                  child: Row(children: [Text('Eliminar')]),
-                ),
-              ],
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: 'Eliminar',
+              child: Row(children: [Text('Eliminar')]),
+            ),
+          ],
         ),
       ],
     );

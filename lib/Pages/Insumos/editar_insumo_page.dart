@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/models/insumo.dart';
 import 'package:cafe_valdivia/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/insumo_notifier.dart';
@@ -17,7 +18,7 @@ class EditarInsumoPage extends ConsumerStatefulWidget {
 class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
   late final TextEditingController _descripcionController;
   late final TextEditingController _nombreController;
-  UnidadMedida? _unidadSeleccionada;
+  UnidadMedida? _selectedUnidadMedidad;
   bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -38,53 +39,27 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     super.dispose();
   }
 
-  void _mensajeExito() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Insumo guardado exitosamente',
-          style: TextStyle(
-            color: theme.colorScheme.onTertiaryContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.tertiaryContainer,
-      ),
-    );
-  }
-
-  void _mensajeError() {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Error al guardar el insumo. Por favor, intente de nuevo',
-          style: TextStyle(
-            color: theme.colorScheme.onErrorContainer,
-            fontSize: 18,
-          ),
-        ),
-        backgroundColor: theme.colorScheme.errorContainer,
-      ),
-    );
-  }
-
   Future<void> _update(UnidadMedida unidadInicial) async {
-    final unidadFinal = _unidadSeleccionada ?? unidadInicial;
-    print(unidadInicial);
+    final unidadFinal = _selectedUnidadMedidad ?? unidadInicial;
 
-    if ((_formKey.currentState?.validate() ?? false)) {
-      final updatedInsumo = widget.insumo.copyWith(
-        id: widget.insumo.id,
-        nombre: _nombreController.text,
-        descripcion: _descripcionController.text,
-        idUnidad: unidadFinal.id!,
-      );
+    final updatedInsumo = widget.insumo.copyWith(
+      idInsumo: widget.insumo.idInsumo, //TODO: ES idInsumo o idUnidad???
+      nombre: _nombreController.text,
+      descripcion: _descripcionController.text,
+      idUnidad: unidadFinal.idUnidadMedida!,
+    );
 
-      await ref.read(insumoProvider.notifier).updateElement(updatedInsumo);
-      _mensajeExito();
-    }
+    update<Insumo>(
+      context: context,
+      ref: ref,
+      provider: insumoProvider,
+      element: updatedInsumo,
+      mensajeExito: "Se actualizo la Unidad de Medida de forma correcta.",
+      mensajeError:
+          "Error al actualizar la Unidad de Medidad, Por favor intente de nuevo.",
+    );
+
+    await ref.read(insumoProvider.notifier).updateElement(updatedInsumo);
   }
 
   @override
@@ -175,32 +150,64 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     );
   }
 
-  Widget _buildDropDownMenu(UnidadMedida? selectedUM) {
-    final asyncUM = ref.watch(unidadMedidaProvider);
+  //TODO: Hay que refactorizar esta funcion, ya que esta elaborada con las patas.
+  Widget _buildDropDownMenu(UnidadMedida unidadInicial) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final asyncUM = ref.watch(unidadMedidaProvider);
 
-    return asyncUM.when(
-      data: (ums) {
-        return DropdownMenu<UnidadMedida>(
-          label: const Text("Unidad de Medida"),
-          leadingIcon: const Icon(Icons.balance_rounded),
-          expandedInsets: EdgeInsets.zero,
-          initialSelection: selectedUM,
-          onSelected: (UnidadMedida? unidadMedida) {
-            setState(() {
-              // Lo puedes guardar en un estado local si es necesario al guardar
-              _unidadSeleccionada = unidadMedida;
-            });
-          },
-          dropdownMenuEntries: ums.map((unidadMedida) {
-            return DropdownMenuEntry<UnidadMedida>(
-              value: unidadMedida,
-              label: unidadMedida.nombre,
+        return asyncUM.when(
+          data: (ums) {
+            return FormField<UnidadMedida>(
+              initialValue: unidadInicial,
+              validator: (value) {
+                if (_selectedUnidadMedidad == null) {
+                  return 'Por favor, selecciona una unidad';
+                }
+                return null;
+              },
+              builder: (FormFieldState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownMenu<UnidadMedida>(
+                      label: const Text("Unidad de Medida"),
+                      leadingIcon: const Icon(Icons.balance_rounded),
+                      expandedInsets: EdgeInsets.zero,
+                      initialSelection: _selectedUnidadMedidad,
+                      onSelected: (UnidadMedida? unidadMedida) {
+                        setState(() {
+                          _selectedUnidadMedidad = unidadMedida;
+                          FormFieldState.didChange(unidadMedida);
+                        });
+                      },
+                      dropdownMenuEntries: ums.map((unidadMedida) {
+                        return DropdownMenuEntry<UnidadMedida>(
+                          value: unidadMedida,
+                          label: unidadMedida.nombre,
+                        );
+                      }).toList(),
+                    ),
+                    if (FormFieldState.hasError)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, top: 8),
+                        child: Text(
+                          FormFieldState.errorText!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             );
-          }).toList(),
+          },
+          error: (err, stack) => Center(child: Text("Error: $err")),
+          loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
-      error: (err, stack) => Center(child: Text("Error: $err")),
-      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -212,14 +219,17 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
           ? null
           : () async {
               if (_formKey.currentState?.validate() ?? false) {
-                setState(() => _isLoading = true);
+                setState(() {
+                  _isLoading = true;
+                });
                 try {
                   await _update(unidadInicial);
-                  if (mounted) Navigator.of(context).pop();
-                } catch (_) {
-                  _mensajeError();
                 } finally {
-                  if (mounted) setState(() => _isLoading = false);
+                  if (context.mounted) {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
                 }
               }
             },

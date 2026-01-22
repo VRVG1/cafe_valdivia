@@ -3,8 +3,10 @@ import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_detallado.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/models/cliente.dart';
+import 'package:cafe_valdivia/models/cliente_extension.dart';
 import 'package:cafe_valdivia/providers/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/cliente_provider.dart';
+import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,63 +22,59 @@ class Clientelista extends ConsumerWidget {
       data: (clientes) {
         if (clientes.isEmpty) {
           return const Center(child: Text('No hay clientes para mostrar.'));
+        } else {
+          appLogger.i(clientes);
         }
 
         return ListviewCustom<Cliente>(
           data: clientes,
           keyBuilder: (cliente) {
             return ValueKey(
-              cliente.id != null ? 'proveedor-${cliente.id}' : cliente.hashCode,
+              cliente.idCliente != null
+                  ? 'proveedor-${cliente.idCliente}'
+                  : cliente.hashCode,
             );
           },
-          titleBuilder:
-              (cliente) =>
-                  cliente.nombre.isEmpty
-                      ? Text('Jonh Doe')
-                      : Text(cliente.nombre),
-          subtitleBuilder:
-              (cliente) =>
-                  cliente.telefono.toString().isEmpty
-                      ? Text('xxxxxxxxxx')
-                      : Text(cliente.telefono.toString()),
-          leadingBuilder:
-              (cliente) => CircleAvatar(
-                backgroundColor: theme.colorScheme.primaryContainer,
-                child: Text(
-                  cliente.getIniciales().isNotEmpty
-                      ? cliente.getIniciales()
-                      : "JD",
-                  style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+          titleBuilder: (cliente) =>
+              cliente.nombre.isEmpty ? Text('Jonh Doe') : Text(cliente.nombre),
+          subtitleBuilder: (cliente) => cliente.telefono.toString().isEmpty
+              ? Text('xxxxxxxxxx')
+              : Text(cliente.telefono.toString()),
+          leadingBuilder: (cliente) => CircleAvatar(
+            backgroundColor: theme.colorScheme.primaryContainer,
+            child: Text(
+              cliente.iniciales.isNotEmpty ? cliente.iniciales : "JD",
+              style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+            ),
+          ),
+          trailingBuilder: (cliente) => Text(
+            //TODO: Aqui se tiene que poner los kilos
+            cliente.idCliente != null ? '${cliente.idCliente} KG' : '0 KG',
+          ),
+          onTapCallback: (cliente) => {
+            if (cliente.idCliente != null)
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ClienteDetallado(clienteId: cliente.idCliente!),
+                  ),
                 ),
-              ),
-          trailingBuilder:
-              (cliente) => Text(
-                //TODO: Aqui se tiene que poner los kilos
-                cliente.id != null ? '${cliente.id} KG' : '0 KG',
-              ),
-          onTapCallback:
-              (cliente) => {
-                if (cliente.id != null)
-                  {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) =>
-                                ClienteDetallado(clienteId: cliente.id!),
-                      ),
-                    ),
-                  },
               },
+          },
           onEditDismissed: (cliente) async {
-            if (cliente.id != null) {
+            if (cliente.idCliente != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => EditarClienteDetallado(cliente: cliente),
+                  builder: (context) =>
+                      EditarClienteDetallado(cliente: cliente),
                 ),
-              ).then((_) => ref.invalidate(clienteDetailProvider(cliente.id!)));
+              ).then(
+                (_) =>
+                    ref.invalidate(clienteDetailProvider(cliente.idCliente!)),
+              );
             }
             return null;
           },
@@ -87,18 +85,18 @@ class Clientelista extends ConsumerWidget {
                   titulo: "Seguro que quiere eliminar este cliente?",
                   contenido: "Esta accion no se puede deshacer",
                   textoBotonConfirmacion: "Eliminar",
-                  onConfirm:
-                      () => {
-                        delete(
-                          context: context,
-                          ref: ref,
-                          provider: clienteProvider,
-                          id: cliente.id!,
-                          mensajeExito: "El cliente se ha borrado con exito",
-                          mensajeError:
-                              "Error al eliminar el cliente,Por favor, intente de nuevo",
-                        ),
-                      },
+                  onConfirm: () => {
+                    delete(
+                      context: context,
+                      ref: ref,
+                      provider: clienteProvider,
+                      id: cliente.idCliente!,
+                      mensajeExito: "El cliente se ha borrado con exito",
+                      detalle: false,
+                      mensajeError:
+                          "Error al eliminar el cliente,Por favor, intente de nuevo",
+                    ),
+                  },
                 ) ??
                 false;
             if (confirmacion == true) {

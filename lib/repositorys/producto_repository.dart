@@ -24,8 +24,16 @@ class ProductoRepository implements BaseRepository<Producto> {
 
   @override
   Future<int> create(Producto entity) async {
-    final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toJson());
+    try {
+      final db = await dbHelper.database;
+      return await db.insert(tableName, entity.toJson());
+    } catch (e) {
+      // Verificamos si es un error de restricción de base de datos
+      if (e.toString().contains('UNIQUE constraint failed')) {
+        throw Exception('El nombre del producto ya existe.');
+      }
+      throw Exception('Error desconocido al guardar.');
+    }
   }
 
   @override

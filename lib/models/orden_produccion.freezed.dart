@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$OrdenProduccion {
 
-@JsonKey(name: 'id_orden_produccion') int? get idOrdenProduccion;@JsonKey(name: 'id_producto') int get idProducto;@JsonKey(name: 'cantidad_producida') int get cantidadProducida; DateTime get fecha;@JsonKey(name: 'costo_total_produccion') String get costoTotalProduccion; String? get notas;
+@JsonKey(name: 'id_orden_produccion') int? get idOrdenProduccion;@JsonKey(name: 'id_producto') int get idProducto;@JsonKey(name: 'cantidad_producida') String get cantidadProducida; DateTime get fecha;@JsonKey(name: 'costo_total_produccion') String get costoTotalProduccion; String? get notas;
 /// Create a copy of OrdenProduccion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $OrdenProduccionCopyWith<$Res>  {
   factory $OrdenProduccionCopyWith(OrdenProduccion value, $Res Function(OrdenProduccion) _then) = _$OrdenProduccionCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_producto') int idProducto,@JsonKey(name: 'cantidad_producida') int cantidadProducida, DateTime fecha,@JsonKey(name: 'costo_total_produccion') String costoTotalProduccion, String? notas
+@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_producto') int idProducto,@JsonKey(name: 'cantidad_producida') String cantidadProducida, DateTime fecha,@JsonKey(name: 'costo_total_produccion') String costoTotalProduccion, String? notas
 });
 
 
@@ -70,7 +70,7 @@ class _$OrdenProduccionCopyWithImpl<$Res>
 idOrdenProduccion: freezed == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
 as int?,idProducto: null == idProducto ? _self.idProducto : idProducto // ignore: cast_nullable_to_non_nullable
 as int,cantidadProducida: null == cantidadProducida ? _self.cantidadProducida : cantidadProducida // ignore: cast_nullable_to_non_nullable
-as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_non_nullable
+as String,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_non_nullable
 as DateTime,costoTotalProduccion: null == costoTotalProduccion ? _self.costoTotalProduccion : costoTotalProduccion // ignore: cast_nullable_to_non_nullable
 as String,notas: freezed == notas ? _self.notas : notas // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_producto')  int idProducto, @JsonKey(name: 'cantidad_producida')  int cantidadProducida,  DateTime fecha, @JsonKey(name: 'costo_total_produccion')  String costoTotalProduccion,  String? notas)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_producto')  int idProducto, @JsonKey(name: 'cantidad_producida')  String cantidadProducida,  DateTime fecha, @JsonKey(name: 'costo_total_produccion')  String costoTotalProduccion,  String? notas)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _OrdenProduccion() when $default != null:
 return $default(_that.idOrdenProduccion,_that.idProducto,_that.cantidadProducida,_that.fecha,_that.costoTotalProduccion,_that.notas);case _:
@@ -179,7 +179,7 @@ return $default(_that.idOrdenProduccion,_that.idProducto,_that.cantidadProducida
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_producto')  int idProducto, @JsonKey(name: 'cantidad_producida')  int cantidadProducida,  DateTime fecha, @JsonKey(name: 'costo_total_produccion')  String costoTotalProduccion,  String? notas)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_producto')  int idProducto, @JsonKey(name: 'cantidad_producida')  String cantidadProducida,  DateTime fecha, @JsonKey(name: 'costo_total_produccion')  String costoTotalProduccion,  String? notas)  $default,) {final _that = this;
 switch (_that) {
 case _OrdenProduccion():
 return $default(_that.idOrdenProduccion,_that.idProducto,_that.cantidadProducida,_that.fecha,_that.costoTotalProduccion,_that.notas);case _:
@@ -199,7 +199,7 @@ return $default(_that.idOrdenProduccion,_that.idProducto,_that.cantidadProducida
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_producto')  int idProducto, @JsonKey(name: 'cantidad_producida')  int cantidadProducida,  DateTime fecha, @JsonKey(name: 'costo_total_produccion')  String costoTotalProduccion,  String? notas)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_producto')  int idProducto, @JsonKey(name: 'cantidad_producida')  String cantidadProducida,  DateTime fecha, @JsonKey(name: 'costo_total_produccion')  String costoTotalProduccion,  String? notas)?  $default,) {final _that = this;
 switch (_that) {
 case _OrdenProduccion() when $default != null:
 return $default(_that.idOrdenProduccion,_that.idProducto,_that.cantidadProducida,_that.fecha,_that.costoTotalProduccion,_that.notas);case _:
@@ -219,7 +219,7 @@ class _OrdenProduccion implements OrdenProduccion {
 
 @override@JsonKey(name: 'id_orden_produccion') final  int? idOrdenProduccion;
 @override@JsonKey(name: 'id_producto') final  int idProducto;
-@override@JsonKey(name: 'cantidad_producida') final  int cantidadProducida;
+@override@JsonKey(name: 'cantidad_producida') final  String cantidadProducida;
 @override final  DateTime fecha;
 @override@JsonKey(name: 'costo_total_produccion') final  String costoTotalProduccion;
 @override final  String? notas;
@@ -257,7 +257,7 @@ abstract mixin class _$OrdenProduccionCopyWith<$Res> implements $OrdenProduccion
   factory _$OrdenProduccionCopyWith(_OrdenProduccion value, $Res Function(_OrdenProduccion) _then) = __$OrdenProduccionCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_producto') int idProducto,@JsonKey(name: 'cantidad_producida') int cantidadProducida, DateTime fecha,@JsonKey(name: 'costo_total_produccion') String costoTotalProduccion, String? notas
+@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_producto') int idProducto,@JsonKey(name: 'cantidad_producida') String cantidadProducida, DateTime fecha,@JsonKey(name: 'costo_total_produccion') String costoTotalProduccion, String? notas
 });
 
 
@@ -279,7 +279,7 @@ class __$OrdenProduccionCopyWithImpl<$Res>
 idOrdenProduccion: freezed == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
 as int?,idProducto: null == idProducto ? _self.idProducto : idProducto // ignore: cast_nullable_to_non_nullable
 as int,cantidadProducida: null == cantidadProducida ? _self.cantidadProducida : cantidadProducida // ignore: cast_nullable_to_non_nullable
-as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_non_nullable
+as String,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_non_nullable
 as DateTime,costoTotalProduccion: null == costoTotalProduccion ? _self.costoTotalProduccion : costoTotalProduccion // ignore: cast_nullable_to_non_nullable
 as String,notas: freezed == notas ? _self.notas : notas // ignore: cast_nullable_to_non_nullable
 as String?,

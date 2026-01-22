@@ -12,7 +12,7 @@ _DetalleProduccionInsumo _$DetalleProduccionInsumoFromJson(
   idDetalleProduccionInsumo: (json['id_detalle_produccion'] as num?)?.toInt(),
   idOrdenProduccion: (json['id_orden_produccion'] as num?)?.toInt(),
   idInsumo: (json['id_insumo'] as num).toInt(),
-  cantidadUsada: (json['cantidad_usada'] as num).toDouble(),
+  cantidadUsada: json['cantidad_usada'] as String,
   costoInsumoMomento: json['costo_insumo_momento'] as String,
 );
 

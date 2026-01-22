@@ -18,8 +18,9 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     // var databaseFactory = databaseFactoryFfi;
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "cafe_sales.db");
+    //Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String directory = Directory.current.path;
+    String path = join(directory, "cafe_sales.db");
 
     return await openDatabase(
       path,

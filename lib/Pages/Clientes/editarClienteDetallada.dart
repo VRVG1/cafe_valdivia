@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/models/cliente.dart';
+import 'package:cafe_valdivia/models/cliente_extension.dart';
 import 'package:cafe_valdivia/providers/cliente_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,13 +28,13 @@ class EditarClienteDetalladoState
   );
   late final TextEditingController _kilosController = TextEditingController(
     //text: "100",
-    text: widget.cliente.id.toString(),
+    text: widget.cliente.idCliente.toString(),
   );
   late final TextEditingController _ventasController = TextEditingController(
     text: "2800",
   );
-  late final String acronimo = widget.cliente.getIniciales();
-  late final int? _id = widget.cliente.id;
+  late final String acronimo = widget.cliente.iniciales;
+  late final int? _id = widget.cliente.idCliente;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -72,23 +73,22 @@ class EditarClienteDetalladoState
   Future<bool> _showExitConfirmDialog(BuildContext context) async {
     return await showDialog<bool>(
           context: context,
-          builder:
-              (context) => AlertDialog(
-                title: const Text('¿Descartar cambios?'),
-                content: const Text(
-                  'Hay cambios sin guardar. Si sales, se perderán.',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('Cancelar'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text('Descartar'),
-                  ),
-                ],
+          builder: (context) => AlertDialog(
+            title: const Text('¿Descartar cambios?'),
+            content: const Text(
+              'Hay cambios sin guardar. Si sales, se perderán.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
               ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Descartar'),
+              ),
+            ],
+          ),
         ) ??
         false;
   }
@@ -145,7 +145,7 @@ class EditarClienteDetalladoState
     final email = _emailController.text;
 
     final Cliente clienteModificado = Cliente(
-      id: _id,
+      idCliente: _id,
       nombre: nombre,
       apellido: apellido,
       telefono: telefono,
@@ -295,45 +295,32 @@ class EditarClienteDetalladoState
         labelStyle: theme.textTheme.bodyMedium?.copyWith(
           color: theme.colorScheme.onSurfaceVariant,
         ),
-        prefixIcon:
-            icon != null
-                ? Padding(
-                  padding: const EdgeInsetsGeometry.symmetric(horizontal: 10.0),
-                  child: Icon(icon, color: theme.colorScheme.primary),
-                )
-                : null,
+        prefixIcon: icon != null
+            ? Padding(
+                padding: const EdgeInsetsGeometry.symmetric(horizontal: 10.0),
+                child: Icon(icon, color: theme.colorScheme.primary),
+              )
+            : null,
         suffixText: suffixText,
         suffixStyle: theme.textTheme.bodySmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.primary,
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24.0),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24.0),
-          borderSide: BorderSide.none,
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24.0)),
+        enabledBorder: OutlineInputBorder(),
         errorBorder: OutlineInputBorder(
           // Borde en caso de error
-          borderRadius: BorderRadius.circular(24.0),
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.error,
             width: 2.0,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24.0),
           borderSide: BorderSide(
             color: Theme.of(context).colorScheme.error,
             width: 2.0,
           ),
         ),
-        filled: true,
-        fillColor: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHigh.withAlpha(178),
         contentPadding: const EdgeInsetsGeometry.symmetric(
           horizontal: 20.0,
           vertical: 16.0,

@@ -20,36 +20,43 @@ void main() {
   setUp(() {
     mockCompraRepository = MockCompraRepository();
     mockInventarioServicio = MockInventarioServicio();
-    compraServicio = CompraServicio(mockCompraRepository, mockInventarioServicio);
+    compraServicio = CompraServicio(
+      mockCompraRepository,
+      mockInventarioServicio,
+    );
   });
 
   group('CompraServicio Tests', () {
     final proveedor = Proveedor(
-        id: 1,
-        nombre: 'Proveedor Test',
-        telefono: '123456789',
-        email: 'test@test.com');
+      idProveedor: 1,
+      nombre: 'Proveedor Test',
+      telefono: '123456789',
+      email: 'test@test.com',
+    );
     final compra = Compra(
-      id: 1,
+      idCompra: 1,
       fecha: DateTime.now(),
-      idProveedor: proveedor.id!,
+      idProveedor: proveedor.idProveedor!,
       proveedor: proveedor,
       pagado: false,
       detallesCompra: [
         DetalleCompra(
-            id: 1,
-            idInsumo: 1,
-            cantidad: 2,
-            precioUnitarioCompra: 50.0)
+          id: 1,
+          idInsumo: 1,
+          cantidad: 2,
+          precioUnitarioCompra: 50.0,
+        ),
       ],
     );
 
     group('Pruebas Basicas', () {
       test('registrarCompra - Exito', () async {
-        when(mockCompraRepository.createWithDetails(any))
-            .thenAnswer((_) async => 1);
-        when(mockInventarioServicio.resgistrarEntradaPorCompra(any))
-            .thenAnswer((_) async => {});
+        when(
+          mockCompraRepository.createWithDetails(any),
+        ).thenAnswer((_) async => 1);
+        when(
+          mockInventarioServicio.resgistrarEntradaPorCompra(any),
+        ).thenAnswer((_) async => {});
 
         final compraId = await compraServicio.registrarCompra(compra);
 
@@ -59,8 +66,9 @@ void main() {
       });
 
       test('obtenerCompraCompleta - Exito', () async {
-        when(mockCompraRepository.getFullCompra(1))
-            .thenAnswer((_) async => compra);
+        when(
+          mockCompraRepository.getFullCompra(1),
+        ).thenAnswer((_) async => compra);
 
         final result = await compraServicio.obtenerCompraCompleta(1);
 
@@ -82,43 +90,57 @@ void main() {
 
     group('Pruebas de Robustez', () {
       test(
-          'registrarCompra - Falla cuando no hay detalles de compra', () async {
-        final compraSinDetalles = Compra(
-          id: 1,
-          fecha: DateTime.now(),
-          idProveedor: proveedor.id!,
-          proveedor: proveedor,
-          pagado: false,
-          detallesCompra: [],
-        );
+        'registrarCompra - Falla cuando no hay detalles de compra',
+        () async {
+          final compraSinDetalles = Compra(
+            id: 1,
+            fecha: DateTime.now(),
+            idProveedor: proveedor.id!,
+            proveedor: proveedor,
+            pagado: false,
+            detallesCompra: [],
+          );
 
-        expect(() => compraServicio.registrarCompra(compraSinDetalles),
-            throwsA(isA<OperacionInvalidaException>()));
-      });
+          expect(
+            () => compraServicio.registrarCompra(compraSinDetalles),
+            throwsA(isA<OperacionInvalidaException>()),
+          );
+        },
+      );
 
-      test('obtenerCompraCompleta - Falla cuando la compra no existe',
-          () async {
-        when(mockCompraRepository.getFullCompra(any))
-            .thenThrow(Exception('No encontrado'));
+      test(
+        'obtenerCompraCompleta - Falla cuando la compra no existe',
+        () async {
+          when(
+            mockCompraRepository.getFullCompra(any),
+          ).thenThrow(Exception('No encontrado'));
 
-        expect(() => compraServicio.obtenerCompraCompleta(999),
-            throwsA(isA<RegistroNoEncontradoException>()));
-      });
+          expect(
+            () => compraServicio.obtenerCompraCompleta(999),
+            throwsA(isA<RegistroNoEncontradoException>()),
+          );
+        },
+      );
 
       test('actulizarEstadoPago - Falla', () async {
-        when(mockCompraRepository.markAsPaid(any))
-            .thenThrow(Exception('Error de base de datos'));
+        when(
+          mockCompraRepository.markAsPaid(any),
+        ).thenThrow(Exception('Error de base de datos'));
 
-        expect(() => compraServicio.actulizarEstadoPago(1, true),
-            throwsA(isA<OperacionInvalidaException>()));
+        expect(
+          () => compraServicio.actulizarEstadoPago(1, true),
+          throwsA(isA<OperacionInvalidaException>()),
+        );
       });
     });
     group('Pruebas de Rendimiento', () {
       test('registrarCompra - Rendimiento', () async {
-        when(mockCompraRepository.createWithDetails(any))
-            .thenAnswer((_) async => 1);
-        when(mockInventarioServicio.resgistrarEntradaPorCompra(any))
-            .thenAnswer((_) async {});
+        when(
+          mockCompraRepository.createWithDetails(any),
+        ).thenAnswer((_) async => 1);
+        when(
+          mockInventarioServicio.resgistrarEntradaPorCompra(any),
+        ).thenAnswer((_) async {});
 
         final stopwatch = Stopwatch()..start();
         for (var i = 0; i < 100; i++) {

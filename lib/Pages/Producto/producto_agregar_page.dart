@@ -37,9 +37,9 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
     final Producto producto = Producto(
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
-      precioVenta: double.parse(_precioController.text),
+      precioVenta: _precioController.text,
     );
-    create(
+    create<Producto>(
       context: context,
       ref: ref,
       provider: productoProvider,
@@ -97,6 +97,12 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingrese el Precio';
                   }
+                  if (double.tryParse(value) == null) {
+                    return 'Ingresar un valor monetario correcto';
+                  }
+                  if ((double.tryParse(value) ?? 0.0) <= 0.0) {
+                    return "El valor del producto no puede ser 0 o menor";
+                  }
                   return null;
                 },
                 decoration: InputDecoration(
@@ -106,12 +112,12 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 controller: _descripcionController,
                 decoration: InputDecoration(
-                  hintText: "Descripcion",
+                  labelText: "Descripcion",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.description_rounded),
                 ),
@@ -152,36 +158,34 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
       children: [
         FilledButton(
           // El botón se deshabilita si el formulario no es válido
-          onPressed:
-              _isLoading
-                  ? null
-                  : () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      try {
-                        _crearProducto();
-                      } finally {
-                        if (context.mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
+          onPressed: _isLoading
+              ? null
+              : () async {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    try {
+                      _crearProducto();
+                    } finally {
+                      if (context.mounted) {
+                        setState(() {
+                          _isLoading = false;
+                        });
                       }
                     }
-                  },
-          child:
-              _isLoading
-                  ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.onSecondaryContainer,
-                      strokeWidth: 2,
-                    ),
-                  )
-                  : const Text("Guardar"),
+                  }
+                },
+          child: _isLoading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: theme.colorScheme.onSecondaryContainer,
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Text("Guardar"),
         ),
       ],
     );

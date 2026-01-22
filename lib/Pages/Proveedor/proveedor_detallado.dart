@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
+import 'package:cafe_valdivia/models/proveedor_extension.dart';
 import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
 import 'package:cafe_valdivia/providers/proveedor_providers.dart';
 import 'package:flutter/material.dart';
@@ -88,16 +89,14 @@ class ProveedorDetallado extends ConsumerWidget {
     final asyncProveedor = ref.watch(proveedorDetailProvider(proveedorId));
 
     return asyncProveedor.when(
-      loading:
-          () => Scaffold(
-            appBar: AppBar(),
-            body: const Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (err, stack) => Scaffold(
-            appBar: AppBar(title: const Text("Error")),
-            body: Center(child: Text('Error al cargar el proveedor: $err')),
-          ),
+      loading: () => Scaffold(
+        appBar: AppBar(),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (err, stack) => Scaffold(
+        appBar: AppBar(title: const Text("Error")),
+        body: Center(child: Text('Error al cargar el proveedor: $err')),
+      ),
       data: (proveedor) {
         return Scaffold(
           appBar: AppBar(
@@ -117,8 +116,8 @@ class ProveedorDetallado extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder:
-                          (context) => EditarProveedor(proveedor: proveedor),
+                      builder: (context) =>
+                          EditarProveedor(proveedor: proveedor),
                     ),
                   ).then(
                     (_) => ref.invalidate(proveedorDetailProvider(proveedorId)),
@@ -132,13 +131,12 @@ class ProveedorDetallado extends ConsumerWidget {
                     _mostrarDialogoConfirmacion(context, ref, theme);
                   }
                 },
-                itemBuilder:
-                    (BuildContext context) => <PopupMenuEntry<String>>[
-                      const PopupMenuItem<String>(
-                        value: 'eliminar',
-                        child: Row(children: [Text('Eliminar')]),
-                      ),
-                    ],
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'eliminar',
+                    child: Row(children: [Text('Eliminar')]),
+                  ),
+                ],
               ),
             ],
           ),
@@ -157,7 +155,7 @@ class ProveedorDetallado extends ConsumerWidget {
                     backgroundColor: theme.colorScheme.primaryContainer,
                     radius: 64,
                     child: Text(
-                      proveedor.getIniciales(),
+                      proveedor.iniciales,
                       style: theme.textTheme.displayMedium?.copyWith(
                         color: theme.colorScheme.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
@@ -190,20 +188,18 @@ class ProveedorDetallado extends ConsumerWidget {
                       context: context,
                       icon: Icons.email_rounded,
                       label: "Email",
-                      value:
-                          _esVacioONulo(proveedor.email)
-                              ? "No especificado"
-                              : proveedor.email!,
+                      value: _esVacioONulo(proveedor.email)
+                          ? "No especificado"
+                          : proveedor.email!,
                     ),
                     const SizedBox(height: 16),
                     _buildDataTile(
                       context: context,
                       icon: Icons.map_rounded,
                       label: "Direccion",
-                      value:
-                          _esVacioONulo(proveedor.direccion)
-                              ? "No especificado"
-                              : proveedor.direccion!,
+                      value: _esVacioONulo(proveedor.direccion)
+                          ? "No especificado"
+                          : proveedor.direccion!,
                     ),
                   ],
                 ),

@@ -20,32 +20,27 @@ class ProductoListaPage extends ConsumerWidget {
     return asyncProducto.when(
       data: (List<Producto> prodcutos) {
         if (prodcutos.isEmpty) {
-          return const Center(child: Text('No hay Productoes para mostrar.'));
+          return const Center(child: Text('No hay Productos para mostrar.'));
         }
         return ListviewCustom<Producto>(
           keyBuilder: (Producto proveedor) {
             return ValueKey(
-              proveedor.id != null
-                  ? 'producto-${proveedor.id}'
+              proveedor.idProducto != null
+                  ? 'producto-${proveedor.idProducto}'
                   : proveedor.hashCode,
             );
           },
           data: prodcutos,
-          titleBuilder:
-              (producto) =>
-                  producto.nombre.isEmpty
-                      ? Text('Jane Doe')
-                      : Text(producto.nombre),
-          subtitleBuilder:
-              (producto) =>
-                  producto.descripcion != null
-                      ? Text(producto.descripcion!)
-                      : null,
+          titleBuilder: (producto) => producto.nombre.isEmpty
+              ? Text('Jane Doe')
+              : Text(producto.nombre),
+          subtitleBuilder: (producto) =>
+              producto.descripcion != null ? Text(producto.descripcion!) : null,
           leadingBuilder: (Producto prodcutos) => Icon(Icons.coffee_rounded),
           //TODO: Poner en el trailingBuilder el numero de stock que tiene el producto
           trailingBuilder: (Producto producto) => Text("1"),
           onEditDismissed: (Producto producto) async {
-            if (producto.id != null) {
+            if (producto.idProducto != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -59,21 +54,21 @@ class ProductoListaPage extends ConsumerWidget {
             final bool confirmacion =
                 await mostrarDialogoConfirmacion(
                   context: context,
-                  titulo: "Seguro que quiere eliminar este cliente?",
+                  titulo: "Seguro que quiere eliminar este Producto?",
                   contenido: "Esta accion no se puede deshacer",
                   textoBotonConfirmacion: "Eliminar",
-                  onConfirm:
-                      () => {
-                        delete(
-                          context: context,
-                          ref: ref,
-                          provider: productoProvider,
-                          id: producto.id!,
-                          mensajeExito: "El cliente se ha borrado con exito",
-                          mensajeError:
-                              "Error al eliminar el cliente,Por favor, intente de nuevo",
-                        ),
-                      },
+                  onConfirm: () => {
+                    delete(
+                      context: context,
+                      ref: ref,
+                      provider: productoProvider,
+                      id: producto.idProducto!,
+                      mensajeExito: "El producto se ha borrado con exito",
+                      mensajeError:
+                          "Error al eliminar el producto, Por favor, intente de nuevo",
+                      detalle: false,
+                    ),
+                  },
                 ) ??
                 false;
             if (confirmacion == true) {
@@ -82,11 +77,12 @@ class ProductoListaPage extends ConsumerWidget {
             return false;
           },
           onTapCallback: (Producto producto) async {
-            if (producto.id != null) {
+            if (producto.idProducto != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductoDetallePage(id: producto.id!),
+                  builder: (context) =>
+                      ProductoDetallePage(id: producto.idProducto!),
                 ),
               );
             }

@@ -1,5 +1,4 @@
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
-import 'package:cafe_valdivia/models/base_model.dart';
 import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,14 +25,12 @@ Future<bool?> mostrarDialogoConfirmacion({
           ),
           TextButton(
             style: TextButton.styleFrom(
-              foregroundColor:
-                  textoBotonConfirmacion == 'Eliminar'
-                      ? Theme.of(context).colorScheme.onErrorContainer
-                      : null,
-              backgroundColor:
-                  textoBotonConfirmacion == 'Eliminar'
-                      ? Theme.of(context).colorScheme.errorContainer
-                      : null,
+              foregroundColor: textoBotonConfirmacion == 'Eliminar'
+                  ? Theme.of(context).colorScheme.onErrorContainer
+                  : null,
+              backgroundColor: textoBotonConfirmacion == 'Eliminar'
+                  ? Theme.of(context).colorScheme.errorContainer
+                  : null,
               elevation: 0,
             ),
             onPressed: () {
@@ -55,12 +52,15 @@ Future<bool> delete({
   required int id,
   required String mensajeExito,
   required String mensajeError,
+  bool detalle = true,
 }) async {
   try {
     await ref.read(provider.notifier).delete(id);
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
-      //Navigator.of(context).pop(); // Regresar a la pantalla anterior
+      if (detalle) {
+        Navigator.of(context).pop(); // Regresar a la pantalla anterior
+      }
     }
     return true;
   } catch (e) {
@@ -76,7 +76,7 @@ Future<bool> delete({
   }
 }
 
-void create<T extends BaseModel>({
+void create<T>({
   required BuildContext context,
   required WidgetRef ref,
   required provider,
@@ -94,8 +94,11 @@ void create<T extends BaseModel>({
     appLogger.e(
       "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
     );
-
-    if (context.mounted) {
+    if (e.toString().contains("existe")) {
+      List<String> cortado = e.toString().split(" ");
+      String duplicado = cortado.sublist(1, cortado.length).join(" ");
+      showCustomSnackBar(context: context, mensaje: duplicado, isError: true);
+    } else if (context.mounted) {
       showCustomSnackBar(
         context: context,
         mensaje: mensajeError,
@@ -105,7 +108,7 @@ void create<T extends BaseModel>({
   }
 }
 
-Future<bool> update<T extends BaseModel>({
+Future<bool> update<T>({
   required BuildContext context,
   required WidgetRef ref,
   required provider,

@@ -18,7 +18,7 @@ void main() {
       'id_cliente': 1,
       'fecha': '2025-10-01T14:30:00.000Z',
       'detalles': 'Venta de prueba',
-      'pagado': false,
+      'pagado': 0,
       'estado': 'pendiente',
     };
 

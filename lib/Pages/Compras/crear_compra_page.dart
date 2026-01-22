@@ -44,8 +44,9 @@ class _CrearCompraPageState extends ConsumerState<CrearCompraPage> {
               Consumer(
                 builder: (context, ref, child) {
                   final asyncProveedor = ref.watch(proveedorProvider);
-                  final selectedProveedor =
-                      ref.watch(crearCompraProvider).proveedor;
+                  final selectedProveedor = ref
+                      .watch(crearCompraProvider)
+                      .proveedor;
 
                   return asyncProveedor.when(
                     data: (proveedores) {
@@ -54,18 +55,17 @@ class _CrearCompraPageState extends ConsumerState<CrearCompraPage> {
                         leadingIcon: const Icon(Icons.person_search_rounded),
                         expandedInsets: EdgeInsets.zero,
                         initialSelection: selectedProveedor,
-                        dropdownMenuEntries:
-                            proveedores.map((proveedor) {
-                              return DropdownMenuEntry<Proveedor>(
-                                value: proveedor,
-                                label: proveedor.nombre,
-                              );
-                            }).toList(),
+                        dropdownMenuEntries: proveedores.map((proveedor) {
+                          return DropdownMenuEntry<Proveedor>(
+                            value: proveedor,
+                            label: proveedor.nombre,
+                          );
+                        }).toList(),
                       );
                     },
                     error: (err, stack) => Center(child: Text('Error: $err')),
-                    loading:
-                        () => const Center(child: CircularProgressIndicator()),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
                   );
                 },
               ),
@@ -115,17 +115,16 @@ Widget _buildActionButtons(BuildContext context) {
   final theme = Theme.of(context);
   return FilledButton(
     onPressed: () {},
-    child:
-        false
-            ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-            : const Text("Guardar"),
+    child: false
+        ? SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              color: theme.colorScheme.onSecondaryContainer,
+              strokeWidth: 2,
+            ),
+          )
+        : const Text("Guardar"),
   );
 }
 
@@ -156,13 +155,14 @@ Widget _buildListInsumo(BuildContext context) {
         itemCount: items.length,
         itemBuilder: (context, index) {
           final item = items[index];
-          final subtotal = item.cantidad * item.precioUnitarioCompra;
+          final subtotal =
+              item.cantidad * double.parse(item.precioUnitarioCompra);
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 4.0),
             child: ListTile(
-              title: Text(item.insumo?.nombre ?? 'Insumo no encontrado'),
+              title: Text(item.idInsumo.toString() ?? 'Insumo no encontrado'),
               subtitle: Text(
-                '${item.cantidad} x \$${item.precioUnitarioCompra.toStringAsFixed(2)}',
+                '${item.cantidad} x \$${item.precioUnitarioCompra}',
               ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,

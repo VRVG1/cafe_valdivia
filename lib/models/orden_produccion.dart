@@ -7,7 +7,7 @@ abstract class OrdenProduccion with _$OrdenProduccion {
   const factory OrdenProduccion({
     @JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,
     @JsonKey(name: 'id_producto') required int idProducto,
-    @JsonKey(name: 'cantidad_producida') required int cantidadProducida,
+    @JsonKey(name: 'cantidad_producida') required String cantidadProducida,
     required DateTime fecha,
     @JsonKey(name: 'costo_total_produccion')
     required String costoTotalProduccion,

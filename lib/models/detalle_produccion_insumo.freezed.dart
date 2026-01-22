@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetalleProduccionInsumo {
 
-@JsonKey(name: 'id_detalle_produccion') int? get idDetalleProduccionInsumo;@JsonKey(name: 'id_orden_produccion') int? get idOrdenProduccion;@JsonKey(name: 'id_insumo') int get idInsumo;@JsonKey(name: 'cantidad_usada') double get cantidadUsada;@JsonKey(name: 'costo_insumo_momento') String get costoInsumoMomento;
+@JsonKey(name: 'id_detalle_produccion') int? get idDetalleProduccionInsumo;@JsonKey(name: 'id_orden_produccion') int? get idOrdenProduccion;@JsonKey(name: 'id_insumo') int get idInsumo;@JsonKey(name: 'cantidad_usada') String get cantidadUsada;@JsonKey(name: 'costo_insumo_momento') String get costoInsumoMomento;
 /// Create a copy of DetalleProduccionInsumo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DetalleProduccionInsumoCopyWith<$Res>  {
   factory $DetalleProduccionInsumoCopyWith(DetalleProduccionInsumo value, $Res Function(DetalleProduccionInsumo) _then) = _$DetalleProduccionInsumoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'cantidad_usada') double cantidadUsada,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
+@JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'cantidad_usada') String cantidadUsada,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
 });
 
 
@@ -71,7 +71,7 @@ idDetalleProduccionInsumo: freezed == idDetalleProduccionInsumo ? _self.idDetall
 as int?,idOrdenProduccion: freezed == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
 as int?,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
 as int,cantidadUsada: null == cantidadUsada ? _self.cantidadUsada : cantidadUsada // ignore: cast_nullable_to_non_nullable
-as double,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
+as String,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  double cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  String cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo() when $default != null:
 return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.cantidadUsada,_that.costoInsumoMomento);case _:
@@ -178,7 +178,7 @@ return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.id
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  double cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  String cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)  $default,) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo():
 return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.cantidadUsada,_that.costoInsumoMomento);case _:
@@ -198,7 +198,7 @@ return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.id
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  double cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_produccion')  int? idDetalleProduccionInsumo, @JsonKey(name: 'id_orden_produccion')  int? idOrdenProduccion, @JsonKey(name: 'id_insumo')  int idInsumo, @JsonKey(name: 'cantidad_usada')  String cantidadUsada, @JsonKey(name: 'costo_insumo_momento')  String costoInsumoMomento)?  $default,) {final _that = this;
 switch (_that) {
 case _DetalleProduccionInsumo() when $default != null:
 return $default(_that.idDetalleProduccionInsumo,_that.idOrdenProduccion,_that.idInsumo,_that.cantidadUsada,_that.costoInsumoMomento);case _:
@@ -219,7 +219,7 @@ class _DetalleProduccionInsumo implements DetalleProduccionInsumo {
 @override@JsonKey(name: 'id_detalle_produccion') final  int? idDetalleProduccionInsumo;
 @override@JsonKey(name: 'id_orden_produccion') final  int? idOrdenProduccion;
 @override@JsonKey(name: 'id_insumo') final  int idInsumo;
-@override@JsonKey(name: 'cantidad_usada') final  double cantidadUsada;
+@override@JsonKey(name: 'cantidad_usada') final  String cantidadUsada;
 @override@JsonKey(name: 'costo_insumo_momento') final  String costoInsumoMomento;
 
 /// Create a copy of DetalleProduccionInsumo
@@ -255,7 +255,7 @@ abstract mixin class _$DetalleProduccionInsumoCopyWith<$Res> implements $Detalle
   factory _$DetalleProduccionInsumoCopyWith(_DetalleProduccionInsumo value, $Res Function(_DetalleProduccionInsumo) _then) = __$DetalleProduccionInsumoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'cantidad_usada') double cantidadUsada,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
+@JsonKey(name: 'id_detalle_produccion') int? idDetalleProduccionInsumo,@JsonKey(name: 'id_orden_produccion') int? idOrdenProduccion,@JsonKey(name: 'id_insumo') int idInsumo,@JsonKey(name: 'cantidad_usada') String cantidadUsada,@JsonKey(name: 'costo_insumo_momento') String costoInsumoMomento
 });
 
 
@@ -278,7 +278,7 @@ idDetalleProduccionInsumo: freezed == idDetalleProduccionInsumo ? _self.idDetall
 as int?,idOrdenProduccion: freezed == idOrdenProduccion ? _self.idOrdenProduccion : idOrdenProduccion // ignore: cast_nullable_to_non_nullable
 as int?,idInsumo: null == idInsumo ? _self.idInsumo : idInsumo // ignore: cast_nullable_to_non_nullable
 as int,cantidadUsada: null == cantidadUsada ? _self.cantidadUsada : cantidadUsada // ignore: cast_nullable_to_non_nullable
-as double,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
+as String,costoInsumoMomento: null == costoInsumoMomento ? _self.costoInsumoMomento : costoInsumoMomento // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

@@ -10,7 +10,7 @@ _OrdenProduccion _$OrdenProduccionFromJson(Map<String, dynamic> json) =>
     _OrdenProduccion(
       idOrdenProduccion: (json['id_orden_produccion'] as num?)?.toInt(),
       idProducto: (json['id_producto'] as num).toInt(),
-      cantidadProducida: (json['cantidad_producida'] as num).toInt(),
+      cantidadProducida: json['cantidad_producida'] as String,
       fecha: DateTime.parse(json['fecha'] as String),
       costoTotalProduccion: json['costo_total_produccion'] as String,
       notas: json['notas'] as String?,
