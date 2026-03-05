@@ -1,5 +1,7 @@
 import 'package:cafe_valdivia/Pages/Clientes/agregar_cliente.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_lista.dart';
+import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page.dart';
+import 'package:cafe_valdivia/Pages/Compras/compra_list_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/agregar_insumos_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/inusmo_lista_page.dart';
 import 'package:cafe_valdivia/Pages/Options/options_list.dart';
@@ -31,7 +33,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => Agregarcliente(),
+                  builder: (context) => AgregarCompraPage(),
                   fullscreenDialog: true,
                 ),
               );
@@ -90,6 +92,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         ),
       ),
 
+      CompraListPage(),
       Clientelista(),
       ProveedorLista(),
       InusmoListaPage(),
@@ -116,6 +119,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
       //   icon: Icon(Icons.warehouse_outlined),
       //   label: Text("Almacen"),
       // ),
+      NavigationDrawerDestination(
+        icon: Icon(Icons.add_shopping_cart),
+        label: Text("Compras"),
+      ),
       NavigationDrawerDestination(
         selectedIcon: Icon(Icons.account_circle),
         icon: Icon(Icons.account_circle_outlined),
