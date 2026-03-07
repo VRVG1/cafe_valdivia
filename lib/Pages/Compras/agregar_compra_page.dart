@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,6 +25,34 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   final TextEditingController _cantidadController = TextEditingController(
     text: "0",
   );
+  // Test
+  List<Map<String, dynamic>> carritoDeCompras = [
+    {'nombre': 'Leche Entera 1L', 'cantidad': 2, 'precio': 1.50},
+    {
+      'nombre':
+          'MacBook Pro M3 Max 16" - Edición Especial para Desarrolladores de Flutter',
+      'cantidad': 1,
+      'precio': 3499.99,
+    },
+    {'nombre': 'Clavos de acero (bolsa x100)', 'cantidad': 50, 'precio': 0.15},
+    {'nombre': 'Suscripción Premium Mensual', 'cantidad': 1, 'precio': 9.99},
+    {
+      'nombre': 'Monitor UltraWide 49"',
+      'cantidad': 0, // Caso de prueba para stock agotado
+      'precio': 1200.50,
+    },
+    {'nombre': 'Chicle de menta', 'cantidad': 100, 'precio': 0.05},
+    {
+      'nombre':
+          'Escritorio Elevable Eléctrico de Madera de Roble Finlandés con Acabado en Aceite Natural',
+      'cantidad': 1,
+      'precio': 850.00,
+    },
+    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
+    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
+    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
+  ];
+  //
 
   @override
   void initState() {
@@ -62,6 +91,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -83,9 +113,11 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           Form(
             key: _formKey,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 32.0,
+              padding: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 32,
+                bottom: 120,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -196,61 +228,90 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             ),
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.12, // Altura visible inicial (pestaña)
-            minChildSize: 0.12, // Mínimo que se puede encoger
-            maxChildSize: 0.6, // Máximo que se puede expandir
+            initialChildSize: 0.13, // Altura visible inicial (pestaña)
+            minChildSize: 0.13, // Mínimo que se puede encoger
+            maxChildSize: 1, // Máximo que se puede expandir
+            expand: true,
             snap: true, // Salta a las posiciones min/max automáticamente
             builder: (context, scrollController) {
+              final double totalDinero = carritoDeCompras.fold<double>(0, (
+                sum,
+                item,
+              ) {
+                return sum + ((item['precio'] ?? 0) * (item['cantidad'] ?? 0));
+              });
+
+              final int totalProductos = carritoDeCompras.fold<int>(0, (
+                sum,
+                item,
+              ) {
+                return sum + (item['cantidad'] as int? ?? 0);
+              });
               return Container(
+                // padding: const EdgeInsets.only(
+                //   top: 16.0,
+                //   left: 24.0,
+                //   right: 24.0,
+                //   bottom: 32.0,
+                // ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHigh,
+                  color: theme.colorScheme.surfaceContainerLow,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(28),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
                 ),
-                child: ListView(
-                  controller: scrollController, // Obligatorio para el drag
-                  children: [
-                    // Tirador visual
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 12),
-                        width: 40,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.outlineVariant,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
+                child: Column(
+                  children: <Widget>[
+                    _buildModalHandle(theme.colorScheme),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        "Resumen de Compra",
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
                       ),
                     ),
-                    const Divider(),
-                    // Aquí iría la lista de items agregados o detalles extra
-                    ListTile(
-                      leading: Icon(
-                        Icons.shopping_basket,
-                        color: theme.colorScheme.primary,
-                      ),
-                      title: const Text("Harina de Trigo"),
-                      subtitle: const Text("12 unidades x \$2.50"),
-                      trailing: Text(
-                        "\$30.00",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                    _buildModalResume(
+                      theme.colorScheme,
+                      theme.textTheme,
+                      totalProductos,
+                      totalDinero,
+                    ),
+
+                    const Divider(height: 1, indent: 24, endIndent: 24),
+                    Expanded(
+                      child: ListviewCustom(
+                        controller: scrollController,
+                        data: carritoDeCompras,
+                        keyBuilder: (item) => ValueKey(item.hashCode),
+                        titleBuilder: (item) => Text(
+                          item['nombre'],
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitleBuilder: (item) =>
+                            Text("Cant: ${item['cantidad']}"),
+                        trailingBuilder: (item) => Text(
+                          "999",
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        footer: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 56,
+                            child: FilledButton.icon(
+                              onPressed: () => print("Compra finalizada"),
+                              icon: const Icon(Icons.shopping_cart_checkout),
+                              label: const Text("Proceder con la compra"),
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size.fromHeight(56),
+                              ),
+                            ),
+                          ),
+                        ),
+                        //TODO: EL onDelete y onEdit, que uno agregue y que el otro elimine
                       ),
                     ),
                   ],
@@ -259,6 +320,52 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildModalResume(
+    ColorScheme cs,
+    TextTheme tt,
+    int totalProductos,
+    double totalDinero,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Text(
+                "Total productos: $totalProductos ",
+                style: tt.titleMedium?.copyWith(color: cs.onSurfaceVariant),
+              ),
+            ],
+          ),
+
+          Text(
+            "\$${totalDinero.toStringAsFixed(2)}",
+            style: tt.headlineMedium?.copyWith(
+              color: cs.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModalHandle(ColorScheme cs) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        width: 32,
+        height: 4,
+        decoration: BoxDecoration(
+          color: cs.outlineVariant,
+          borderRadius: BorderRadius.circular(2),
+        ),
       ),
     );
   }
@@ -361,5 +468,10 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         ),
       ),
     );
+  }
+
+  Widget resumenCompra() {
+    //return ListviewCustom(data: data, titleBuilder: titleBuilder, keyBuilder: keyBuilder);
+    return Text("hola");
   }
 }
