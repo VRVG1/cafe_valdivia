@@ -11,6 +11,7 @@ class ListviewCustom<T> extends ConsumerWidget {
   final Key Function(T element) keyBuilder;
   final ScrollController? controller;
   final Widget? footer;
+  final Widget? header;
 
   // Functions
   final void Function(T element)? onTapCallback;
@@ -30,23 +31,30 @@ class ListviewCustom<T> extends ConsumerWidget {
     this.onDeleteDismissed,
     this.controller,
     this.footer,
+    this.header,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final bool hasHeader = header != null;
+    final bool hasFooter = footer != null;
     return ListView.builder(
       controller: controller,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       physics: const ClampingScrollPhysics(),
-      itemCount: data.length + (footer != null ? 1 : 0),
+      itemCount: data.length + (hasFooter ? 1 : 0) + (hasHeader ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
-        if (footer != null && index == data.length) {
+        if (hasHeader && index == 0) {
+          return header;
+        }
+        if (hasFooter && index == data.length + (hasHeader ? 1 : 0)) {
           return footer;
         }
-        final T element = data[index];
-        final bool isFirst = index == 0;
-        final bool isLast = index == data.length - 1;
+        final int dataIndex = hasHeader ? index - 1 : index;
+        final T element = data[dataIndex];
+        final bool isFirst = dataIndex == 0;
+        final bool isLast = dataIndex == data.length - 1;
 
         final BorderRadius borderRadius;
         if (isFirst && isLast) {

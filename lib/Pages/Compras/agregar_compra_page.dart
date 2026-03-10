@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,6 +52,21 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
     {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
     {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
+    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
+    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
+    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
+    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
+    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
+    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
+    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
+    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
+    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
+    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
+    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
+    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
+    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
+    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
+    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
   ];
   //
 
@@ -72,7 +88,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
     // Controllers
     _cantidadController.dispose();
-    super.initState();
     super.dispose();
   }
 
@@ -123,77 +138,13 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  TextFormField(
-                    //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
-                    readOnly: true,
-                    onTap: () => {
-                      print("Abrir pagina de seleccion de proveedore"),
-                    },
-                    decoration: InputDecoration(
-                      labelText:
-                          "Proveedor", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.fax_rounded),
-                    ),
-                  ),
+                  _buildAgregarProveedor(),
+                  const SizedBox(height: 16),
+                  _buildAgregarInsumo(),
 
                   const SizedBox(height: 16),
 
-                  TextFormField(
-                    //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
-                    readOnly: true,
-                    onTap: () => {
-                      print("Abrir pagina de seleccion de Insumos"),
-                    },
-                    decoration: InputDecoration(
-                      labelText:
-                          "Insumo", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar                  border: OutlineInputBorder(),
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.fax_rounded),
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextFormField(
-                          enabled: !_isLoading,
-                          decoration: InputDecoration(
-                            labelText:
-                                "Precio", //TODO: Poner una funcion en la que busque el precio anterior registrado y lo auto acomplete
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.fax_rounded),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-
-                      Expanded(
-                        child: TapRegion(
-                          groupId: _grupoCantidad,
-                          onTapOutside: (event) {
-                            _focusNodeTextField.unfocus();
-                            setState(() {
-                              _isButtonsExpresive = false;
-                            });
-                          },
-                          child: TextFormField(
-                            enabled: !_isLoading,
-                            focusNode: _focusNodeTextField,
-                            controller: _cantidadController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: "Cantidad",
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.fax_rounded),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  _buildCantidadPrecio(),
                   if (_isButtonsExpresive)
                     TapRegion(
                       groupId: _grupoCantidad,
@@ -201,126 +152,173 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                     ),
 
                   const SizedBox(height: 32),
-                  Padding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
-                    child: SizedBox(
-                      height: 56,
-                      child: FilledButton(
-                        onPressed: () {},
-                        child: Text("Agregar"),
-                      ),
-                    ),
-                  ),
-
-                  //TODO: El detalles va en la parte final, antes de realizar la compra, por si se quiere comentar algo
-                  // TextFormField(
-                  //   enabled: !_isLoading,
-                  //   keyboardType: TextInputType.multiline,
-                  //   maxLines: null,
-                  //   decoration: InputDecoration(
-                  //     labelText: "Comentarios",
-                  //     border: OutlineInputBorder(),
-                  //     prefixIcon: Icon(Icons.fax_rounded),
-                  //   ),
-                  // ),
+                  _buildAgregarButton(),
                 ],
               ),
             ),
           ),
-          DraggableScrollableSheet(
-            initialChildSize: 0.13, // Altura visible inicial (pestaña)
-            minChildSize: 0.13, // Mínimo que se puede encoger
-            maxChildSize: 1, // Máximo que se puede expandir
-            expand: true,
-            snap: true, // Salta a las posiciones min/max automáticamente
-            builder: (context, scrollController) {
-              final double totalDinero = carritoDeCompras.fold<double>(0, (
-                sum,
-                item,
-              ) {
-                return sum + ((item['precio'] ?? 0) * (item['cantidad'] ?? 0));
-              });
-
-              final int totalProductos = carritoDeCompras.fold<int>(0, (
-                sum,
-                item,
-              ) {
-                return sum + (item['cantidad'] as int? ?? 0);
-              });
-              return Container(
-                // padding: const EdgeInsets.only(
-                //   top: 16.0,
-                //   left: 24.0,
-                //   right: 24.0,
-                //   bottom: 32.0,
-                // ),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerLow,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(28),
-                  ),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    _buildModalHandle(theme.colorScheme),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 8,
-                      ),
-                    ),
-                    _buildModalResume(
-                      theme.colorScheme,
-                      theme.textTheme,
-                      totalProductos,
-                      totalDinero,
-                    ),
-
-                    const Divider(height: 1, indent: 24, endIndent: 24),
-                    Expanded(
-                      child: ListviewCustom(
-                        controller: scrollController,
-                        data: carritoDeCompras,
-                        keyBuilder: (item) => ValueKey(item.hashCode),
-                        titleBuilder: (item) => Text(
-                          item['nombre'],
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitleBuilder: (item) =>
-                            Text("Cant: ${item['cantidad']}"),
-                        trailingBuilder: (item) => Text(
-                          "999",
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        footer: Padding(
-                          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: FilledButton.icon(
-                              onPressed: () => print("Compra finalizada"),
-                              icon: const Icon(Icons.shopping_cart_checkout),
-                              label: const Text("Proceder con la compra"),
-                              style: FilledButton.styleFrom(
-                                minimumSize: const Size.fromHeight(56),
-                              ),
-                            ),
-                          ),
-                        ),
-                        //TODO: EL onDelete y onEdit, que uno agregue y que el otro elimine
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+          _buildModal(theme.colorScheme, theme.textTheme),
         ],
       ),
+    );
+  }
+
+  Widget _buildAgregarProveedor() {
+    return TextFormField(
+      //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
+      readOnly: true,
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AgregarCompraPageProveedorLista(),
+          ),
+        ),
+      },
+      decoration: InputDecoration(
+        labelText:
+            "Proveedor", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar
+        border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.fax_rounded),
+      ),
+    );
+  }
+
+  Widget _buildAgregarInsumo() {
+    return TextFormField(
+      //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
+      readOnly: true,
+      onTap: () => {print("Abrir pagina de seleccion de Insumos")},
+      decoration: InputDecoration(
+        labelText:
+            "Insumo", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar                  border: OutlineInputBorder(),
+        border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.fax_rounded),
+      ),
+    );
+  }
+
+  Widget _buildAgregarButton() {
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
+      child: SizedBox(
+        height: 56,
+        child: FilledButton(onPressed: () {}, child: Text("Agregar")),
+      ),
+    );
+  }
+
+  Widget _buildCantidadPrecio() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: TextFormField(
+            enabled: !_isLoading,
+            decoration: InputDecoration(
+              labelText:
+                  "Precio", //TODO: Poner una funcion en la que busque el precio anterior registrado y lo auto acomplete
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.fax_rounded),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+
+        Expanded(
+          child: TapRegion(
+            groupId: _grupoCantidad,
+            onTapOutside: (event) {
+              _focusNodeTextField.unfocus();
+              setState(() {
+                _isButtonsExpresive = false;
+              });
+            },
+            child: TextFormField(
+              enabled: !_isLoading,
+              focusNode: _focusNodeTextField,
+              controller: _cantidadController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Cantidad",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.fax_rounded),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildModal(ColorScheme cs, TextTheme tt) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.13, // Altura visible inicial (pestaña)
+      minChildSize: 0.13, // Mínimo que se puede encoger
+      maxChildSize: 1, // Máximo que se puede expandir
+      expand: true,
+      snap: true, // Salta a las posiciones min/max automáticamente
+      builder: (context, scrollController) {
+        final double totalDinero = carritoDeCompras.fold<double>(0, (
+          sum,
+          item,
+        ) {
+          return sum + ((item['precio'] ?? 0) * (item['cantidad'] ?? 0));
+        });
+
+        final int totalProductos = carritoDeCompras.fold<int>(0, (sum, item) {
+          return sum + (item['cantidad'] as int? ?? 0);
+        });
+        return Container(
+          decoration: BoxDecoration(
+            color: cs.surfaceContainerLow,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: ListviewCustom(
+            controller: scrollController,
+            data: carritoDeCompras,
+            keyBuilder: (item) => ValueKey(item.hashCode),
+            titleBuilder: (item) => Text(
+              item['nombre'],
+              style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            subtitleBuilder: (item) => Text("Cant: ${item['cantidad']}"),
+            trailingBuilder: (item) =>
+                Text("999", style: tt.labelLarge?.copyWith(color: cs.primary)),
+            footer: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+              child: SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FilledButton.icon(
+                  onPressed: () => print("Compra finalizada"),
+                  icon: const Icon(Icons.shopping_cart_checkout),
+                  label: const Text("Proceder con la compra"),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(56),
+                  ),
+                ),
+              ),
+            ),
+            header: Column(
+              children: <Widget>[
+                _buildModalHandle(cs),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                ),
+                _buildModalResume(cs, tt, totalProductos, totalDinero),
+
+                SizedBox(height: 12),
+                const Divider(height: 1, indent: 12, endIndent: 12),
+                SizedBox(height: 12),
+              ],
+            ),
+            //TODO: EL onDelete y onEdit, que uno agregue y que el otro elimine
+          ),
+        );
+      },
     );
   }
 
