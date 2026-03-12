@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
@@ -21,6 +22,7 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final ColorScheme cs = theme.colorScheme;
     final asyncProveedor = ref.watch(proveedorProvider);
 
     return asyncProveedor.when(
@@ -30,121 +32,86 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
         }
 
         return Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            backgroundColor: theme.colorScheme.surface,
-            toolbarHeight: 120,
-            title: Container(
-              width: 320,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24.0),
-                color: theme.colorScheme.surfaceContainerHighest.withAlpha(200),
-              ),
-              child: TextField(
-                textAlign: TextAlign.center,
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  labelText: "Buscar Proveedor",
-                  labelStyle: TextStyle(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  contentPadding: const EdgeInsetsGeometry.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                ),
-                style: TextStyle(
-                  color: theme.colorScheme.onSurface,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+          appBar: AppbarChips(),
+          body: ListviewCustom<Proveedor>(
+            data: proveedores,
+            keyBuilder: (proveedor) {
+              return ValueKey(
+                proveedor.idProveedor != null
+                    ? 'proveedor-${proveedor.idProveedor}'
+                    : proveedor.hashCode,
+              );
+            },
+            titleBuilder: (proveedor) => Text(
+              proveedor.nombre.isNotEmpty ? proveedor.nombre : 'Jonh Doe',
+            ),
+            leadingBuilder: (proveedor) => CircleAvatar(
+              backgroundColor: theme.colorScheme.primaryContainer,
+              child: Text(
+                proveedor.iniciales.isNotEmpty ? proveedor.iniciales : "JD",
+                style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
               ),
             ),
-          ),
-        );
-        ListviewCustom<Proveedor>(
-          data: proveedores,
-          keyBuilder: (proveedor) {
-            return ValueKey(
-              proveedor.idProveedor != null
-                  ? 'proveedor-${proveedor.idProveedor}'
-                  : proveedor.hashCode,
-            );
-          },
-          titleBuilder: (proveedor) =>
-              Text(proveedor.nombre.isNotEmpty ? proveedor.nombre : 'Jonh Doe'),
-          leadingBuilder: (proveedor) => CircleAvatar(
-            backgroundColor: theme.colorScheme.primaryContainer,
-            child: Text(
-              proveedor.iniciales.isNotEmpty ? proveedor.iniciales : "JD",
-              style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+            subtitleBuilder: (proveedor) => Text(
+              proveedor.telefono.toString().isNotEmpty
+                  ? proveedor.telefono.toString()
+                  : "xxxxxxxxxx",
             ),
-          ),
-          subtitleBuilder: (proveedor) => Text(
-            proveedor.telefono.toString().isNotEmpty
-                ? proveedor.telefono.toString()
-                : "xxxxxxxxxx",
-          ),
-          onTapCallback: (proveedor) => {
-            if (proveedor.idProveedor != null)
-              {
+            onTapCallback: (proveedor) => {
+              if (proveedor.idProveedor != null)
+                {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProveedorDetallado(
+                        proveedorId: proveedor.idProveedor!,
+                      ),
+                    ),
+                  ),
+                },
+            },
+            onEditDismissed: (proveedor) async {
+              if (proveedor.idProveedor != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ProveedorDetallado(proveedorId: proveedor.idProveedor!),
+                    builder: (context) => EditarProveedor(proveedor: proveedor),
                   ),
-                ),
-              },
-          },
-          onEditDismissed: (proveedor) async {
-            if (proveedor.idProveedor != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditarProveedor(proveedor: proveedor),
-                ),
-              ).then(
-                (_) => ref.invalidate(
-                  proveedorDetailProvider(proveedor.idProveedor!),
-                ),
-              );
-            }
-            return null;
-          },
-          onDeleteDismissed: (proveedor) async {
-            final confirmacion =
-                await mostrarDialogoConfirmacion(
-                  context: context,
-                  titulo: "Seguro que quiere elminar este proveedor?",
-                  contenido: "Esta accion no se puede deshacer",
-                  textoBotonConfirmacion: "Eliminar",
-                  onConfirm: () => {
-                    delete(
-                      context: context,
-                      ref: ref,
-                      provider: proveedorProvider,
-                      id: proveedor.idProveedor!,
-                      mensajeExito: "Proveedor eliminado correctamente",
-                      mensajeError:
-                          "Error al eliminar el cliente, intente de nuevo",
-                      detalle: false,
-                    ),
-                  },
-                ) ??
-                false;
-            if (confirmacion == true) {
-              return true;
-            }
-            return false;
-          },
+                ).then(
+                  (_) => ref.invalidate(
+                    proveedorDetailProvider(proveedor.idProveedor!),
+                  ),
+                );
+              }
+              return null;
+            },
+            onDeleteDismissed: (proveedor) async {
+              final confirmacion =
+                  await mostrarDialogoConfirmacion(
+                    context: context,
+                    titulo: "Seguro que quiere elminar este proveedor?",
+                    contenido: "Esta accion no se puede deshacer",
+                    textoBotonConfirmacion: "Eliminar",
+                    onConfirm: () => {
+                      delete(
+                        context: context,
+                        ref: ref,
+                        provider: proveedorProvider,
+                        id: proveedor.idProveedor!,
+                        mensajeExito: "Proveedor eliminado correctamente",
+                        mensajeError:
+                            "Error al eliminar el cliente, intente de nuevo",
+                        detalle: false,
+                      ),
+                    },
+                  ) ??
+                  false;
+              if (confirmacion == true) {
+                return true;
+              }
+              return false;
+            },
+          ),
         );
       },
       error: (err, stack) => Center(child: Text('Error: $err')),
