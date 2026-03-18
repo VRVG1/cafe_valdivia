@@ -9,6 +9,7 @@ import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';
 import 'package:cafe_valdivia/services/compra_servicio.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
+import 'package:cafe_valdivia/utils/tipo_busqueda.dart';
 // import 'package:cafe_valdivia/services/inventario_servicio.dart';
 // import 'package:cafe_valdivia/services/reporte_servicio.dart';
 // import 'package:cafe_valdivia/services/venta_servicio.dart';

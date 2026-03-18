@@ -1,3 +1,5 @@
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
+import 'package:cafe_valdivia/utils/tipo_busqueda.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,6 +20,8 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final tt = theme.textTheme;
+    final filtro = ref.watch(filtroBusquedaProvider);
+
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -35,12 +39,9 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
               width: 320,
               height: 48,
               child: TextField(
-                textAlign: TextAlign.center,
-                textAlignVertical: TextAlignVertical.center,
-
+                //textAlign: TextAlign.center,
                 onChanged: (value) {},
 
-                // DECORACIÓN SIN LABEL FLOTANTE
                 decoration: InputDecoration(
                   border: InputBorder.none,
 
@@ -59,27 +60,14 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   filled: true,
                   fillColor: colorScheme.secondaryContainer.withOpacity(0.4),
 
-                  // LABEL CENTRADO (no flota, se comporta como hint)
                   labelText: 'Buscar proveedor...',
                   labelStyle: TextStyle(
                     color: colorScheme.onSurfaceVariant,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
-                  // ESTO ES CLAVE: evita que el label flote
                   floatingLabelBehavior: FloatingLabelBehavior.never,
 
-                  // Icono de búsqueda
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  prefixIconConstraints: const BoxConstraints(
-                    minWidth: 48,
-                    minHeight: 48,
-                  ),
-
-                  // Padding para centrar verticalmente
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
@@ -109,7 +97,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   // Chip Nombre (siempre activo, no se puede desactivar)
                   FilterChip(
                     label: const Text('Nombre'),
-                    selected: true,
+                    selected: filtro.tieneFiltro(TipoBusqueda.nombre),
                     onSelected: null, // Siempre activo
                     selectedColor: colorScheme.primaryContainer,
                     labelStyle: TextStyle(
@@ -117,11 +105,6 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                       fontWeight: FontWeight.w600,
                     ),
                     showCheckmark: false,
-                    avatar: Icon(
-                      Icons.person_outline,
-                      size: 18,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
                   ),
 
                   const SizedBox(width: 8),
@@ -129,46 +112,45 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   // Chip Email
                   FilterChip(
                     label: const Text('Email'),
-                    onSelected: (selected) {},
-                    selectedColor: colorScheme.tertiaryContainer,
+                    selected: filtro.tieneFiltro(TipoBusqueda.email),
+                    onSelected: (selected) {
+                      ref
+                          .read(filtroBusquedaProvider.notifier)
+                          .toggleFiltro(TipoBusqueda.email);
+                    },
+                    selectedColor: colorScheme.primaryContainer,
+                    showCheckmark: false,
+                    labelStyle: TextStyle(
+                      fontWeight: filtro.tieneFiltro(TipoBusqueda.email)
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: filtro.tieneFiltro(TipoBusqueda.email)
+                          ? colorScheme.onSurfaceVariant
+                          : colorScheme.onPrimaryContainer,
+                    ),
                   ),
 
                   const SizedBox(width: 8),
 
-                  // Chip Teléfono
-                  // FilterChip(
-                  //   label: const Text('Teléfono'),
-                  //   selected: filtro.filtrosActivos.contains(
-                  //     TipoBusqueda.telefono,
-                  //   ),
-                  //   onSelected: (selected) {
-                  //     final nuevosFiltros = Set<TipoBusqueda>.from(
-                  //       filtro.filtrosActivos,
-                  //     );
-                  //     if (selected) {
-                  //       nuevosFiltros.add(TipoBusqueda.telefono);
-                  //     } else {
-                  //       nuevosFiltros.remove(TipoBusqueda.telefono);
-                  //     }
-                  //     ref.read(filtroBusquedaProvider.notifier).state = filtro
-                  //         .copyWith(filtrosActivos: nuevosFiltros);
-                  //   },
-                  //   selectedColor: colorScheme.tertiaryContainer,
-                  //   labelStyle: TextStyle(
-                  //     color:
-                  //         filtro.filtrosActivos.contains(TipoBusqueda.telefono)
-                  //         ? colorScheme.onTertiaryContainer
-                  //         : colorScheme.onSurfaceVariant,
-                  //   ),
-                  //   avatar: Icon(
-                  //     Icons.phone_outlined,
-                  //     size: 18,
-                  //     color:
-                  //         filtro.filtrosActivos.contains(TipoBusqueda.telefono)
-                  //         ? colorScheme.onTertiaryContainer
-                  //         : colorScheme.onSurfaceVariant,
-                  //   ),
-                  // ),
+                  FilterChip(
+                    label: const Text('Teléfono'),
+                    selected: filtro.tieneFiltro(TipoBusqueda.telefono),
+                    onSelected: (bool selected) {
+                      ref
+                          .read(filtroBusquedaProvider.notifier)
+                          .toggleFiltro(TipoBusqueda.telefono);
+                    },
+                    selectedColor: colorScheme.primaryContainer,
+                    showCheckmark: false,
+                    labelStyle: TextStyle(
+                      fontWeight: filtro.tieneFiltro(TipoBusqueda.email)
+                          ? FontWeight.w600
+                          : FontWeight.normal,
+                      color: filtro.tieneFiltro(TipoBusqueda.email)
+                          ? colorScheme.onSurfaceVariant
+                          : colorScheme.onPrimaryContainer,
+                    ),
+                  ),
                   const SizedBox(width: 16),
                 ],
               ),
