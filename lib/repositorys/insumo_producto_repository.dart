@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/insumo_producto.dart';
+import 'package:cafe_valdivia/core/models/insumo_producto.dart';
 
 class InsumoProductoRepository {
   final DatabaseHelper dbHelper;

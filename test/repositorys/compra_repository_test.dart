@@ -2,12 +2,12 @@ import 'package:test/test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/compra.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
-import 'package:cafe_valdivia/models/detalle_compra.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 
 void main() {
   setUpAll(() {

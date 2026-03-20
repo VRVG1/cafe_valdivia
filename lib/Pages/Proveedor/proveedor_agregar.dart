@@ -1,6 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
+import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +41,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
       create<Proveedor>(
         context: context,
         ref: ref,
-        provider: proveedorProvider,
+        provider: proveedorListProvider,
         element: proveedor,
         mensajeExito: "El Proveedor se guardo con exito",
         mensajeError:

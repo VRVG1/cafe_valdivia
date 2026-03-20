@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/compra.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

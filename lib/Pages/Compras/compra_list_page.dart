@@ -1,6 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
-import 'package:cafe_valdivia/providers/compra_notifier.dart';
+import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

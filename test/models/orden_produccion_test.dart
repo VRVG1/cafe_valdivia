@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/orden_produccion.dart';
+import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

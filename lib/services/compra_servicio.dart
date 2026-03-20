@@ -1,8 +1,5 @@
-import 'package:cafe_valdivia/models/compra.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/services/inventario_servicio.dart';
-import 'package:cafe_valdivia/utils/exceptions.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
 
 class CompraServicio {
   final CompraRepository _compraRepository;

@@ -10,11 +10,11 @@ part of 'filtro_busqueda_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(FiltroBusquedaNotifier)
-const filtroBusquedaProvider = FiltroBusquedaNotifierProvider._();
+final filtroBusquedaProvider = FiltroBusquedaNotifierProvider._();
 
 final class FiltroBusquedaNotifierProvider
     extends $NotifierProvider<FiltroBusquedaNotifier, FiltroBusqueda> {
-  const FiltroBusquedaNotifierProvider._()
+  FiltroBusquedaNotifierProvider._()
     : super(
         from: null,
         argument: null,
@@ -42,14 +42,13 @@ final class FiltroBusquedaNotifierProvider
 }
 
 String _$filtroBusquedaNotifierHash() =>
-    r'6e8522d3bda0467d5ac8bb446cf620e5e80181b5';
+    r'f83e672621bf8c487a1173bd9975c24a38e60ead';
 
 abstract class _$FiltroBusquedaNotifier extends $Notifier<FiltroBusqueda> {
   FiltroBusqueda build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
     final ref = this.ref as $Ref<FiltroBusqueda, FiltroBusqueda>;
     final element =
         ref.element
@@ -59,6 +58,6 @@ abstract class _$FiltroBusquedaNotifier extends $Notifier<FiltroBusqueda> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, build);
   }
 }

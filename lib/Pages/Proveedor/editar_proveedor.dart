@@ -1,6 +1,6 @@
-import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/models/proveedor_extension.dart';
-import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
+import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
+import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -149,7 +149,7 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
     );
 
     await ref
-        .read(proveedorProvider.notifier)
+        .read(proveedorListProvider.notifier)
         .updateElement(proveedorModificado);
 
     if (mounted) {

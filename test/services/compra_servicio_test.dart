@@ -1,10 +1,10 @@
-import 'package:cafe_valdivia/models/compra.dart';
-import 'package:cafe_valdivia/models/detalle_compra.dart';
-import 'package:cafe_valdivia/models/proveedor.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/services/compra_servicio.dart';
 import 'package:cafe_valdivia/services/inventario_servicio.dart';
-import 'package:cafe_valdivia/utils/exceptions.dart';
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';

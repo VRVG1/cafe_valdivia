@@ -5,8 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i7;
 
-import 'package:cafe_valdivia/models/detalle_venta.dart' as _i9;
-import 'package:cafe_valdivia/models/venta.dart' as _i8;
+import 'package:cafe_valdivia/core/models/detalle_venta.dart' as _i9;
+import 'package:cafe_valdivia/core/models/venta.dart' as _i8;
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart' as _i3;
 import 'package:cafe_valdivia/repositorys/producto_repository.dart' as _i4;
 import 'package:cafe_valdivia/repositorys/venta_repository.dart' as _i5;
@@ -28,6 +28,7 @@ import 'package:mockito/src/dummies.dart' as _i6;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: invalid_use_of_internal_member
 
 class _FakeDatabaseHelper_0 extends _i1.SmartFake
     implements _i2.DatabaseHelper {

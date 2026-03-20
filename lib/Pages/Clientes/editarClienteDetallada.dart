@@ -1,6 +1,6 @@
-import 'package:cafe_valdivia/models/cliente.dart';
-import 'package:cafe_valdivia/models/cliente_extension.dart';
-import 'package:cafe_valdivia/providers/cliente_notifier.dart';
+import 'package:cafe_valdivia/core/models/cliente.dart';
+import 'package:cafe_valdivia/core/models/cliente_extension.dart';
+import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

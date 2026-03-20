@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

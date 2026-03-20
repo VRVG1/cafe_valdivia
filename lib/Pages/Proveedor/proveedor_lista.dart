@@ -2,10 +2,9 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/proveedor_detallado.dart';
-import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/models/proveedor_extension.dart';
-import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
-import 'package:cafe_valdivia/providers/proveedor_providers.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
+import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
+import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +19,7 @@ class ProveedorListaState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final asyncProveedor = ref.watch(proveedorProvider);
+    final asyncProveedor = ref.watch(proveedorListProvider);
 
     return asyncProveedor.when(
       data: (proveedores) {
@@ -89,7 +88,7 @@ class ProveedorListaState extends ConsumerState {
                     delete(
                       context: context,
                       ref: ref,
-                      provider: proveedorProvider,
+                      provider: proveedorListProvider,
                       id: proveedor.idProveedor!,
                       mensajeExito: "Proveedor eliminado correctamente",
                       mensajeError:

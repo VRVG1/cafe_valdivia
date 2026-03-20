@@ -1,5 +1,5 @@
-import 'package:cafe_valdivia/models/detalle_produccion_insumo.dart';
-import 'package:cafe_valdivia/models/orden_produccion.dart';
+import 'package:cafe_valdivia/core/models/detalle_produccion_insumo.dart';
+import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:sqflite/sqflite.dart';
 

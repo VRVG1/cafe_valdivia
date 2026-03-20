@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 
 class UnidadMedidaRepository implements BaseRepository<UnidadMedida> {

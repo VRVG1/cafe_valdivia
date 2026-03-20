@@ -1,5 +1,5 @@
-import 'package:cafe_valdivia/models/detalle_venta.dart';
-import 'package:cafe_valdivia/models/detalle_venta_extension.dart';
+import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/models/detalle_venta_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

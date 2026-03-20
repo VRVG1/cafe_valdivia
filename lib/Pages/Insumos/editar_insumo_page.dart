@@ -1,9 +1,9 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/models/insumo.dart';
-import 'package:cafe_valdivia/models/unidad_medida.dart';
-import 'package:cafe_valdivia/providers/insumo_notifier.dart';
-import 'package:cafe_valdivia/providers/unidad_medida_notifier.dart';
-import 'package:cafe_valdivia/providers/unidad_medida_providers.dart';
+import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_notifier.dart';
+import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
+import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

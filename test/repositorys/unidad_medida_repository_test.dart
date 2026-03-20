@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:cafe_valdivia/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/utils/logger.dart';

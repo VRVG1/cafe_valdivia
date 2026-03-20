@@ -1,5 +1,5 @@
-import 'package:cafe_valdivia/models/unidad_medida.dart';
-import 'package:cafe_valdivia/providers/unidad_medida_notifier.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

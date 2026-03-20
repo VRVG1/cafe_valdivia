@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -138,3 +138,27 @@ Future<bool> update<T>({
     return false;
   }
 }
+
+// Provider<AsyncValue<List<T>>> buscarConFiltros<T>({
+//   required WidgetRef ref,
+//   required Provider provider,
+//   required T element,
+// }) {
+//   final elementAsync = ref.watch(provider);
+//   final query = ref.watch(provider).getQuery();
+//   final filtros = ref.watch(filtroBusquedaProvider);
+//
+//   return elementAsync.when(
+//     data: (elements) {
+//       if (query.isEmpty) return AsyncValue.data(elements);
+//
+//       final filtrados = elements.where((p) {
+//         bool coincidencia = p.nombre.toLowerCase().contains(query);
+//
+//         if (filtros.contains(TipoBusqueda.email) && !coincidencia) {
+//         coincidencia = p.email?.toLowerCase().contains(query) ?? false;
+//         }
+//       });
+//     }
+//   );
+// }

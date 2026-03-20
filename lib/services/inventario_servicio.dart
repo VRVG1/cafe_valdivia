@@ -1,4 +1,4 @@
-// import 'package:cafe_valdivia/models/movimiento_invetario.dart';
+// import 'package:cafe_valdivia/core/models/movimiento_invetario.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/inventario_repository.dart';
