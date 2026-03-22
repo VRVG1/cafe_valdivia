@@ -36,7 +36,7 @@ Future<Proveedor> proveedorDetail(Ref ref, int id) async {
   return repository.getById(id);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<Proveedor>> proveedoresFiltrados(Ref ref) async {
   final filtro = ref.watch(filtroBusquedaProvider);
   final repo = ref.watch(proveedorRepositoryProvider);

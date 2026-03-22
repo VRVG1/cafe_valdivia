@@ -19,12 +19,17 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
-    final asyncProveedor = ref.watch(proveedorListProvider);
+    final asyncProveedorFiltrado = ref.watch(proveedoresFiltradosProvider);
 
-    return asyncProveedor.when(
+    return asyncProveedorFiltrado.when(
+      skipLoadingOnReload: true,
+      skipLoadingOnRefresh: true,
       data: (proveedores) {
         if (proveedores.isEmpty) {
-          return const Center(child: Text('No hay proveedors para mostrar.'));
+          return Scaffold(
+            appBar: AppbarChips(),
+            body: const Center(child: Text('No hay proveedors para mostrar.')),
+          );
         }
 
         return Scaffold(
@@ -54,7 +59,8 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
                   : "xxxxxxxxxx",
             ),
             onTapCallback: (proveedor) => {
-              if (proveedor.idProveedor != null) {print(proveedor)},
+              if (proveedor.idProveedor != null)
+                {Navigator.pop(context, proveedor.nombre)},
             },
             onEditDismissed: null,
             onDeleteDismissed: null,
@@ -62,7 +68,11 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
         );
       },
       error: (err, stack) => Center(child: Text('Error: $err')),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () {
+        final previos = asyncProveedorFiltrado.value;
+        if (previos != null) return Text("Hola");
+        return Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

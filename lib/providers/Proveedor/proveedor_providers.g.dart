@@ -144,7 +144,7 @@ final class ProveedoresFiltradosProvider
         argument: null,
         retry: null,
         name: r'proveedoresFiltradosProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -165,4 +165,4 @@ final class ProveedoresFiltradosProvider
 }
 
 String _$proveedoresFiltradosHash() =>
-    r'094f6faf46022629cefa8f44b3d9e3c67e3d8df3';
+    r'bd0287b3e8f2e7b67d473cdc4d3f27abc9e5d237';
