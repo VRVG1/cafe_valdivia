@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/cliente.dart';
+import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

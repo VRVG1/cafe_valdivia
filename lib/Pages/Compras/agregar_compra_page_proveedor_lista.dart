@@ -1,12 +1,8 @@
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
-import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
-import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
-import 'package:cafe_valdivia/Pages/Proveedor/proveedor_detallado.dart';
-import 'package:cafe_valdivia/models/proveedor.dart';
-import 'package:cafe_valdivia/models/proveedor_extension.dart';
-import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
-import 'package:cafe_valdivia/providers/proveedor_providers.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
+import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
+import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,12 +19,17 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
-    final asyncProveedor = ref.watch(proveedorProvider);
+    final asyncProveedorFiltrado = ref.watch(proveedoresFiltradosProvider);
 
-    return asyncProveedor.when(
+    return asyncProveedorFiltrado.when(
+      skipLoadingOnReload: true,
+      skipLoadingOnRefresh: true,
       data: (proveedores) {
         if (proveedores.isEmpty) {
-          return const Center(child: Text('No hay proveedors para mostrar.'));
+          return Scaffold(
+            appBar: AppbarChips(),
+            body: const Center(child: Text('No hay proveedors para mostrar.')),
+          );
         }
 
         return Scaffold(
@@ -59,63 +60,19 @@ class AgregarCompraPageProveedorListaState extends ConsumerState {
             ),
             onTapCallback: (proveedor) => {
               if (proveedor.idProveedor != null)
-                {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProveedorDetallado(
-                        proveedorId: proveedor.idProveedor!,
-                      ),
-                    ),
-                  ),
-                },
+                {Navigator.pop(context, proveedor.nombre)},
             },
-            onEditDismissed: (proveedor) async {
-              if (proveedor.idProveedor != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditarProveedor(proveedor: proveedor),
-                  ),
-                ).then(
-                  (_) => ref.invalidate(
-                    proveedorDetailProvider(proveedor.idProveedor!),
-                  ),
-                );
-              }
-              return null;
-            },
-            onDeleteDismissed: (proveedor) async {
-              final confirmacion =
-                  await mostrarDialogoConfirmacion(
-                    context: context,
-                    titulo: "Seguro que quiere elminar este proveedor?",
-                    contenido: "Esta accion no se puede deshacer",
-                    textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: proveedorProvider,
-                        id: proveedor.idProveedor!,
-                        mensajeExito: "Proveedor eliminado correctamente",
-                        mensajeError:
-                            "Error al eliminar el cliente, intente de nuevo",
-                        detalle: false,
-                      ),
-                    },
-                  ) ??
-                  false;
-              if (confirmacion == true) {
-                return true;
-              }
-              return false;
-            },
+            onEditDismissed: null,
+            onDeleteDismissed: null,
           ),
         );
       },
       error: (err, stack) => Center(child: Text('Error: $err')),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () {
+        final previos = asyncProveedorFiltrado.value;
+        if (previos != null) return Text("Hola");
+        return Center(child: CircularProgressIndicator());
+      },
     );
   }
 }

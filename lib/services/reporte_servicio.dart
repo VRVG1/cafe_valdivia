@@ -1,5 +1,5 @@
-import 'package:cafe_valdivia/models/detalle_venta.dart';
-import 'package:cafe_valdivia/models/producto.dart';
+import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/models/producto.dart';
 // import 'package:cafe_valdivia/repositorys/inventario_repository.dart';
 // import 'package:cafe_valdivia/repositorys/movimiento_inventario_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';

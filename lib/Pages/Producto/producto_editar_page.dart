@@ -1,8 +1,8 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/models/producto.dart';
-import 'package:cafe_valdivia/providers/producto_notifier.dart';
-import 'package:cafe_valdivia/providers/producto_provider.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
+import 'package:cafe_valdivia/core/models/producto.dart';
+import 'package:cafe_valdivia/providers/Producto/producto_notifier.dart';
+import 'package:cafe_valdivia/providers/Producto/producto_provider.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

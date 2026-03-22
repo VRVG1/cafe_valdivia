@@ -1,6 +1,6 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/detalle_venta.dart';
-import 'package:cafe_valdivia/models/venta.dart';
+import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:sqflite/sqflite.dart';

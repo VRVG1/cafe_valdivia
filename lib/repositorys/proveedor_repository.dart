@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/proveedor.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 
 class ProveedorRepository implements BaseRepository<Proveedor> {
   @override

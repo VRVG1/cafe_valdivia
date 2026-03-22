@@ -26,6 +26,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   final TextEditingController _cantidadController = TextEditingController(
     text: "0",
   );
+  final TextEditingController _proveedorController = TextEditingController();
   // Test
   List<Map<String, dynamic>> carritoDeCompras = [
     {'nombre': 'Leche Entera 1L', 'cantidad': 2, 'precio': 1.50},
@@ -69,6 +70,18 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
   ];
   //
+  //
+  Future<void> _recibirDatos(BuildContext context, Widget widget) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => widget),
+    );
+
+    setState(() {
+      _proveedorController.text = result;
+    });
+    if (!context.mounted) return;
+  }
 
   @override
   void initState() {
@@ -88,6 +101,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
     // Controllers
     _cantidadController.dispose();
+    _proveedorController.dispose();
     super.dispose();
   }
 
@@ -167,14 +181,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return TextFormField(
       //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
       readOnly: true,
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AgregarCompraPageProveedorLista(),
-          ),
-        ),
-      },
+      controller: _proveedorController,
+      onTap: () => {_recibirDatos(context, AgregarCompraPageProveedorLista())},
       decoration: InputDecoration(
         labelText:
             "Proveedor", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar

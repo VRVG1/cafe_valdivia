@@ -3,10 +3,10 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
-import 'package:cafe_valdivia/models/producto.dart';
-import 'package:cafe_valdivia/models/producto_extension.dart';
-import 'package:cafe_valdivia/providers/producto_notifier.dart';
-import 'package:cafe_valdivia/providers/producto_provider.dart';
+import 'package:cafe_valdivia/core/models/producto.dart';
+import 'package:cafe_valdivia/core/models/producto_extension.dart';
+import 'package:cafe_valdivia/providers/Producto/producto_notifier.dart';
+import 'package:cafe_valdivia/providers/Producto/producto_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,7 +1,6 @@
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
-import 'package:cafe_valdivia/models/proveedor_extension.dart';
-import 'package:cafe_valdivia/providers/proveedor_notifier.dart';
-import 'package:cafe_valdivia/providers/proveedor_providers.dart';
+import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
+import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,7 +44,7 @@ class ProveedorDetallado extends ConsumerWidget {
 
   void _eliminar(BuildContext context, WidgetRef ref, ThemeData theme) async {
     try {
-      await ref.read(proveedorProvider.notifier).delete(proveedorId);
+      await ref.read(proveedorListProvider.notifier).delete(proveedorId);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

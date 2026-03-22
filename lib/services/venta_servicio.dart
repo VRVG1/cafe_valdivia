@@ -1,9 +1,3 @@
-import 'package:cafe_valdivia/models/venta.dart';
-import 'package:cafe_valdivia/repositorys/venta_repository.dart';
-import 'package:cafe_valdivia/services/inventario_servicio.dart';
-import 'package:cafe_valdivia/utils/exceptions.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
-
 class VentaServicio {
   // final VentaRepository _ventaRepository;
   // final InventarioServicio _inventarioServicio;

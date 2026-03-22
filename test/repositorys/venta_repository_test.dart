@@ -1,7 +1,7 @@
-import 'package:cafe_valdivia/models/cliente.dart';
-import 'package:cafe_valdivia/models/detalle_venta.dart';
-import 'package:cafe_valdivia/models/producto.dart';
-import 'package:cafe_valdivia/models/venta.dart';
+import 'package:cafe_valdivia/core/models/cliente.dart';
+import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/models/producto.dart';
+import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';

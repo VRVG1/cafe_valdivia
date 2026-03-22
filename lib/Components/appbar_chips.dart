@@ -1,5 +1,5 @@
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
-import 'package:cafe_valdivia/utils/tipo_busqueda.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,6 +15,25 @@ class AppbarChips extends ConsumerStatefulWidget
 }
 
 class _AppbarChipsState extends ConsumerState<AppbarChips> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final filtro = ref.read(filtroBusquedaProvider);
+      _controller.text = filtro.query;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -27,6 +46,13 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       scrolledUnderElevation: 0,
       backgroundColor: colorScheme.surface,
       toolbarHeight: 120, // Más alto para acomodar chips
+      leading: IconButton(
+        onPressed: () {
+          ref.invalidate(filtroBusquedaProvider);
+          Navigator.of(context).pop();
+        },
+        icon: Icon(Icons.arrow_back_rounded),
+      ),
 
       flexibleSpace: SafeArea(
         child: Column(
@@ -40,7 +66,11 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
               height: 48,
               child: TextField(
                 //textAlign: TextAlign.center,
-                onChanged: (value) {},
+                onChanged: (value) {
+                  ref
+                      .read(filtroBusquedaProvider.notifier)
+                      .actualizarQuery(value);
+                },
 
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -97,7 +127,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   // Chip Nombre (siempre activo, no se puede desactivar)
                   FilterChip(
                     label: const Text('Nombre'),
-                    selected: filtro.tieneFiltro(TipoBusqueda.nombre),
+                    selected: true,
                     onSelected: null, // Siempre activo
                     selectedColor: colorScheme.primaryContainer,
                     labelStyle: TextStyle(
@@ -112,7 +142,9 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   // Chip Email
                   FilterChip(
                     label: const Text('Email'),
-                    selected: filtro.tieneFiltro(TipoBusqueda.email),
+                    selected: ref
+                        .watch(filtroBusquedaProvider)
+                        .tieneFiltro(TipoBusqueda.email),
                     onSelected: (selected) {
                       ref
                           .read(filtroBusquedaProvider.notifier)
@@ -121,10 +153,16 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                     selectedColor: colorScheme.primaryContainer,
                     showCheckmark: false,
                     labelStyle: TextStyle(
-                      fontWeight: filtro.tieneFiltro(TipoBusqueda.email)
+                      fontWeight:
+                          ref
+                              .watch(filtroBusquedaProvider)
+                              .tieneFiltro(TipoBusqueda.email)
                           ? FontWeight.w600
                           : FontWeight.normal,
-                      color: filtro.tieneFiltro(TipoBusqueda.email)
+                      color:
+                          ref
+                              .watch(filtroBusquedaProvider)
+                              .tieneFiltro(TipoBusqueda.email)
                           ? colorScheme.onSurfaceVariant
                           : colorScheme.onPrimaryContainer,
                     ),
@@ -143,10 +181,10 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                     selectedColor: colorScheme.primaryContainer,
                     showCheckmark: false,
                     labelStyle: TextStyle(
-                      fontWeight: filtro.tieneFiltro(TipoBusqueda.email)
+                      fontWeight: filtro.tieneFiltro(TipoBusqueda.telefono)
                           ? FontWeight.w600
                           : FontWeight.normal,
-                      color: filtro.tieneFiltro(TipoBusqueda.email)
+                      color: filtro.tieneFiltro(TipoBusqueda.telefono)
                           ? colorScheme.onSurfaceVariant
                           : colorScheme.onPrimaryContainer,
                     ),

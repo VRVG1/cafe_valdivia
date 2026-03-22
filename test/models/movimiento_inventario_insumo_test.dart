@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/movimiento_inventario_insumo.dart';
+import 'package:cafe_valdivia/core/models/movimiento_inventario_insumo.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/models/producto.dart';
+import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

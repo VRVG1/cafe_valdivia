@@ -1,14 +1,12 @@
-import 'package:cafe_valdivia/models/compra.dart';
-import 'package:cafe_valdivia/models/detalle_compra.dart';
-import 'package:cafe_valdivia/models/detalle_venta.dart';
-import 'package:cafe_valdivia/models/insumo_producto.dart';
-import 'package:cafe_valdivia/models/movimiento_invetario.dart';
-import 'package:cafe_valdivia/models/producto.dart';
-import 'package:cafe_valdivia/models/venta.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
+import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/models/insumo_producto.dart';
+import 'package:cafe_valdivia/core/models/producto.dart';
+import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
 import 'package:cafe_valdivia/repositorys/inventario_repository.dart';
-import 'package:cafe_valdivia/repositorys/movimiento_inventario_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
@@ -21,8 +19,7 @@ import 'inventario_servicio_test.mocks.dart';
 
 @GenerateMocks([
   InventarioRepository,
-  MovimientoInventarioRepository,
-  InsumoRepository,
+  InsumosRepository,
   CompraRepository,
   VentaRepository,
   ProductoRepository,
@@ -30,9 +27,7 @@ import 'inventario_servicio_test.mocks.dart';
 ])
 void main() {
   late InventarioServicio inventarioServicio;
-  late MockInventarioRepository mockInventarioRepository;
-  late MockMovimientoInventarioRepository mockMovimientoInventarioRepository;
-  late MockInsumoRepository mockInsumoRepository;
+  late MockInsumosRepository mockInsumoRepository;
   late MockCompraRepository mockCompraRepository;
   late MockVentaRepository mockVentaRepository;
   late MockProductoRepository mockProductoRepository;

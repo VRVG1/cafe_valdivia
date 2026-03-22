@@ -1,5 +1,5 @@
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/models/cliente.dart';
+import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 
 class ClienteRepository implements BaseRepository<Cliente> {
