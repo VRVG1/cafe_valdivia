@@ -1,5 +1,7 @@
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
+import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_insumo_page.dart';
+import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -119,6 +121,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final AsyncValue<List<Insumo>> insumoAsync = ref.watch(
+      insumosRepositoryProvider,
+    );
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -179,7 +184,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
   Widget _buildAgregarProveedor() {
     return TextFormField(
-      //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
       readOnly: true,
       controller: _proveedorController,
       onTap: () => {_recibirDatos(context, AgregarCompraPageProveedorLista())},
@@ -196,7 +200,15 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return TextFormField(
       //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
       readOnly: true,
-      onTap: () => {print("Abrir pagina de seleccion de Insumos")},
+      onTap: () => {
+        _recibirDatos(
+          context,
+          AgregarCompraSeleccionInsumoPage(
+            provider: insumosRepositoryProvider,
+            asyncData: ref.watch(insumosRepositoryProvider),
+          ),
+        ),
+      },
       decoration: InputDecoration(
         labelText:
             "Insumo", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar                  border: OutlineInputBorder(),

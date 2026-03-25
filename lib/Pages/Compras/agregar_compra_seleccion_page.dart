@@ -1,11 +1,10 @@
-import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum SeleccionPaginaEstado { loading, error, empty, data }
 
-abstract class AgregarCompraSeleccionPage<T> extends ConsumerWidget {
+abstract class AgregarCompraSeleccionPage<T> extends ConsumerStatefulWidget {
   final AsyncValue<List<T>> asyncData;
   final Provider<T> provider;
 
@@ -13,11 +12,10 @@ abstract class AgregarCompraSeleccionPage<T> extends ConsumerWidget {
   final ScrollController? controller;
 
   //Widgets
-  final Widget Function(T element) titleBuilder;
-  final Widget? Function(T element)? subtitleBuilder;
+  final Widget Function(T element)? subtitleBuilder;
   final Widget Function(T element)? leadingBuilder;
   final Widget Function(T element)? trailingBuilder;
-  final Key Function(T element) keyBuilder;
+  final Key Function(T element)? keyBuilder;
   final Widget? footer;
   final Widget? header;
 
@@ -27,17 +25,16 @@ abstract class AgregarCompraSeleccionPage<T> extends ConsumerWidget {
   final Future<bool?> Function(T element)? onDeleteDismissed;
 
   final Duration transitionDuration;
-  final Duration reveseTransitionDuration;
+  final Duration reverseTransitionDuration;
 
   const AgregarCompraSeleccionPage({
     super.key,
     required this.asyncData,
     required this.provider,
-    required this.titleBuilder,
     this.subtitleBuilder,
     this.leadingBuilder,
     this.trailingBuilder,
-    required this.keyBuilder,
+    this.keyBuilder,
     this.onTapCallback,
     this.onEditDismissed,
     this.onDeleteDismissed,
@@ -45,8 +42,10 @@ abstract class AgregarCompraSeleccionPage<T> extends ConsumerWidget {
     this.footer,
     this.header,
     this.transitionDuration = const Duration(milliseconds: 400),
-    this.reveseTransitionDuration = const Duration(milliseconds: 300),
+    this.reverseTransitionDuration = const Duration(milliseconds: 300),
   });
+
+  Widget Function(T element) get titleBuilder;
 
   String get mensajeVacio;
   String? get mensajeError => null;
@@ -58,7 +57,7 @@ abstract class AgregarCompraSeleccionPage<T> extends ConsumerWidget {
   void Function()? get onRetry => null;
 
   @override
-  ConsumerState<AgregarCompraSeleccionPage<T>> consumerState() =>
+  ConsumerState<AgregarCompraSeleccionPage<T>> createState() =>
       _AgregarCompraSeleccionPageState<T>();
 }
 
@@ -86,8 +85,8 @@ class _AgregarCompraSeleccionPageState<T>
     );
     _pulseController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
-    );
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
 
     _updateStatus(widget.asyncData);
   }
@@ -136,7 +135,7 @@ class _AgregarCompraSeleccionPageState<T>
       appBar: widget.buildAppBar(context, ref),
       body: AnimatedSwitcher(
         duration: widget.transitionDuration,
-        reverseDuration: widget.reveseTransitionDuration,
+        reverseDuration: widget.reverseTransitionDuration,
         switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {
@@ -147,8 +146,7 @@ class _AgregarCompraSeleccionPageState<T>
             _currentStatus,
           );
         },
-        //child: _buildContentForStatus(cs, theme),
-        child: Text("Hola"),
+        child: _buildContentForStatus(cs, theme),
       ),
     );
   }
@@ -199,16 +197,257 @@ class _AgregarCompraSeleccionPageState<T>
     );
   }
 
-  Widget _buildContentFroStatus(ColorScheme cs, ThemeData theme) {
+  Widget _buildContentForStatus(ColorScheme cs, ThemeData theme) {
     switch (_currentStatus) {
       case SeleccionPaginaEstado.loading:
-        return Text("text");
+        return _buildLoadingState(cs);
       case SeleccionPaginaEstado.error:
-        return Text("text");
+        return _buildErrorState(cs);
       case SeleccionPaginaEstado.data:
-        return Text("text");
+        return _buildDataState();
       case SeleccionPaginaEstado.empty:
-        return Text("Text");
+        return _buildEmptyState(cs);
     }
+  }
+
+  Widget _buildLoadingState(ColorScheme cs) {
+    final customLoading = widget.buildLoadingState(context, cs);
+    if (customLoading != null) return customLoading;
+    return Center(
+      key: const ValueKey('loading'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AnimatedBuilder(
+            animation: _pulseController,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: 1.0 + (_pulseController.value + 0.1),
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: cs.primaryContainer.withValues(alpha: 0.3),
+                  ),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+          FadeTransition(
+            opacity: _fadeController,
+            child: Text(
+              "Cargando ...",
+              style: TextStyle(
+                color: cs.onSurfaceVariant,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(ColorScheme cs) {
+    final customError = widget.buildErrorState(context, _lastError!, cs);
+    if (customError != null) return customError;
+
+    final canRetry = widget.onRetry != null;
+
+    return Center(
+      key: const ValueKey("error"),
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.elasticOut,
+              builder: (context, value, child) {
+                return Transform.scale(
+                  scale: value,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: cs.errorContainer,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.error_outline_rounded,
+                      size: 50,
+                      color: cs.onErrorContainer,
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 24),
+            Text(
+              widget.mensajeError ?? 'Ocurrio un error inserperado',
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+            ),
+            const SizedBox(height: 8),
+            if (_lastError != null)
+              Text(
+                _lastError.toString(),
+                textAlign: TextAlign.center,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+            const SizedBox(height: 24),
+            if (canRetry)
+              AnimatedBuilder(
+                animation: _pulseController,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: 1.0 + (_pulseController.value) + 0.02,
+                    child: FilledButton.icon(
+                      onPressed: widget.onRetry,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('Reintentar'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(ColorScheme cs) {
+    final customEmpty = widget.buildEmptyState(context, cs);
+
+    if (customEmpty != null) return customEmpty;
+
+    return Center(
+      key: const ValueKey("empty"),
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedBuilder(
+              animation: _pulseController,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, _pulseController.value * -8),
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerHighest,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.inbox_outlined,
+                      size: 60,
+                      color: cs.outline,
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 32),
+            _buildStaggeredText(
+              widget.mensajeVacio,
+              Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: cs.onSurfaceVariant),
+              delay: 100,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStaggeredText(
+    String text,
+    TextStyle? style, {
+    required int delay,
+  }) {
+    return TweenAnimationBuilder<double>(
+      duration: Duration(milliseconds: 600 + delay),
+      tween: Tween(begin: 0, end: 1),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 20 * (1 - value)),
+            child: Text(text, textAlign: TextAlign.center, style: style),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDataState() {
+    final data = widget.asyncData.value!;
+
+    return ListviewCustom<T>(
+      data: data,
+      titleBuilder: widget.titleBuilder,
+      keyBuilder: widget.keyBuilder ?? _defaultKeyBuilder,
+      subtitleBuilder: widget.subtitleBuilder,
+      leadingBuilder: widget.leadingBuilder,
+      trailingBuilder: widget.trailingBuilder,
+      onTapCallback: widget.onTapCallback,
+      onDeleteDismissed: widget.onDeleteDismissed,
+      onEditDismissed: widget.onEditDismissed,
+      header: _buildListHeader(data.length),
+    );
+  }
+
+  Key _defaultKeyBuilder(T t) {
+    return ValueKey(t != null ? 'T-${t.hashCode}' : t.hashCode);
+  }
+
+  Widget? _buildListHeader(int count) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, left: 4, right: 4),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '$count elementos',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
