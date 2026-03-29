@@ -1,11 +1,11 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'insumo_notifier.g.dart';
+part 'insumo_provider.g.dart';
 
 @riverpod
-class InsumoNotifier extends _$InsumoNotifier {
+class InsumoProvider extends _$InsumoProvider {
   @override
   Future<List<Insumo>> build() async {
     final repo = ref.watch(insumosRepositoryProvider);
@@ -26,4 +26,10 @@ class InsumoNotifier extends _$InsumoNotifier {
     await ref.read(insumosRepositoryProvider).delete(id);
     ref.invalidateSelf();
   }
+}
+
+@riverpod
+Future<Insumo> insumoDetail(Ref ref, int id) async {
+  final repository = ref.watch(insumosRepositoryProvider);
+  return repository.getById(id);
 }
