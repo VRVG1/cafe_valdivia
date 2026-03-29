@@ -1,7 +1,6 @@
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_insumo_page.dart';
-import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,6 +28,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     text: "0",
   );
   final TextEditingController _proveedorController = TextEditingController();
+  final TextEditingController _insumoController = TextEditingController();
   // Test
   List<Map<String, dynamic>> carritoDeCompras = [
     {'nombre': 'Leche Entera 1L', 'cantidad': 2, 'precio': 1.50},
@@ -73,14 +73,20 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   ];
   //
   //
-  Future<void> _recibirDatos(BuildContext context, Widget widget) async {
+  Future<void> _recibirDatos(
+    BuildContext context,
+    Widget widget,
+    TextEditingController controller,
+  ) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => widget),
     );
 
+    if (result == null) return;
+
     setState(() {
-      _proveedorController.text = result;
+      controller.text = result.nombre;
     });
     if (!context.mounted) return;
   }
@@ -104,6 +110,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     // Controllers
     _cantidadController.dispose();
     _proveedorController.dispose();
+    _insumoController.dispose();
     super.dispose();
   }
 
@@ -121,9 +128,10 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final AsyncValue<List<Insumo>> insumoAsync = ref.watch(
-      insumosRepositoryProvider,
-    );
+    // final AsyncValue<List<Insumo>> insumoAsync = ref.watch(
+    //   insumosRepositoryProvider,
+    // );
+    //
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -186,7 +194,13 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return TextFormField(
       readOnly: true,
       controller: _proveedorController,
-      onTap: () => {_recibirDatos(context, AgregarCompraPageProveedorLista())},
+      onTap: () => {
+        _recibirDatos(
+          context,
+          AgregarCompraPageProveedorLista(),
+          _proveedorController,
+        ),
+      },
       decoration: InputDecoration(
         labelText:
             "Proveedor", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar
@@ -200,13 +214,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return TextFormField(
       //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
       readOnly: true,
+      controller: _insumoController,
       onTap: () => {
         _recibirDatos(
           context,
-          AgregarCompraSeleccionInsumoPage(
-            provider: insumosRepositoryProvider,
-            asyncData: ref.watch(insumosRepositoryProvider),
-          ),
+          AgregarCompraSeleccionInsumoPage(),
+          _insumoController,
         ),
       },
       decoration: InputDecoration(
