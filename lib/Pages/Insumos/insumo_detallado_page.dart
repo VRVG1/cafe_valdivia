@@ -4,8 +4,7 @@ import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_notifier.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_providers.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +16,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncInsumo = ref.watch(insumoDetailProvider(insumoId));
+    final asyncInsumo = ref.read(insumoDetailProvider(insumoId));
 
     return asyncInsumo.when(
       data: (insumo) => Scaffold(
@@ -57,7 +56,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
                       final bool exito = await delete(
                         context: context,
                         ref: ref,
-                        provider: insumoProvider,
+                        provider: insumoProviderProvider,
                         id: insumo.idInsumo!, //TODO: es idInsumo o idUnidad??
                         mensajeExito: "El cliente se ha borrado con exito",
                         mensajeError:
@@ -195,10 +194,10 @@ void _mostrarDialogoConfirmacion(
           ),
           TextButton(
             onPressed: () {
-              ref.read(insumoDetailProvider(insumo.idInsumo!).future).then((_) {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              });
+              // ref.read(insumoDetailProvider(insumo.idInsumo!).future).then((_) {
+              //   Navigator.of(context).pop();
+              //   Navigator.of(context).pop();
+              // });
             },
             child: const Text("Eliminar"),
           ),

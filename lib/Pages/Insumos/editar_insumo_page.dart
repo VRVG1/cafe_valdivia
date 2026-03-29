@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_notifier.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
 import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
@@ -52,14 +52,16 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     update<Insumo>(
       context: context,
       ref: ref,
-      provider: insumoProvider,
+      provider: insumoProviderProvider,
       element: updatedInsumo,
       mensajeExito: "Se actualizo la Unidad de Medida de forma correcta.",
       mensajeError:
           "Error al actualizar la Unidad de Medidad, Por favor intente de nuevo.",
     );
 
-    await ref.read(insumoProvider.notifier).updateElement(updatedInsumo);
+    await ref
+        .read(insumoProviderProvider.notifier)
+        .updateElement(updatedInsumo);
   }
 
   @override

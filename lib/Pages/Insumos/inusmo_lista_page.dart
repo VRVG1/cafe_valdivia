@@ -4,7 +4,7 @@ import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/insumo_detallado_page.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
 import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_notifier.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,7 +13,7 @@ class InusmoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncInsumo = ref.watch(insumoProvider);
+    final asyncInsumo = ref.watch(insumoProviderProvider);
 
     return asyncInsumo.when(
       data: (insumos) {
@@ -66,7 +66,7 @@ class InusmoListaPage extends ConsumerWidget {
                     delete(
                       context: context,
                       ref: ref,
-                      provider: insumoProvider,
+                      provider: insumoProviderProvider,
                       id: insumo.idInsumo!,
                       mensajeExito: "El insumo se ha borrado con exito",
                       detalle: false,
