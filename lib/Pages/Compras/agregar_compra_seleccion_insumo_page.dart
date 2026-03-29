@@ -1,16 +1,14 @@
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_page.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AgregarCompraSeleccionInsumoPage
     extends AgregarCompraSeleccionPage<Insumo> {
-  const AgregarCompraSeleccionInsumoPage({
-    super.key,
-    required super.asyncData,
-    required super.provider,
-  });
+  AgregarCompraSeleccionInsumoPage({super.key})
+    : super(provider: insumoProviderProvider);
 
   @override
   String get mensajeVacio => "No hay Insumos registrados";
