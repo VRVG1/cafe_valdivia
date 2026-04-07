@@ -76,7 +76,7 @@ Future<bool> delete({
   }
 }
 
-void create<T>({
+Future<void> create<T>({
   required BuildContext context,
   required WidgetRef ref,
   required provider,
@@ -88,7 +88,7 @@ void create<T>({
     await ref.read(provider.notifier).create(element);
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
-      Navigator.of(context).pop(); // Regresar a la pantalla anterior
+      Navigator.of(context).pop(element); // Regresar a la pantalla anterior
     }
   } catch (e, st) {
     appLogger.e(
