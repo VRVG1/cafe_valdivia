@@ -16,6 +16,7 @@ class ProveedorList extends _$ProveedorList {
 
   Future<void> create(Proveedor proveedor) async {
     await ref.read(proveedorRepositoryProvider).create(proveedor);
+    if (!ref.mounted) return;
     ref.invalidateSelf();
   }
 

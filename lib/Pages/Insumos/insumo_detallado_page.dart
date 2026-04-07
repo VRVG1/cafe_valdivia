@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
 import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
 import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,10 +12,79 @@ class InsumoDetalladoPage extends ConsumerWidget {
 
   const InsumoDetalladoPage({super.key, required this.insumoId});
 
+  void _mostrarDialogoConfirmacion(
+    BuildContext context,
+    WidgetRef ref,
+    ThemeData theme,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Confirmar eliminación'),
+          content: const Text(
+            '¿Estás seguro de que deseas eliminar este Insumo? Esta acción no se puede deshacer.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Cierra el diálogo
+              },
+            ),
+            TextButton(
+              child: const Text('Eliminar'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Cierra el diálogo
+                _eliminar(context, ref, theme);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _eliminar(BuildContext context, WidgetRef ref, ThemeData theme) async {
+    try {
+      await ref.read(insumoProviderProvider.notifier).delete(insumoId);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Insumo eliminado con éxito',
+              style: TextStyle(
+                color: theme.colorScheme.onTertiaryContainer,
+                fontSize: 18,
+              ),
+            ),
+            backgroundColor: theme.colorScheme.tertiaryContainer,
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Error al eliminar el insumo: $e',
+              style: TextStyle(
+                color: theme.colorScheme.onErrorContainer,
+                fontSize: 18,
+              ),
+            ),
+            backgroundColor: theme.colorScheme.errorContainer,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncInsumo = ref.read(insumoDetailProvider(insumoId));
+    final asyncInsumo = ref.watch(insumoDetailProvider(insumoId));
 
     return asyncInsumo.when(
       data: (insumo) => Scaffold(
@@ -46,29 +114,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
               icon: const Icon(Icons.more_vert_rounded),
               onSelected: (String result) {
                 if (result == 'eliminar') {
-                  _mostrarDialogoConfirmacion(context, ref, insumo);
-                  mostrarDialogoConfirmacion(
-                    context: context,
-                    titulo: "Eliminar Insumo",
-                    contenido: "Esta accion no se puede revertir",
-                    textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () async {
-                      final bool exito = await delete(
-                        context: context,
-                        ref: ref,
-                        provider: insumoProviderProvider,
-                        id: insumo.idInsumo!, //TODO: es idInsumo o idUnidad??
-                        mensajeExito: "El cliente se ha borrado con exito",
-                        mensajeError:
-                            "Error al eliminar el cliente,Por favor, intente de nuevo",
-                      );
-                      if (exito && context.mounted) {
-                        //TODO: No se porque tengo que poner aqui dos pop
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  );
+                  _mostrarDialogoConfirmacion(context, ref, theme);
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -174,35 +220,4 @@ class InsumoDetalladoPage extends ConsumerWidget {
       ),
     );
   }
-}
-
-void _mostrarDialogoConfirmacion(
-  BuildContext context,
-  WidgetRef ref,
-  Insumo insumo,
-) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Eliminar Insumo"),
-        content: Text("¿Estás seguro de eliminar ${insumo.nombre}?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancelar"),
-          ),
-          TextButton(
-            onPressed: () {
-              // ref.read(insumoDetailProvider(insumo.idInsumo!).future).then((_) {
-              //   Navigator.of(context).pop();
-              //   Navigator.of(context).pop();
-              // });
-            },
-            child: const Text("Eliminar"),
-          ),
-        ],
-      );
-    },
-  );
 }

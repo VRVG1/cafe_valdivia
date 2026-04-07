@@ -1,3 +1,5 @@
+import 'package:cafe_valdivia/core/utils/busqueda_helper.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -14,6 +16,7 @@ class InsumoProvider extends _$InsumoProvider {
 
   Future<void> create(Insumo insumo) async {
     await ref.read(insumosRepositoryProvider).create(insumo);
+    if (!ref.mounted) return;
     ref.invalidateSelf();
   }
 
@@ -32,4 +35,16 @@ class InsumoProvider extends _$InsumoProvider {
 Future<Insumo> insumoDetail(Ref ref, int id) async {
   final repository = ref.watch(insumosRepositoryProvider);
   return repository.getById(id);
+}
+
+@Riverpod(keepAlive: true)
+Future<List<Insumo>> insumosFiltrados(Ref ref) async {
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final repo = ref.watch(insumosRepositoryProvider);
+
+  return informacionFiltrada(
+    query: filtro.getQuery(),
+    getAll: repo.getAll,
+    search: repo.search,
+  );
 }
