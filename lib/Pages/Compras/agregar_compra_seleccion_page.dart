@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 abstract class AgregarCompraSeleccionPage<T> extends ConsumerStatefulWidget {
   //final AsyncValue<List<T>> asyncData;
   final ProviderListenable<AsyncValue<List<T>>> provider;
+  final Widget addElement;
 
   //Controller
   final ScrollController? controller;
@@ -25,8 +26,8 @@ abstract class AgregarCompraSeleccionPage<T> extends ConsumerStatefulWidget {
 
   const AgregarCompraSeleccionPage({
     super.key,
-    //required this.asyncData,
     required this.provider,
+    required this.addElement,
     this.subtitleBuilder,
     this.leadingBuilder,
     this.trailingBuilder,
@@ -73,6 +74,19 @@ class _AgregarCompraSeleccionPageState<T>
         return Scaffold(
           appBar: widget.buildAppBar(context, ref),
           body: _buildDataState(elements),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => widget.addElement,
+                ),
+              );
+              if (result != null && context.mounted) {
+                Navigator.pop(context, result);
+              }
+            },
+            child: const Icon(Icons.add),
+          ),
         );
       },
       error: (err, stack) {

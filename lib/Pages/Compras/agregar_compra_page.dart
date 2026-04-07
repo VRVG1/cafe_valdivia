@@ -23,60 +23,26 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
 
+  final _proveedorInsumo = <String, dynamic>{"proveedor": "", "insumo": ""};
+
   // Controllers
   final TextEditingController _cantidadController = TextEditingController(
     text: "0",
   );
   final TextEditingController _proveedorController = TextEditingController();
   final TextEditingController _insumoController = TextEditingController();
+  final TextEditingController _precioController = TextEditingController(
+    text: "0",
+  );
   // Test
-  List<Map<String, dynamic>> carritoDeCompras = [
-    {'nombre': 'Leche Entera 1L', 'cantidad': 2, 'precio': 1.50},
-    {
-      'nombre':
-          'MacBook Pro M3 Max 16" - Edición Especial para Desarrolladores de Flutter',
-      'cantidad': 1,
-      'precio': 3499.99,
-    },
-    {'nombre': 'Clavos de acero (bolsa x100)', 'cantidad': 50, 'precio': 0.15},
-    {'nombre': 'Suscripción Premium Mensual', 'cantidad': 1, 'precio': 9.99},
-    {
-      'nombre': 'Monitor UltraWide 49"',
-      'cantidad': 0, // Caso de prueba para stock agotado
-      'precio': 1200.50,
-    },
-    {'nombre': 'Chicle de menta', 'cantidad': 100, 'precio': 0.05},
-    {
-      'nombre':
-          'Escritorio Elevable Eléctrico de Madera de Roble Finlandés con Acabado en Aceite Natural',
-      'cantidad': 1,
-      'precio': 850.00,
-    },
-    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
-    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
-    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
-    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
-    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
-    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
-    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
-    {'nombre': 'Adaptador USB-C a Jack 3.5mm', 'cantidad': 3, 'precio': 12.45},
-    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
-    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
-    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
-    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
-    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
-    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
-    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
-    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
-    {'nombre': 'Pan Artesanal', 'cantidad': 5, 'precio': 2.25},
-    {'nombre': 'Cámara Mirrorless 4K', 'cantidad': 2, 'precio': 1890.00},
-  ];
+  List<Map<String, dynamic>> carritoDeCompras = [];
   //
   //
   Future<void> _recibirDatos(
     BuildContext context,
     Widget widget,
     TextEditingController controller,
+    String eleccion,
   ) async {
     final result = await Navigator.push(
       context,
@@ -86,7 +52,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     if (result == null) return;
 
     setState(() {
+      if (eleccion == 'insumo') {
+        print(result.costoUnitario);
+        _precioController.text = result.costoUnitario;
+      }
       controller.text = result.nombre;
+      _proveedorInsumo[eleccion] = result;
     });
     if (!context.mounted) return;
   }
@@ -123,15 +94,27 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     });
   }
 
+  void _agregarAlCarrito() {
+    if (_formKey.currentState?.validate() ?? false) {
+      final producto = {
+        'nombre': _proveedorInsumo['insumo'].nombre,
+        'cantidad': int.tryParse(_cantidadController.text),
+        'precio': double.parse(_proveedorInsumo['insumo'].costoUnitario),
+        'insumo': _proveedorInsumo['insumo'],
+        'proveedor': _proveedorInsumo['proveedor'],
+      };
+
+      setState(() {
+        carritoDeCompras.add(producto);
+      });
+    }
+  }
+
   // fin funciones
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    // final AsyncValue<List<Insumo>> insumoAsync = ref.watch(
-    //   insumosRepositoryProvider,
-    // );
-    //
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -192,6 +175,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
   Widget _buildAgregarProveedor() {
     return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Favor de seleccionar un Proveedor.";
+        }
+        return null;
+      },
       readOnly: true,
       controller: _proveedorController,
       onTap: () => {
@@ -199,11 +188,11 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           context,
           AgregarCompraPageProveedorLista(),
           _proveedorController,
+          "proveedor",
         ),
       },
       decoration: InputDecoration(
-        labelText:
-            "Proveedor", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar
+        labelText: "Proveedor",
         border: OutlineInputBorder(),
         prefixIcon: Icon(Icons.fax_rounded),
       ),
@@ -212,7 +201,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
   Widget _buildAgregarInsumo() {
     return TextFormField(
-      //TODO: Aqui va el controller y la forma de saber como retoranar cosas de otra pagina
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Favor de seleccionar un Insumo.";
+        }
+        return null;
+      },
       readOnly: true,
       controller: _insumoController,
       onTap: () => {
@@ -220,11 +214,11 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           context,
           AgregarCompraSeleccionInsumoPage(),
           _insumoController,
+          "insumo",
         ),
       },
       decoration: InputDecoration(
-        labelText:
-            "Insumo", //TODO: Es un combobox o una lista flotante u otra pagina donde se pueda ver como lista y buscar                  border: OutlineInputBorder(),
+        labelText: "Insumo",
         border: OutlineInputBorder(),
         prefixIcon: Icon(Icons.fax_rounded),
       ),
@@ -236,7 +230,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
       child: SizedBox(
         height: 56,
-        child: FilledButton(onPressed: () {}, child: Text("Agregar")),
+        child: FilledButton(
+          onPressed: () {
+            _agregarAlCarrito();
+          },
+          child: Text("Agregar"),
+        ),
       ),
     );
   }
@@ -247,9 +246,15 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         Expanded(
           child: TextFormField(
             enabled: !_isLoading,
+            controller: _precioController,
+            validator: (value) {
+              if (value == null || value == "0") {
+                return "El monto no puede ser 0.";
+              }
+              return null;
+            },
             decoration: InputDecoration(
-              labelText:
-                  "Precio", //TODO: Poner una funcion en la que busque el precio anterior registrado y lo auto acomplete
+              labelText: "Precio",
               border: OutlineInputBorder(),
               prefixIcon: Icon(Icons.fax_rounded),
             ),
@@ -267,6 +272,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
               });
             },
             child: TextFormField(
+              validator: (value) {
+                if (value == null || value == "0") {
+                  return "La cantidad no puede ser 0.";
+                }
+                return null;
+              },
               enabled: !_isLoading,
               focusNode: _focusNodeTextField,
               controller: _cantidadController,
