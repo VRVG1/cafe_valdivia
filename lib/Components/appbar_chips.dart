@@ -5,13 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppbarChips extends ConsumerStatefulWidget
     implements PreferredSizeWidget {
-  const AppbarChips({super.key});
+  const AppbarChips({super.key, this.extraFilters = const []});
 
   @override
   ConsumerState<AppbarChips> createState() => _AppbarChipsState();
 
   @override
   Size get preferredSize => const Size.fromHeight(120.0);
+
+  final List<TipoBusqueda> extraFilters;
 }
 
 class _AppbarChipsState extends ConsumerState<AppbarChips> {
@@ -32,6 +34,35 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Widget _buildFilterChip(
+    WidgetRef ref,
+    TipoBusqueda tipo,
+    ColorScheme colorScheme,
+  ) {
+    final filtro = ref.watch(filtroBusquedaProvider);
+    final isSelected = filtro.tieneFiltro(tipo);
+    //"${this[0].toUpperCase()}${this.substring(1)}";
+    String label = "${tipo.name[0].toUpperCase()}${tipo.name.substring(1)}";
+
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: FilterChip(
+        label: Text(label),
+        selected: isSelected,
+        onSelected: (_) =>
+            ref.read(filtroBusquedaProvider.notifier).toggleFiltro(tipo),
+        selectedColor: colorScheme.primaryContainer,
+        showCheckmark: false,
+        labelStyle: TextStyle(
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          color: isSelected
+              ? colorScheme.onSurfaceVariant
+              : colorScheme.onPrimaryContainer,
+        ),
+      ),
+    );
   }
 
   @override
@@ -60,12 +91,10 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
           children: [
             const SizedBox(height: 8),
 
-            // TEXTFIELD CENTRADO SIN ANIMACIÓN FLOTANTE
             Container(
               width: 320,
               height: 48,
               child: TextField(
-                //textAlign: TextAlign.center,
                 onChanged: (value) {
                   ref
                       .read(filtroBusquedaProvider.notifier)
@@ -116,15 +145,12 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
 
             const SizedBox(height: 8),
 
-            // CHIPS DE FILTRO
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(width: 16),
-
-                  // Chip Nombre (siempre activo, no se puede desactivar)
                   FilterChip(
                     label: const Text('Nombre'),
                     selected: true,
@@ -136,60 +162,10 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                     ),
                     showCheckmark: false,
                   ),
-
-                  const SizedBox(width: 8),
-
-                  // Chip Email
-                  FilterChip(
-                    label: const Text('Email'),
-                    selected: ref
-                        .watch(filtroBusquedaProvider)
-                        .tieneFiltro(TipoBusqueda.email),
-                    onSelected: (selected) {
-                      ref
-                          .read(filtroBusquedaProvider.notifier)
-                          .toggleFiltro(TipoBusqueda.email);
-                    },
-                    selectedColor: colorScheme.primaryContainer,
-                    showCheckmark: false,
-                    labelStyle: TextStyle(
-                      fontWeight:
-                          ref
-                              .watch(filtroBusquedaProvider)
-                              .tieneFiltro(TipoBusqueda.email)
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                      color:
-                          ref
-                              .watch(filtroBusquedaProvider)
-                              .tieneFiltro(TipoBusqueda.email)
-                          ? colorScheme.onSurfaceVariant
-                          : colorScheme.onPrimaryContainer,
-                    ),
+                  const SizedBox(width: 8.0),
+                  ...widget.extraFilters.map(
+                    (tipo) => _buildFilterChip(ref, tipo, colorScheme),
                   ),
-
-                  const SizedBox(width: 8),
-
-                  FilterChip(
-                    label: const Text('Teléfono'),
-                    selected: filtro.tieneFiltro(TipoBusqueda.telefono),
-                    onSelected: (bool selected) {
-                      ref
-                          .read(filtroBusquedaProvider.notifier)
-                          .toggleFiltro(TipoBusqueda.telefono);
-                    },
-                    selectedColor: colorScheme.primaryContainer,
-                    showCheckmark: false,
-                    labelStyle: TextStyle(
-                      fontWeight: filtro.tieneFiltro(TipoBusqueda.telefono)
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                      color: filtro.tieneFiltro(TipoBusqueda.telefono)
-                          ? colorScheme.onSurfaceVariant
-                          : colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
                 ],
               ),
             ),
