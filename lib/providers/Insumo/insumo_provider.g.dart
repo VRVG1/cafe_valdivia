@@ -33,7 +33,7 @@ final class InsumoProviderProvider
   InsumoProvider create() => InsumoProvider();
 }
 
-String _$insumoProviderHash() => r'd2f40ef5a3abb49cfb7747c3065c01520768b0c0';
+String _$insumoProviderHash() => r'edd1e0f108e2570293a7bf11e7e8909941e48440';
 
 abstract class _$InsumoProvider extends $AsyncNotifier<List<Insumo>> {
   FutureOr<List<Insumo>> build();
@@ -102,7 +102,7 @@ final class InsumoDetailProvider
   }
 }
 
-String _$insumoDetailHash() => r'a90bae8c78dedee22ab5bbf50bcaafd82f0e9fb7';
+String _$insumoDetailHash() => r'66d015eaafb55ee0a40001c992e44a72d1760f4c';
 
 final class InsumoDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Insumo>, int> {
@@ -121,3 +121,42 @@ final class InsumoDetailFamily extends $Family
   @override
   String toString() => r'insumoDetailProvider';
 }
+
+@ProviderFor(insumosFiltrados)
+final insumosFiltradosProvider = InsumosFiltradosProvider._();
+
+final class InsumosFiltradosProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Insumo>>,
+          List<Insumo>,
+          FutureOr<List<Insumo>>
+        >
+    with $FutureModifier<List<Insumo>>, $FutureProvider<List<Insumo>> {
+  InsumosFiltradosProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'insumosFiltradosProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$insumosFiltradosHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Insumo>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Insumo>> create(Ref ref) {
+    return insumosFiltrados(ref);
+  }
+}
+
+String _$insumosFiltradosHash() => r'9e92a4133696f13cc17dbc1e8493a17cbcb12417';
