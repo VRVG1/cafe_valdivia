@@ -1,4 +1,3 @@
-import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
@@ -164,6 +163,11 @@ class InsumoDetalladoPage extends ConsumerWidget {
                     icon: Icon(Icons.label_rounded),
                     title: Text("Nombre"),
                     description: Text(insumo.nombre),
+                  ),
+                  DetailElement(
+                    icon: Icon(Icons.attach_money),
+                    title: Text("Costo Unitario"),
+                    description: Text(insumo.costoUnitario),
                   ),
                   DetailElement(
                     icon: Icon(Icons.balance_rounded),
