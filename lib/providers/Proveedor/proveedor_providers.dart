@@ -18,6 +18,7 @@ class ProveedorList extends _$ProveedorList {
     await ref.read(proveedorRepositoryProvider).create(proveedor);
     if (!ref.mounted) return;
     ref.invalidateSelf();
+    ref.invalidate(proveedoresFiltradosProvider);
   }
 
   Future<void> updateElement(Proveedor proveedor) async {
@@ -37,14 +38,14 @@ Future<Proveedor> proveedorDetail(Ref ref, int id) async {
   return repository.getById(id);
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<Proveedor>> proveedoresFiltrados(Ref ref) async {
   final filtro = ref.watch(filtroBusquedaProvider);
   final repo = ref.watch(proveedorRepositoryProvider);
 
   return informacionFiltrada<Proveedor>(
     query: filtro.getQuery(),
-    getAll: repo.getAll,
+    getAll: () async => repo.getAll(),
     search: repo.search,
   );
 }
