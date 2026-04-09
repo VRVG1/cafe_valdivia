@@ -33,7 +33,7 @@ final class ProveedorListProvider
   ProveedorList create() => ProveedorList();
 }
 
-String _$proveedorListHash() => r'c7d79626eca019416b70a73a20aef579a8e9816e';
+String _$proveedorListHash() => r'1ffe62805ba57ef6e171f49049fff2486a89bd24';
 
 abstract class _$ProveedorList extends $AsyncNotifier<List<Proveedor>> {
   FutureOr<List<Proveedor>> build();
@@ -144,7 +144,7 @@ final class ProveedoresFiltradosProvider
         argument: null,
         retry: null,
         name: r'proveedoresFiltradosProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -165,4 +165,4 @@ final class ProveedoresFiltradosProvider
 }
 
 String _$proveedoresFiltradosHash() =>
-    r'bd0287b3e8f2e7b67d473cdc4d3f27abc9e5d237';
+    r'8262acb0c8cf20a44d1dd9e92f14f53336b799d8';

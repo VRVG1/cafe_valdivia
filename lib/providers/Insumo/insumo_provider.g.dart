@@ -33,7 +33,7 @@ final class InsumoProviderProvider
   InsumoProvider create() => InsumoProvider();
 }
 
-String _$insumoProviderHash() => r'edd1e0f108e2570293a7bf11e7e8909941e48440';
+String _$insumoProviderHash() => r'4ab1e772858c031c1f538061f480207e4009cbb1';
 
 abstract class _$InsumoProvider extends $AsyncNotifier<List<Insumo>> {
   FutureOr<List<Insumo>> build();
@@ -102,7 +102,7 @@ final class InsumoDetailProvider
   }
 }
 
-String _$insumoDetailHash() => r'66d015eaafb55ee0a40001c992e44a72d1760f4c';
+String _$insumoDetailHash() => r'a90bae8c78dedee22ab5bbf50bcaafd82f0e9fb7';
 
 final class InsumoDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Insumo>, int> {
@@ -139,7 +139,7 @@ final class InsumosFiltradosProvider
         argument: null,
         retry: null,
         name: r'insumosFiltradosProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -159,4 +159,4 @@ final class InsumosFiltradosProvider
   }
 }
 
-String _$insumosFiltradosHash() => r'9e92a4133696f13cc17dbc1e8493a17cbcb12417';
+String _$insumosFiltradosHash() => r'601962b775ccd37288d1b7a3ffa91da0184006ef';
