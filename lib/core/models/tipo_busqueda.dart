@@ -1,4 +1,4 @@
-enum TipoBusqueda { nombre, email, telefono }
+enum TipoBusqueda { nombre, email, telefono, costo }
 
 class FiltroBusqueda {
   final String query;

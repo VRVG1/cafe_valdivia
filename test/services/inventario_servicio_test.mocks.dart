@@ -311,6 +311,14 @@ class MockInsumosRepository extends _i1.Mock implements _i7.InsumosRepository {
             returnValue: _i12.Future<double>.value(0.0),
           )
           as _i12.Future<double>);
+
+  @override
+  _i12.Future<List<_i4.Insumo>> search(String? query) =>
+      (super.noSuchMethod(
+            Invocation.method(#search, [query]),
+            returnValue: _i12.Future<List<_i4.Insumo>>.value(<_i4.Insumo>[]),
+          )
+          as _i12.Future<List<_i4.Insumo>>);
 }
 
 /// A class which mocks [CompraRepository].

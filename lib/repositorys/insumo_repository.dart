@@ -95,4 +95,12 @@ class InsumosRepository implements BaseRepository<Insumo> {
     );
     return result.first['costo_promedio'] as double? ?? 0.0;
   }
+
+  Future<List<Insumo>> search(String query) async {
+    return getAll(
+      where: 'LOWER(nombre) LIKE ? OR LOWER(costo_unitario) LIKE ?',
+
+      whereArgs: ['%${query.toLowerCase()}%', '%${query.toLowerCase()}%'],
+    );
+  }
 }

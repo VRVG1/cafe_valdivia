@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/core/models/insumo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_notifier.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,7 +45,7 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
     create<Insumo>(
       context: context,
       ref: ref,
-      provider: insumoProvider,
+      provider: insumoProviderProvider,
       element: insumo,
       mensajeExito: "El Insumo se guardo con exito",
       mensajeError: "Error al guardar el Insumo. Por favor, inente de nuevo.",
