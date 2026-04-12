@@ -18,6 +18,7 @@ class InsumoProvider extends _$InsumoProvider {
     await ref.read(insumosRepositoryProvider).create(insumo);
     if (!ref.mounted) return;
     ref.invalidateSelf();
+    ref.invalidate(insumosFiltradosProvider);
   }
 
   Future<void> updateElement(Insumo insumo) async {
@@ -37,14 +38,14 @@ Future<Insumo> insumoDetail(Ref ref, int id) async {
   return repository.getById(id);
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<Insumo>> insumosFiltrados(Ref ref) async {
   final filtro = ref.watch(filtroBusquedaProvider);
   final repo = ref.watch(insumosRepositoryProvider);
 
   return informacionFiltrada(
     query: filtro.getQuery(),
-    getAll: repo.getAll,
+    getAll: () async => repo.getAll(),
     search: repo.search,
   );
 }

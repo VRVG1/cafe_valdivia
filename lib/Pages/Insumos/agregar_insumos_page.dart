@@ -16,6 +16,8 @@ class AgregarInsumoPage extends ConsumerStatefulWidget {
 class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
   final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _costoUnitarioController =
+      TextEditingController();
   UnidadMedida? _selectedUnidadMedidad;
 
   final _formKey = GlobalKey<FormState>();
@@ -31,6 +33,7 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
   void dispose() {
     _descripcionController.dispose();
     _nombreController.dispose();
+    _costoUnitarioController.dispose();
     super.dispose();
   }
 
@@ -39,8 +42,7 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
-      costoUnitario:
-          "99999", //TODO: Ver aqui que pedo con el costo costoUnitario, de donde sale
+      costoUnitario: _costoUnitarioController.text,
     );
     create<Insumo>(
       context: context,
@@ -97,6 +99,12 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
                 text: "Descripcion",
                 controller: _descripcionController,
                 icon: Icons.person_outline,
+              ),
+              const SizedBox(height: 16),
+              _buildTextField(
+                text: "Costo Unitario",
+                controller: _costoUnitarioController,
+                icon: Icons.attach_money,
               ),
             ],
           ),

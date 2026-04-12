@@ -62,7 +62,7 @@ class _AgregarCompraSeleccionPageState<T>
     final asyncData = ref.watch(widget.provider);
 
     return asyncData.when(
-      skipLoadingOnReload: true,
+      //skipLoadingOnReload: true,
       //skipLoadingOnRefresh: true,
       data: (elements) {
         if (elements.isEmpty) {

@@ -18,6 +18,7 @@ class EditarInsumoPage extends ConsumerStatefulWidget {
 class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
   late final TextEditingController _descripcionController;
   late final TextEditingController _nombreController;
+  late final TextEditingController _costoUnitarioController;
   UnidadMedida? _selectedUnidadMedidad;
   bool _isLoading = false;
 
@@ -30,12 +31,16 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
       text: widget.insumo.descripcion,
     );
     _nombreController = TextEditingController(text: widget.insumo.nombre);
+    _costoUnitarioController = TextEditingController(
+      text: widget.insumo.costoUnitario,
+    );
   }
 
   @override
   void dispose() {
     _descripcionController.dispose();
     _nombreController.dispose();
+    _costoUnitarioController.dispose();
     super.dispose();
   }
 
@@ -43,11 +48,16 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     final unidadFinal = _selectedUnidadMedidad ?? unidadInicial;
 
     final updatedInsumo = widget.insumo.copyWith(
-      idInsumo: widget.insumo.idInsumo, //TODO: ES idInsumo o idUnidad???
+      idInsumo: widget.insumo.idInsumo,
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
+      costoUnitario: _costoUnitarioController.text,
       idUnidad: unidadFinal.idUnidadMedida!,
     );
+
+    await ref
+        .read(insumoProviderProvider.notifier)
+        .updateElement(updatedInsumo);
 
     update<Insumo>(
       context: context,
@@ -58,10 +68,6 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
       mensajeError:
           "Error al actualizar la Unidad de Medidad, Por favor intente de nuevo.",
     );
-
-    await ref
-        .read(insumoProviderProvider.notifier)
-        .updateElement(updatedInsumo);
   }
 
   @override
@@ -121,6 +127,12 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
                     controller: _descripcionController,
                     icon: Icons.description_outlined,
                   ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    label: "Costo Unitario",
+                    controller: _costoUnitarioController,
+                    icon: Icons.attach_money,
+                  ),
                 ],
               ),
             ),
@@ -157,7 +169,6 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     return Consumer(
       builder: (context, ref, child) {
         final asyncUM = ref.watch(unidadMedidaProvider);
-
         return asyncUM.when(
           data: (ums) {
             return FormField<UnidadMedida>(

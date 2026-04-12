@@ -31,6 +31,10 @@ class InusmoListaPage extends ConsumerWidget {
           },
           leadingBuilder: (insumo) => const Icon(Icons.inventory_2_rounded),
           titleBuilder: (insumo) => Text(insumo.nombre),
+          trailingBuilder: (insumo) => Text(
+            "\$${insumo.costoUnitario}",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           subtitleBuilder: (insumo) =>
               UnidadMedidaNombre(unidadMedidaId: insumo.idUnidad),
           onTapCallback: (insumo) {
