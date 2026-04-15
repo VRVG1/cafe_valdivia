@@ -21,8 +21,8 @@ class CompraListPage extends ConsumerWidget {
           keyBuilder: (Map<String, dynamic> compra) {
             final compraData = compra['compra'];
             return ValueKey<Object>(
-              compraData.idCompra != null
-                  ? 'compra-${compraData.idCompra}'
+              compraData['id_compra'] != null
+                  ? 'compra-${compraData['id_compra']}'
                   : compra.hashCode,
             );
           },
