@@ -1,6 +1,12 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_insumo_page.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
+import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
+import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -99,7 +105,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       final producto = {
         'nombre': _proveedorInsumo['insumo'].nombre,
         'cantidad': int.tryParse(_cantidadController.text),
-        'precio': double.parse(_proveedorInsumo['insumo'].costoUnitario),
+        'precio': double.parse(_precioController.text),
         'insumo': _proveedorInsumo['insumo'],
         'proveedor': _proveedorInsumo['proveedor'],
       };
@@ -110,6 +116,85 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     }
   }
 
+  List<Map<String, dynamic>> _separarPorProveedor(
+    List<Map<String, dynamic>> data,
+  ) {
+    final Map<int, Map<String, dynamic>> grupos = {};
+
+    for (var item in data) {
+      final proveedor = item['proveedor'];
+      final insumo = item['insumo'];
+      if (proveedor == null) continue;
+      final int id = proveedor.idProveedor;
+
+      final contenedor = grupos.putIfAbsent(
+        id,
+        () => {'idProveedor': id, 'insumos': <Map<String, dynamic>>[]},
+      );
+
+      final listaInsumos = contenedor['insumos'] as List<Map<String, dynamic>>;
+      listaInsumos.add({'insumo': insumo, 'cantidad': item['cantidad']});
+    }
+    return grupos.values.toList();
+  }
+
+  void _procesarCompra(
+    Compra compra,
+    List<DetalleCompra> detalleCompra,
+    List<Insumo> insumos,
+  ) async {
+    final result = await create(
+      context: context,
+      ref: ref,
+      provider: compraProvider,
+      element: compra,
+      detalles: true,
+      detallesElement: detalleCompra,
+      mensajeExito: "Compra realizada con exito",
+      mensajeError: "Error al procesar la compra, intente mas tarde",
+    );
+    if (result) {
+      for (var insumo in insumos) {
+        update(
+          context: context,
+          ref: ref,
+          provider: insumoProviderProvider,
+          element: insumo,
+        );
+      }
+    }
+  }
+
+  void _resumenCompra() {
+    //TODO: REcordar que, siempre se tiene que actualizar el insumo, en concreto el campo costoUnitario, ya que puede que o no, cambie con la compra, y como no se como validar si cambia o no, mejor lo actualizo y ya.
+    final List<Map<String, dynamic>> result = _separarPorProveedor(
+      carritoDeCompras,
+    );
+    for (var item in result) {
+      //Creamos una compras
+      Compra compra = Compra(
+        idProveedor: item['idProveedor'],
+        fecha: DateTime.now(),
+      );
+      //Creamos una lista de compras detalladas
+      final List<DetalleCompra> detallesCompraList = [];
+      final List<Insumo> insumos = [];
+      for (var elemento in item['insumos']) {
+        DetalleCompra detalleCompra = DetalleCompra(
+          idCompra:
+              0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
+          idInsumo: elemento['insumo'].idInsumo,
+          cantidad: elemento['cantidad'],
+          precioUnitarioCompra: elemento['insumo'].costoUnitario,
+        );
+        insumos.add(elemento['insumo']);
+        detallesCompraList.add(detalleCompra);
+      }
+      //Usamos el crud la funcion create
+      _procesarCompra(compra, detallesCompraList, insumos);
+      //esperamos a que jale xd
+    }
+  }
   // fin funciones
 
   @override
@@ -326,15 +411,17 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
               style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             subtitleBuilder: (item) => Text("Cant: ${item['cantidad']}"),
-            trailingBuilder: (item) =>
-                Text("999", style: tt.labelLarge?.copyWith(color: cs.primary)),
+            trailingBuilder: (item) => Text(
+              "\$ ${item['precio'].toString()}",
+              style: tt.labelLarge?.copyWith(color: cs.primary),
+            ),
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: FilledButton.icon(
-                  onPressed: () => print("Compra finalizada"),
+                  onPressed: () => _resumenCompra(),
                   icon: const Icon(Icons.shopping_cart_checkout),
                   label: const Text("Proceder con la compra"),
                   style: FilledButton.styleFrom(
@@ -510,10 +597,5 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         ),
       ),
     );
-  }
-
-  Widget resumenCompra() {
-    //return ListviewCustom(data: data, titleBuilder: titleBuilder, keyBuilder: keyBuilder);
-    return Text("hola");
   }
 }
