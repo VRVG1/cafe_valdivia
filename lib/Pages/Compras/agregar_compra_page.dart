@@ -28,6 +28,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   bool _isLoading = false;
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
+  bool _esPagado = false;
 
   final _proveedorInsumo = <String, dynamic>{"proveedor": "", "insumo": ""};
 
@@ -40,6 +41,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   final TextEditingController _precioController = TextEditingController(
     text: "0",
   );
+  final TextEditingController _descripcionController = TextEditingController();
   // Test
   List<Map<String, dynamic>> carritoDeCompras = [];
   //
@@ -88,6 +90,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     _cantidadController.dispose();
     _proveedorController.dispose();
     _insumoController.dispose();
+    _descripcionController.dispose();
+
     super.dispose();
   }
 
@@ -175,6 +179,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       Compra compra = Compra(
         idProveedor: item['idProveedor'],
         fecha: DateTime.now(),
+        pagado: _esPagado,
+        detalles: _descripcionController.text,
       );
       //Creamos una lista de compras detalladas
       final List<DetalleCompra> detallesCompraList = [];
@@ -379,6 +385,70 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     );
   }
 
+  Future<bool> _mostrarModal({
+    required BuildContext context,
+    required String titulo,
+    required String cuerpo,
+    bool mostrarSegundoBoton = true,
+    bool mostrarCamposExtra = true,
+  }) async {
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(titulo),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(cuerpo),
+                    if (mostrarCamposExtra) ...[
+                      const SizedBox(height: 20),
+                      SwitchListTile(
+                        title: const Text("¿Pagado?"),
+                        value: _esPagado,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _esPagado = value;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _descripcionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Información extra',
+                          hintText: 'Escribe aquí...',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              actions: [
+                if (mostrarSegundoBoton)
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text("Cancelar"),
+                  ),
+                FilledButton(
+                  onPressed: () {
+                    // Aquí manejas la lógica de los datos capturados
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text("Aceptar"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    return result ?? false;
+  }
+
   Widget _buildModal(ColorScheme cs, TextTheme tt) {
     return DraggableScrollableSheet(
       initialChildSize: 0.13, // Altura visible inicial (pestaña)
@@ -421,7 +491,25 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 width: double.infinity,
                 height: 56,
                 child: FilledButton.icon(
-                  onPressed: () => _resumenCompra(),
+                  onPressed: () async {
+                    if (carritoDeCompras.isNotEmpty) {
+                      if (await _mostrarModal(
+                        context: context,
+                        titulo: "Realizar Compra",
+                        cuerpo: "Desea realizar la compra de \$$totalDinero",
+                      )) {
+                        _resumenCompra();
+                      }
+                    } else {
+                      _mostrarModal(
+                        context: context,
+                        titulo: "Carrito Vacio",
+                        cuerpo: "No existe articulo agregado al carrito",
+                        mostrarSegundoBoton: false,
+                        mostrarCamposExtra: false,
+                      );
+                    }
+                  },
                   icon: const Icon(Icons.shopping_cart_checkout),
                   label: const Text("Proceder con la compra"),
                   style: FilledButton.styleFrom(
