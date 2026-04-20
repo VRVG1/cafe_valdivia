@@ -10,7 +10,7 @@ class CompraNotifier extends _$CompraNotifier {
   @override
   Future<List<Map<String, dynamic>>> build() async {
     final repo = ref.watch(compraRepositoryProvider);
-    return repo.getAll();
+    return repo.getAllNombreProveedor();
   }
 
   Future<void> create(Compra compra, List<DetalleCompra> detallesCompra) async {

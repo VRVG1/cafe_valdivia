@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
@@ -24,7 +23,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 5,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -32,8 +31,9 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 3]) =>
+  Future<void> testOnCreate(Database db, [int version = 5]) =>
       _onCreate(db, version);
+
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
   void setMockDatabase(Database database) {
     _database = database;
@@ -45,7 +45,30 @@ class DatabaseHelper {
   }
 
   Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {
-    // Actualizaciones
+    if (oldversion < 10) {
+      _migrateToV4(db);
+    }
+  }
+
+  Future<void> _migrateToV4(Database db) async {
+    await db.execute('''
+    CREATE VIEW IF NOT EXISTS v_compras_list AS 
+      SELECT
+        c.id_compra,
+        c.fecha,
+        c.pagado,
+        p.id_proveedor,
+        p.nombre AS nombre_proveedor,
+        SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
+      FROM
+        Compra AS c
+      JOIN
+        Proveedor AS p ON c.id_proveedor = p.id_proveedor
+      JOIN
+        Detalle_Compra as dc ON c.id_compra = dc.id_compra
+      GROUP BY C.id_compra
+      ORDER BY c.fecha ASC
+  ''');
   }
 
   // ============== MÉTODOS DE UTILIDAD ==============
@@ -386,6 +409,23 @@ class DatabaseHelper {
         Insumo as i ON dc.id_insumo = i.id_insumo
       ''');
 
+    await db.execute('''
+      CREATE VIEW v_compras_list AS 
+      SELECT
+        c.id_compra,
+        c.fecha,
+        c.pagado,
+        p.id_proveedor,
+        p.nombre AS nombre_proveedor,
+        SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
+      FROM
+        Compra AS c
+      JOIN
+        Proveedor AS p ON c.id_proveedor = p.id_proveedor
+      JOIN
+        Detalle_Compra as dc ON c.id_compra = dc.id_compra
+      ORDER BY c.fecha ASC
+      ''');
     await db.execute('''
       CREATE VIEW V_Venta_Detallada AS 
       SELECT
