@@ -824,7 +824,7 @@ class MockDatabaseHelper extends _i1.Mock implements _i2.DatabaseHelper {
           as _i13.Future<_i12.Database>);
 
   @override
-  _i13.Future<void> testOnCreate(_i12.Database? db, [int? version = 3]) =>
+  _i13.Future<void> testOnCreate(_i12.Database? db, [int? version = 5]) =>
       (super.noSuchMethod(
             Invocation.method(#testOnCreate, [db, version]),
             returnValue: _i13.Future<void>.value(),

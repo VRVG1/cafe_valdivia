@@ -104,20 +104,16 @@ class CompraRepository implements BaseRepository<Compra> {
       (sum, subtotal) => sum + (subtotal['subtotal'] as num),
     );
 
-    final infoCompra = {
-      'id_compra': result.first['id_compra'],
-      'fecha': result.first['fecha'],
-      'detalles': result.first['detalles_compra'],
-      'pagado': result.first['pagado'],
-      'id_proveedor': result.first['id_proveedor'],
-      'nombre_proveedor': result.first['nombre_proveedor'],
-    };
-    //TODO: Ver una manera de obtener todas las cantidades, precio_unitario_compra y su relacion para una muestra mas detallada valgame dios
-    //
+    final firstRow = result.first;
+
     return {
-      'compra': infoCompra,
-      'detalles': result,
+      'id_compra': firstRow['id_compra'],
+      'fecha': firstRow['fecha'],
+      'pagado': firstRow['pagado'],
+      'nombre_proveedor': firstRow['nombre_proveedor'],
       'total': total.toStringAsFixed(2),
+      // Pasamos el resultado completo como los "detalles"
+      'detalles': result,
     };
   }
 
