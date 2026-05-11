@@ -116,6 +116,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
       setState(() {
         carritoDeCompras.add(producto);
+        _cantidadController.text = "";
+        _insumoController.text = "";
+        _precioController.text = "";
       });
     }
   }

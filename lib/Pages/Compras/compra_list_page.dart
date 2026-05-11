@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Pages/Compras/detalle_compra_page.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +23,8 @@ class CompraListPage extends ConsumerWidget {
           data: compras,
           keyBuilder: (Map<String, dynamic> compra) {
             return ValueKey<Object>(
-              compra['idCompra'] != null
-                  ? 'compra-${compra['idCompra']}'
+              compra['id_compra'] != null
+                  ? 'compra-${compra['id_compra']}'
                   : compra.hashCode,
             );
           },
@@ -40,56 +41,16 @@ class CompraListPage extends ConsumerWidget {
           trailingBuilder: (Map<String, dynamic> compra) =>
               Text("\$${compra['total_compra'].toString()}"),
           onTapCallback: (Map<String, dynamic> compra) {
-            if (compra['idCompra'] != null) {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) =>
-              //         InsumoDetalladoPage(compraId: compra.idCompra!),
-              //   ),
-              // );
+            print(compra['id_compra']);
+            if (compra['id_compra'] != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DetalleCompraPage(id: compra['id_compra']),
+                ),
+              );
             }
-          },
-          onEditDismissed: (Map<String, dynamic> compra) async {
-            if (compra['idCompra'] != null) {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => EditarInsumoPage(compra: compra),
-              //   ),
-              // );
-            }
-            return false;
-          },
-          onDeleteDismissed: (Map<String, dynamic> compra) async {
-            // if (compra.idCompra != null){
-
-            // final bool confirmar =
-            //     await mostrarDialogoConfirmacion(
-            //       context: context,
-            //       titulo: "Seguro que quiere eliminar este cliente?",
-            //       contenido: "Esta accion no se puede deshacer",
-            //       textoBotonConfirmacion: "Eliminar",
-            //       onConfirm: () => <Future<bool>>{
-            //         delete(
-            //           context: context,
-            //           ref: ref,
-            //           provider: compraProvider,
-            //           id: compra.idCompra,
-            //           mensajeExito: "El compra se ha borrado con exito",
-            //           detalle: false,
-            //           mensajeError:
-            //               "Error al eliminar el Insumo, Por favor, intente de nuevo.",
-            //         ),
-            //       },
-            //     ) ??
-            //     false;
-            // }
-
-            // if (confirmar) {
-            //   return true;
-            // }
-            return false;
           },
         );
       },
