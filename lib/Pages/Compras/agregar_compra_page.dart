@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_insumo_page.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
@@ -160,16 +161,17 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       mensajeExito: "Compra realizada con exito",
       mensajeError: "Error al procesar la compra, intente mas tarde",
     );
-    if (result) {
-      for (var insumo in insumos) {
-        update(
-          context: context,
-          ref: ref,
-          provider: insumoProviderProvider,
-          element: insumo,
-        );
-      }
-    }
+    // TODO: Se supone que en los triggers se tiene que realizar dicha operacion de cambios
+    // if (result) {
+    //   for (var insumo in insumos) {
+    //     update(
+    //       context: context,
+    //       ref: ref,
+    //       provider: insumoProviderProvider,
+    //       element: insumo,
+    //     );
+    //   }
+    // }
   }
 
   void _resumenCompra() {
@@ -502,6 +504,13 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                         cuerpo: "Desea realizar la compra de \$$totalDinero",
                       )) {
                         _resumenCompra();
+                        if (context.mounted) {
+                          showCustomSnackBar(
+                            context: context,
+                            mensaje: "Compra realizada con exito",
+                          );
+                          Navigator.pop(context);
+                        }
                       }
                     } else {
                       _mostrarModal(

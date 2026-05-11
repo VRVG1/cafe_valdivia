@@ -94,7 +94,9 @@ Future<bool> create<T>({
     }
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
-      Navigator.of(context).pop(element); // Regresar a la pantalla anterior
+      if (!detalles) {
+        Navigator.of(context).pop(element); // Regresar a la pantalla anterior
+      }
     }
     return true;
   } catch (e, st) {
