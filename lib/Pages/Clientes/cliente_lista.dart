@@ -31,7 +31,7 @@ class Clientelista extends ConsumerWidget {
           keyBuilder: (cliente) {
             return ValueKey(
               cliente.idCliente != null
-                  ? 'proveedor-${cliente.idCliente}'
+                  ? 'cliente-${cliente.idCliente}'
                   : cliente.hashCode,
             );
           },

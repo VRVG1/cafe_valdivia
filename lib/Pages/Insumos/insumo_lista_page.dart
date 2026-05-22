@@ -8,8 +8,8 @@ import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class InusmoListaPage extends ConsumerWidget {
-  const InusmoListaPage({super.key});
+class InsumoListaPage extends ConsumerWidget {
+  const InsumoListaPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
