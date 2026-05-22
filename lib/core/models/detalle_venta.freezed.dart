@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DetalleVenta {
 
-@JsonKey(name: 'id_detalle_venta') int? get idDetalleVenta;@JsonKey(name: 'id_venta') int get idVenta;@JsonKey(name: 'id_articulo') int get idArticulo; int get cantidad;@JsonKey(name: 'precio_unitario_venta') String get precioUnitarioVenta;
+@JsonKey(name: 'id_detalle_venta') int? get idDetalleVenta;@JsonKey(name: 'id_venta') int get idVenta;@JsonKey(name: 'id_articulo') int get idArticulo; double get cantidad;@JsonKey(name: 'precio_unitario_venta') double get precioUnitarioVenta;
 /// Create a copy of DetalleVenta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DetalleVentaCopyWith<$Res>  {
   factory $DetalleVentaCopyWith(DetalleVenta value, $Res Function(DetalleVenta) _then) = _$DetalleVentaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_venta') int? idDetalleVenta,@JsonKey(name: 'id_venta') int idVenta,@JsonKey(name: 'id_articulo') int idArticulo, int cantidad,@JsonKey(name: 'precio_unitario_venta') String precioUnitarioVenta
+@JsonKey(name: 'id_detalle_venta') int? idDetalleVenta,@JsonKey(name: 'id_venta') int idVenta,@JsonKey(name: 'id_articulo') int idArticulo, double cantidad,@JsonKey(name: 'precio_unitario_venta') double precioUnitarioVenta
 });
 
 
@@ -71,8 +71,8 @@ idDetalleVenta: freezed == idDetalleVenta ? _self.idDetalleVenta : idDetalleVent
 as int?,idVenta: null == idVenta ? _self.idVenta : idVenta // ignore: cast_nullable_to_non_nullable
 as int,idArticulo: null == idArticulo ? _self.idArticulo : idArticulo // ignore: cast_nullable_to_non_nullable
 as int,cantidad: null == cantidad ? _self.cantidad : cantidad // ignore: cast_nullable_to_non_nullable
-as int,precioUnitarioVenta: null == precioUnitarioVenta ? _self.precioUnitarioVenta : precioUnitarioVenta // ignore: cast_nullable_to_non_nullable
-as String,
+as double,precioUnitarioVenta: null == precioUnitarioVenta ? _self.precioUnitarioVenta : precioUnitarioVenta // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_venta')  int? idDetalleVenta, @JsonKey(name: 'id_venta')  int idVenta, @JsonKey(name: 'id_articulo')  int idArticulo,  int cantidad, @JsonKey(name: 'precio_unitario_venta')  String precioUnitarioVenta)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_venta')  int? idDetalleVenta, @JsonKey(name: 'id_venta')  int idVenta, @JsonKey(name: 'id_articulo')  int idArticulo,  double cantidad, @JsonKey(name: 'precio_unitario_venta')  double precioUnitarioVenta)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DetalleVenta() when $default != null:
 return $default(_that.idDetalleVenta,_that.idVenta,_that.idArticulo,_that.cantidad,_that.precioUnitarioVenta);case _:
@@ -178,7 +178,7 @@ return $default(_that.idDetalleVenta,_that.idVenta,_that.idArticulo,_that.cantid
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_venta')  int? idDetalleVenta, @JsonKey(name: 'id_venta')  int idVenta, @JsonKey(name: 'id_articulo')  int idArticulo,  int cantidad, @JsonKey(name: 'precio_unitario_venta')  String precioUnitarioVenta)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_detalle_venta')  int? idDetalleVenta, @JsonKey(name: 'id_venta')  int idVenta, @JsonKey(name: 'id_articulo')  int idArticulo,  double cantidad, @JsonKey(name: 'precio_unitario_venta')  double precioUnitarioVenta)  $default,) {final _that = this;
 switch (_that) {
 case _DetalleVenta():
 return $default(_that.idDetalleVenta,_that.idVenta,_that.idArticulo,_that.cantidad,_that.precioUnitarioVenta);case _:
@@ -198,7 +198,7 @@ return $default(_that.idDetalleVenta,_that.idVenta,_that.idArticulo,_that.cantid
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_venta')  int? idDetalleVenta, @JsonKey(name: 'id_venta')  int idVenta, @JsonKey(name: 'id_articulo')  int idArticulo,  int cantidad, @JsonKey(name: 'precio_unitario_venta')  String precioUnitarioVenta)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_detalle_venta')  int? idDetalleVenta, @JsonKey(name: 'id_venta')  int idVenta, @JsonKey(name: 'id_articulo')  int idArticulo,  double cantidad, @JsonKey(name: 'precio_unitario_venta')  double precioUnitarioVenta)?  $default,) {final _that = this;
 switch (_that) {
 case _DetalleVenta() when $default != null:
 return $default(_that.idDetalleVenta,_that.idVenta,_that.idArticulo,_that.cantidad,_that.precioUnitarioVenta);case _:
@@ -219,8 +219,8 @@ class _DetalleVenta implements DetalleVenta {
 @override@JsonKey(name: 'id_detalle_venta') final  int? idDetalleVenta;
 @override@JsonKey(name: 'id_venta') final  int idVenta;
 @override@JsonKey(name: 'id_articulo') final  int idArticulo;
-@override final  int cantidad;
-@override@JsonKey(name: 'precio_unitario_venta') final  String precioUnitarioVenta;
+@override final  double cantidad;
+@override@JsonKey(name: 'precio_unitario_venta') final  double precioUnitarioVenta;
 
 /// Create a copy of DetalleVenta
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$DetalleVentaCopyWith<$Res> implements $DetalleVentaCopyWi
   factory _$DetalleVentaCopyWith(_DetalleVenta value, $Res Function(_DetalleVenta) _then) = __$DetalleVentaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_detalle_venta') int? idDetalleVenta,@JsonKey(name: 'id_venta') int idVenta,@JsonKey(name: 'id_articulo') int idArticulo, int cantidad,@JsonKey(name: 'precio_unitario_venta') String precioUnitarioVenta
+@JsonKey(name: 'id_detalle_venta') int? idDetalleVenta,@JsonKey(name: 'id_venta') int idVenta,@JsonKey(name: 'id_articulo') int idArticulo, double cantidad,@JsonKey(name: 'precio_unitario_venta') double precioUnitarioVenta
 });
 
 
@@ -278,8 +278,8 @@ idDetalleVenta: freezed == idDetalleVenta ? _self.idDetalleVenta : idDetalleVent
 as int?,idVenta: null == idVenta ? _self.idVenta : idVenta // ignore: cast_nullable_to_non_nullable
 as int,idArticulo: null == idArticulo ? _self.idArticulo : idArticulo // ignore: cast_nullable_to_non_nullable
 as int,cantidad: null == cantidad ? _self.cantidad : cantidad // ignore: cast_nullable_to_non_nullable
-as int,precioUnitarioVenta: null == precioUnitarioVenta ? _self.precioUnitarioVenta : precioUnitarioVenta // ignore: cast_nullable_to_non_nullable
-as String,
+as double,precioUnitarioVenta: null == precioUnitarioVenta ? _self.precioUnitarioVenta : precioUnitarioVenta // ignore: cast_nullable_to_non_nullable
+as double,
   ));
 }
 

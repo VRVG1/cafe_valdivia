@@ -48,7 +48,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
       idProducto: widget.producto.idProducto,
       nombre: _nombreController.text,
       descripcion: _descriptionController.text,
-      precioVenta: _precioController.text,
+      precioVenta: double.parse(_precioController.text),
     );
     mostrarDialogoConfirmacion(
       context: context,

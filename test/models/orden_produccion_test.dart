@@ -6,19 +6,19 @@ void main() {
     final fecha = DateTime.parse('2025-11-01T12:00:00.000Z');
     final op = OrdenProduccion(
       idOrdenProduccion: 1,
-      idProducto: 5,
-      cantidadProducida: "50",
+      idReceta: 5,
+      cantidadProducida: 50.0,
       fecha: fecha,
-      costoTotalProduccion: '1250.50',
+      costoTotalProduccion: 1250.50,
       notas: 'Producción para stock',
     );
 
     final opJson = {
       'id_orden_produccion': 1,
-      'id_producto': 5,
-      'cantidad_producida': "50",
+      'id_receta': 5,
+      'cantidad_producida': 50.0,
       'fecha': '2025-11-01T12:00:00.000Z',
-      'costo_total_produccion': '1250.50',
+      'costo_total_produccion': 1250.50,
       'notas': 'Producción para stock',
     };
 
@@ -34,15 +34,15 @@ void main() {
 
     test('copyWith crea una copia con valores actualizados', () {
       final opCopia = op.copyWith(
-        cantidadProducida: "60",
+        cantidadProducida: 60.0,
         notas: 'Producción urgente',
       );
 
-      expect(opCopia.cantidadProducida, "60");
+      expect(opCopia.cantidadProducida, 60.0);
       expect(opCopia.notas, 'Producción urgente');
       // Los demás valores deben permanecer iguales
       expect(opCopia.idOrdenProduccion, op.idOrdenProduccion);
-      expect(opCopia.idProducto, op.idProducto);
+      expect(opCopia.idReceta, op.idReceta);
       expect(opCopia.fecha, op.fecha);
       expect(opCopia.costoTotalProduccion, op.costoTotalProduccion);
     });
@@ -50,18 +50,18 @@ void main() {
     test('Las instancias con los mismos valores son iguales', () {
       final op1 = OrdenProduccion(
         idOrdenProduccion: 1,
-        idProducto: 5,
-        cantidadProducida: "50",
+        idReceta: 5,
+        cantidadProducida: 50.0,
         fecha: fecha,
-        costoTotalProduccion: '1250.50',
+        costoTotalProduccion: 1250.50,
         notas: 'Producción para stock',
       );
       final op2 = OrdenProduccion(
         idOrdenProduccion: 1,
-        idProducto: 5,
-        cantidadProducida: "50",
+        idReceta: 5,
+        cantidadProducida: 50.0,
         fecha: fecha,
-        costoTotalProduccion: '1250.50',
+        costoTotalProduccion: 1250.50,
         notas: 'Producción para stock',
       );
 
@@ -71,18 +71,18 @@ void main() {
     test('El hashCode es el mismo para instancias iguales', () {
       final op1 = OrdenProduccion(
         idOrdenProduccion: 1,
-        idProducto: 5,
-        cantidadProducida: "50",
+        idReceta: 5,
+        cantidadProducida: 50.0,
         fecha: fecha,
-        costoTotalProduccion: '1250.50',
+        costoTotalProduccion: 1250.50,
         notas: 'Producción para stock',
       );
       final op2 = OrdenProduccion(
         idOrdenProduccion: 1,
-        idProducto: 5,
-        cantidadProducida: "50",
+        idReceta: 5,
+        cantidadProducida: 50.0,
         fecha: fecha,
-        costoTotalProduccion: '1250.50',
+        costoTotalProduccion: 1250.50,
         notas: 'Producción para stock',
       );
 

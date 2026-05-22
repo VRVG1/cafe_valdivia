@@ -11,8 +11,8 @@ _DetalleVenta _$DetalleVentaFromJson(Map<String, dynamic> json) =>
       idDetalleVenta: (json['id_detalle_venta'] as num?)?.toInt(),
       idVenta: (json['id_venta'] as num).toInt(),
       idArticulo: (json['id_articulo'] as num).toInt(),
-      cantidad: (json['cantidad'] as num).toInt(),
-      precioUnitarioVenta: json['precio_unitario_venta'] as String,
+      cantidad: (json['cantidad'] as num).toDouble(),
+      precioUnitarioVenta: (json['precio_unitario_venta'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$DetalleVentaToJson(_DetalleVenta instance) =>

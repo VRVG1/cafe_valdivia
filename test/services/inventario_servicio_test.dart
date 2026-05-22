@@ -62,8 +62,8 @@ void main() {
         DetalleCompra(
           id: 1,
           idArticulo: 1,
-          cantidad: 10,
-          precioUnitarioCompra: 100,
+          cantidad: 10.0,
+          precioUnitarioCompra: 100.0,
         ),
       ],
     );
@@ -75,18 +75,18 @@ void main() {
         DetalleVenta(
           id: 1,
           idVenta: 1,
-          idProducto: 1,
-          cantidad: 2,
-          precioUnitarioVenta: 200,
+          idArticulo: 1,
+          cantidad: 2.0,
+          precioUnitarioVenta: 200.0,
         ),
       ],
     );
     final producto = Producto(
       id: 1,
       nombre: 'Cafe',
-      precioVenta: 250,
+      precioVenta: 250.0,
       articulos: [
-        ArticuloProducto(idArticulo: 1, idProducto: 1, cantidadRequerida: 1),
+        ArticuloProducto(idArticulo: 1, idProducto: 1, cantidadRequerida: 1.0),
       ],
     );
 

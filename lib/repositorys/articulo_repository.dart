@@ -35,7 +35,10 @@ class ArticuloRepository implements BaseRepository<Articulo> {
   }
 
   @override
-  Future<List<Articulo>> getAll({String? where, List<Object?>? whereArgs}) async {
+  Future<List<Articulo>> getAll({
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
     final result = await dbHelper.query(
       tableName,
       where: where,
@@ -67,6 +70,7 @@ class ArticuloRepository implements BaseRepository<Articulo> {
     );
   }
 
+  // VIEWS
   Future<(UnidadMedida, List<Articulo>)> getArticuloByIdUnidad({
     required int idUnidad,
   }) async {

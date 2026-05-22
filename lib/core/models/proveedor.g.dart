@@ -9,7 +9,7 @@ part of 'proveedor.dart';
 _Proveedor _$ProveedorFromJson(Map<String, dynamic> json) => _Proveedor(
   idProveedor: (json['id_proveedor'] as num?)?.toInt(),
   nombre: json['nombre'] as String,
-  telefono: json['telefono'] as String,
+  telefono: json['telefono'] as String?,
   email: json['email'] as String?,
   direccion: json['direccion'] as String?,
 );

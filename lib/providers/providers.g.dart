@@ -194,9 +194,9 @@ String _$proveedorRepositoryHash() =>
     r'80bc8c9228856bf6de8784f89041e9c51f142f62';
 
 @ProviderFor(articulosRepository)
-final articulosRepositoryProvider = ArticuloRepositoryProvider._();
+final articulosRepositoryProvider = ArticulosRepositoryProvider._();
 
-final class ArticuloRepositoryProvider
+final class ArticulosRepositoryProvider
     extends
         $FunctionalProvider<
           ArticuloRepository,
@@ -204,7 +204,7 @@ final class ArticuloRepositoryProvider
           ArticuloRepository
         >
     with $Provider<ArticuloRepository> {
-  ArticuloRepositoryProvider._()
+  ArticulosRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -238,7 +238,8 @@ final class ArticuloRepositoryProvider
   }
 }
 
-String _$articulosRepositoryHash() => r'2c5ee0b6bb70bfbec29164829804ba1d4a507fc4';
+String _$articulosRepositoryHash() =>
+    r'4c4230d203bf35ba8444b943799828f2e13376ac';
 
 @ProviderFor(productoRepository)
 final productoRepositoryProvider = ProductoRepositoryProvider._();
@@ -286,7 +287,7 @@ final class ProductoRepositoryProvider
 }
 
 String _$productoRepositoryHash() =>
-    r'3936345b6e3532f8235ef34f4527332d67eae1c7';
+    r'e09323effbad93dc7af3f1564e227c36891bec7c';
 
 @ProviderFor(ventaRepository)
 final ventaRepositoryProvider = VentaRepositoryProvider._();
@@ -374,4 +375,4 @@ final class CompraRepositoryProvider
   }
 }
 
-String _$compraRepositoryHash() => r'9019f907658144b6e030c512c166af3a42c0eb98';
+String _$compraRepositoryHash() => r'f150562ffcb30118b20332353c485245b2c41ccc';

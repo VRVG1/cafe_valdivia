@@ -29,5 +29,5 @@ class AgregarCompraSeleccionArticuloPage
 
   @override
   Widget Function(Articulo element)? get subtitleBuilder =>
-      (Articulo i) => Text(i.costoUnitario);
+      (Articulo i) => Text(i.costoUnitario.toString());
 }

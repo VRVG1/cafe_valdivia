@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Cliente {
 
-@JsonKey(name: 'id_cliente') int? get idCliente; String get nombre; String? get apellido; String? get telefono; String? get email;
+@JsonKey(name: 'id_cliente') int? get idCliente; String get nombre; String get apellido; String? get telefono; String? get email;
 /// Create a copy of Cliente
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ClienteCopyWith<$Res>  {
   factory $ClienteCopyWith(Cliente value, $Res Function(Cliente) _then) = _$ClienteCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_cliente') int? idCliente, String nombre, String? apellido, String? telefono, String? email
+@JsonKey(name: 'id_cliente') int? idCliente, String nombre, String apellido, String? telefono, String? email
 });
 
 
@@ -65,12 +65,12 @@ class _$ClienteCopyWithImpl<$Res>
 
 /// Create a copy of Cliente
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idCliente = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idCliente = freezed,Object? nombre = null,Object? apellido = null,Object? telefono = freezed,Object? email = freezed,}) {
   return _then(_self.copyWith(
 idCliente: freezed == idCliente ? _self.idCliente : idCliente // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,apellido: freezed == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
-as String?,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
+as String,apellido: null == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
+as String,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String apellido,  String? telefono,  String? email)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Cliente() when $default != null:
 return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
@@ -178,7 +178,7 @@ return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String? apellido,  String? telefono,  String? email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String apellido,  String? telefono,  String? email)  $default,) {final _that = this;
 switch (_that) {
 case _Cliente():
 return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
@@ -198,7 +198,7 @@ return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String? apellido,  String? telefono,  String? email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_cliente')  int? idCliente,  String nombre,  String apellido,  String? telefono,  String? email)?  $default,) {final _that = this;
 switch (_that) {
 case _Cliente() when $default != null:
 return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that.email);case _:
@@ -213,12 +213,12 @@ return $default(_that.idCliente,_that.nombre,_that.apellido,_that.telefono,_that
 @JsonSerializable()
 
 class _Cliente implements Cliente {
-  const _Cliente({@JsonKey(name: 'id_cliente') this.idCliente, required this.nombre, this.apellido, this.telefono, this.email});
+  const _Cliente({@JsonKey(name: 'id_cliente') this.idCliente, required this.nombre, required this.apellido, this.telefono, this.email});
   factory _Cliente.fromJson(Map<String, dynamic> json) => _$ClienteFromJson(json);
 
 @override@JsonKey(name: 'id_cliente') final  int? idCliente;
 @override final  String nombre;
-@override final  String? apellido;
+@override final  String apellido;
 @override final  String? telefono;
 @override final  String? email;
 
@@ -255,7 +255,7 @@ abstract mixin class _$ClienteCopyWith<$Res> implements $ClienteCopyWith<$Res> {
   factory _$ClienteCopyWith(_Cliente value, $Res Function(_Cliente) _then) = __$ClienteCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_cliente') int? idCliente, String nombre, String? apellido, String? telefono, String? email
+@JsonKey(name: 'id_cliente') int? idCliente, String nombre, String apellido, String? telefono, String? email
 });
 
 
@@ -272,12 +272,12 @@ class __$ClienteCopyWithImpl<$Res>
 
 /// Create a copy of Cliente
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idCliente = freezed,Object? nombre = null,Object? apellido = freezed,Object? telefono = freezed,Object? email = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idCliente = freezed,Object? nombre = null,Object? apellido = null,Object? telefono = freezed,Object? email = freezed,}) {
   return _then(_Cliente(
 idCliente: freezed == idCliente ? _self.idCliente : idCliente // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,apellido: freezed == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
-as String?,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
+as String,apellido: null == apellido ? _self.apellido : apellido // ignore: cast_nullable_to_non_nullable
+as String,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

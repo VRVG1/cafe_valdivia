@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Proveedor {
 
-@JsonKey(name: 'id_proveedor') int? get idProveedor; String get nombre; String get telefono; String? get email; String? get direccion;
+@JsonKey(name: 'id_proveedor') int? get idProveedor; String get nombre; String? get telefono; String? get email; String? get direccion;
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ProveedorCopyWith<$Res>  {
   factory $ProveedorCopyWith(Proveedor value, $Res Function(Proveedor) _then) = _$ProveedorCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String telefono, String? email, String? direccion
+@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String? telefono, String? email, String? direccion
 });
 
 
@@ -65,12 +65,12 @@ class _$ProveedorCopyWithImpl<$Res>
 
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = null,Object? email = freezed,Object? direccion = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = freezed,Object? email = freezed,Object? direccion = freezed,}) {
   return _then(_self.copyWith(
 idProveedor: freezed == idProveedor ? _self.idProveedor : idProveedor // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,telefono: null == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
-as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,direccion: freezed == direccion ? _self.direccion : direccion // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String telefono,  String? email,  String? direccion)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Proveedor() when $default != null:
 return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
@@ -178,7 +178,7 @@ return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String telefono,  String? email,  String? direccion)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion)  $default,) {final _that = this;
 switch (_that) {
 case _Proveedor():
 return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
@@ -198,7 +198,7 @@ return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String telefono,  String? email,  String? direccion)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion)?  $default,) {final _that = this;
 switch (_that) {
 case _Proveedor() when $default != null:
 return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
@@ -213,12 +213,12 @@ return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.
 @JsonSerializable()
 
 class _Proveedor implements Proveedor {
-  const _Proveedor({@JsonKey(name: 'id_proveedor') this.idProveedor, required this.nombre, required this.telefono, this.email, this.direccion});
+  const _Proveedor({@JsonKey(name: 'id_proveedor') this.idProveedor, required this.nombre, this.telefono, this.email, this.direccion});
   factory _Proveedor.fromJson(Map<String, dynamic> json) => _$ProveedorFromJson(json);
 
 @override@JsonKey(name: 'id_proveedor') final  int? idProveedor;
 @override final  String nombre;
-@override final  String telefono;
+@override final  String? telefono;
 @override final  String? email;
 @override final  String? direccion;
 
@@ -255,7 +255,7 @@ abstract mixin class _$ProveedorCopyWith<$Res> implements $ProveedorCopyWith<$Re
   factory _$ProveedorCopyWith(_Proveedor value, $Res Function(_Proveedor) _then) = __$ProveedorCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String telefono, String? email, String? direccion
+@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String? telefono, String? email, String? direccion
 });
 
 
@@ -272,12 +272,12 @@ class __$ProveedorCopyWithImpl<$Res>
 
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = null,Object? email = freezed,Object? direccion = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = freezed,Object? email = freezed,Object? direccion = freezed,}) {
   return _then(_Proveedor(
 idProveedor: freezed == idProveedor ? _self.idProveedor : idProveedor // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,telefono: null == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
-as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,direccion: freezed == direccion ? _self.direccion : direccion // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

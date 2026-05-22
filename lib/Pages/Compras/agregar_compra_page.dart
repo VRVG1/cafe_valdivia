@@ -63,7 +63,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     setState(() {
       if (eleccion == 'articulo') {
         print(result.costoUnitario);
-        _precioController.text = result.costoUnitario;
+        _precioController.text = result.costoUnitario.toString();
       }
       controller.text = result.nombre;
       _proveedorArticulo[eleccion] = result;
@@ -195,7 +195,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           idCompra:
               0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
           idArticulo: elemento['articulo'].idArticulo,
-          cantidad: elemento['cantidad'],
+          cantidad: ((elemento['cantidad'] as int?) ?? 0).toDouble(),
           precioUnitarioCompra: elemento['articulo'].costoUnitario,
         );
         articulos.add(elemento['articulo']);

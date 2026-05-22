@@ -9,17 +9,17 @@ part of 'orden_produccion.dart';
 _OrdenProduccion _$OrdenProduccionFromJson(Map<String, dynamic> json) =>
     _OrdenProduccion(
       idOrdenProduccion: (json['id_orden_produccion'] as num?)?.toInt(),
-      idProducto: (json['id_producto'] as num).toInt(),
-      cantidadProducida: json['cantidad_producida'] as String,
+      idReceta: (json['id_receta'] as num).toInt(),
+      cantidadProducida: (json['cantidad_producida'] as num).toDouble(),
       fecha: DateTime.parse(json['fecha'] as String),
-      costoTotalProduccion: json['costo_total_produccion'] as String,
+      costoTotalProduccion: (json['costo_total_produccion'] as num).toDouble(),
       notas: json['notas'] as String?,
     );
 
 Map<String, dynamic> _$OrdenProduccionToJson(_OrdenProduccion instance) =>
     <String, dynamic>{
       'id_orden_produccion': instance.idOrdenProduccion,
-      'id_producto': instance.idProducto,
+      'id_receta': instance.idReceta,
       'cantidad_producida': instance.cantidadProducida,
       'fecha': instance.fecha.toIso8601String(),
       'costo_total_produccion': instance.costoTotalProduccion,

@@ -9,7 +9,7 @@ part of 'cliente.dart';
 _Cliente _$ClienteFromJson(Map<String, dynamic> json) => _Cliente(
   idCliente: (json['id_cliente'] as num?)?.toInt(),
   nombre: json['nombre'] as String,
-  apellido: json['apellido'] as String?,
+  apellido: json['apellido'] as String,
   telefono: json['telefono'] as String?,
   email: json['email'] as String?,
 );

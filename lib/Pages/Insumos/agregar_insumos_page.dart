@@ -42,7 +42,10 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
-      costoUnitario: _costoUnitarioController.text,
+      costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
+      precioVenta: 0.0,
+      stock: 0.0,
+      tipo: ArticuloTipo.insumo,
     );
     create<Articulo>(
       context: context,

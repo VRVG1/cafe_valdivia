@@ -7,7 +7,7 @@ abstract class Proveedor with _$Proveedor {
   const factory Proveedor({
     @JsonKey(name: 'id_proveedor') int? idProveedor,
     required String nombre,
-    required String telefono,
+    String? telefono,
     String? email,
     String? direccion,
   }) = _Proveedor;

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RecetaDetalle {
 
-@JsonKey(name: 'id_receta_detalle') int? get idRecetaDetalle;@JsonKey(name: 'id_receta') int get idReceta;@JsonKey(name: 'id_articulo') int get idArticulo; double get cantidad;@JsonKey(name: 'id_unidad') int get idUnidad;
+@JsonKey(name: 'id_receta_detalle') int? get idRecetaDetalle;@JsonKey(name: 'id_receta') int get idReceta;@JsonKey(name: 'id_articulo_componente') int get idArticulo; double get cantidad;@JsonKey(name: 'id_unidad') int get idUnidad;
 /// Create a copy of RecetaDetalle
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RecetaDetalleCopyWith<$Res>  {
   factory $RecetaDetalleCopyWith(RecetaDetalle value, $Res Function(RecetaDetalle) _then) = _$RecetaDetalleCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_receta_detalle') int? idRecetaDetalle,@JsonKey(name: 'id_receta') int idReceta,@JsonKey(name: 'id_articulo') int idArticulo, double cantidad,@JsonKey(name: 'id_unidad') int idUnidad
+@JsonKey(name: 'id_receta_detalle') int? idRecetaDetalle,@JsonKey(name: 'id_receta') int idReceta,@JsonKey(name: 'id_articulo_componente') int idArticulo, double cantidad,@JsonKey(name: 'id_unidad') int idUnidad
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_receta_detalle')  int? idRecetaDetalle, @JsonKey(name: 'id_receta')  int idReceta, @JsonKey(name: 'id_articulo')  int idArticulo,  double cantidad, @JsonKey(name: 'id_unidad')  int idUnidad)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_receta_detalle')  int? idRecetaDetalle, @JsonKey(name: 'id_receta')  int idReceta, @JsonKey(name: 'id_articulo_componente')  int idArticulo,  double cantidad, @JsonKey(name: 'id_unidad')  int idUnidad)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecetaDetalle() when $default != null:
 return $default(_that.idRecetaDetalle,_that.idReceta,_that.idArticulo,_that.cantidad,_that.idUnidad);case _:
@@ -178,7 +178,7 @@ return $default(_that.idRecetaDetalle,_that.idReceta,_that.idArticulo,_that.cant
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_receta_detalle')  int? idRecetaDetalle, @JsonKey(name: 'id_receta')  int idReceta, @JsonKey(name: 'id_articulo')  int idArticulo,  double cantidad, @JsonKey(name: 'id_unidad')  int idUnidad)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_receta_detalle')  int? idRecetaDetalle, @JsonKey(name: 'id_receta')  int idReceta, @JsonKey(name: 'id_articulo_componente')  int idArticulo,  double cantidad, @JsonKey(name: 'id_unidad')  int idUnidad)  $default,) {final _that = this;
 switch (_that) {
 case _RecetaDetalle():
 return $default(_that.idRecetaDetalle,_that.idReceta,_that.idArticulo,_that.cantidad,_that.idUnidad);case _:
@@ -198,7 +198,7 @@ return $default(_that.idRecetaDetalle,_that.idReceta,_that.idArticulo,_that.cant
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_receta_detalle')  int? idRecetaDetalle, @JsonKey(name: 'id_receta')  int idReceta, @JsonKey(name: 'id_articulo')  int idArticulo,  double cantidad, @JsonKey(name: 'id_unidad')  int idUnidad)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_receta_detalle')  int? idRecetaDetalle, @JsonKey(name: 'id_receta')  int idReceta, @JsonKey(name: 'id_articulo_componente')  int idArticulo,  double cantidad, @JsonKey(name: 'id_unidad')  int idUnidad)?  $default,) {final _that = this;
 switch (_that) {
 case _RecetaDetalle() when $default != null:
 return $default(_that.idRecetaDetalle,_that.idReceta,_that.idArticulo,_that.cantidad,_that.idUnidad);case _:
@@ -213,12 +213,12 @@ return $default(_that.idRecetaDetalle,_that.idReceta,_that.idArticulo,_that.cant
 @JsonSerializable()
 
 class _RecetaDetalle implements RecetaDetalle {
-  const _RecetaDetalle({@JsonKey(name: 'id_receta_detalle') this.idRecetaDetalle, @JsonKey(name: 'id_receta') required this.idReceta, @JsonKey(name: 'id_articulo') required this.idArticulo, required this.cantidad, @JsonKey(name: 'id_unidad') required this.idUnidad});
+  const _RecetaDetalle({@JsonKey(name: 'id_receta_detalle') this.idRecetaDetalle, @JsonKey(name: 'id_receta') required this.idReceta, @JsonKey(name: 'id_articulo_componente') required this.idArticulo, required this.cantidad, @JsonKey(name: 'id_unidad') required this.idUnidad});
   factory _RecetaDetalle.fromJson(Map<String, dynamic> json) => _$RecetaDetalleFromJson(json);
 
 @override@JsonKey(name: 'id_receta_detalle') final  int? idRecetaDetalle;
 @override@JsonKey(name: 'id_receta') final  int idReceta;
-@override@JsonKey(name: 'id_articulo') final  int idArticulo;
+@override@JsonKey(name: 'id_articulo_componente') final  int idArticulo;
 @override final  double cantidad;
 @override@JsonKey(name: 'id_unidad') final  int idUnidad;
 
@@ -255,7 +255,7 @@ abstract mixin class _$RecetaDetalleCopyWith<$Res> implements $RecetaDetalleCopy
   factory _$RecetaDetalleCopyWith(_RecetaDetalle value, $Res Function(_RecetaDetalle) _then) = __$RecetaDetalleCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_receta_detalle') int? idRecetaDetalle,@JsonKey(name: 'id_receta') int idReceta,@JsonKey(name: 'id_articulo') int idArticulo, double cantidad,@JsonKey(name: 'id_unidad') int idUnidad
+@JsonKey(name: 'id_receta_detalle') int? idRecetaDetalle,@JsonKey(name: 'id_receta') int idReceta,@JsonKey(name: 'id_articulo_componente') int idArticulo, double cantidad,@JsonKey(name: 'id_unidad') int idUnidad
 });
 
 

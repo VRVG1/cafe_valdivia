@@ -7,13 +7,12 @@ part 'orden_produccion_consumo.g.dart';
 abstract class OrdenProduccionConsumo with _$OrdenProduccionConsumo {
   const factory OrdenProduccionConsumo({
     @JsonKey(name: 'id_consumo') int? idConsumo,
-    @JsonKey(name: 'id_orden_produccion ') required int idOrdenProduccion,
+    @JsonKey(name: 'id_orden_produccion') required int idOrdenProduccion,
     @JsonKey(name: 'id_articulo') required int idArticulo,
-    @JsonKey(name: 'cantidad_usada') required String cantidadUsada,
+    @JsonKey(name: 'cantidad_usada') required double cantidadUsada,
     @JsonKey(name: 'costo_articulo_momento')
     required double costoArticuloMomento,
-    String? notas,
-  }) = OrdenProduccionConsumo;
+  }) = _OrdenProduccionConsumo;
 
   factory OrdenProduccionConsumo.fromJson(Map<String, dynamic> json) =>
       _$OrdenProduccionConsumoFromJson(json);

@@ -7,17 +7,17 @@ void main() {
     final detalleVenta = DetalleVenta(
       idDetalleVenta: 1,
       idVenta: 10,
-      idProducto: 20,
-      cantidad: 3,
-      precioUnitarioVenta: '15.50',
+      idArticulo: 20,
+      cantidad: 3.0,
+      precioUnitarioVenta: 15.50,
     );
 
     final detalleVentaJson = {
       'id_detalle_venta': 1,
       'id_venta': 10,
-      'id_producto': 20,
-      'cantidad': 3,
-      'precio_unitario_venta': '15.50',
+      'id_articulo': 20,
+      'cantidad': 3.0,
+      'precio_unitario_venta': 15.50,
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -31,13 +31,13 @@ void main() {
     });
 
     test('copyWith crea una copia con valores actualizados', () {
-      final copia = detalleVenta.copyWith(cantidad: 5);
+      final copia = detalleVenta.copyWith(cantidad: 5.0);
 
-      expect(copia.cantidad, 5);
+      expect(copia.cantidad, 5.0);
       // Los demás valores deben permanecer iguales
       expect(copia.idVenta, detalleVenta.idVenta);
       expect(copia.idVenta, detalleVenta.idVenta);
-      expect(copia.idProducto, detalleVenta.idProducto);
+      expect(copia.idArticulo, detalleVenta.idArticulo);
       expect(copia.precioUnitarioVenta, detalleVenta.precioUnitarioVenta);
     });
 
@@ -45,16 +45,16 @@ void main() {
       final dv1 = DetalleVenta(
         idDetalleVenta: 1,
         idVenta: 10,
-        idProducto: 20,
-        cantidad: 3,
-        precioUnitarioVenta: '15.50',
+        idArticulo: 20,
+        cantidad: 3.0,
+        precioUnitarioVenta: 15.50,
       );
       final dv2 = DetalleVenta(
         idDetalleVenta: 1,
         idVenta: 10,
-        idProducto: 20,
-        cantidad: 3,
-        precioUnitarioVenta: '15.50',
+        idArticulo: 20,
+        cantidad: 3.0,
+        precioUnitarioVenta: 15.50,
       );
 
       expect(dv1, dv2);
@@ -64,16 +64,16 @@ void main() {
       final dv1 = DetalleVenta(
         idDetalleVenta: 1,
         idVenta: 10,
-        idProducto: 20,
-        cantidad: 3,
-        precioUnitarioVenta: '15.50',
+        idArticulo: 20,
+        cantidad: 3.0,
+        precioUnitarioVenta: 15.50,
       );
       final dv2 = DetalleVenta(
         idDetalleVenta: 1,
         idVenta: 10,
-        idProducto: 20,
-        cantidad: 3,
-        precioUnitarioVenta: '15.50',
+        idArticulo: 20,
+        cantidad: 3.0,
+        precioUnitarioVenta: 15.50,
       );
 
       expect(dv1.hashCode, dv2.hashCode);
@@ -82,20 +82,13 @@ void main() {
     group('Extension', () {
       test('subTotal calcula el valor correcto en centavos', () {
         // 3 * 15.50 = 46.50 -> 4650 centavos
-        expect(detalleVenta.subTotal, 4650);
+        expect(detalleVenta.subTotal, 46.50);
       });
 
       test('subTotalFormateado retorna el string correcto', () {
         expect(detalleVenta.subTotalFormateado, '46.50');
       });
 
-      test('subTotal con precio inválido retorna 0', () {
-        final detalleInvalido = detalleVenta.copyWith(
-          precioUnitarioVenta: 'invalido',
-        );
-        expect(detalleInvalido.subTotal, 0);
-        expect(detalleInvalido.subTotalFormateado, '0.00');
-      });
     });
   });
 }

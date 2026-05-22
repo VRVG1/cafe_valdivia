@@ -7,8 +7,8 @@ import 'dart:async' as _i8;
 
 import 'package:cafe_valdivia/core/models/compra.dart' as _i5;
 import 'package:cafe_valdivia/core/models/detalle_compra.dart' as _i9;
-import 'package:cafe_valdivia/repositorys/compra_repository.dart' as _i6;
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart' as _i4;
+import 'package:cafe_valdivia/repositorys/compra_repository.dart' as _i6;
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart' as _i3;
 import 'package:cafe_valdivia/services/db_helper.dart' as _i2;
 import 'package:cafe_valdivia/services/inventario_servicio.dart' as _i10;

@@ -1,5 +1,4 @@
 import 'package:cafe_valdivia/core/models/articulo.dart';
-import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
@@ -26,18 +25,29 @@ void main() {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearArticulo(String nombre, int unidadId, String costo) async {
+    Future<int> _crearArticulo(String nombre, int unidadId, double costo) async {
       final articulo = Articulo(
         nombre: nombre,
+        tipo: ArticuloTipo.insumo,
         idUnidad: unidadId,
         costoUnitario: costo,
+        precioVenta: 0.0,
+        stock: 0.0,
       );
       return await articuloRepository.create(articulo);
     }
 
-    Future<int> _crearProducto(String nombre, String precio) async {
-      final producto = Producto(nombre: nombre, precioVenta: precio);
-      return await productoRepository.create(producto);
+    Future<int> _crearProducto(String nombre, double precio) async {
+      final unidadId = await _crearUnidad('Unidad');
+      final articulo = Articulo(
+        nombre: nombre,
+        tipo: ArticuloTipo.producto,
+        idUnidad: unidadId,
+        costoUnitario: 0.0,
+        precioVenta: precio,
+        stock: 0.0,
+      );
+      return await articuloRepository.create(articulo);
     }
 
     setUp(() async {
@@ -76,48 +86,53 @@ void main() {
       test(
         'Create, GetById, Update, and Delete a Producto successfully',
         () async {
-          final nuevoProducto = Producto(
+          final unidadId = await _crearUnidad('Unidad');
+          final nuevoProducto = Articulo(
             nombre: 'Café Americano',
-            precioVenta: "45.0",
+            tipo: ArticuloTipo.producto,
+            idUnidad: unidadId,
+            costoUnitario: 0.0,
+            precioVenta: 45.0,
+            stock: 0.0,
           );
 
-          final productoId = await productoRepository.create(nuevoProducto);
+          final productoId = await articuloRepository.create(nuevoProducto);
           expect(productoId, isA<int>());
 
-          var productoRecuperado = await productoRepository.getById(productoId);
+          var productoRecuperado = await articuloRepository.getById(productoId);
           expect(productoRecuperado.nombre, 'Café Americano');
-          expect(productoRecuperado.precioVenta, '45.0');
+          expect(productoRecuperado.precioVenta, 45.0);
 
           final productoActualizado = productoRecuperado.copyWith(
             nombre: 'Café Espresso',
-            precioVenta: "50.0",
+            precioVenta: 50.0,
           );
-          final rowsAffectedUpdate = await productoRepository.update(
+          final rowsAffectedUpdate = await articuloRepository.update(
             productoActualizado,
           );
           expect(rowsAffectedUpdate, 1);
 
-          productoRecuperado = await productoRepository.getById(productoId);
+          productoRecuperado = await articuloRepository.getById(productoId);
           expect(productoRecuperado.nombre, 'Café Espresso');
-          expect(productoRecuperado.precioVenta, "50.0");
+          expect(productoRecuperado.precioVenta, 50.0);
 
-          final rowsAffectedDelete = await productoRepository.delete(
+          final rowsAffectedDelete = await articuloRepository.delete(
             productoId,
           );
           expect(rowsAffectedDelete, 1);
           expect(
-            () => productoRepository.getById(productoId),
+            () => articuloRepository.getById(productoId),
             throwsA(isA<Exception>()),
           );
         },
       );
 
       test('getAll returns a list of all productos', () async {
-        await _crearProducto('Pastel de Chocolate', "60.0");
-        await _crearProducto('Galleta de Avena', "25.0");
-        await _crearProducto('Jugo de Naranja', "35.0");
+        await _crearProducto('Pastel de Chocolate', 60.0);
+        await _crearProducto('Galleta de Avena', 25.0);
+        await _crearProducto('Jugo de Naranja', 35.0);
 
-        final todosLosProductos = await productoRepository.getAll();
+        final todosLosProductos = await articuloRepository.getAll();
 
         expect(todosLosProductos.length, 3);
         expect(
@@ -127,11 +142,11 @@ void main() {
       });
 
       test('getAll with "where" clause filters correctly', () async {
-        await _crearProducto('Café Latte', "55.0");
-        await _crearProducto('Café Mocha', "65.0");
-        await _crearProducto('Té Verde', "40.0");
+        await _crearProducto('Café Latte', 55.0);
+        await _crearProducto('Café Mocha', 65.0);
+        await _crearProducto('Té Verde', 40.0);
 
-        final resultado = await productoRepository.getAll(
+        final resultado = await articuloRepository.getAll(
           where: 'nombre LIKE ?',
           whereArgs: ['%Café%'],
         );
@@ -146,8 +161,8 @@ void main() {
         test('throws exception because of incorrect query logic', () async {
           // ARRANGE: Crear datos
           final unidadId = await _crearUnidad('Unidad');
-          final articuloId = await _crearArticulo('Articulo Test', unidadId, "10.0");
-          final productoId = await _crearProducto('Producto Test', "100.0");
+          final articuloId = await _crearArticulo('Articulo Test', unidadId, 10.0);
+          final productoId = await _crearProducto('Producto Test', 100.0);
 
           // Crear relación
           await database.insert('Articulo_Producto', {
@@ -172,7 +187,7 @@ void main() {
           final articuloId = await _crearArticulo(
             'Articulo sin productos',
             unidadId,
-            "5.0",
+            5.0,
           );
 
           // ACT & ASSERT
@@ -211,12 +226,16 @@ void main() {
       });
 
       test('update throws exception for entity with null ID', () {
-        final productoSinId = Producto(
+        final productoSinId = Articulo(
           nombre: 'Producto Fantasma',
-          precioVenta: "99.99",
+          tipo: ArticuloTipo.producto,
+          idUnidad: 1,
+          costoUnitario: 0.0,
+          precioVenta: 99.99,
+          stock: 0.0,
         );
         expect(
-          () => productoRepository.update(productoSinId),
+          () => articuloRepository.update(productoSinId),
           throwsA(isA<Exception>()),
         );
       });
@@ -229,10 +248,17 @@ void main() {
       test(
         'create fails for producto with empty name if constrained',
         () async {
-          final productoVacio = Producto(nombre: '', precioVenta: "10.0");
+          final productoVacio = Articulo(
+            nombre: '',
+            tipo: ArticuloTipo.producto,
+            idUnidad: 1,
+            costoUnitario: 0.0,
+            precioVenta: 10.0,
+            stock: 0.0,
+          );
 
           expect(
-            () => productoRepository.create(productoVacio),
+            () => articuloRepository.create(productoVacio),
             throwsA(isA<DatabaseException>()),
           );
         },

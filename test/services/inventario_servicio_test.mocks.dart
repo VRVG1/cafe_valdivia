@@ -3,25 +3,26 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i11;
+import 'dart:async' as _i12;
 
-import 'package:cafe_valdivia/core/models/compra.dart' as _i7;
-import 'package:cafe_valdivia/core/models/detalle_compra.dart' as _i15;
-import 'package:cafe_valdivia/core/models/detalle_venta.dart' as _i18;
-import 'package:cafe_valdivia/core/models/unidad_medida.dart' as _i4;
-import 'package:cafe_valdivia/core/models/venta.dart' as _i17;
-import 'package:cafe_valdivia/repositorys/cliente_repository.dart' as _i8;
-import 'package:cafe_valdivia/repositorys/compra_repository.dart' as _i14;
-import 'package:cafe_valdivia/repositorys/articulo_repository.dart' as _i6;
-import 'package:cafe_valdivia/repositorys/inventario_repository.dart' as _i12;
-import 'package:cafe_valdivia/repositorys/producto_repository.dart' as _i9;
-import 'package:cafe_valdivia/repositorys/proveedor_repository.dart' as _i5;
+import 'package:cafe_valdivia/core/models/articulo.dart' as _i4;
+import 'package:cafe_valdivia/core/models/compra.dart' as _i8;
+import 'package:cafe_valdivia/core/models/detalle_compra.dart' as _i16;
+import 'package:cafe_valdivia/core/models/detalle_venta.dart' as _i19;
+import 'package:cafe_valdivia/core/models/unidad_medida.dart' as _i5;
+import 'package:cafe_valdivia/core/models/venta.dart' as _i18;
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart' as _i7;
+import 'package:cafe_valdivia/repositorys/cliente_repository.dart' as _i9;
+import 'package:cafe_valdivia/repositorys/compra_repository.dart' as _i15;
+import 'package:cafe_valdivia/repositorys/inventario_repository.dart' as _i13;
+import 'package:cafe_valdivia/repositorys/producto_repository.dart' as _i10;
+import 'package:cafe_valdivia/repositorys/proveedor_repository.dart' as _i6;
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart' as _i3;
-import 'package:cafe_valdivia/repositorys/venta_repository.dart' as _i16;
+import 'package:cafe_valdivia/repositorys/venta_repository.dart' as _i17;
 import 'package:cafe_valdivia/services/db_helper.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i13;
-import 'package:sqflite/sqflite.dart' as _i10;
+import 'package:mockito/src/dummies.dart' as _i14;
+import 'package:sqflite/sqflite.dart' as _i11;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -50,47 +51,52 @@ class _FakeUnidadMedidaRepository_1 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeUnidadMedida_2 extends _i1.SmartFake implements _i4.UnidadMedida {
-  _FakeUnidadMedida_2(Object parent, Invocation parentInvocation)
+class _FakeArticulo_2 extends _i1.SmartFake implements _i4.Articulo {
+  _FakeArticulo_2(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeProveedorRepository_3 extends _i1.SmartFake
-    implements _i5.ProveedorRepository {
-  _FakeProveedorRepository_3(Object parent, Invocation parentInvocation)
+class _FakeUnidadMedida_3 extends _i1.SmartFake implements _i5.UnidadMedida {
+  _FakeUnidadMedida_3(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeArticuloRepository_4 extends _i1.SmartFake
-    implements _i6.ArticuloRepository {
-  _FakeArticuloRepository_4(Object parent, Invocation parentInvocation)
+class _FakeProveedorRepository_4 extends _i1.SmartFake
+    implements _i6.ProveedorRepository {
+  _FakeProveedorRepository_4(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeCompra_5 extends _i1.SmartFake implements _i7.Compra {
-  _FakeCompra_5(Object parent, Invocation parentInvocation)
+class _FakeArticuloRepository_5 extends _i1.SmartFake
+    implements _i7.ArticuloRepository {
+  _FakeArticuloRepository_5(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeClienteRepository_6 extends _i1.SmartFake
-    implements _i8.ClienteRepository {
-  _FakeClienteRepository_6(Object parent, Invocation parentInvocation)
+class _FakeCompra_6 extends _i1.SmartFake implements _i8.Compra {
+  _FakeCompra_6(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeProductoRepository_7 extends _i1.SmartFake
-    implements _i9.ProductoRepository {
-  _FakeProductoRepository_7(Object parent, Invocation parentInvocation)
+class _FakeClienteRepository_7 extends _i1.SmartFake
+    implements _i9.ClienteRepository {
+  _FakeClienteRepository_7(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeDatabase_8 extends _i1.SmartFake implements _i10.Database {
-  _FakeDatabase_8(Object parent, Invocation parentInvocation)
+class _FakeProductoRepository_8 extends _i1.SmartFake
+    implements _i10.ProductoRepository {
+  _FakeProductoRepository_8(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
-class _FakeFuture_9<T1> extends _i1.SmartFake implements _i11.Future<T1> {
-  _FakeFuture_9(Object parent, Invocation parentInvocation)
+class _FakeDatabase_9 extends _i1.SmartFake implements _i11.Database {
+  _FakeDatabase_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeFuture_10<T1> extends _i1.SmartFake implements _i12.Future<T1> {
+  _FakeFuture_10(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -98,7 +104,7 @@ class _FakeFuture_9<T1> extends _i1.SmartFake implements _i11.Future<T1> {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockInventarioRepository extends _i1.Mock
-    implements _i12.InventarioRepository {
+    implements _i13.InventarioRepository {
   MockInventarioRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -115,54 +121,55 @@ class MockInventarioRepository extends _i1.Mock
           as _i2.DatabaseHelper);
 
   @override
-  _i11.Future<double> getStockArticulo({required int? articuloId}) =>
+  _i12.Future<double> getStockArticulo({required int? articuloId}) =>
       (super.noSuchMethod(
             Invocation.method(#getStockArticulo, [], {#articuloId: articuloId}),
-            returnValue: _i11.Future<double>.value(0.0),
+            returnValue: _i12.Future<double>.value(0.0),
           )
-          as _i11.Future<double>);
+          as _i12.Future<double>);
 
   @override
-  _i11.Future<double> getStockProducto({required int? idProducto}) =>
+  _i12.Future<double> getStockProducto({required int? idProducto}) =>
       (super.noSuchMethod(
             Invocation.method(#getStockProducto, [], {#idProducto: idProducto}),
-            returnValue: _i11.Future<double>.value(0.0),
+            returnValue: _i12.Future<double>.value(0.0),
           )
-          as _i11.Future<double>);
+          as _i12.Future<double>);
 
   @override
-  _i11.Future<List<Map<String, dynamic>>> getMovimientoArticuloDetallado({
+  _i12.Future<List<Map<String, dynamic>>> getMovimientoArticuloDetallado({
     int? idArticulo,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getMovimientoArticuloDetallado, [], {
               #idArticulo: idArticulo,
             }),
-            returnValue: _i11.Future<List<Map<String, dynamic>>>.value(
+            returnValue: _i12.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
           )
-          as _i11.Future<List<Map<String, dynamic>>>);
+          as _i12.Future<List<Map<String, dynamic>>>);
 
   @override
-  _i11.Future<List<Map<String, dynamic>>> getMovimientoProductoDetallado({
+  _i12.Future<List<Map<String, dynamic>>> getMovimientoProductoDetallado({
     int? idProducto,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#getMovimientoProductoDetallado, [], {
               #idProducto: idProducto,
             }),
-            returnValue: _i11.Future<List<Map<String, dynamic>>>.value(
+            returnValue: _i12.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
           )
-          as _i11.Future<List<Map<String, dynamic>>>);
+          as _i12.Future<List<Map<String, dynamic>>>);
 }
 
 /// A class which mocks [ArticuloRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockArticuloRepository extends _i1.Mock implements _i6.ArticuloRepository {
+class MockArticuloRepository extends _i1.Mock
+    implements _i7.ArticuloRepository {
   MockArticuloRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -182,7 +189,7 @@ class MockArticuloRepository extends _i1.Mock implements _i6.ArticuloRepository 
   String get tableName =>
       (super.noSuchMethod(
             Invocation.getter(#tableName),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#tableName),
             ),
@@ -193,7 +200,7 @@ class MockArticuloRepository extends _i1.Mock implements _i6.ArticuloRepository 
   String get idColumn =>
       (super.noSuchMethod(
             Invocation.getter(#idColumn),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#idColumn),
             ),
@@ -212,11 +219,18 @@ class MockArticuloRepository extends _i1.Mock implements _i6.ArticuloRepository 
           as _i3.UnidadMedidaRepository);
 
   @override
-  dynamic fromJson(Map<String, dynamic>? map) =>
-      super.noSuchMethod(Invocation.method(#fromJson, [map]));
+  _i4.Articulo fromJson(Map<String, dynamic>? map) =>
+      (super.noSuchMethod(
+            Invocation.method(#fromJson, [map]),
+            returnValue: _FakeArticulo_2(
+              this,
+              Invocation.method(#fromJson, [map]),
+            ),
+          )
+          as _i4.Articulo);
 
   @override
-  Map<String, dynamic> toJson(dynamic entity) =>
+  Map<String, dynamic> toJson(_i4.Articulo? entity) =>
       (super.noSuchMethod(
             Invocation.method(#toJson, [entity]),
             returnValue: <String, dynamic>{},
@@ -224,23 +238,23 @@ class MockArticuloRepository extends _i1.Mock implements _i6.ArticuloRepository 
           as Map<String, dynamic>);
 
   @override
-  _i11.Future<int> create(dynamic entity) =>
+  _i12.Future<int> create(_i4.Articulo? entity) =>
       (super.noSuchMethod(
             Invocation.method(#create, [entity]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> delete(int? id) =>
+  _i12.Future<int> delete(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#delete, [id]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<List<dynamic>> getAll({
+  _i12.Future<List<_i4.Articulo>> getAll({
     String? where,
     List<Object?>? whereArgs,
   }) =>
@@ -249,65 +263,74 @@ class MockArticuloRepository extends _i1.Mock implements _i6.ArticuloRepository 
               #where: where,
               #whereArgs: whereArgs,
             }),
-            returnValue: _i11.Future<List<dynamic>>.value(<dynamic>[]),
+            returnValue: _i12.Future<List<_i4.Articulo>>.value(
+              <_i4.Articulo>[],
+            ),
           )
-          as _i11.Future<List<dynamic>>);
+          as _i12.Future<List<_i4.Articulo>>);
 
   @override
-  _i11.Future<dynamic> getById(int? id) =>
+  _i12.Future<_i4.Articulo> getById(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#getById, [id]),
-            returnValue: _i11.Future<dynamic>.value(),
+            returnValue: _i12.Future<_i4.Articulo>.value(
+              _FakeArticulo_2(this, Invocation.method(#getById, [id])),
+            ),
           )
-          as _i11.Future<dynamic>);
+          as _i12.Future<_i4.Articulo>);
 
   @override
-  _i11.Future<int> update(dynamic entity) =>
+  _i12.Future<int> update(_i4.Articulo? entity) =>
       (super.noSuchMethod(
             Invocation.method(#update, [entity]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<(_i4.UnidadMedida, List<dynamic>)> getArticuloByIdUnidad({
+  _i12.Future<(_i5.UnidadMedida, List<_i4.Articulo>)> getArticuloByIdUnidad({
     required int? idUnidad,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#getArticuloByIdUnidad, [], {#idUnidad: idUnidad}),
-            returnValue: _i11.Future<(_i4.UnidadMedida, List<dynamic>)>.value((
-              _FakeUnidadMedida_2(
-                this,
-                Invocation.method(#getArticuloByIdUnidad, [], {
-                  #idUnidad: idUnidad,
-                }),
-              ),
-              <dynamic>[],
-            )),
+            Invocation.method(#getArticuloByIdUnidad, [], {
+              #idUnidad: idUnidad,
+            }),
+            returnValue:
+                _i12.Future<(_i5.UnidadMedida, List<_i4.Articulo>)>.value((
+                  _FakeUnidadMedida_3(
+                    this,
+                    Invocation.method(#getArticuloByIdUnidad, [], {
+                      #idUnidad: idUnidad,
+                    }),
+                  ),
+                  <_i4.Articulo>[],
+                )),
           )
-          as _i11.Future<(_i4.UnidadMedida, List<dynamic>)>);
+          as _i12.Future<(_i5.UnidadMedida, List<_i4.Articulo>)>);
 
   @override
-  _i11.Future<double> getCostoPromedio(int? articuloId) =>
+  _i12.Future<double> getCostoPromedio(int? articuloId) =>
       (super.noSuchMethod(
             Invocation.method(#getCostoPromedio, [articuloId]),
-            returnValue: _i11.Future<double>.value(0.0),
+            returnValue: _i12.Future<double>.value(0.0),
           )
-          as _i11.Future<double>);
+          as _i12.Future<double>);
 
   @override
-  _i11.Future<List<dynamic>> search(String? query) =>
+  _i12.Future<List<_i4.Articulo>> search(String? query) =>
       (super.noSuchMethod(
             Invocation.method(#search, [query]),
-            returnValue: _i11.Future<List<dynamic>>.value(<dynamic>[]),
+            returnValue: _i12.Future<List<_i4.Articulo>>.value(
+              <_i4.Articulo>[],
+            ),
           )
-          as _i11.Future<List<dynamic>>);
+          as _i12.Future<List<_i4.Articulo>>);
 }
 
 /// A class which mocks [CompraRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
+class MockCompraRepository extends _i1.Mock implements _i15.CompraRepository {
   MockCompraRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -327,7 +350,7 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
   String get tableName =>
       (super.noSuchMethod(
             Invocation.getter(#tableName),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#tableName),
             ),
@@ -338,7 +361,7 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
   String get idColumn =>
       (super.noSuchMethod(
             Invocation.getter(#idColumn),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#idColumn),
             ),
@@ -346,40 +369,40 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
           as String);
 
   @override
-  _i5.ProveedorRepository get proveedorRepo =>
+  _i6.ProveedorRepository get proveedorRepo =>
       (super.noSuchMethod(
             Invocation.getter(#proveedorRepo),
-            returnValue: _FakeProveedorRepository_3(
+            returnValue: _FakeProveedorRepository_4(
               this,
               Invocation.getter(#proveedorRepo),
             ),
           )
-          as _i5.ProveedorRepository);
+          as _i6.ProveedorRepository);
 
   @override
-  _i6.ArticuloRepository get articuloRepo =>
+  _i7.ArticuloRepository get articuloRepo =>
       (super.noSuchMethod(
             Invocation.getter(#articuloRepo),
-            returnValue: _FakeArticuloRepository_4(
+            returnValue: _FakeArticuloRepository_5(
               this,
               Invocation.getter(#articuloRepo),
             ),
           )
-          as _i6.ArticuloRepository);
+          as _i7.ArticuloRepository);
 
   @override
-  _i7.Compra fromJson(Map<String, dynamic>? map) =>
+  _i8.Compra fromJson(Map<String, dynamic>? map) =>
       (super.noSuchMethod(
             Invocation.method(#fromJson, [map]),
-            returnValue: _FakeCompra_5(
+            returnValue: _FakeCompra_6(
               this,
               Invocation.method(#fromJson, [map]),
             ),
           )
-          as _i7.Compra);
+          as _i8.Compra);
 
   @override
-  Map<String, dynamic> toJson(_i7.Compra? entity) =>
+  Map<String, dynamic> toJson(_i8.Compra? entity) =>
       (super.noSuchMethod(
             Invocation.method(#toJson, [entity]),
             returnValue: <String, dynamic>{},
@@ -387,23 +410,23 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
           as Map<String, dynamic>);
 
   @override
-  _i11.Future<int> create(_i7.Compra? entity) =>
+  _i12.Future<int> create(_i8.Compra? entity) =>
       (super.noSuchMethod(
             Invocation.method(#create, [entity]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> delete(int? id) =>
+  _i12.Future<int> delete(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#delete, [id]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<List<_i7.Compra>> getAll({
+  _i12.Future<List<_i8.Compra>> getAll({
     String? where,
     List<Object?>? whereArgs,
   }) =>
@@ -412,64 +435,64 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
               #where: where,
               #whereArgs: whereArgs,
             }),
-            returnValue: _i11.Future<List<_i7.Compra>>.value(<_i7.Compra>[]),
+            returnValue: _i12.Future<List<_i8.Compra>>.value(<_i8.Compra>[]),
           )
-          as _i11.Future<List<_i7.Compra>>);
+          as _i12.Future<List<_i8.Compra>>);
 
   @override
-  _i11.Future<_i7.Compra> getById(int? id) =>
+  _i12.Future<_i8.Compra> getById(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#getById, [id]),
-            returnValue: _i11.Future<_i7.Compra>.value(
-              _FakeCompra_5(this, Invocation.method(#getById, [id])),
+            returnValue: _i12.Future<_i8.Compra>.value(
+              _FakeCompra_6(this, Invocation.method(#getById, [id])),
             ),
           )
-          as _i11.Future<_i7.Compra>);
+          as _i12.Future<_i8.Compra>);
 
   @override
-  _i11.Future<int> update(_i7.Compra? entity) =>
+  _i12.Future<int> update(_i8.Compra? entity) =>
       (super.noSuchMethod(
             Invocation.method(#update, [entity]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> registrarNuevaCompra({
-    required _i7.Compra? compra,
-    required List<_i15.DetalleCompra>? detallesCompra,
+  _i12.Future<int> registrarNuevaCompra({
+    required _i8.Compra? compra,
+    required List<_i16.DetalleCompra>? detallesCompra,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#registrarNuevaCompra, [], {
               #compra: compra,
               #detallesCompra: detallesCompra,
             }),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<Map<String, dynamic>> getFullCompra(int? compraId) =>
+  _i12.Future<Map<String, dynamic>> getFullCompra(int? compraId) =>
       (super.noSuchMethod(
             Invocation.method(#getFullCompra, [compraId]),
-            returnValue: _i11.Future<Map<String, dynamic>>.value(
+            returnValue: _i12.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i11.Future<Map<String, dynamic>>);
+          as _i12.Future<Map<String, dynamic>>);
 
   @override
-  _i11.Future<List<Map<String, dynamic>>> getAllDetalles() =>
+  _i12.Future<List<Map<String, dynamic>>> getAllDetalles() =>
       (super.noSuchMethod(
             Invocation.method(#getAllDetalles, []),
-            returnValue: _i11.Future<List<Map<String, dynamic>>>.value(
+            returnValue: _i12.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
           )
-          as _i11.Future<List<Map<String, dynamic>>>);
+          as _i12.Future<List<Map<String, dynamic>>>);
 
   @override
-  _i11.Future<List<_i7.Compra>> getAllOnlyCompra({
+  _i12.Future<List<_i8.Compra>> getAllOnlyCompra({
     String? where,
     List<Object?>? whereArgs,
   }) =>
@@ -478,28 +501,28 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
               #where: where,
               #whereArgs: whereArgs,
             }),
-            returnValue: _i11.Future<List<_i7.Compra>>.value(<_i7.Compra>[]),
+            returnValue: _i12.Future<List<_i8.Compra>>.value(<_i8.Compra>[]),
           )
-          as _i11.Future<List<_i7.Compra>>);
+          as _i12.Future<List<_i8.Compra>>);
 
   @override
-  _i11.Future<int> markAsPaid(int? compraId) =>
+  _i12.Future<int> markAsPaid(int? compraId) =>
       (super.noSuchMethod(
             Invocation.method(#markAsPaid, [compraId]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> markAsUnpaid(int? compraId) =>
+  _i12.Future<int> markAsUnpaid(int? compraId) =>
       (super.noSuchMethod(
             Invocation.method(#markAsUnpaid, [compraId]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<List<Map<String, dynamic>>> getAllNombreProveedor({
+  _i12.Future<List<Map<String, dynamic>>> getAllNombreProveedor({
     String? where,
     List<Object?>? whereArgs,
   }) =>
@@ -508,17 +531,17 @@ class MockCompraRepository extends _i1.Mock implements _i14.CompraRepository {
               #where: where,
               #whereArgs: whereArgs,
             }),
-            returnValue: _i11.Future<List<Map<String, dynamic>>>.value(
+            returnValue: _i12.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
           )
-          as _i11.Future<List<Map<String, dynamic>>>);
+          as _i12.Future<List<Map<String, dynamic>>>);
 }
 
 /// A class which mocks [VentaRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockVentaRepository extends _i1.Mock implements _i16.VentaRepository {
+class MockVentaRepository extends _i1.Mock implements _i17.VentaRepository {
   MockVentaRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -538,7 +561,7 @@ class MockVentaRepository extends _i1.Mock implements _i16.VentaRepository {
   String get tableName =>
       (super.noSuchMethod(
             Invocation.getter(#tableName),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#tableName),
             ),
@@ -549,7 +572,7 @@ class MockVentaRepository extends _i1.Mock implements _i16.VentaRepository {
   String get idColumn =>
       (super.noSuchMethod(
             Invocation.getter(#idColumn),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#idColumn),
             ),
@@ -557,91 +580,91 @@ class MockVentaRepository extends _i1.Mock implements _i16.VentaRepository {
           as String);
 
   @override
-  _i8.ClienteRepository get clienteRepo =>
+  _i9.ClienteRepository get clienteRepo =>
       (super.noSuchMethod(
             Invocation.getter(#clienteRepo),
-            returnValue: _FakeClienteRepository_6(
+            returnValue: _FakeClienteRepository_7(
               this,
               Invocation.getter(#clienteRepo),
             ),
           )
-          as _i8.ClienteRepository);
+          as _i9.ClienteRepository);
 
   @override
-  _i9.ProductoRepository get productoRepo =>
+  _i10.ProductoRepository get productoRepo =>
       (super.noSuchMethod(
             Invocation.getter(#productoRepo),
-            returnValue: _FakeProductoRepository_7(
+            returnValue: _FakeProductoRepository_8(
               this,
               Invocation.getter(#productoRepo),
             ),
           )
-          as _i9.ProductoRepository);
+          as _i10.ProductoRepository);
 
   @override
-  _i11.Future<int> registrarNuevaVenta({
-    required _i17.Venta? venta,
-    required List<_i18.DetalleVenta>? detallesVenta,
+  _i12.Future<int> registrarNuevaVenta({
+    required _i18.Venta? venta,
+    required List<_i19.DetalleVenta>? detallesVenta,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#registrarNuevaVenta, [], {
               #venta: venta,
               #detallesVenta: detallesVenta,
             }),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<Map<String, dynamic>> getFullVenta({required int? ventaId}) =>
+  _i12.Future<Map<String, dynamic>> getFullVenta({required int? ventaId}) =>
       (super.noSuchMethod(
             Invocation.method(#getFullVenta, [], {#ventaId: ventaId}),
-            returnValue: _i11.Future<Map<String, dynamic>>.value(
+            returnValue: _i12.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i11.Future<Map<String, dynamic>>);
+          as _i12.Future<Map<String, dynamic>>);
 
   @override
-  _i11.Future<List<Map<String, dynamic>>> getAll() =>
+  _i12.Future<List<Map<String, dynamic>>> getAll() =>
       (super.noSuchMethod(
             Invocation.method(#getAll, []),
-            returnValue: _i11.Future<List<Map<String, dynamic>>>.value(
+            returnValue: _i12.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
           )
-          as _i11.Future<List<Map<String, dynamic>>>);
+          as _i12.Future<List<Map<String, dynamic>>>);
 
   @override
-  _i11.Future<int> markAsPaid(int? ventaId) =>
+  _i12.Future<int> markAsPaid(int? ventaId) =>
       (super.noSuchMethod(
             Invocation.method(#markAsPaid, [ventaId]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> markAsUnpaid(int? ventaId) =>
+  _i12.Future<int> markAsUnpaid(int? ventaId) =>
       (super.noSuchMethod(
             Invocation.method(#markAsUnpaid, [ventaId]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> markAsNulled(int? ventaId) =>
+  _i12.Future<int> markAsNulled(int? ventaId) =>
       (super.noSuchMethod(
             Invocation.method(#markAsNulled, [ventaId]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 }
 
 /// A class which mocks [ProductoRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockProductoRepository extends _i1.Mock
-    implements _i9.ProductoRepository {
+    implements _i10.ProductoRepository {
   MockProductoRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -661,7 +684,7 @@ class MockProductoRepository extends _i1.Mock
   String get tableName =>
       (super.noSuchMethod(
             Invocation.getter(#tableName),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#tableName),
             ),
@@ -672,7 +695,7 @@ class MockProductoRepository extends _i1.Mock
   String get idColumn =>
       (super.noSuchMethod(
             Invocation.getter(#idColumn),
-            returnValue: _i13.dummyValue<String>(
+            returnValue: _i14.dummyValue<String>(
               this,
               Invocation.getter(#idColumn),
             ),
@@ -680,15 +703,15 @@ class MockProductoRepository extends _i1.Mock
           as String);
 
   @override
-  _i6.ArticuloRepository get articuloRepo =>
+  _i7.ArticuloRepository get articuloRepo =>
       (super.noSuchMethod(
             Invocation.getter(#articuloRepo),
-            returnValue: _FakeArticuloRepository_4(
+            returnValue: _FakeArticuloRepository_5(
               this,
               Invocation.getter(#articuloRepo),
             ),
           )
-          as _i6.ArticuloRepository);
+          as _i7.ArticuloRepository);
 
   @override
   dynamic fromJson(Map<String, dynamic>? map) =>
@@ -703,23 +726,23 @@ class MockProductoRepository extends _i1.Mock
           as Map<String, dynamic>);
 
   @override
-  _i11.Future<int> create(dynamic entity) =>
+  _i12.Future<int> create(dynamic entity) =>
       (super.noSuchMethod(
             Invocation.method(#create, [entity]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> delete(int? id) =>
+  _i12.Future<int> delete(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#delete, [id]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<List<dynamic>> getAll({
+  _i12.Future<List<dynamic>> getAll({
     String? where,
     List<Object?>? whereArgs,
   }) =>
@@ -728,28 +751,28 @@ class MockProductoRepository extends _i1.Mock
               #where: where,
               #whereArgs: whereArgs,
             }),
-            returnValue: _i11.Future<List<dynamic>>.value(<dynamic>[]),
+            returnValue: _i12.Future<List<dynamic>>.value(<dynamic>[]),
           )
-          as _i11.Future<List<dynamic>>);
+          as _i12.Future<List<dynamic>>);
 
   @override
-  _i11.Future<dynamic> getById(int? id) =>
+  _i12.Future<dynamic> getById(int? id) =>
       (super.noSuchMethod(
             Invocation.method(#getById, [id]),
-            returnValue: _i11.Future<dynamic>.value(),
+            returnValue: _i12.Future<dynamic>.value(),
           )
-          as _i11.Future<dynamic>);
+          as _i12.Future<dynamic>);
 
   @override
-  _i11.Future<int> update(dynamic entity) =>
+  _i12.Future<int> update(dynamic entity) =>
       (super.noSuchMethod(
             Invocation.method(#update, [entity]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<(dynamic, List<dynamic>)> getProductoByArticuloId({
+  _i12.Future<(_i4.Articulo, List<dynamic>)> getProductoByArticuloId({
     required int? idArticulo,
     int? idProducto,
   }) =>
@@ -758,12 +781,18 @@ class MockProductoRepository extends _i1.Mock
               #idArticulo: idArticulo,
               #idProducto: idProducto,
             }),
-            returnValue: _i11.Future<(dynamic, List<dynamic>)>.value((
-              null,
+            returnValue: _i12.Future<(_i4.Articulo, List<dynamic>)>.value((
+              _FakeArticulo_2(
+                this,
+                Invocation.method(#getProductoByArticuloId, [], {
+                  #idArticulo: idArticulo,
+                  #idProducto: idProducto,
+                }),
+              ),
               <dynamic>[],
             )),
           )
-          as _i11.Future<(dynamic, List<dynamic>)>);
+          as _i12.Future<(_i4.Articulo, List<dynamic>)>);
 }
 
 /// A class which mocks [DatabaseHelper].
@@ -775,49 +804,49 @@ class MockDatabaseHelper extends _i1.Mock implements _i2.DatabaseHelper {
   }
 
   @override
-  _i11.Future<_i10.Database> get database =>
+  _i12.Future<_i11.Database> get database =>
       (super.noSuchMethod(
             Invocation.getter(#database),
-            returnValue: _i11.Future<_i10.Database>.value(
-              _FakeDatabase_8(this, Invocation.getter(#database)),
+            returnValue: _i12.Future<_i11.Database>.value(
+              _FakeDatabase_9(this, Invocation.getter(#database)),
             ),
           )
-          as _i11.Future<_i10.Database>);
+          as _i12.Future<_i11.Database>);
 
   @override
-  _i11.Future<void> testOnCreate(_i10.Database? db, [int? version = 5]) =>
+  _i12.Future<void> testOnCreate(_i11.Database? db, [int? version = 5]) =>
       (super.noSuchMethod(
             Invocation.method(#testOnCreate, [db, version]),
-            returnValue: _i11.Future<void>.value(),
-            returnValueForMissingStub: _i11.Future<void>.value(),
+            returnValue: _i12.Future<void>.value(),
+            returnValueForMissingStub: _i12.Future<void>.value(),
           )
-          as _i11.Future<void>);
+          as _i12.Future<void>);
 
   @override
-  _i11.Future<void> testOnConfigure(_i10.Database? db) =>
+  _i12.Future<void> testOnConfigure(_i11.Database? db) =>
       (super.noSuchMethod(
             Invocation.method(#testOnConfigure, [db]),
-            returnValue: _i11.Future<void>.value(),
-            returnValueForMissingStub: _i11.Future<void>.value(),
+            returnValue: _i12.Future<void>.value(),
+            returnValueForMissingStub: _i12.Future<void>.value(),
           )
-          as _i11.Future<void>);
+          as _i12.Future<void>);
 
   @override
-  void setMockDatabase(_i10.Database? database) => super.noSuchMethod(
+  void setMockDatabase(_i11.Database? database) => super.noSuchMethod(
     Invocation.method(#setMockDatabase, [database]),
     returnValueForMissingStub: null,
   );
 
   @override
-  _i11.Future<int> insert(String? table, Map<String, dynamic>? data) =>
+  _i12.Future<int> insert(String? table, Map<String, dynamic>? data) =>
       (super.noSuchMethod(
             Invocation.method(#insert, [table, data]),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<List<Map<String, dynamic>>> query(
+  _i12.Future<List<Map<String, dynamic>>> query(
     String? table, {
     bool? distinct,
     List<String>? columns,
@@ -845,19 +874,19 @@ class MockDatabaseHelper extends _i1.Mock implements _i2.DatabaseHelper {
                 #offset: offset,
               },
             ),
-            returnValue: _i11.Future<List<Map<String, dynamic>>>.value(
+            returnValue: _i12.Future<List<Map<String, dynamic>>>.value(
               <Map<String, dynamic>>[],
             ),
           )
-          as _i11.Future<List<Map<String, dynamic>>>);
+          as _i12.Future<List<Map<String, dynamic>>>);
 
   @override
-  _i11.Future<int> update(
+  _i12.Future<int> update(
     String? table,
     Map<String, dynamic>? data, {
     String? where,
     List<Object?>? whereArgs,
-    _i10.ConflictAlgorithm? conflictAlgorithm,
+    _i11.ConflictAlgorithm? conflictAlgorithm,
   }) =>
       (super.noSuchMethod(
             Invocation.method(
@@ -869,12 +898,12 @@ class MockDatabaseHelper extends _i1.Mock implements _i2.DatabaseHelper {
                 #conflictAlgorithm: conflictAlgorithm,
               },
             ),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<int> delete(
+  _i12.Future<int> delete(
     String? table, {
     String? where,
     List<Object?>? whereArgs,
@@ -885,37 +914,37 @@ class MockDatabaseHelper extends _i1.Mock implements _i2.DatabaseHelper {
               [table],
               {#where: where, #whereArgs: whereArgs},
             ),
-            returnValue: _i11.Future<int>.value(0),
+            returnValue: _i12.Future<int>.value(0),
           )
-          as _i11.Future<int>);
+          as _i12.Future<int>);
 
   @override
-  _i11.Future<T> transaction<T>(
-    _i11.Future<T> Function(_i10.Transaction)? action,
+  _i12.Future<T> transaction<T>(
+    _i12.Future<T> Function(_i11.Transaction)? action,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#transaction, [action]),
             returnValue:
-                _i13.ifNotNull(
-                  _i13.dummyValueOrNull<T>(
+                _i14.ifNotNull(
+                  _i14.dummyValueOrNull<T>(
                     this,
                     Invocation.method(#transaction, [action]),
                   ),
-                  (T v) => _i11.Future<T>.value(v),
+                  (T v) => _i12.Future<T>.value(v),
                 ) ??
-                _FakeFuture_9<T>(
+                _FakeFuture_10<T>(
                   this,
                   Invocation.method(#transaction, [action]),
                 ),
           )
-          as _i11.Future<T>);
+          as _i12.Future<T>);
 
   @override
-  _i11.Future<void> execute(String? sql, [List<Object?>? arguments]) =>
+  _i12.Future<void> execute(String? sql, [List<Object?>? arguments]) =>
       (super.noSuchMethod(
             Invocation.method(#execute, [sql, arguments]),
-            returnValue: _i11.Future<void>.value(),
-            returnValueForMissingStub: _i11.Future<void>.value(),
+            returnValue: _i12.Future<void>.value(),
+            returnValueForMissingStub: _i12.Future<void>.value(),
           )
-          as _i11.Future<void>);
+          as _i12.Future<void>);
 }

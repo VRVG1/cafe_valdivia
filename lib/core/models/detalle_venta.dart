@@ -8,8 +8,8 @@ abstract class DetalleVenta with _$DetalleVenta {
     @JsonKey(name: 'id_detalle_venta') int? idDetalleVenta,
     @JsonKey(name: 'id_venta') required int idVenta,
     @JsonKey(name: 'id_articulo') required int idArticulo,
-    required int cantidad,
-    @JsonKey(name: 'precio_unitario_venta') required String precioUnitarioVenta,
+    required double cantidad,
+    @JsonKey(name: 'precio_unitario_venta') required double precioUnitarioVenta,
   }) = _DetalleVenta;
 
   factory DetalleVenta.fromJson(Map<String, dynamic> json) =>

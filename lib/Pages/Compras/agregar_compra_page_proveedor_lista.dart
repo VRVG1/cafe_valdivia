@@ -31,5 +31,5 @@ class AgregarCompraPageProveedorLista
 
   @override
   Widget Function(Proveedor element)? get subtitleBuilder =>
-      (Proveedor i) => Text(i.telefono);
+      (Proveedor i) => Text(i.telefono ?? '');
 }

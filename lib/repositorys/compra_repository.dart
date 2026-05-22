@@ -1,9 +1,9 @@
 import 'package:cafe_valdivia/core/utils/logger.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
-import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:sqflite/sqflite.dart';
 

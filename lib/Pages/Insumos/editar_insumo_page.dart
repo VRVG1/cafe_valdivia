@@ -32,7 +32,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     );
     _nombreController = TextEditingController(text: widget.articulo.nombre);
     _costoUnitarioController = TextEditingController(
-      text: widget.articulo.costoUnitario,
+      text: widget.articulo.costoUnitario.toString(),
     );
   }
 
@@ -51,7 +51,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
       idArticulo: widget.articulo.idArticulo,
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
-      costoUnitario: _costoUnitarioController.text,
+      costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
       idUnidad: unidadFinal.idUnidadMedida!,
     );
 

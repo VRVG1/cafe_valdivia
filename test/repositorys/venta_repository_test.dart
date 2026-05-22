@@ -68,10 +68,10 @@ void main() {
         ),
       );
       productoId1 = await productoRepo.create(
-        Producto(nombre: 'Café Especial', precioVenta: '15.50'),
+        Producto(nombre: 'Café Especial', precioVenta: 15.50),
       );
       productoId2 = await productoRepo.create(
-        Producto(nombre: 'Pastel de Chocolate', precioVenta: '8.00'),
+        Producto(nombre: 'Pastel de Chocolate', precioVenta: 8.00),
       );
     });
 
@@ -81,7 +81,7 @@ void main() {
       );
     }
 
-    Future<int> crearProducto(String nombre, String precio) async {
+    Future<int> crearProducto(String nombre, double precio) async {
       final producto = Producto(nombre: nombre, precioVenta: precio);
       return await productoRepo.create(producto);
     }
@@ -96,15 +96,15 @@ void main() {
         final List<DetalleVenta> detalles = [
           DetalleVenta(
             idVenta: 0,
-            idProducto: productoId1,
-            cantidad: 2,
-            precioUnitarioVenta: '15.50',
+            idArticulo: productoId1,
+            cantidad: 2.0,
+            precioUnitarioVenta: 15.50,
           ), // 31.0
           DetalleVenta(
             idVenta: 0,
-            idProducto: productoId2,
-            cantidad: 1,
-            precioUnitarioVenta: '8.00',
+            idArticulo: productoId2,
+            cantidad: 1.0,
+            precioUnitarioVenta: 8.00,
           ), // 8.0
         ];
 
@@ -128,7 +128,7 @@ void main() {
           whereArgs: [ventaId],
         );
         expect(detallesDb, hasLength(2));
-        expect(detallesDb.first['id_producto'], productoId1);
+        expect(detallesDb.first['id_articulo'], productoId1);
         expect(detallesDb.first['cantidad'], 2);
       });
 
@@ -139,15 +139,15 @@ void main() {
           final List<DetalleVenta> detalles = [
             DetalleVenta(
               idVenta: 0,
-              idProducto: productoId1,
-              cantidad: 2,
-              precioUnitarioVenta: '15.50',
+              idArticulo: productoId1,
+              cantidad: 2.0,
+              precioUnitarioVenta: 15.50,
             ), // 31.0
             DetalleVenta(
               idVenta: 0,
-              idProducto: productoId2,
-              cantidad: 1,
-              precioUnitarioVenta: '8.00',
+              idArticulo: productoId2,
+              cantidad: 1.0,
+              precioUnitarioVenta: 8.00,
             ), // 8.0
           ];
           final ventaId = await ventaRepo.registrarNuevaVenta(
@@ -172,9 +172,9 @@ void main() {
           detallesVenta: [
             DetalleVenta(
               idVenta: 0,
-              idProducto: productoId1,
-              cantidad: 1,
-              precioUnitarioVenta: '15.50',
+              idArticulo: productoId1,
+              cantidad: 1.0,
+              precioUnitarioVenta: 15.50,
             ),
           ],
         );
@@ -184,9 +184,9 @@ void main() {
           detallesVenta: [
             DetalleVenta(
               idVenta: 0,
-              idProducto: productoId2,
-              cantidad: 2,
-              precioUnitarioVenta: '8.00',
+              idArticulo: productoId2,
+              cantidad: 2.0,
+              precioUnitarioVenta: 8.00,
             ),
           ],
         );
@@ -267,9 +267,9 @@ void main() {
           final List<DetalleVenta> detallesInvalidos = [
             DetalleVenta(
               idVenta: 0,
-              idProducto: 9999, // ID de producto no existente
-              cantidad: 1,
-              precioUnitarioVenta: '10.0',
+              idArticulo: 9999, // ID de artículo no existente
+              cantidad: 1.0,
+              precioUnitarioVenta: 10.0,
             ),
           ];
 
@@ -353,7 +353,7 @@ void main() {
           final stopwatch = Stopwatch()..start();
 
           final int clienteId = await crearCliente();
-          final int productoId = await crearProducto("Producto", "12");
+          final int productoId = await crearProducto("Producto", 12.0);
 
           final Batch batch = database.batch();
 
@@ -372,7 +372,7 @@ void main() {
           for (int i = 0; i < recordCount; i++) {
             detallesBatch.insert('Detalle_Venta', {
               'id_venta': ventaIds[i],
-              'id_producto': productoId,
+              'id_articulo': productoId,
               'cantidad': i + 1,
               'precio_unitario_venta': ((i + 1) * 1.5).toString(),
             });
@@ -403,13 +403,13 @@ void main() {
 
           final int clienteId = await crearCliente();
 
-          final Batch productoBatch = database.batch();
+          final Batch articuloBatch = database.batch();
           for (int i = 0; i < detailCount; i++) {
-            productoBatch.insert("Producto", {'nombre': 'Producto $i'});
+            articuloBatch.insert("Articulo", {'nombre': 'Articulo $i'});
           }
 
-          final productoResults = await productoBatch.commit(noResult: false);
-          final productoIds = productoResults.cast<int>();
+          final articuloResults = await articuloBatch.commit(noResult: false);
+          final articuloIds = articuloResults.cast<int>();
           appLogger.i(
             "Creacuion de $recordCount productos en ${stopwatch.elapsedMilliseconds} ms",
           );
@@ -424,7 +424,7 @@ void main() {
           for (var i = 0; i < detailCount; i++) {
             detalleBatch.insert("Detalle_Venta", {
               'id_venta': ventaId,
-              'id_producto': productoIds[i],
+              'id_articulo': articuloIds[i],
               'cantidad': 10,
               'precio_unitario_venta': '8.00',
             });
@@ -462,9 +462,9 @@ void main() {
               detallesVenta: [
                 DetalleVenta(
                   idVenta: 0,
-                  idProducto: productoId1,
-                  cantidad: 1,
-                  precioUnitarioVenta: '10.0',
+                  idArticulo: productoId1,
+                  cantidad: 1.0,
+                  precioUnitarioVenta: 10.0,
                 ),
               ],
             );

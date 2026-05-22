@@ -7,7 +7,7 @@ abstract class Cliente with _$Cliente {
   const factory Cliente({
     @JsonKey(name: 'id_cliente') int? idCliente,
     required String nombre,
-    String? apellido,
+    required String apellido,
     String? telefono,
     String? email,
   }) = _Cliente;

@@ -34,12 +34,12 @@ void main() {
     Future<int> crearArticulo({
       required int unidadId,
       String? nombre,
-      String? costoUnitario,
+      double? costoUnitario,
     }) async {
       return await database.insert('Articulo', {
         'nombre': nombre ?? 'Articulo Test',
         'id_unidad': unidadId,
-        'costo_unitario': costoUnitario ?? "0.0",
+        'costo_unitario': costoUnitario?.toString() ?? "0.0",
       });
     }
 
@@ -76,20 +76,20 @@ void main() {
         DetalleCompra(
           idCompra: idCompra,
           idArticulo: articuloId,
-          cantidad: 9,
-          precioUnitarioCompra: "20.00",
+          cantidad: 9.0,
+          precioUnitarioCompra: 20.00,
         ),
         DetalleCompra(
           idCompra: idCompra,
           idArticulo: articuloId,
-          cantidad: 7,
-          precioUnitarioCompra: "19.80",
+          cantidad: 7.0,
+          precioUnitarioCompra: 19.80,
         ),
         DetalleCompra(
           idCompra: idCompra,
           idArticulo: articuloId,
-          cantidad: 2,
-          precioUnitarioCompra: "880.20",
+          cantidad: 2.0,
+          precioUnitarioCompra: 880.20,
         ),
       ];
     }

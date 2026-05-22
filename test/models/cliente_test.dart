@@ -81,17 +81,17 @@ void main() {
     });
 
     test('El modelo funciona con campos nulos', () {
-      final clienteNulo = Cliente(nombre: 'Solo Nombre');
+      final clienteNulo = Cliente(nombre: 'Solo Nombre', apellido: '');
       final clienteNuloJson = {
         'id_cliente': null,
         'nombre': 'Solo Nombre',
-        'apellido': null,
+        'apellido': '',
         'telefono': null,
         'email': null,
       };
 
       expect(clienteNulo.idCliente, isNull);
-      expect(clienteNulo.apellido, isNull);
+      expect(clienteNulo.apellido, '');
       expect(clienteNulo.toJson(), clienteNuloJson);
       expect(Cliente.fromJson(clienteNuloJson), clienteNulo);
     });

@@ -25,9 +25,16 @@ void main() {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearArticulo(String nombre, int unidadId, String costo) async {
+    Future<int> _crearArticulo(String nombre, int unidadId, double costo) async {
       return await articuloRepository.create(
-        Articulo(nombre: nombre, idUnidad: unidadId, costoUnitario: costo),
+        Articulo(
+          nombre: nombre,
+          tipo: ArticuloTipo.insumo,
+          idUnidad: unidadId,
+          costoUnitario: costo,
+          precioVenta: 0.0,
+          stock: 0.0,
+        ),
       );
     }
 

@@ -23,9 +23,16 @@ void main() {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearArticulo(String nombre, int unidadId, String costo) async {
+    Future<int> _crearArticulo(String nombre, int unidadId, double costo) async {
       return await articuloRepository.create(
-        Articulo(nombre: nombre, idUnidad: unidadId, costoUnitario: costo),
+        Articulo(
+          nombre: nombre,
+          tipo: ArticuloTipo.insumo,
+          idUnidad: unidadId,
+          costoUnitario: costo,
+          precioVenta: 0.0,
+          stock: 0.0,
+        ),
       );
     }
 
@@ -67,8 +74,11 @@ void main() {
           final unidadId = await _crearUnidad('Kilogramo');
           final nuevoArticulo = Articulo(
             nombre: 'Café en Grano',
+            tipo: ArticuloTipo.insumo,
             idUnidad: unidadId,
-            costoUnitario: "212.0",
+            costoUnitario: 212.0,
+            precioVenta: 0.0,
+            stock: 0.0,
           );
 
           final articuloId = await articuloRepository.create(nuevoArticulo);
@@ -100,9 +110,9 @@ void main() {
 
       test('getAll returns a list of all articulos', () async {
         final unidadId = await _crearUnidad('Kilogramos');
-        await _crearArticulo('Articulo A', unidadId, "666");
-        await _crearArticulo('Articulo B', unidadId, "65.20");
-        await _crearArticulo('Articulo C', unidadId, "21");
+        await _crearArticulo('Articulo A', unidadId, 666);
+        await _crearArticulo('Articulo B', unidadId, 65.20);
+        await _crearArticulo('Articulo C', unidadId, 21);
 
         final todosLosArticulos = await articuloRepository.getAll();
 
@@ -112,9 +122,9 @@ void main() {
 
       test('getAll with "where" clause filters correctly', () async {
         final unidadId = await _crearUnidad('Litro');
-        await _crearArticulo('Leche Entera', unidadId, "20.5");
-        await _crearArticulo('Leche Descremada', unidadId, "22.5");
-        await _crearArticulo('Crema de Leche', unidadId, "30.0");
+        await _crearArticulo('Leche Entera', unidadId, 20.5);
+        await _crearArticulo('Leche Descremada', unidadId, 22.5);
+        await _crearArticulo('Crema de Leche', unidadId, 30.0);
 
         final resultado = await articuloRepository.getAll(
           where: 'nombre LIKE ?',
@@ -132,8 +142,8 @@ void main() {
           'returns correct unit and a list of multiple articulos associated with it',
           () async {
             final unidadId = await _crearUnidad('Pieza');
-            await _crearArticulo('Taza', unidadId, "50.0");
-            await _crearArticulo('Plato', unidadId, "40.0");
+            await _crearArticulo('Taza', unidadId, 50.0);
+            await _crearArticulo('Plato', unidadId, 40.0);
 
             final (unidad, articulos) = await articuloRepository
                 .getArticuloByIdUnidad(idUnidad: unidadId);
@@ -186,7 +196,7 @@ void main() {
           final articuloId = await _crearArticulo(
             'Vaso Desechable',
             unidadId,
-            "22.22",
+            22.22,
           );
 
           await database.insert('Detalle_Compra', {
@@ -211,7 +221,7 @@ void main() {
 
         test('returns 0.0 if articulo has no purchase history', () async {
           final unidadId = await _crearUnidad('Gramo');
-          final articuloId = await _crearArticulo('Azafrán', unidadId, "999");
+          final articuloId = await _crearArticulo('Azafrán', unidadId, 999);
 
           final costoPromedio = await articuloRepository.getCostoPromedio(
             articuloId,
@@ -236,8 +246,11 @@ void main() {
       test('update throws exception for entity with null ID', () {
         final articuloSinId = Articulo(
           nombre: 'Articulo Fantasma',
+          tipo: ArticuloTipo.insumo,
           idUnidad: 1,
-          costoUnitario: "99.99",
+          costoUnitario: 99.99,
+          precioVenta: 0.0,
+          stock: 0.0,
         );
         expect(
           () => articuloRepository.update(articuloSinId),
@@ -255,8 +268,11 @@ void main() {
         () async {
           final articuloInvalido = Articulo(
             nombre: 'Articulo Roto',
+            tipo: ArticuloTipo.insumo,
             idUnidad: 999,
-            costoUnitario: "29.0",
+            costoUnitario: 29.0,
+            precioVenta: 0.0,
+            stock: 0.0,
           );
 
           expect(
@@ -270,8 +286,11 @@ void main() {
         final unidadId = await _crearUnidad('Unidad');
         final articuloVacio = Articulo(
           nombre: '',
+          tipo: ArticuloTipo.insumo,
           idUnidad: unidadId,
-          costoUnitario: "1.0",
+          costoUnitario: 1.0,
+          precioVenta: 0.0,
+          stock: 0.0,
         );
 
         expect(

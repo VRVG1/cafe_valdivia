@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Articulo {
 
-@JsonKey(name: 'id_articulo') int? get idArticulo; String get nombre; String? get descripcion; String? get tipo;@JsonKey(name: 'id_unidad') int get idUnidad;@JsonKey(name: 'costo_unitario') String get costoUnitario;@JsonKey(name: 'precio_venta') String get precioVenta; double get stock;
+@JsonKey(name: 'id_articulo') int? get idArticulo; String get nombre; String? get descripcion; ArticuloTipo get tipo;@JsonKey(name: 'id_unidad') int get idUnidad;@JsonKey(name: 'costo_unitario') double get costoUnitario;@JsonKey(name: 'precio_venta') double get precioVenta; double get stock;
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ArticuloCopyWith<$Res>  {
   factory $ArticuloCopyWith(Articulo value, $Res Function(Articulo) _then) = _$ArticuloCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, String? tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') String costoUnitario,@JsonKey(name: 'precio_venta') String precioVenta, double stock
+@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, ArticuloTipo tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') double costoUnitario,@JsonKey(name: 'precio_venta') double precioVenta, double stock
 });
 
 
@@ -65,16 +65,16 @@ class _$ArticuloCopyWithImpl<$Res>
 
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = freezed,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = null,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,}) {
   return _then(_self.copyWith(
 idArticulo: freezed == idArticulo ? _self.idArticulo : idArticulo // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,descripcion: freezed == descripcion ? _self.descripcion : descripcion // ignore: cast_nullable_to_non_nullable
-as String?,tipo: freezed == tipo ? _self.tipo : tipo // ignore: cast_nullable_to_non_nullable
-as String?,idUnidad: null == idUnidad ? _self.idUnidad : idUnidad // ignore: cast_nullable_to_non_nullable
+as String?,tipo: null == tipo ? _self.tipo : tipo // ignore: cast_nullable_to_non_nullable
+as ArticuloTipo,idUnidad: null == idUnidad ? _self.idUnidad : idUnidad // ignore: cast_nullable_to_non_nullable
 as int,costoUnitario: null == costoUnitario ? _self.costoUnitario : costoUnitario // ignore: cast_nullable_to_non_nullable
-as String,precioVenta: null == precioVenta ? _self.precioVenta : precioVenta // ignore: cast_nullable_to_non_nullable
-as String,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
+as double,precioVenta: null == precioVenta ? _self.precioVenta : precioVenta // ignore: cast_nullable_to_non_nullable
+as double,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -160,7 +160,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  String? tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  String costoUnitario, @JsonKey(name: 'precio_venta')  String precioVenta,  double stock)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Articulo() when $default != null:
 return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock);case _:
@@ -181,7 +181,7 @@ return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  String? tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  String costoUnitario, @JsonKey(name: 'precio_venta')  String precioVenta,  double stock)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock)  $default,) {final _that = this;
 switch (_that) {
 case _Articulo():
 return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock);case _:
@@ -201,7 +201,7 @@ return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  String? tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  String costoUnitario, @JsonKey(name: 'precio_venta')  String precioVenta,  double stock)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock)?  $default,) {final _that = this;
 switch (_that) {
 case _Articulo() when $default != null:
 return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock);case _:
@@ -222,10 +222,10 @@ class _Articulo implements Articulo {
 @override@JsonKey(name: 'id_articulo') final  int? idArticulo;
 @override final  String nombre;
 @override final  String? descripcion;
-@override final  String? tipo;
+@override final  ArticuloTipo tipo;
 @override@JsonKey(name: 'id_unidad') final  int idUnidad;
-@override@JsonKey(name: 'costo_unitario') final  String costoUnitario;
-@override@JsonKey(name: 'precio_venta') final  String precioVenta;
+@override@JsonKey(name: 'costo_unitario') final  double costoUnitario;
+@override@JsonKey(name: 'precio_venta') final  double precioVenta;
 @override final  double stock;
 
 /// Create a copy of Articulo
@@ -261,7 +261,7 @@ abstract mixin class _$ArticuloCopyWith<$Res> implements $ArticuloCopyWith<$Res>
   factory _$ArticuloCopyWith(_Articulo value, $Res Function(_Articulo) _then) = __$ArticuloCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, String? tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') String costoUnitario,@JsonKey(name: 'precio_venta') String precioVenta, double stock
+@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, ArticuloTipo tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') double costoUnitario,@JsonKey(name: 'precio_venta') double precioVenta, double stock
 });
 
 
@@ -278,16 +278,16 @@ class __$ArticuloCopyWithImpl<$Res>
 
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = freezed,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = null,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,}) {
   return _then(_Articulo(
 idArticulo: freezed == idArticulo ? _self.idArticulo : idArticulo // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,descripcion: freezed == descripcion ? _self.descripcion : descripcion // ignore: cast_nullable_to_non_nullable
-as String?,tipo: freezed == tipo ? _self.tipo : tipo // ignore: cast_nullable_to_non_nullable
-as String?,idUnidad: null == idUnidad ? _self.idUnidad : idUnidad // ignore: cast_nullable_to_non_nullable
+as String?,tipo: null == tipo ? _self.tipo : tipo // ignore: cast_nullable_to_non_nullable
+as ArticuloTipo,idUnidad: null == idUnidad ? _self.idUnidad : idUnidad // ignore: cast_nullable_to_non_nullable
 as int,costoUnitario: null == costoUnitario ? _self.costoUnitario : costoUnitario // ignore: cast_nullable_to_non_nullable
-as String,precioVenta: null == precioVenta ? _self.precioVenta : precioVenta // ignore: cast_nullable_to_non_nullable
-as String,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
+as double,precioVenta: null == precioVenta ? _self.precioVenta : precioVenta // ignore: cast_nullable_to_non_nullable
+as double,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }

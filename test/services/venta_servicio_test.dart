@@ -32,10 +32,10 @@ void main() {
         DetalleVenta(
           id: 1,
           idVenta: 1,
-          idProducto: 1,
-          cantidad: 2,
-          precioUnitarioVenta: 200,
-          producto: Producto(id: 1, nombre: 'Cafe', precioVenta: 250),
+          idArticulo: 1,
+          cantidad: 2.0,
+          precioUnitarioVenta: 200.0,
+          producto: Producto(id: 1, nombre: 'Cafe', precioVenta: 250.0),
         ),
       ],
     );
