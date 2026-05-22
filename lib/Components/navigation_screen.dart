@@ -2,8 +2,8 @@ import 'package:cafe_valdivia/Pages/Clientes/agregar_cliente.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page.dart';
 import 'package:cafe_valdivia/Pages/Compras/compra_list_page.dart';
-import 'package:cafe_valdivia/Pages/Insumos/agregar_insumos_page.dart';
-import 'package:cafe_valdivia/Pages/Insumos/inusmo_lista_page.dart';
+import 'package:cafe_valdivia/Pages/Articulos/agregar_articulos_page.dart';
+import 'package:cafe_valdivia/Pages/Articulos/inusmo_lista_page.dart';
 import 'package:cafe_valdivia/Pages/Options/options_list.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_agregar_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_lista_page.dart';
@@ -69,7 +69,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => AgregarInsumoPage(),
+                  builder: (context) => AgregarArticuloPage(),
                   fullscreenDialog: true,
                 ),
               );
@@ -136,7 +136,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       NavigationDrawerDestination(
         selectedIcon: Icon(Icons.trolley),
         icon: Icon(Icons.trolley),
-        label: Text("Insumo"),
+        label: Text("Articulo"),
       ),
       NavigationDrawerDestination(
         selectedIcon: Icon(Icons.coffee_rounded),

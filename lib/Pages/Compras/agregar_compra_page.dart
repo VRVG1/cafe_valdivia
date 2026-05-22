@@ -2,12 +2,12 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
-import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_insumo_page.dart';
+import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_page.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,14 +31,14 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   bool _isNegative = false;
   bool _esPagado = false;
 
-  final _proveedorInsumo = <String, dynamic>{"proveedor": "", "insumo": ""};
+  final _proveedorArticulo = <String, dynamic>{"proveedor": "", "articulo": ""};
 
   // Controllers
   final TextEditingController _cantidadController = TextEditingController(
     text: "0",
   );
   final TextEditingController _proveedorController = TextEditingController();
-  final TextEditingController _insumoController = TextEditingController();
+  final TextEditingController _articuloController = TextEditingController();
   final TextEditingController _precioController = TextEditingController(
     text: "0",
   );
@@ -61,12 +61,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     if (result == null) return;
 
     setState(() {
-      if (eleccion == 'insumo') {
+      if (eleccion == 'articulo') {
         print(result.costoUnitario);
         _precioController.text = result.costoUnitario;
       }
       controller.text = result.nombre;
-      _proveedorInsumo[eleccion] = result;
+      _proveedorArticulo[eleccion] = result;
     });
     if (!context.mounted) return;
   }
@@ -90,7 +90,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     // Controllers
     _cantidadController.dispose();
     _proveedorController.dispose();
-    _insumoController.dispose();
+    _articuloController.dispose();
     _descripcionController.dispose();
 
     super.dispose();
@@ -108,17 +108,17 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   void _agregarAlCarrito() {
     if (_formKey.currentState?.validate() ?? false) {
       final producto = {
-        'nombre': _proveedorInsumo['insumo'].nombre,
+        'nombre': _proveedorArticulo['articulo'].nombre,
         'cantidad': int.tryParse(_cantidadController.text),
         'precio': double.parse(_precioController.text),
-        'insumo': _proveedorInsumo['insumo'],
-        'proveedor': _proveedorInsumo['proveedor'],
+        'articulo': _proveedorArticulo['articulo'],
+        'proveedor': _proveedorArticulo['proveedor'],
       };
 
       setState(() {
         carritoDeCompras.add(producto);
         _cantidadController.text = "";
-        _insumoController.text = "";
+        _articuloController.text = "";
         _precioController.text = "";
       });
     }
@@ -131,17 +131,17 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
     for (var item in data) {
       final proveedor = item['proveedor'];
-      final insumo = item['insumo'];
+      final articulo = item['articulo'];
       if (proveedor == null) continue;
       final int id = proveedor.idProveedor;
 
       final contenedor = grupos.putIfAbsent(
         id,
-        () => {'idProveedor': id, 'insumos': <Map<String, dynamic>>[]},
+        () => {'idProveedor': id, 'articulos': <Map<String, dynamic>>[]},
       );
 
-      final listaInsumos = contenedor['insumos'] as List<Map<String, dynamic>>;
-      listaInsumos.add({'insumo': insumo, 'cantidad': item['cantidad']});
+      final listaArticulos = contenedor['articulos'] as List<Map<String, dynamic>>;
+      listaArticulos.add({'articulo': articulo, 'cantidad': item['cantidad']});
     }
     return grupos.values.toList();
   }
@@ -149,7 +149,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   void _procesarCompra(
     Compra compra,
     List<DetalleCompra> detalleCompra,
-    List<Insumo> insumos,
+    List<Articulo> articulos,
   ) async {
     final result = await create(
       context: context,
@@ -163,19 +163,19 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     );
     // TODO: Se supone que en los triggers se tiene que realizar dicha operacion de cambios
     // if (result) {
-    //   for (var insumo in insumos) {
+    //   for (var articulo in articulos) {
     //     update(
     //       context: context,
     //       ref: ref,
-    //       provider: insumoProviderProvider,
-    //       element: insumo,
+    //       provider: articuloProviderProvider,
+    //       element: articulo,
     //     );
     //   }
     // }
   }
 
   void _resumenCompra() {
-    //TODO: REcordar que, siempre se tiene que actualizar el insumo, en concreto el campo costoUnitario, ya que puede que o no, cambie con la compra, y como no se como validar si cambia o no, mejor lo actualizo y ya.
+    //TODO: REcordar que, siempre se tiene que actualizar el articulo, en concreto el campo costoUnitario, ya que puede que o no, cambie con la compra, y como no se como validar si cambia o no, mejor lo actualizo y ya.
     final List<Map<String, dynamic>> result = _separarPorProveedor(
       carritoDeCompras,
     );
@@ -189,20 +189,20 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       );
       //Creamos una lista de compras detalladas
       final List<DetalleCompra> detallesCompraList = [];
-      final List<Insumo> insumos = [];
-      for (var elemento in item['insumos']) {
+      final List<Articulo> articulos = [];
+      for (var elemento in item['articulos']) {
         DetalleCompra detalleCompra = DetalleCompra(
           idCompra:
               0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
-          idInsumo: elemento['insumo'].idInsumo,
+          idArticulo: elemento['articulo'].idArticulo,
           cantidad: elemento['cantidad'],
-          precioUnitarioCompra: elemento['insumo'].costoUnitario,
+          precioUnitarioCompra: elemento['articulo'].costoUnitario,
         );
-        insumos.add(elemento['insumo']);
+        articulos.add(elemento['articulo']);
         detallesCompraList.add(detalleCompra);
       }
       //Usamos el crud la funcion create
-      _procesarCompra(compra, detallesCompraList, insumos);
+      _procesarCompra(compra, detallesCompraList, articulos);
       //esperamos a que jale xd
     }
   }
@@ -246,7 +246,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 children: <Widget>[
                   _buildAgregarProveedor(),
                   const SizedBox(height: 16),
-                  _buildAgregarInsumo(),
+                  _buildAgregarArticulo(),
 
                   const SizedBox(height: 16),
 
@@ -295,26 +295,26 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     );
   }
 
-  Widget _buildAgregarInsumo() {
+  Widget _buildAgregarArticulo() {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Favor de seleccionar un Insumo.";
+          return "Favor de seleccionar un Articulo.";
         }
         return null;
       },
       readOnly: true,
-      controller: _insumoController,
+      controller: _articuloController,
       onTap: () => {
         _recibirDatos(
           context,
-          AgregarCompraSeleccionInsumoPage(),
-          _insumoController,
-          "insumo",
+          AgregarCompraSeleccionArticuloPage(),
+          _articuloController,
+          "articulo",
         ),
       },
       decoration: InputDecoration(
-        labelText: "Insumo",
+        labelText: "Articulo",
         border: OutlineInputBorder(),
         prefixIcon: Icon(Icons.fax_rounded),
       ),

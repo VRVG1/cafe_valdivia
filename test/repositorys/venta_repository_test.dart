@@ -3,7 +3,7 @@ import 'package:cafe_valdivia/core/models/detalle_venta.dart';
 import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';
@@ -53,8 +53,8 @@ void main() {
 
       // Inicializar repositorios
       final unidadRepo = UnidadMedidaRepository(databaseHelper);
-      final insumoRepo = InsumosRepository(databaseHelper, unidadRepo);
-      productoRepo = ProductoRepository(databaseHelper, insumoRepo);
+      final articuloRepo = ArticuloRepository(databaseHelper, unidadRepo);
+      productoRepo = ProductoRepository(databaseHelper, articuloRepo);
       clienteRepo = ClienteRepository(databaseHelper);
       ventaRepo = VentaRepository(databaseHelper, productoRepo, clienteRepo);
 

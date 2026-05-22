@@ -1,11 +1,11 @@
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
-import 'package:cafe_valdivia/core/models/insumo_producto.dart';
+import 'package:cafe_valdivia/core/models/articulo_producto.dart';
 import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/inventario_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';
@@ -19,7 +19,7 @@ import 'inventario_servicio_test.mocks.dart';
 
 @GenerateMocks([
   InventarioRepository,
-  InsumosRepository,
+  ArticuloRepository,
   CompraRepository,
   VentaRepository,
   ProductoRepository,
@@ -27,7 +27,7 @@ import 'inventario_servicio_test.mocks.dart';
 ])
 void main() {
   late InventarioServicio inventarioServicio;
-  late MockInsumosRepository mockInsumoRepository;
+  late MockArticuloRepository mockArticuloRepository;
   late MockCompraRepository mockCompraRepository;
   late MockVentaRepository mockVentaRepository;
   late MockProductoRepository mockProductoRepository;
@@ -36,7 +36,7 @@ void main() {
   setUp(() {
     mockInventarioRepository = MockInventarioRepository();
     mockMovimientoInventarioRepository = MockMovimientoInventarioRepository();
-    mockInsumoRepository = MockInsumoRepository();
+    mockArticuloRepository = MockArticuloRepository();
     mockCompraRepository = MockCompraRepository();
     mockVentaRepository = MockVentaRepository();
     mockProductoRepository = MockProductoRepository();
@@ -45,7 +45,7 @@ void main() {
     inventarioServicio = InventarioServicio(
       inventarioRepository: mockInventarioRepository,
       movimientoInventarioRepository: mockMovimientoInventarioRepository,
-      insumoRepository: mockInsumoRepository,
+      articuloRepository: mockArticuloRepository,
       compraRepository: mockCompraRepository,
       ventaRepository: mockVentaRepository,
       productoRepository: mockProductoRepository,
@@ -61,7 +61,7 @@ void main() {
       detallesCompra: [
         DetalleCompra(
           id: 1,
-          idInsumo: 1,
+          idArticulo: 1,
           cantidad: 10,
           precioUnitarioCompra: 100,
         ),
@@ -85,8 +85,8 @@ void main() {
       id: 1,
       nombre: 'Cafe',
       precioVenta: 250,
-      insumos: [
-        InsumoProducto(idInsumo: 1, idProducto: 1, cantidadRequerida: 1),
+      articulos: [
+        ArticuloProducto(idArticulo: 1, idProducto: 1, cantidadRequerida: 1),
       ],
     );
 
@@ -116,7 +116,7 @@ void main() {
           mockVentaRepository.getFullVenta(1),
         ).thenAnswer((_) async => venta);
         when(
-          mockProductoRepository.getWithInsumo(1),
+          mockProductoRepository.getWithArticulo(1),
         ).thenAnswer((_) async => producto);
 
         await inventarioServicio.registrarSalidaPorVenta(1);
@@ -136,7 +136,7 @@ void main() {
 
       test('registrarAjusteInvetario - Entrada', () async {
         await inventarioServicio.registrarAjusteInvetario(
-          insumoId: 1,
+          articuloId: 1,
           cantidad: 5,
           motivo: 'Ajuste',
         );
@@ -154,7 +154,7 @@ void main() {
 
       test('registrarAjusteInvetario - Salida', () async {
         await inventarioServicio.registrarAjusteInvetario(
-          insumoId: 1,
+          articuloId: 1,
           cantidad: -5,
           motivo: 'Ajuste',
         );
@@ -172,7 +172,7 @@ void main() {
 
       test('verificarStockDisponible - Hay stock', () async {
         when(
-          mockProductoRepository.getWithInsumo(1),
+          mockProductoRepository.getWithArticulo(1),
         ).thenAnswer((_) async => producto);
         when(mockInventarioRepository.getStock(1)).thenAnswer((_) async => 10);
 
@@ -183,10 +183,10 @@ void main() {
 
       test('calcularCostoProducto - Exito', () async {
         when(
-          mockProductoRepository.getWithInsumo(1),
+          mockProductoRepository.getWithArticulo(1),
         ).thenAnswer((_) async => producto);
         when(
-          mockInsumoRepository.getCostoPromedio(1),
+          mockArticuloRepository.getCostoPromedio(1),
         ).thenAnswer((_) async => 150);
 
         final result = await inventarioServicio.calcularCostoProducto(1);
@@ -198,7 +198,7 @@ void main() {
     group('Pruebas de Robustez', () {
       test('registrarAjusteInvetario - Cantidad es 0', () async {
         await inventarioServicio.registrarAjusteInvetario(
-          insumoId: 1,
+          articuloId: 1,
           cantidad: 0,
           motivo: 'Ajuste',
         );
@@ -216,7 +216,7 @@ void main() {
 
       test('verificarStockDisponible - No hay stock', () async {
         when(
-          mockProductoRepository.getWithInsumo(1),
+          mockProductoRepository.getWithArticulo(1),
         ).thenAnswer((_) async => producto);
         when(mockInventarioRepository.getStock(1)).thenAnswer((_) async => 2);
 
@@ -229,7 +229,7 @@ void main() {
     group('Pruebas de Rendimiento', () {
       test('verificarStockDisponible - Rendimiento', () async {
         when(
-          mockProductoRepository.getWithInsumo(1),
+          mockProductoRepository.getWithArticulo(1),
         ).thenAnswer((_) async => producto);
         when(
           mockInventarioRepository.getStock(1),

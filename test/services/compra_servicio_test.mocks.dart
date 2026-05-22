@@ -8,7 +8,7 @@ import 'dart:async' as _i8;
 import 'package:cafe_valdivia/core/models/compra.dart' as _i5;
 import 'package:cafe_valdivia/core/models/detalle_compra.dart' as _i9;
 import 'package:cafe_valdivia/repositorys/compra_repository.dart' as _i6;
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart' as _i4;
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart' as _i4;
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart' as _i3;
 import 'package:cafe_valdivia/services/db_helper.dart' as _i2;
 import 'package:cafe_valdivia/services/inventario_servicio.dart' as _i10;
@@ -42,9 +42,9 @@ class _FakeProveedorRepository_1 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeInsumosRepository_2 extends _i1.SmartFake
-    implements _i4.InsumosRepository {
-  _FakeInsumosRepository_2(Object parent, Invocation parentInvocation)
+class _FakeArticuloRepository_2 extends _i1.SmartFake
+    implements _i4.ArticuloRepository {
+  _FakeArticuloRepository_2(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -106,15 +106,15 @@ class MockCompraRepository extends _i1.Mock implements _i6.CompraRepository {
           as _i3.ProveedorRepository);
 
   @override
-  _i4.InsumosRepository get insumoRepo =>
+  _i4.ArticuloRepository get articuloRepo =>
       (super.noSuchMethod(
-            Invocation.getter(#insumoRepo),
-            returnValue: _FakeInsumosRepository_2(
+            Invocation.getter(#articuloRepo),
+            returnValue: _FakeArticuloRepository_2(
               this,
-              Invocation.getter(#insumoRepo),
+              Invocation.getter(#articuloRepo),
             ),
           )
-          as _i4.InsumosRepository);
+          as _i4.ArticuloRepository);
 
   @override
   _i5.Compra fromJson(Map<String, dynamic>? map) =>

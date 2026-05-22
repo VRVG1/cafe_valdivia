@@ -1,56 +1,56 @@
-import 'package:cafe_valdivia/core/models/insumo_producto.dart';
+import 'package:cafe_valdivia/core/models/articulo_producto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('InsumoProducto', () {
-    final insumoProducto = InsumoProducto(
-      idInsumoProducto: 1,
-      idInsumo: 10,
+  group('ArticuloProducto', () {
+    final articuloProducto = ArticuloProducto(
+      idArticuloProducto: 1,
+      idArticulo: 10,
       idProducto: 20,
       nombre: 'Azúcar',
       cantidadRequerida: 0.5,
     );
 
-    final insumoProductoJson = {
-      'id_insumo_producto': 1,
-      'id_insumo': 10,
+    final articuloProductoJson = {
+      'id_articulo_producto': 1,
+      'id_articulo': 10,
       'id_producto': 20,
       'nombre': 'Azúcar',
       'cantidad_requerida': 0.5,
     };
 
     test('fromJson crea una instancia correcta', () {
-      final fromJson = InsumoProducto.fromJson(insumoProductoJson);
-      expect(fromJson, insumoProducto);
+      final fromJson = ArticuloProducto.fromJson(articuloProductoJson);
+      expect(fromJson, articuloProducto);
     });
 
     test('toJson crea el mapa correcto', () {
-      final toJson = insumoProducto.toJson();
-      expect(toJson, insumoProductoJson);
+      final toJson = articuloProducto.toJson();
+      expect(toJson, articuloProductoJson);
     });
 
     test('copyWith crea una copia con valores actualizados', () {
-      final copia = insumoProducto.copyWith(cantidadRequerida: 1.0);
+      final copia = articuloProducto.copyWith(cantidadRequerida: 1.0);
 
       expect(copia.cantidadRequerida, 1.0);
       // Los demás valores deben permanecer iguales
-      expect(copia.idInsumoProducto, insumoProducto.idInsumoProducto);
-      expect(copia.idInsumo, insumoProducto.idInsumo);
-      expect(copia.idProducto, insumoProducto.idProducto);
-      expect(copia.nombre, insumoProducto.nombre);
+      expect(copia.idArticuloProducto, articuloProducto.idArticuloProducto);
+      expect(copia.idArticulo, articuloProducto.idArticulo);
+      expect(copia.idProducto, articuloProducto.idProducto);
+      expect(copia.nombre, articuloProducto.nombre);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
-      final ip1 = InsumoProducto(
-        idInsumoProducto: 1,
-        idInsumo: 10,
+      final ip1 = ArticuloProducto(
+        idArticuloProducto: 1,
+        idArticulo: 10,
         idProducto: 20,
         nombre: 'Azúcar',
         cantidadRequerida: 0.5,
       );
-      final ip2 = InsumoProducto(
-        idInsumoProducto: 1,
-        idInsumo: 10,
+      final ip2 = ArticuloProducto(
+        idArticuloProducto: 1,
+        idArticulo: 10,
         idProducto: 20,
         nombre: 'Azúcar',
         cantidadRequerida: 0.5,
@@ -60,16 +60,16 @@ void main() {
     });
 
     test('El hashCode es el mismo para instancias iguales', () {
-      final ip1 = InsumoProducto(
-        idInsumoProducto: 1,
-        idInsumo: 10,
+      final ip1 = ArticuloProducto(
+        idArticuloProducto: 1,
+        idArticulo: 10,
         idProducto: 20,
         nombre: 'Azúcar',
         cantidadRequerida: 0.5,
       );
-      final ip2 = InsumoProducto(
-        idInsumoProducto: 1,
-        idInsumo: 10,
+      final ip2 = ArticuloProducto(
+        idArticuloProducto: 1,
+        idArticulo: 10,
         idProducto: 20,
         nombre: 'Azúcar',
         cantidadRequerida: 0.5,

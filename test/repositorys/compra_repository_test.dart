@@ -5,7 +5,7 @@ import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 
@@ -18,7 +18,7 @@ void main() {
   group('CompraRepository Tests', () {
     late DatabaseHelper databaseHelper;
     late UnidadMedidaRepository unidadRepo;
-    late InsumosRepository insumoRepo;
+    late ArticuloRepository articuloRepo;
     late ProveedorRepository proveedorRepo;
     late CompraRepository compraRepo;
     late Database database;
@@ -31,13 +31,13 @@ void main() {
       });
     }
 
-    Future<int> crearInsumo({
+    Future<int> crearArticulo({
       required int unidadId,
       String? nombre,
       String? costoUnitario,
     }) async {
-      return await database.insert('Insumo', {
-        'nombre': nombre ?? 'Insumo Test',
+      return await database.insert('Articulo', {
+        'nombre': nombre ?? 'Articulo Test',
         'id_unidad': unidadId,
         'costo_unitario': costoUnitario ?? "0.0",
       });
@@ -65,29 +65,29 @@ void main() {
     Future<List<DetalleCompra>> crearDetallesCompra({
       int idCompra = 0,
       String? nombreUnidad,
-      String? nombreInsumo,
+      String? nombreArticulo,
     }) async {
       final unidadId = await crearUnidad(nombreUnidad: nombreUnidad);
-      final insumoId = await crearInsumo(
+      final articuloId = await crearArticulo(
         unidadId: unidadId,
-        nombre: nombreInsumo,
+        nombre: nombreArticulo,
       );
       return [
         DetalleCompra(
           idCompra: idCompra,
-          idInsumo: insumoId,
+          idArticulo: articuloId,
           cantidad: 9,
           precioUnitarioCompra: "20.00",
         ),
         DetalleCompra(
           idCompra: idCompra,
-          idInsumo: insumoId,
+          idArticulo: articuloId,
           cantidad: 7,
           precioUnitarioCompra: "19.80",
         ),
         DetalleCompra(
           idCompra: idCompra,
-          idInsumo: insumoId,
+          idArticulo: articuloId,
           cantidad: 2,
           precioUnitarioCompra: "880.20",
         ),
@@ -113,9 +113,9 @@ void main() {
       databaseHelper.setMockDatabase(database);
 
       unidadRepo = UnidadMedidaRepository(databaseHelper);
-      insumoRepo = InsumosRepository(databaseHelper, unidadRepo);
+      articuloRepo = ArticuloRepository(databaseHelper, unidadRepo);
       proveedorRepo = ProveedorRepository(databaseHelper);
-      compraRepo = CompraRepository(databaseHelper, proveedorRepo, insumoRepo);
+      compraRepo = CompraRepository(databaseHelper, proveedorRepo, articuloRepo);
     });
 
     tearDown(() async {
@@ -199,7 +199,7 @@ void main() {
       final compra1 = await crearCompra(true);
       final detalles1 = await crearDetallesCompra(
         nombreUnidad: "Unidad 1",
-        nombreInsumo: "Insumo 1",
+        nombreArticulo: "Articulo 1",
       );
       await compraRepo.registrarNuevaCompra(
         compra: compra1,
@@ -209,7 +209,7 @@ void main() {
       final compra2 = await crearCompra(false);
       final detalles2 = await crearDetallesCompra(
         nombreUnidad: "Unidad 2",
-        nombreInsumo: "Insumo 2",
+        nombreArticulo: "Articulo 2",
       );
       await compraRepo.registrarNuevaCompra(
         compra: compra2,
@@ -252,7 +252,7 @@ void main() {
 
         final proveedorId = await crearProveedor();
         final unidadId = await crearUnidad();
-        final insumoId = await crearInsumo(unidadId: unidadId);
+        final articuloId = await crearArticulo(unidadId: unidadId);
 
         final batch = database.batch();
         final compraIds = <int>[];
@@ -275,7 +275,7 @@ void main() {
         for (int i = 0; i < recordCount; i++) {
           detallesBatch.insert('Detalle_Compra', {
             'id_compra': compraIds[i],
-            'id_insumo': insumoId,
+            'id_articulo': articuloId,
             'cantidad': i + 1,
             'precio_unitario_compra': ((i + 1) * 1.5).toString(),
           });
@@ -308,18 +308,18 @@ void main() {
         final proveedorId = await crearProveedor();
         final unidadId = await crearUnidad();
 
-        // 2. Crear 100 insumos usando batch
-        final insumoBatch = database.batch();
+        // 2. Crear 100 articulos usando batch
+        final articuloBatch = database.batch();
         for (int i = 0; i < 100; i++) {
-          insumoBatch.insert('Insumo', {
-            'nombre': 'Insumo ${i + 1}',
+          articuloBatch.insert('Articulo', {
+            'nombre': 'Articulo ${i + 1}',
             'id_unidad': unidadId,
             'costo_unitario': '1.0',
           });
         }
-        final insumoResults = await insumoBatch.commit(noResult: false);
-        final insumoIds = insumoResults.cast<int>();
-        print('Creación 100 insumos: ${stopwatch.elapsedMilliseconds}ms');
+        final articuloResults = await articuloBatch.commit(noResult: false);
+        final articuloIds = articuloResults.cast<int>();
+        print('Creación 100 articulos: ${stopwatch.elapsedMilliseconds}ms');
 
         // 3. Crear compra principal
         final compraId = await database.insert('Compra', {
@@ -333,7 +333,7 @@ void main() {
         for (int i = 0; i < 100; i++) {
           detallesBatch.insert('Detalle_Compra', {
             'id_compra': compraId,
-            'id_insumo': insumoIds[i],
+            'id_articulo': articuloIds[i],
             'cantidad': 10,
             'precio_unitario_compra': '5.99',
           });

@@ -7,7 +7,7 @@ void main() {
     final detalleCompra = DetalleCompra(
       id: 1,
       idCompra: 10,
-      idInsumo: 20,
+      idArticulo: 20,
       cantidad: 5,
       precioUnitarioCompra: '10.50',
     );
@@ -15,7 +15,7 @@ void main() {
     final detalleCompraJson = {
       'id_detalle_compra': 1,
       'id_compra': 10,
-      'id_insumo': 20,
+      'id_articulo': 20,
       'cantidad': 5,
       'precio_unitario_compra': '10.50',
     };
@@ -37,7 +37,7 @@ void main() {
       // Los demás valores deben permanecer iguales
       expect(copia.id, detalleCompra.id);
       expect(copia.idCompra, detalleCompra.idCompra);
-      expect(copia.idInsumo, detalleCompra.idInsumo);
+      expect(copia.idArticulo, detalleCompra.idArticulo);
       expect(copia.precioUnitarioCompra, detalleCompra.precioUnitarioCompra);
     });
 
@@ -45,14 +45,14 @@ void main() {
       final dc1 = DetalleCompra(
         id: 1,
         idCompra: 10,
-        idInsumo: 20,
+        idArticulo: 20,
         cantidad: 5,
         precioUnitarioCompra: '10.50',
       );
       final dc2 = DetalleCompra(
         id: 1,
         idCompra: 10,
-        idInsumo: 20,
+        idArticulo: 20,
         cantidad: 5,
         precioUnitarioCompra: '10.50',
       );
@@ -64,14 +64,14 @@ void main() {
       final dc1 = DetalleCompra(
         id: 1,
         idCompra: 10,
-        idInsumo: 20,
+        idArticulo: 20,
         cantidad: 5,
         precioUnitarioCompra: '10.50',
       );
       final dc2 = DetalleCompra(
         id: 1,
         idCompra: 10,
-        idInsumo: 20,
+        idArticulo: 20,
         cantidad: 5,
         precioUnitarioCompra: '10.50',
       );

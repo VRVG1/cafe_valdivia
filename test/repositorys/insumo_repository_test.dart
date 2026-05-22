@@ -1,6 +1,6 @@
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,9 +13,9 @@ void main() {
     databaseFactory = databaseFactoryFfi;
   });
 
-  group('InsumosRepository Tests', () {
+  group('ArticuloRepository Tests', () {
     late DatabaseHelper databaseHelper;
-    late InsumosRepository insumoRepository;
+    late ArticuloRepository articuloRepository;
     late UnidadMedidaRepository unidadMedidaRepository;
     late Database database;
 
@@ -23,14 +23,14 @@ void main() {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearInsumo(String nombre, int unidadId, String costo) async {
-      return await insumoRepository.create(
-        Insumo(nombre: nombre, idUnidad: unidadId, costoUnitario: costo),
+    Future<int> _crearArticulo(String nombre, int unidadId, String costo) async {
+      return await articuloRepository.create(
+        Articulo(nombre: nombre, idUnidad: unidadId, costoUnitario: costo),
       );
     }
 
     setUp(() async {
-      final path = p.join(inMemoryDatabasePath, 'test_insumos_repository.db');
+      final path = p.join(inMemoryDatabasePath, 'test_articulos_repository.db');
       await databaseFactory.deleteDatabase(path);
 
       database = await openDatabase(
@@ -48,7 +48,7 @@ void main() {
       databaseHelper.setMockDatabase(database);
 
       unidadMedidaRepository = UnidadMedidaRepository(databaseHelper);
-      insumoRepository = InsumosRepository(
+      articuloRepository = ArticuloRepository(
         databaseHelper,
         unidadMedidaRepository,
       );
@@ -62,61 +62,61 @@ void main() {
 
     group('CRUD Operations', () {
       test(
-        'Create, GetById, Update, and Delete an Insumo successfully',
+        'Create, GetById, Update, and Delete an Articulo successfully',
         () async {
           final unidadId = await _crearUnidad('Kilogramo');
-          final nuevoInsumo = Insumo(
+          final nuevoArticulo = Articulo(
             nombre: 'Café en Grano',
             idUnidad: unidadId,
             costoUnitario: "212.0",
           );
 
-          final insumoId = await insumoRepository.create(nuevoInsumo);
-          expect(insumoId, isA<int>());
+          final articuloId = await articuloRepository.create(nuevoArticulo);
+          expect(articuloId, isA<int>());
 
-          var insumoRecuperado = await insumoRepository.getById(insumoId);
-          expect(insumoRecuperado.nombre, 'Café en Grano');
-          expect(insumoRecuperado.idUnidad, unidadId);
+          var articuloRecuperado = await articuloRepository.getById(articuloId);
+          expect(articuloRecuperado.nombre, 'Café en Grano');
+          expect(articuloRecuperado.idUnidad, unidadId);
 
-          final insumoActualizado = insumoRecuperado.copyWith(
+          final articuloActualizado = articuloRecuperado.copyWith(
             nombre: 'Café Tostado',
           );
-          final rowsAffectedUpdate = await insumoRepository.update(
-            insumoActualizado,
+          final rowsAffectedUpdate = await articuloRepository.update(
+            articuloActualizado,
           );
           expect(rowsAffectedUpdate, 1);
 
-          insumoRecuperado = await insumoRepository.getById(insumoId);
-          expect(insumoRecuperado.nombre, 'Café Tostado');
+          articuloRecuperado = await articuloRepository.getById(articuloId);
+          expect(articuloRecuperado.nombre, 'Café Tostado');
 
-          final rowsAffectedDelete = await insumoRepository.delete(insumoId);
+          final rowsAffectedDelete = await articuloRepository.delete(articuloId);
           expect(rowsAffectedDelete, 1);
           expect(
-            () => insumoRepository.getById(insumoId),
+            () => articuloRepository.getById(articuloId),
             throwsA(isA<Exception>()),
           );
         },
       );
 
-      test('getAll returns a list of all insumos', () async {
+      test('getAll returns a list of all articulos', () async {
         final unidadId = await _crearUnidad('Kilogramos');
-        await _crearInsumo('Insumo A', unidadId, "666");
-        await _crearInsumo('Insumo B', unidadId, "65.20");
-        await _crearInsumo('Insumo C', unidadId, "21");
+        await _crearArticulo('Articulo A', unidadId, "666");
+        await _crearArticulo('Articulo B', unidadId, "65.20");
+        await _crearArticulo('Articulo C', unidadId, "21");
 
-        final todosLosInsumos = await insumoRepository.getAll();
+        final todosLosArticulos = await articuloRepository.getAll();
 
-        expect(todosLosInsumos.length, 3);
-        expect(todosLosInsumos.any((i) => i.nombre == 'Insumo B'), isTrue);
+        expect(todosLosArticulos.length, 3);
+        expect(todosLosArticulos.any((i) => i.nombre == 'Articulo B'), isTrue);
       });
 
       test('getAll with "where" clause filters correctly', () async {
         final unidadId = await _crearUnidad('Litro');
-        await _crearInsumo('Leche Entera', unidadId, "20.5");
-        await _crearInsumo('Leche Descremada', unidadId, "22.5");
-        await _crearInsumo('Crema de Leche', unidadId, "30.0");
+        await _crearArticulo('Leche Entera', unidadId, "20.5");
+        await _crearArticulo('Leche Descremada', unidadId, "22.5");
+        await _crearArticulo('Crema de Leche', unidadId, "30.0");
 
-        final resultado = await insumoRepository.getAll(
+        final resultado = await articuloRepository.getAll(
           where: 'nombre LIKE ?',
           whereArgs: ['%Leche%'],
         );
@@ -127,33 +127,33 @@ void main() {
     });
 
     group('Business Logic', () {
-      group('getInsumosConUnidad', () {
+      group('getArticulosConUnidad', () {
         test(
-          'returns correct unit and a list of multiple insumos associated with it',
+          'returns correct unit and a list of multiple articulos associated with it',
           () async {
             final unidadId = await _crearUnidad('Pieza');
-            await _crearInsumo('Taza', unidadId, "50.0");
-            await _crearInsumo('Plato', unidadId, "40.0");
+            await _crearArticulo('Taza', unidadId, "50.0");
+            await _crearArticulo('Plato', unidadId, "40.0");
 
-            final (unidad, insumos) = await insumoRepository
-                .getInsumoByIdUnidad(idUnidad: unidadId);
+            final (unidad, articulos) = await articuloRepository
+                .getArticuloByIdUnidad(idUnidad: unidadId);
 
             expect(unidad.nombre, 'Pieza');
-            expect(insumos.length, 2);
-            expect(insumos.any((i) => i.nombre == 'Taza'), isTrue);
+            expect(articulos.length, 2);
+            expect(articulos.any((i) => i.nombre == 'Taza'), isTrue);
           },
         );
 
         test(
-          'returns correct unit and an empty list if unit has no insumos',
+          'returns correct unit and an empty list if unit has no articulos',
           () async {
             final unidadId = await _crearUnidad('Caja');
 
-            final (unidad, insumos) = await insumoRepository
-                .getInsumoByIdUnidad(idUnidad: unidadId);
+            final (unidad, articulos) = await articuloRepository
+                .getArticuloByIdUnidad(idUnidad: unidadId);
 
             expect(unidad.nombre, 'Caja');
-            expect(insumos, isEmpty);
+            expect(articulos, isEmpty);
           },
         );
 
@@ -161,7 +161,7 @@ void main() {
           const idUnidadInexistente = 999;
 
           expect(
-            () => insumoRepository.getInsumoByIdUnidad(
+            () => articuloRepository.getArticuloByIdUnidad(
               idUnidad: idUnidadInexistente,
             ),
             throwsA(isA<Exception>()),
@@ -183,7 +183,7 @@ void main() {
             'fecha': DateTime.now().toIso8601String(),
           });
           final unidadId = await _crearUnidad('Unidad');
-          final insumoId = await _crearInsumo(
+          final articuloId = await _crearArticulo(
             'Vaso Desechable',
             unidadId,
             "22.22",
@@ -191,37 +191,37 @@ void main() {
 
           await database.insert('Detalle_Compra', {
             'id_compra': compraId1,
-            'id_insumo': insumoId,
+            'id_articulo': articuloId,
             'cantidad': 100,
             'precio_unitario_compra': 1.50,
           });
           await database.insert('Detalle_Compra', {
             'id_compra': compraId2,
-            'id_insumo': insumoId,
+            'id_articulo': articuloId,
             'cantidad': 50,
             'precio_unitario_compra': 2.00,
           });
 
-          final costoPromedio = await insumoRepository.getCostoPromedio(
-            insumoId,
+          final costoPromedio = await articuloRepository.getCostoPromedio(
+            articuloId,
           );
 
           expect(costoPromedio, closeTo(1.66, 0.01));
         });
 
-        test('returns 0.0 if insumo has no purchase history', () async {
+        test('returns 0.0 if articulo has no purchase history', () async {
           final unidadId = await _crearUnidad('Gramo');
-          final insumoId = await _crearInsumo('Azafrán', unidadId, "999");
+          final articuloId = await _crearArticulo('Azafrán', unidadId, "999");
 
-          final costoPromedio = await insumoRepository.getCostoPromedio(
-            insumoId,
+          final costoPromedio = await articuloRepository.getCostoPromedio(
+            articuloId,
           );
 
           expect(costoPromedio, 0.0);
         });
 
-        test('returns 0.0 for non-existent insumoId', () async {
-          final costoPromedio = await insumoRepository.getCostoPromedio(999);
+        test('returns 0.0 for non-existent articuloId', () async {
+          final costoPromedio = await articuloRepository.getCostoPromedio(999);
 
           expect(costoPromedio, 0.0);
         });
@@ -230,52 +230,52 @@ void main() {
 
     group('Robustness and Edge Cases', () {
       test('getById throws exception for non-existent ID', () {
-        expect(() => insumoRepository.getById(999), throwsA(isA<Exception>()));
+        expect(() => articuloRepository.getById(999), throwsA(isA<Exception>()));
       });
 
       test('update throws exception for entity with null ID', () {
-        final insumoSinId = Insumo(
-          nombre: 'Insumo Fantasma',
+        final articuloSinId = Articulo(
+          nombre: 'Articulo Fantasma',
           idUnidad: 1,
           costoUnitario: "99.99",
         );
         expect(
-          () => insumoRepository.update(insumoSinId),
+          () => articuloRepository.update(articuloSinId),
           throwsA(isA<Exception>()),
         );
       });
 
       test('delete returns 0 for non-existent ID', () async {
-        final rowsAffected = await insumoRepository.delete(999);
+        final rowsAffected = await articuloRepository.delete(999);
         expect(rowsAffected, 0);
       });
 
       test(
         'create fails with foreign key violation for non-existent unidad',
         () async {
-          final insumoInvalido = Insumo(
-            nombre: 'Insumo Roto',
+          final articuloInvalido = Articulo(
+            nombre: 'Articulo Roto',
             idUnidad: 999,
             costoUnitario: "29.0",
           );
 
           expect(
-            () => insumoRepository.create(insumoInvalido),
+            () => articuloRepository.create(articuloInvalido),
             throwsA(isA<DatabaseException>()),
           );
         },
       );
 
-      test('create fails for insumo with empty name if constrained', () async {
+      test('create fails for articulo with empty name if constrained', () async {
         final unidadId = await _crearUnidad('Unidad');
-        final insumoVacio = Insumo(
+        final articuloVacio = Articulo(
           nombre: '',
           idUnidad: unidadId,
           costoUnitario: "1.0",
         );
 
         expect(
-          () => insumoRepository.create(insumoVacio),
+          () => articuloRepository.create(articuloVacio),
           throwsA(isA<DatabaseException>()),
         );
       });
@@ -292,8 +292,8 @@ void main() {
 
           final batch = database.batch();
           for (int i = 0; i < recordCount; i++) {
-            batch.insert('Insumo', {
-              'nombre': 'Insumo $i',
+            batch.insert('Articulo', {
+              'nombre': 'Articulo $i',
               'id_unidad': unidadId,
               'costo_unitario': '1.0',
             });
@@ -304,8 +304,8 @@ void main() {
             'Creación de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
           );
 
-          final allInsumos = await insumoRepository.getAll();
-          expect(allInsumos.length, recordCount);
+          final allArticulos = await articuloRepository.getAll();
+          expect(allArticulos.length, recordCount);
           print(
             'Lectura de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
           );
@@ -327,24 +327,24 @@ void main() {
           final unidadId = await _crearUnidad('Pieza');
           final batch = database.batch();
           for (int i = 0; i < recordCount; i++) {
-            batch.insert('Insumo', {
-              'nombre': 'Insumo $i',
+            batch.insert('Articulo', {
+              'nombre': 'Articulo $i',
               'id_unidad': unidadId,
               'costo_unitario': '1.0',
             });
           }
           await batch.commit();
-          final allInsumos = await insumoRepository.getAll();
+          final allArticulos = await articuloRepository.getAll();
 
           final stopwatch = Stopwatch()..start();
 
           final updateBatch = database.batch();
-          for (final insumo in allInsumos) {
+          for (final articulo in allArticulos) {
             updateBatch.update(
-              'Insumo',
+              'Articulo',
               {'costo_unitario': '2.0'},
-              where: 'id_insumo = ?',
-              whereArgs: [insumo.idInsumo],
+              where: 'id_articulo = ?',
+              whereArgs: [articulo.idArticulo],
             );
           }
           await updateBatch.commit(noResult: true);
@@ -353,15 +353,15 @@ void main() {
           );
 
           final deleteBatch = database.batch();
-          for (final insumo in allInsumos) {
+          for (final articulo in allArticulos) {
             deleteBatch.delete(
-              'Insumo',
-              where: 'id_insumo = ?',
-              whereArgs: [insumo.idInsumo],
+              'Articulo',
+              where: 'id_articulo = ?',
+              whereArgs: [articulo.idArticulo],
             );
           }
           await deleteBatch.commit(noResult: true);
-          final finalList = await insumoRepository.getAll();
+          final finalList = await articuloRepository.getAll();
           expect(finalList, isEmpty);
           print(
             'Borrado de $recordCount y tiempo total: ${stopwatch.elapsedMilliseconds} ms',

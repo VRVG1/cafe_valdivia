@@ -3,7 +3,7 @@ import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -16,9 +16,9 @@ class CompraRepository implements BaseRepository<Compra> {
   final String idColumn = 'id_compra';
 
   final ProveedorRepository proveedorRepo;
-  final InsumosRepository insumoRepo;
+  final ArticuloRepository articuloRepo;
 
-  CompraRepository(this.dbHelper, this.proveedorRepo, this.insumoRepo);
+  CompraRepository(this.dbHelper, this.proveedorRepo, this.articuloRepo);
   @override
   Compra fromJson(Map<String, dynamic> map) => Compra.fromJson(map);
 

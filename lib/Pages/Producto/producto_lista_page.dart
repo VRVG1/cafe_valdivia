@@ -87,12 +87,12 @@ class ProductoListaPage extends ConsumerWidget {
               );
             }
           },
-          // onEditDismissed: (insumo) async {
-          //   if (insumo.id != null) {
+          // onEditDismissed: (articulo) async {
+          //   if (articulo.id != null) {
           //     Navigator.push(
           //       context,
           //       MaterialPageRoute(
-          //         builder: (context) => EditarInsumoPage(insumo: insumo),
+          //         builder: (context) => EditarArticuloPage(articulo: articulo),
           //       ),
           //     );
           //   }

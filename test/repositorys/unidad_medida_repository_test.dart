@@ -124,7 +124,7 @@ void main() {
         final rowsAffected = await respository.delete(999);
         expect(rowsAffected, 0);
       });
-      test('create fails for insumo with empty name if constrained', () async {
+      test('create fails for articulo with empty name if constrained', () async {
         final UnidadMedida unidadMedida = UnidadMedida(nombre: "");
         expect(
           () => respository.create(unidadMedida),

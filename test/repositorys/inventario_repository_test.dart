@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/repositorys/inventario_repository.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,7 +17,7 @@ void main() {
   group("inventario_repository", () {
     late DatabaseHelper databaseHelper;
     late InventarioRepository inventarioRepository;
-    late InsumosRepository insumoRepository;
+    late ArticuloRepository articuloRepository;
     late UnidadMedidaRepository unidadMedidaRepository;
     late Database database;
 
@@ -25,14 +25,14 @@ void main() {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearInsumo(String nombre, int unidadId, String costo) async {
-      return await insumoRepository.create(
-        Insumo(nombre: nombre, idUnidad: unidadId, costoUnitario: costo),
+    Future<int> _crearArticulo(String nombre, int unidadId, String costo) async {
+      return await articuloRepository.create(
+        Articulo(nombre: nombre, idUnidad: unidadId, costoUnitario: costo),
       );
     }
 
     setUp(() async {
-      final path = p.join(inMemoryDatabasePath, 'test_insumos_repository.db');
+      final path = p.join(inMemoryDatabasePath, 'test_articulos_repository.db');
       await databaseFactory.deleteDatabase(path);
 
       database = await openDatabase(
@@ -49,7 +49,7 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
       unidadMedidaRepository = UnidadMedidaRepository(databaseHelper);
-      insumoRepository = InsumosRepository(
+      articuloRepository = ArticuloRepository(
         databaseHelper,
         unidadMedidaRepository,
       );

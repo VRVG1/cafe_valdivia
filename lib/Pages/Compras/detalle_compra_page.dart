@@ -14,7 +14,7 @@ class DetalleCompraPage extends ConsumerWidget {
   List<Map<String, dynamic>> _reagruparDetalles(List<dynamic> detalles) {
     return detalles.map((element) {
       return {
-        "producto": element['nombre_insumo']?.toString() ?? 'Sin nombre',
+        "producto": element['nombre_articulo']?.toString() ?? 'Sin nombre',
         "cantidad": element['cantidad']?.toString() ?? '0',
         "precio": element['precio_unitario_compra']?.toString() ?? '0.00',
         "total": element['subtotal']?.toString() ?? '0.00',
@@ -47,7 +47,7 @@ class DetalleCompraPage extends ConsumerWidget {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
           content: const Text(
-            '¿Estás seguro de que deseas eliminar este Insumo? Esta acción no se puede deshacer.',
+            '¿Estás seguro de que deseas eliminar este Articulo? Esta acción no se puede deshacer.',
           ),
           actions: <Widget>[
             TextButton(
@@ -185,7 +185,7 @@ class DetalleCompraPage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                "Error al cargar el insumo",
+                "Error al cargar el articulo",
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 8),

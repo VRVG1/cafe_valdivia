@@ -1,8 +1,8 @@
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 
 class ProductoRepository implements BaseRepository<Producto> {
   @override
@@ -12,9 +12,9 @@ class ProductoRepository implements BaseRepository<Producto> {
   @override
   final String idColumn = 'id_producto';
 
-  final InsumosRepository insumoRepo;
+  final ArticuloRepository articuloRepo;
 
-  ProductoRepository(this.dbHelper, this.insumoRepo);
+  ProductoRepository(this.dbHelper, this.articuloRepo);
 
   @override
   Producto fromJson(Map<String, dynamic> map) => Producto.fromJson(map);
@@ -78,12 +78,12 @@ class ProductoRepository implements BaseRepository<Producto> {
     );
   }
 
-  Future<(Insumo, List<Producto>)> getProductoByInsumoId({
-    required int idInsumo,
+  Future<(Articulo, List<Producto>)> getProductoByArticuloId({
+    required int idArticulo,
     int? idProducto,
   }) async {
-    List<String?> whereInicial = ["idInsumo = ?"];
-    List<int?> whereArgs = [idInsumo];
+    List<String?> whereInicial = ["idArticulo = ?"];
+    List<int?> whereArgs = [idArticulo];
 
     if (idProducto != null) {
       whereArgs.add(idProducto);
@@ -96,8 +96,8 @@ class ProductoRepository implements BaseRepository<Producto> {
       where: where,
       whereArgs: whereArgs,
     );
-    final Insumo insumo = await insumoRepo.getById(idInsumo);
+    final Articulo articulo = await articuloRepo.getById(idArticulo);
     final List<Producto> lista = result.map(fromJson).toList();
-    return (insumo, lista);
+    return (articulo, lista);
   }
 }
