@@ -1,21 +1,21 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
 import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditarInsumoPage extends ConsumerStatefulWidget {
-  final Insumo insumo;
-  const EditarInsumoPage({super.key, required this.insumo});
+class EditarArticuloPage extends ConsumerStatefulWidget {
+  final Articulo articulo;
+  const EditarArticuloPage({super.key, required this.articulo});
 
   @override
-  EditarInsumoPageState createState() => EditarInsumoPageState();
+  EditarArticuloPageState createState() => EditarArticuloPageState();
 }
 
-class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
+class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
   late final TextEditingController _descripcionController;
   late final TextEditingController _nombreController;
   late final TextEditingController _costoUnitarioController;
@@ -28,11 +28,11 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
   void initState() {
     super.initState();
     _descripcionController = TextEditingController(
-      text: widget.insumo.descripcion,
+      text: widget.articulo.descripcion,
     );
-    _nombreController = TextEditingController(text: widget.insumo.nombre);
+    _nombreController = TextEditingController(text: widget.articulo.nombre);
     _costoUnitarioController = TextEditingController(
-      text: widget.insumo.costoUnitario,
+      text: widget.articulo.costoUnitario,
     );
   }
 
@@ -47,8 +47,8 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
   Future<void> _update(UnidadMedida unidadInicial) async {
     final unidadFinal = _selectedUnidadMedidad ?? unidadInicial;
 
-    final updatedInsumo = widget.insumo.copyWith(
-      idInsumo: widget.insumo.idInsumo,
+    final updatedArticulo = widget.articulo.copyWith(
+      idArticulo: widget.articulo.idArticulo,
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       costoUnitario: _costoUnitarioController.text,
@@ -56,14 +56,14 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
     );
 
     await ref
-        .read(insumoProviderProvider.notifier)
-        .updateElement(updatedInsumo);
+        .read(articuloProviderProvider.notifier)
+        .updateElement(updatedArticulo);
 
-    update<Insumo>(
+    update<Articulo>(
       context: context,
       ref: ref,
-      provider: insumoProviderProvider,
-      element: updatedInsumo,
+      provider: articuloProviderProvider,
+      element: updatedArticulo,
       mensajeExito: "Se actualizo la Unidad de Medida de forma correcta.",
       mensajeError:
           "Error al actualizar la Unidad de Medidad, Por favor intente de nuevo.",
@@ -74,7 +74,7 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final unidadMedidaAsync = ref.watch(
-      unidadMedidaDetailProvider(widget.insumo.idUnidad),
+      unidadMedidaDetailProvider(widget.articulo.idUnidad),
     );
 
     return unidadMedidaAsync.when(
@@ -87,7 +87,7 @@ class EditarInsumoPageState extends ConsumerState<EditarInsumoPage> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              "Editar Insumo",
+              "Editar Articulo",
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: theme.colorScheme.onPrimaryContainer,

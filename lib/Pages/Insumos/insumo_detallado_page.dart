@@ -1,15 +1,15 @@
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
-import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
-import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
+import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
+import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class InsumoDetalladoPage extends ConsumerWidget {
-  final int insumoId;
+class ArticuloDetalladoPage extends ConsumerWidget {
+  final int articuloId;
 
-  const InsumoDetalladoPage({super.key, required this.insumoId});
+  const ArticuloDetalladoPage({super.key, required this.articuloId});
 
   void _mostrarDialogoConfirmacion(
     BuildContext context,
@@ -22,7 +22,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
           content: const Text(
-            '¿Estás seguro de que deseas eliminar este Insumo? Esta acción no se puede deshacer.',
+            '¿Estás seguro de que deseas eliminar este Articulo? Esta acción no se puede deshacer.',
           ),
           actions: <Widget>[
             TextButton(
@@ -46,12 +46,12 @@ class InsumoDetalladoPage extends ConsumerWidget {
 
   void _eliminar(BuildContext context, WidgetRef ref, ThemeData theme) async {
     try {
-      await ref.read(insumoProviderProvider.notifier).delete(insumoId);
+      await ref.read(articuloProviderProvider.notifier).delete(articuloId);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Insumo eliminado con éxito',
+              'Articulo eliminado con éxito',
               style: TextStyle(
                 color: theme.colorScheme.onTertiaryContainer,
                 fontSize: 18,
@@ -67,7 +67,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Error al eliminar el insumo: $e',
+              'Error al eliminar el articulo: $e',
               style: TextStyle(
                 color: theme.colorScheme.onErrorContainer,
                 fontSize: 18,
@@ -83,13 +83,13 @@ class InsumoDetalladoPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncInsumo = ref.watch(insumoDetailProvider(insumoId));
+    final asyncArticulo = ref.watch(articuloDetailProvider(articuloId));
 
-    return asyncInsumo.when(
-      data: (insumo) => Scaffold(
+    return asyncArticulo.when(
+      data: (articulo) => Scaffold(
         appBar: AppBar(
           title: Text(
-            "Insumo",
+            "Articulo",
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -104,9 +104,9 @@ class InsumoDetalladoPage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditarInsumoPage(insumo: insumo),
+                    builder: (context) => EditarArticuloPage(articulo: articulo),
                   ),
-                ).then((_) => ref.invalidate(insumoDetailProvider(insumoId)));
+                ).then((_) => ref.invalidate(articuloDetailProvider(articuloId)));
               },
             ),
             PopupMenuButton<String>(
@@ -126,7 +126,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
           ],
         ),
         body: RefreshIndicator(
-          onRefresh: () async => ref.invalidate(insumoDetailProvider(insumoId)),
+          onRefresh: () async => ref.invalidate(articuloDetailProvider(articuloId)),
           child: ListView(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -138,7 +138,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
                   backgroundColor: theme.colorScheme.primaryContainer,
                   radius: 64,
                   child: Text(
-                    insumo.nombre[0].toUpperCase(),
+                    articulo.nombre[0].toUpperCase(),
                     style: theme.textTheme.displayMedium?.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
                       fontWeight: FontWeight.bold,
@@ -148,7 +148,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                insumo.nombre,
+                articulo.nombre,
                 style: theme.textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.onSurface,
@@ -162,24 +162,24 @@ class InsumoDetalladoPage extends ConsumerWidget {
                   DetailElement(
                     icon: Icon(Icons.label_rounded),
                     title: Text("Nombre"),
-                    description: Text(insumo.nombre),
+                    description: Text(articulo.nombre),
                   ),
                   DetailElement(
                     icon: Icon(Icons.attach_money),
                     title: Text("Costo Unitario"),
-                    description: Text(insumo.costoUnitario),
+                    description: Text(articulo.costoUnitario),
                   ),
                   DetailElement(
                     icon: Icon(Icons.balance_rounded),
                     title: Text("Unidad de Medida"),
                     description: UnidadMedidaNombre(
-                      unidadMedidaId: insumo.idUnidad,
+                      unidadMedidaId: articulo.idUnidad,
                     ),
                   ),
                   DetailElement(
                     icon: Icon(Icons.description_rounded),
                     title: Text("Descripcion"),
-                    description: Text(insumo.descripcion ?? "No especificado"),
+                    description: Text(articulo.descripcion ?? "No especificado"),
                   ),
                 ],
               ),
@@ -200,7 +200,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                "Error al cargar el insumo",
+                "Error al cargar el articulo",
                 style: theme.textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
@@ -211,7 +211,7 @@ class InsumoDetalladoPage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.invalidate(insumoDetailProvider(insumoId)),
+                onPressed: () => ref.invalidate(articuloDetailProvider(articuloId)),
                 child: const Text("Reintentar"),
               ),
             ],

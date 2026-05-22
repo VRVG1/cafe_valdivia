@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
@@ -24,7 +23,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 3,
+      version: 5,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -32,8 +31,9 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 3]) =>
+  Future<void> testOnCreate(Database db, [int version = 5]) =>
       _onCreate(db, version);
+
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
   void setMockDatabase(Database database) {
     _database = database;
@@ -45,7 +45,30 @@ class DatabaseHelper {
   }
 
   Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {
-    // Actualizaciones
+    if (oldversion < 10) {
+      _migrateToV4(db);
+    }
+  }
+
+  Future<void> _migrateToV4(Database db) async {
+    await db.execute('''
+    CREATE VIEW IF NOT EXISTS v_compras_list AS 
+      SELECT
+        c.id_compra,
+        c.fecha,
+        c.pagado,
+        p.id_proveedor,
+        p.nombre AS nombre_proveedor,
+        SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
+      FROM
+        Compra AS c
+      JOIN
+        Proveedor AS p ON c.id_proveedor = p.id_proveedor
+      JOIN
+        Detalle_Compra as dc ON c.id_compra = dc.id_compra
+      GROUP BY C.id_compra
+      ORDER BY c.fecha ASC
+  ''');
   }
 
   // ============== MÉTODOS DE UTILIDAD ==============
@@ -147,36 +170,20 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Insumo (
-        id_insumo INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
-        descripcion TEXT,
-        id_unidad INTEGER NOT NULL,
-        costo_unitario TEXT DEFAULT 0.0,
-        FOREIGN KEY (id_unidad) REFERENCES Unidad_Medida (id_unidad)
-      )
-    ''');
+  CREATE TABLE Articulo (
+    id_articulo INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
+    descripcion TEXT,
+    tipo TEXT NOT NULL DEFAULT 'INSUMO' CHECK(tipo IN ('INSUMO', 'PRODUCTO_INTERMEDIO', 'PRODUCTO')),
+    id_unidad INTEGER NOT NULL,
+    costo_unitario REAL DEFAULT 0.0,
+    precio_venta REAL DEFAULT 0.0,
+    stock REAL DEFAULT 0.0,
+    FOREIGN KEY (id_unidad) REFERENCES Unidad_Medida (id_unidad)
+      ON DELETE RESTRICT ON UPDATE CASCADE
+  )
+''');
 
-    await db.execute('''
-      CREATE TABLE Producto (
-        id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
-        descripcion TEXT,
-        precio_venta TEXT DEFAULT 0.0
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE Insumo_Producto (
-        id_insumo_producto INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_insumo INTEGER NOT NULL,
-        id_producto INTEGER NOT NULL,
-        cantidad_requerida REAL DEFAULT 0.0,
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo),
-        FOREIGN KEY (id_producto) REFERENCES Producto (id_producto),
-        UNIQUE (id_insumo, id_producto)
-      )
-    ''');
     // Compras
     await db.execute('''
       CREATE TABLE Compra(
@@ -190,16 +197,16 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Detalle_Compra (
-        id_detalle_compra INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_compra INTEGER NOT NULL,
-        id_insumo INTEGER NOT NULL,
-        cantidad INTEGER NOT NULL,
-        precio_unitario_compra TEXT NOT NULL,
-        FOREIGN KEY (id_compra) REFERENCES Compra (id_compra),
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)
-      )
-    ''');
+  CREATE TABLE Detalle_Compra (
+    id_detalle_compra INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_compra INTEGER NOT NULL,
+    id_articulo INTEGER NOT NULL,
+    cantidad REAL NOT NULL CHECK(cantidad > 0),
+    precio_unitario_compra REAL NOT NULL,
+    FOREIGN KEY (id_compra) REFERENCES Compra (id_compra) ON DELETE CASCADE,
+    FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo) ON DELETE RESTRICT
+  )
+''');
 
     //Ventas
 
@@ -216,352 +223,442 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Detalle_Venta (
-        id_detalle_venta INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_venta INTEGER NOT NULL,
-        id_producto INTEGER NOT NULL,
-        cantidad INTEGER NOT NULL,
-        precio_unitario_venta TEXT NOT NULL,
-        FOREIGN KEY (id_venta) REFERENCES Venta (id_venta),
-        FOREIGN KEY (id_producto) REFERENCES Producto (id_producto),
-        UNIQUE(id_venta, id_producto)
+  CREATE TABLE Detalle_Venta (
+    id_detalle_venta INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_venta INTEGER NOT NULL,
+    id_articulo INTEGER NOT NULL,
+    cantidad REAL NOT NULL CHECK(cantidad > 0),
+    precio_unitario_venta REAL NOT NULL,
+    FOREIGN KEY (id_venta) REFERENCES Venta (id_venta) ON DELETE CASCADE,
+    FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo) ON DELETE RESTRICT,
+    UNIQUE(id_venta, id_articulo)
+  )
+''');
+
+    //RECETA
+
+    await db.execute('''
+      CREATE TABLE Receta(
+      id_receta INTEGER PRIMARY KEY AUTOINCREMENT,
+      id_articulo_producto INTEGER NOT NULL,
+      nombre TEXT NOT NULL,
+      cantidad_base REAL NOT NULL,
+      FOREIGN KEY (id_articulo_producto) REFERENCES Articulo (id_articulo)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE Receta_Detalle(
+        id_receta_detalle INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_receta INTEGER NOT NULL,
+        id_articulo_componente INTEGER NOT NULL,
+        cantidad REAL NOT NULL,
+        id_unidad INTEGER NOT NULL,
+        FOREIGN KEY (id_receta) REFERENCES Receta (id_receta),
+        FOREIGN KEY (id_articulo_componente) REFERENCES Articulo (id_articulo),
+        FOREIGN KEY (id_unidad) REFERENCES Unidad_Medida (id_unidad)
       )
     ''');
 
     //Produccion
-    //
     await db.execute('''
-      CREATE TABLE Orden_Produccion (
-      id_orden_produccion INTEGER PRIMARY KEY AUTOINCREMENT,
-      id_producto INTEGER NOT NULL,
-      cantidad_producida INTEGER NOT NULL,
-      fecha DATETIME NOT NULL,
-      costo_total_produccion TEXT DEFAULT '0.0',
-      notas TEXT,
-      FOREIGN KEY (id_producto) REFERENCES Producto (id_producto)
-      )
-    ''');
+  CREATE TABLE Orden_Produccion (
+    id_orden_produccion INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_receta INTEGER NOT NULL,
+    cantidad_producida REAL NOT NULL CHECK(cantidad_producida > 0),
+    fecha DATETIME NOT NULL,
+    costo_total_produccion REAL DEFAULT 0.0,
+    notas TEXT,
+    FOREIGN KEY (id_receta) REFERENCES Receta (id_receta) ON DELETE RESTRICT
+  )
+''');
 
     await db.execute('''
-      CREATE TABLE Detalle_Produccion_Insumo (
-        id_detalle_produccion INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_orden_produccion INTEGER NOT NULL,
-        id_insumo INTEGER NOT NULL,
-        cantidad_usada REAL DEFAULT 0.0,
-        costo_insumo_momento TEXT DEFAULT '0.0',
-        FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion (id_orden_produccion),
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)
-      )
-      ''');
+  CREATE TABLE Orden_Produccion_Consumo(
+    id_consumo INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_orden_produccion INTEGER NOT NULL,
+    id_articulo INTEGER NOT NULL,
+    cantidad_usada REAL DEFAULT 0.0 CHECK(cantidad_usada >= 0),
+    costo_articulo_momento REAL DEFAULT 0.0,
+    FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion (id_orden_produccion) ON DELETE CASCADE,
+    FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo) ON DELETE RESTRICT
+  )
+''');
 
-    // Inventario de Insumo (SOLO MOVIMIENTOS)
-    await db.execute('''
-      CREATE TABLE Movimiento_Inventario_Insumo (
-        id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_insumo INTEGER NOT NULL,
-        tipo TEXT NOT NULL CHECK (tipo IN ('entrada', 'salida', 'ajuste')),
-        cantidad INTEGER NOT NULL, -- Positivo para entradas, Negativo para salidas
-        fecha DATETIME NOT NULL,
-        id_detalle_compra INTEGER,
-        id_detalle_produccion INTEGER,
-        motivo TEXT,
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo),
-        FOREIGN KEY (id_detalle_compra) REFERENCES Detalle_Compra(id_detalle_compra),
-        FOREIGN KEY (id_detalle_produccion) REFERENCES Detalle_Produccion_Insumo(id_detalle_produccion)
-        CHECK (id_detalle_compra IS NULL OR id_detalle_produccion IS NULL)
-      )
-      ''');
+    // --- Búsquedas por nombre ---
+    await db.execute('CREATE INDEX idx_articulo_nombre ON Articulo(nombre)');
+    await db.execute(
+      'CREATE INDEX idx_cliente_nombre ON Cliente(nombre, apellido)',
+    );
+    await db.execute('CREATE INDEX idx_proveedor_nombre ON Proveedor(nombre)');
 
-    // --- Inventario de Productos (SOLO MOVIMIENTOS) ---
-    await db.execute('''
-      CREATE TABLE Movimiento_Inventario_Producto (
-        id_movimiento_producto INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_producto INTEGER NOT NULL,
-        tipo TEXT NOT NULL CHECK (tipo IN ('entrada', 'salida', 'ajuste')),
-        cantidad INTEGER NOT NULL, -- Positivo para entradas, Negativo para salidas
-        fecha DATETIME NOT NULL,
-        id_detalle_venta INTEGER,
-        id_orden_produccion INTEGER,
-        motivo TEXT,
-        FOREIGN KEY (id_producto) REFERENCES Producto (id_producto),
-        FOREIGN KEY (id_detalle_venta) REFERENCES Detalle_Venta(id_detalle_venta),
-        FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion(id_orden_produccion),
-        CHECK (id_detalle_venta IS NULL OR id_orden_produccion IS NULL)
-      )
-    ''');
+    // --- Fechas (reportes mensuales/anuales) ---
+    await db.execute('CREATE INDEX idx_compra_fecha ON Compra(fecha)');
+    await db.execute('CREATE INDEX idx_venta_fecha ON Venta(fecha)');
+    await db.execute(
+      'CREATE INDEX idx_orden_prod_fecha ON Orden_Produccion(fecha)',
+    );
 
-    // Indices
+    // --- Claves foráneas (JOINs frecuentes) ---
+    await db.execute('CREATE INDEX idx_articulo_unidad ON Articulo(id_unidad)');
+    await db.execute(
+      'CREATE INDEX idx_compra_proveedor ON Compra(id_proveedor)',
+    );
+    await db.execute('CREATE INDEX idx_venta_cliente ON Venta(id_cliente)');
+    await db.execute(
+      'CREATE INDEX idx_detalle_compra_compra ON Detalle_Compra(id_compra)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_detalle_compra_articulo ON Detalle_Compra(id_articulo)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_detalle_venta_venta ON Detalle_Venta(id_venta)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_detalle_venta_articulo ON Detalle_Venta(id_articulo)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_receta_producto ON Receta(id_articulo_producto)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_receta_detalle_receta ON Receta_Detalle(id_receta)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_receta_detalle_componente ON Receta_Detalle(id_articulo_componente)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_orden_prod_receta ON Orden_Produccion(id_receta)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_orden_prod_consumo_orden ON Orden_Produccion_Consumo(id_orden_produccion)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_orden_prod_consumo_articulo ON Orden_Produccion_Consumo(id_articulo)',
+    );
 
-    await db.execute('CREATE INDEX idx_venta_cliente ON Venta (id_cliente)');
-    await db.execute(
-      'CREATE INDEX idx_detalle_venta_venta ON Detalle_Venta (id_venta)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_detalle_venta_producto ON Detalle_Venta (id_producto)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_insumo_producto_insumo ON Insumo_Producto (id_insumo)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_insumo_producto_producto ON Insumo_Producto (id_producto)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_compra_proveedor ON Compra (id_proveedor)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_detalle_compra_insumo ON Detalle_Compra (id_insumo)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_orden_prod_prod ON Orden_Produccion (id_producto)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_detalle_prod_orden ON Detalle_Produccion_Insumo (id_orden_produccion)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_detalle_prod_insumo ON Detalle_Produccion_Insumo (id_insumo)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_mov_insumo_insumo ON Movimiento_Inventario_Insumo (id_insumo)',
-    );
-    await db.execute(
-      'CREATE INDEX idx_mov_prod_prod ON Movimiento_Inventario_Producto (id_producto)',
-    );
+    // --- Estados y tipos (filtros comunes) ---
+    await db.execute('CREATE INDEX idx_venta_estado ON Venta(estado)');
+    await db.execute('CREATE INDEX idx_articulo_tipo ON Articulo(tipo)');
+    await db.execute('CREATE INDEX idx_compra_pagado ON Compra(pagado)');
+    await db.execute('CREATE INDEX idx_venta_pagado ON Venta(pagado)');
 
     // Views
-    await db.execute('''
-    CREATE VIEW V_Inventario_Insumo_Stock AS 
-    SELECT
-      i.id_insumo,
-      i.nombre,
-      i.costo_unitario,
-      u.nombre AS unidad_medida,
-      COALESCE(SUM(mii.cantidad), 0) AS stock_actual
-    FROM
-      Insumo AS i
-    JOIN
-      Unidad_Medida AS u ON i.id_unidad = u.id_unidad
-    LEFT JOIN
-      Movimiento_Inventario_Insumo AS mii ON i.id_insumo = mii.id_insumo
-    GROUP BY
-      i.id_insumo, i.nombre, i.costo_unitario, u.nombre
-    ''');
 
     await db.execute('''
-    CREATE VIEW V_Inventario_Producto_Stock AS
-    SELECT
-      p.id_producto,
-      p.nombre,
-      p.precio_venta,
-      COALESCE(SUM(mip.cantidad), 0) AS stock_actual
-    FROM
-      Producto AS p
-    LEFT JOIN
-      Movimiento_Inventario_Producto AS mip ON p.id_producto = mip.id_producto
-    GROUP BY
-      p.id_producto, p.nombre, p.precio_venta
-    ''');
+  CREATE VIEW IF NOT EXISTS v_articulos_completos AS
+  SELECT 
+    a.id_articulo,
+    a.nombre AS articulo,
+    a.descripcion,
+    a.tipo,
+    a.costo_unitario,
+    a.precio_venta,
+    a.stock,
+    um.nombre AS unidad_medida
+  FROM Articulo a
+  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+''');
 
     await db.execute('''
-      CREATE VIEW V_Compra_Detallada AS 
-      SELECT
-        c.id_compra,
-        c.fecha,
-        c.detalles AS detalles_compra,
-        c.pagado,
-        p.id_proveedor,
-        p.nombre AS nombre_proveedor,
-        dc.id_detalle_compra,
-        dc.cantidad,
-        dc.precio_unitario_compra,
-        i.id_insumo,
-        i.nombre AS nombre_insumo,
-        (CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS subtotal
-      FROM
-        Compra AS c
-      JOIN
-        Proveedor AS p ON c.id_proveedor = p.id_proveedor
-      JOIN
-        Detalle_Compra as dc ON c.id_compra = dc.id_compra
-      JOIN
-        Insumo as i ON dc.id_insumo = i.id_insumo
-      ''');
+  CREATE VIEW IF NOT EXISTS v_compras_resumen AS
+  SELECT 
+    c.id_compra,
+    c.fecha,
+    c.detalles,
+    c.pagado,
+    p.nombre AS proveedor,
+    p.telefono AS telefono_proveedor,
+    COUNT(dc.id_detalle_compra) AS cantidad_items,
+    SUM(dc.cantidad * dc.precio_unitario_compra) AS total_compra
+  FROM Compra c
+  JOIN Proveedor p ON c.id_proveedor = p.id_proveedor
+  LEFT JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+  GROUP BY c.id_compra
+''');
 
     await db.execute('''
-      CREATE VIEW V_Venta_Detallada AS 
-      SELECT
-        v.id_venta,
-        v.fecha,
-        v.detalles AS detalles_venta,
-        v.pagado,
-        c.id_cliente,
-        c.nombre AS nombre_cliente,
-        c.apellido AS apellido_cliente,
-        dv.id_detalle_venta,
-        dv.cantidad,
-        dv.precio_unitario_venta,
-        p.id_producto,
-        p.nombre AS nombre_producto,
-        (CAST(dv.cantidad AS REAL) * CAST(dv.precio_unitario_venta AS REAL)) AS subtotal
-      FROM
-        Venta AS v
-      JOIN
-        Cliente AS c ON v.id_cliente = c.id_cliente
-      JOIN
-        Detalle_Venta as dv ON v.id_venta = dv.id_venta
-      JOIN
-        Producto as p ON dv.id_producto = p.id_producto
-      ''');
+  CREATE VIEW IF NOT EXISTS v_ventas_resumen AS
+  SELECT 
+    v.id_venta,
+    v.fecha,
+    v.detalles,
+    v.pagado,
+    v.estado,
+    cl.nombre || ' '  AS cliente,
+    cl.telefono AS telefono_cliente,
+    cl.email AS email_cliente,
+    COUNT(dv.id_detalle_venta) AS cantidad_items,
+    SUM(dv.cantidad * dv.precio_unitario_venta) AS total_venta
+  FROM Venta v
+  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
+  LEFT JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+  GROUP BY v.id_venta
+''');
 
     await db.execute('''
-      CREATE VIEW V_Orden_Produccion_Detallada AS
-      SELECT
-          op.id_orden_produccion,
-          op.fecha,
-          op.cantidad_producida,
-          op.costo_total_produccion,
-          op.notas,
-          p.id_producto,
-          p.nombre AS nombre_producto,
-          dpi.id_detalle_produccion,
-          dpi.cantidad_usada,
-          dpi.costo_insumo_momento,
-          i.id_insumo,
-          i.nombre AS nombre_insumo,
-          (CAST(dpi.cantidad_usada AS REAL) * CAST(dpi.costo_insumo_momento AS REAL)) AS subtotal_linea_costo
-      FROM
-          Orden_Produccion AS op
-      JOIN
-          Producto AS p ON op.id_producto = p.id_producto
-      JOIN
-          Detalle_Produccion_Insumo AS dpi ON op.id_orden_produccion = dpi.id_orden_produccion
-      JOIN
-          Insumo AS i ON dpi.id_insumo = i.id_insumo;
-      ''');
+  CREATE VIEW IF NOT EXISTS v_recetas_detalle AS
+  SELECT 
+    r.id_receta,
+    r.nombre AS nombre_receta,
+    r.cantidad_base,
+    ap.nombre AS producto_final,
+    ap.id_articulo AS id_producto_final,
+    ac.nombre AS componente,
+    ac.id_articulo AS id_componente,
+    rd.cantidad AS cantidad_necesaria,
+    um.nombre AS unidad_componente,
+    ac.costo_unitario AS costo_unitario_actual,
+    (rd.cantidad * ac.costo_unitario) AS costo_componente,
+    (SELECT SUM(rd2.cantidad * a2.costo_unitario)
+     FROM Receta_Detalle rd2
+     JOIN Articulo a2 ON rd2.id_articulo_componente = a2.id_articulo
+     WHERE rd2.id_receta = r.id_receta) AS costo_total_receta_estimado
+  FROM Receta r
+  JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
+  JOIN Receta_Detalle rd ON r.id_receta = rd.id_receta
+  JOIN Articulo ac ON rd.id_articulo_componente = ac.id_articulo
+  JOIN Unidad_Medida um ON rd.id_unidad = um.id_unidad
+''');
 
     await db.execute('''
-      CREATE VIEW V_Movimiento_Insumo_Detallado AS
-      SELECT
-          mi.id_movimiento,
-          mi.fecha,
-          mi.tipo,
-          mi.cantidad,
-          mi.motivo,
-          i.id_insumo,
-          i.nombre AS nombre_insumo,
-          -- Origen del movimiento (Compra, Producción o Ajuste)
-          CASE
-              WHEN mi.id_detalle_compra IS NOT NULL THEN 'Compra ID: ' || c.id_compra
-              WHEN mi.id_detalle_produccion IS NOT NULL THEN 'Producción ID: ' || op.id_orden_produccion
-              ELSE 'Ajuste Manual'
-          END AS origen_movimiento
-      FROM
-          Movimiento_Inventario_Insumo AS mi
-      JOIN
-          Insumo AS i ON mi.id_insumo = i.id_insumo
-      LEFT JOIN
-          Detalle_Produccion_Insumo AS dpi ON mi.id_detalle_produccion = dpi.id_detalle_produccion
-      LEFT JOIN
-          Orden_Produccion AS op ON dpi.idOrdenProduccion = op.id_orden_produccion
-      LEFT JOIN
-          Detalle_Compra AS dc ON mi.id_detalle_compra = dc.id_detalle_compra
-      LEFT JOIN
-          Compra AS c ON dc.idCompra = c.id_compra;
-      ''');
+  CREATE VIEW IF NOT EXISTS v_produccion_resumen AS
+  SELECT 
+    op.id_orden_produccion,
+    op.fecha,
+    op.cantidad_producida,
+    op.costo_total_produccion,
+    op.notas,
+    r.nombre AS receta,
+    ap.nombre AS producto_producido,
+    COUNT(opc.id_consumo) AS cantidad_insumos_diferentes,
+    SUM(opc.cantidad_usada) AS total_unidades_consumidas,
+    SUM(opc.cantidad_usada * opc.costo_articulo_momento) AS costo_real_calculado
+  FROM Orden_Produccion op
+  JOIN Receta r ON op.id_receta = r.id_receta
+  JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
+  LEFT JOIN Orden_Produccion_Consumo opc ON op.id_orden_produccion = opc.id_orden_produccion
+  GROUP BY op.id_orden_produccion
+''');
 
     await db.execute('''
-      CREATE VIEW V_Movimiento_Producto_Detallado AS
-      SELECT
-          mp.id_movimiento_producto,
-          mp.fecha,
-          mp.tipo,
-          mp.cantidad,
-          mp.motivo,
-          p.id_producto,
-          p.nombre AS nombre_producto,
-          -- Origen del movimiento (Venta, Producción o Ajuste)
-          CASE
-              WHEN mp.id_detalle_venta IS NOT NULL THEN 'Venta ID: ' || v.id_venta
-              WHEN mp.id_orden_produccion IS NOT NULL THEN 'Producción ID: ' || mp.id_orden_produccion
-              ELSE 'Ajuste Manual'
-          END AS origen_movimiento
-      FROM
-          Movimiento_Inventario_Producto AS mp
-      JOIN
-          Producto AS p ON mp.id_producto = p.id_producto
-      LEFT JOIN
-          Detalle_Venta AS dv ON mp.id_detalle_venta = dv.id_detalle_venta
-      LEFT JOIN
-          Venta AS v ON dv.idVenta = v.id_venta;
-      ''');
+  CREATE VIEW IF NOT EXISTS v_rentabilidad_ventas AS
+  SELECT 
+    v.id_venta,
+    v.fecha,
+    cl.nombre || ' ' || cl.apellido AS cliente,
+    a.nombre AS articulo,
+    dv.cantidad,
+    dv.precio_unitario_venta,
+    a.costo_unitario,
+    (dv.cantidad * dv.precio_unitario_venta) AS ingreso,
+    (dv.cantidad * a.costo_unitario) AS costo_estimado,
+    (dv.cantidad * dv.precio_unitario_venta) - (dv.cantidad * a.costo_unitario) AS ganancia_neta,
+    CASE 
+      WHEN (dv.cantidad * dv.precio_unitario_venta) > 0 
+      THEN ROUND(((dv.cantidad * dv.precio_unitario_venta) - (dv.cantidad * a.costo_unitario)) * 100.0 / (dv.cantidad * dv.precio_unitario_venta), 2)
+      ELSE 0 
+    END AS margen_porcentaje
+  FROM Venta v
+  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
+  JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+  JOIN Articulo a ON dv.id_articulo = a.id_articulo
+''');
 
-    //TRIGGERS
     await db.execute('''
-      CREATE TRIGGER trg_compra_insumo
-      AFTER INSERT ON Detalle_Compra
-      BEGIN
-        INSERT INTO Movimiento_Inventario_Insumo (
-        id_insumo, tipo, cantidad, fecha, id_detalle_compra, motivo
-        )
-        VALUES (
-        NEW.id_insumo, 
-        'entrada',
-        NEW.cantidad,
-        (SELECT fecha FROM Compra WHERE id_compra = NEW.id_compra),
-        NEW.id_detalle_compra,
-        'Compra'
-        );
-        END
-    ''');
+  CREATE VIEW IF NOT EXISTS v_inventario_stock AS
+  SELECT 
+    a.id_articulo,
+    a.nombre,
+    a.descripcion,
+    a.tipo,
+    a.stock,
+    um.nombre AS unidad,
+    a.costo_unitario,
+    (a.stock * a.costo_unitario) AS valor_inventario,
+    CASE 
+      WHEN a.stock <= 0 THEN 'SIN STOCK'
+      WHEN a.stock < 10 THEN 'BAJO'   -- ajusta el umbral según tu negocio
+      ELSE 'OK'
+    END AS estado_stock
+  FROM Articulo a
+  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+''');
+
     await db.execute('''
-      CREATE TRIGGER trg_produccion_insumo
-      AFTER INSERT ON Detalle_Produccion_Insumo
-      BEGIN
-        INSERT INTO Movimiento_Inventario_Insumo (
-        id_insumo, tipo, cantidad, fecha, id_detalle_produccion, motivo
-        )
-        VALUES (
-        NEW.id_insumo,
-        'salida',
-        -NEW.cantidad_usada,
-        (SELECT fecha FROM Orden_Produccion WHERE id_orden_produccion = NEW.id_orden_produccion),
-        NEW.id_detalle_produccion,
-        'Produccion'
-        );
-        END
-    ''');
+  CREATE VIEW IF NOT EXISTS v_consumo_insumos_periodo AS
+  SELECT 
+    a.id_articulo,
+    a.nombre AS insumo,
+    um.nombre AS unidad,
+    SUM(opc.cantidad_usada) AS total_consumido,
+    SUM(opc.cantidad_usada * opc.costo_articulo_momento) AS costo_total_consumido,
+    MIN(op.fecha) AS primera_fecha,
+    MAX(op.fecha) AS ultima_fecha
+  FROM Orden_Produccion_Consumo opc
+  JOIN Orden_Produccion op ON opc.id_orden_produccion = op.id_orden_produccion
+  JOIN Articulo a ON opc.id_articulo = a.id_articulo
+  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+  GROUP BY a.id_articulo
+''');
+
     await db.execute('''
-      CREATE TRIGGER trg_produccion_producto
-      AFTER INSERT ON Orden_Produccion
-      BEGIN
-        INSERT INTO Movimiento_Inventario_Producto (
-        id_producto, tipo, cantidad, fecha, id_orden_produccion, motivo
-        )
-        VALUES (
-        NEW.id_producto,
-        'entrada',
-        NEW.cantidad_producida,
-        NEW.fecha,
-        NEW.id_orden_produccion,
-        'Produccion'
-        );
-        END
-    ''');
+  CREATE TRIGGER IF NOT EXISTS trg_validar_stock_venta
+  BEFORE INSERT ON Detalle_Venta
+  BEGIN
+    SELECT CASE
+      WHEN (SELECT IFNULL(stock, 0) FROM Articulo WHERE id_articulo = NEW.id_articulo) < NEW.cantidad
+      THEN RAISE(ABORT, 'Stock insuficiente para registrar la venta')
+    END;
+  END;
+''');
+
     await db.execute('''
-      CREATE TRIGGER trg_venta_producto
-      AFTER INSERT ON Detalle_Venta
-      BEGIN
-        INSERT INTO Movimiento_Inventario_Producto (
-          id_producto, tipo, cantidad, fecha, id_detalle_venta, motivo
-        )
-        VALUES (
-          NEW.id_producto,
-          'salida',
-          -NEW.cantidad, -- Cantidad en negativo
-          (SELECT fecha FROM Venta WHERE id_venta = NEW.id_venta),
-          NEW.id_detalle_venta,
-          'Venta'
-        );
-      END
-    ''');
+  CREATE TRIGGER IF NOT EXISTS trg_validar_stock_produccion
+  BEFORE INSERT ON Orden_Produccion_Consumo
+  BEGIN
+    SELECT CASE
+      WHEN (SELECT IFNULL(stock, 0) FROM Articulo WHERE id_articulo = NEW.id_articulo) < NEW.cantidad_usada
+      THEN RAISE(ABORT, 'Stock insuficiente para consumo en producción')
+    END;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_insert
+  AFTER INSERT ON Detalle_Compra
+  BEGIN
+    UPDATE Articulo
+    SET 
+      stock = stock + NEW.cantidad,
+      costo_unitario = NEW.precio_unitario_compra
+    WHERE id_articulo = NEW.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_update
+  AFTER UPDATE ON Detalle_Compra
+  WHEN OLD.cantidad != NEW.cantidad
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock - OLD.cantidad + NEW.cantidad
+    WHERE id_articulo = NEW.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_delete
+  AFTER DELETE ON Detalle_Compra
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock - OLD.cantidad
+    WHERE id_articulo = OLD.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_insert
+  AFTER INSERT ON Detalle_Venta
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock - NEW.cantidad
+    WHERE id_articulo = NEW.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_update
+  AFTER UPDATE ON Detalle_Venta
+  WHEN OLD.cantidad != NEW.cantidad
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock + OLD.cantidad - NEW.cantidad
+    WHERE id_articulo = NEW.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_delete
+  AFTER DELETE ON Detalle_Venta
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock + OLD.cantidad
+    WHERE id_articulo = OLD.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_prod_consumo_insert
+  AFTER INSERT ON Orden_Produccion_Consumo
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock - NEW.cantidad_usada
+    WHERE id_articulo = NEW.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_prod_consumo_update
+  AFTER UPDATE ON Orden_Produccion_Consumo
+  WHEN OLD.cantidad_usada != NEW.cantidad_usada
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock + OLD.cantidad_usada - NEW.cantidad_usada
+    WHERE id_articulo = NEW.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_prod_consumo_delete
+  AFTER DELETE ON Orden_Produccion_Consumo
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock + OLD.cantidad_usada
+    WHERE id_articulo = OLD.id_articulo;
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_prod_insert
+  AFTER INSERT ON Orden_Produccion
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock + NEW.cantidad_producida
+    WHERE id_articulo = (
+      SELECT id_articulo_producto 
+      FROM Receta 
+      WHERE id_receta = NEW.id_receta
+    );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_prod_update
+  AFTER UPDATE ON Orden_Produccion
+  WHEN OLD.cantidad_producida != NEW.cantidad_producida
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock - OLD.cantidad_producida + NEW.cantidad_producida
+    WHERE id_articulo = (
+      SELECT id_articulo_producto 
+      FROM Receta 
+      WHERE id_receta = NEW.id_receta
+    );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_prod_delete
+  AFTER DELETE ON Orden_Produccion
+  BEGIN
+    UPDATE Articulo
+    SET stock = stock - OLD.cantidad_producida
+    WHERE id_articulo = (
+      SELECT id_articulo_producto 
+      FROM Receta 
+      WHERE id_receta = OLD.id_receta
+    );
+  END;
+''');
   }
 }

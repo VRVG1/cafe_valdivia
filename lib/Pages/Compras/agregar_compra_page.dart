@@ -1,6 +1,13 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
-import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_insumo_page.dart';
+import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_page.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,18 +29,20 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   bool _isLoading = false;
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
+  bool _esPagado = false;
 
-  final _proveedorInsumo = <String, dynamic>{"proveedor": "", "insumo": ""};
+  final _proveedorArticulo = <String, dynamic>{"proveedor": "", "articulo": ""};
 
   // Controllers
   final TextEditingController _cantidadController = TextEditingController(
     text: "0",
   );
   final TextEditingController _proveedorController = TextEditingController();
-  final TextEditingController _insumoController = TextEditingController();
+  final TextEditingController _articuloController = TextEditingController();
   final TextEditingController _precioController = TextEditingController(
     text: "0",
   );
+  final TextEditingController _descripcionController = TextEditingController();
   // Test
   List<Map<String, dynamic>> carritoDeCompras = [];
   //
@@ -52,12 +61,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     if (result == null) return;
 
     setState(() {
-      if (eleccion == 'insumo') {
+      if (eleccion == 'articulo') {
         print(result.costoUnitario);
         _precioController.text = result.costoUnitario;
       }
       controller.text = result.nombre;
-      _proveedorInsumo[eleccion] = result;
+      _proveedorArticulo[eleccion] = result;
     });
     if (!context.mounted) return;
   }
@@ -81,7 +90,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     // Controllers
     _cantidadController.dispose();
     _proveedorController.dispose();
-    _insumoController.dispose();
+    _articuloController.dispose();
+    _descripcionController.dispose();
+
     super.dispose();
   }
 
@@ -97,19 +108,104 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   void _agregarAlCarrito() {
     if (_formKey.currentState?.validate() ?? false) {
       final producto = {
-        'nombre': _proveedorInsumo['insumo'].nombre,
+        'nombre': _proveedorArticulo['articulo'].nombre,
         'cantidad': int.tryParse(_cantidadController.text),
-        'precio': double.parse(_proveedorInsumo['insumo'].costoUnitario),
-        'insumo': _proveedorInsumo['insumo'],
-        'proveedor': _proveedorInsumo['proveedor'],
+        'precio': double.parse(_precioController.text),
+        'articulo': _proveedorArticulo['articulo'],
+        'proveedor': _proveedorArticulo['proveedor'],
       };
 
       setState(() {
         carritoDeCompras.add(producto);
+        _cantidadController.text = "";
+        _articuloController.text = "";
+        _precioController.text = "";
       });
     }
   }
 
+  List<Map<String, dynamic>> _separarPorProveedor(
+    List<Map<String, dynamic>> data,
+  ) {
+    final Map<int, Map<String, dynamic>> grupos = {};
+
+    for (var item in data) {
+      final proveedor = item['proveedor'];
+      final articulo = item['articulo'];
+      if (proveedor == null) continue;
+      final int id = proveedor.idProveedor;
+
+      final contenedor = grupos.putIfAbsent(
+        id,
+        () => {'idProveedor': id, 'articulos': <Map<String, dynamic>>[]},
+      );
+
+      final listaArticulos = contenedor['articulos'] as List<Map<String, dynamic>>;
+      listaArticulos.add({'articulo': articulo, 'cantidad': item['cantidad']});
+    }
+    return grupos.values.toList();
+  }
+
+  void _procesarCompra(
+    Compra compra,
+    List<DetalleCompra> detalleCompra,
+    List<Articulo> articulos,
+  ) async {
+    final result = await create(
+      context: context,
+      ref: ref,
+      provider: compraProvider,
+      element: compra,
+      detalles: true,
+      detallesElement: detalleCompra,
+      mensajeExito: "Compra realizada con exito",
+      mensajeError: "Error al procesar la compra, intente mas tarde",
+    );
+    // TODO: Se supone que en los triggers se tiene que realizar dicha operacion de cambios
+    // if (result) {
+    //   for (var articulo in articulos) {
+    //     update(
+    //       context: context,
+    //       ref: ref,
+    //       provider: articuloProviderProvider,
+    //       element: articulo,
+    //     );
+    //   }
+    // }
+  }
+
+  void _resumenCompra() {
+    //TODO: REcordar que, siempre se tiene que actualizar el articulo, en concreto el campo costoUnitario, ya que puede que o no, cambie con la compra, y como no se como validar si cambia o no, mejor lo actualizo y ya.
+    final List<Map<String, dynamic>> result = _separarPorProveedor(
+      carritoDeCompras,
+    );
+    for (var item in result) {
+      //Creamos una compras
+      Compra compra = Compra(
+        idProveedor: item['idProveedor'],
+        fecha: DateTime.now(),
+        pagado: _esPagado,
+        detalles: _descripcionController.text,
+      );
+      //Creamos una lista de compras detalladas
+      final List<DetalleCompra> detallesCompraList = [];
+      final List<Articulo> articulos = [];
+      for (var elemento in item['articulos']) {
+        DetalleCompra detalleCompra = DetalleCompra(
+          idCompra:
+              0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
+          idArticulo: elemento['articulo'].idArticulo,
+          cantidad: elemento['cantidad'],
+          precioUnitarioCompra: elemento['articulo'].costoUnitario,
+        );
+        articulos.add(elemento['articulo']);
+        detallesCompraList.add(detalleCompra);
+      }
+      //Usamos el crud la funcion create
+      _procesarCompra(compra, detallesCompraList, articulos);
+      //esperamos a que jale xd
+    }
+  }
   // fin funciones
 
   @override
@@ -150,7 +246,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 children: <Widget>[
                   _buildAgregarProveedor(),
                   const SizedBox(height: 16),
-                  _buildAgregarInsumo(),
+                  _buildAgregarArticulo(),
 
                   const SizedBox(height: 16),
 
@@ -199,26 +295,26 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     );
   }
 
-  Widget _buildAgregarInsumo() {
+  Widget _buildAgregarArticulo() {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Favor de seleccionar un Insumo.";
+          return "Favor de seleccionar un Articulo.";
         }
         return null;
       },
       readOnly: true,
-      controller: _insumoController,
+      controller: _articuloController,
       onTap: () => {
         _recibirDatos(
           context,
-          AgregarCompraSeleccionInsumoPage(),
-          _insumoController,
-          "insumo",
+          AgregarCompraSeleccionArticuloPage(),
+          _articuloController,
+          "articulo",
         ),
       },
       decoration: InputDecoration(
-        labelText: "Insumo",
+        labelText: "Articulo",
         border: OutlineInputBorder(),
         prefixIcon: Icon(Icons.fax_rounded),
       ),
@@ -294,6 +390,70 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     );
   }
 
+  Future<bool> _mostrarModal({
+    required BuildContext context,
+    required String titulo,
+    required String cuerpo,
+    bool mostrarSegundoBoton = true,
+    bool mostrarCamposExtra = true,
+  }) async {
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(titulo),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(cuerpo),
+                    if (mostrarCamposExtra) ...[
+                      const SizedBox(height: 20),
+                      SwitchListTile(
+                        title: const Text("¿Pagado?"),
+                        value: _esPagado,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _esPagado = value;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _descripcionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Información extra',
+                          hintText: 'Escribe aquí...',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              actions: [
+                if (mostrarSegundoBoton)
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text("Cancelar"),
+                  ),
+                FilledButton(
+                  onPressed: () {
+                    // Aquí manejas la lógica de los datos capturados
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text("Aceptar"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    return result ?? false;
+  }
+
   Widget _buildModal(ColorScheme cs, TextTheme tt) {
     return DraggableScrollableSheet(
       initialChildSize: 0.13, // Altura visible inicial (pestaña)
@@ -326,15 +486,42 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
               style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             subtitleBuilder: (item) => Text("Cant: ${item['cantidad']}"),
-            trailingBuilder: (item) =>
-                Text("999", style: tt.labelLarge?.copyWith(color: cs.primary)),
+            trailingBuilder: (item) => Text(
+              "\$ ${item['precio'].toString()}",
+              style: tt.labelLarge?.copyWith(color: cs.primary),
+            ),
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: FilledButton.icon(
-                  onPressed: () => print("Compra finalizada"),
+                  onPressed: () async {
+                    if (carritoDeCompras.isNotEmpty) {
+                      if (await _mostrarModal(
+                        context: context,
+                        titulo: "Realizar Compra",
+                        cuerpo: "Desea realizar la compra de \$$totalDinero",
+                      )) {
+                        _resumenCompra();
+                        if (context.mounted) {
+                          showCustomSnackBar(
+                            context: context,
+                            mensaje: "Compra realizada con exito",
+                          );
+                          Navigator.pop(context);
+                        }
+                      }
+                    } else {
+                      _mostrarModal(
+                        context: context,
+                        titulo: "Carrito Vacio",
+                        cuerpo: "No existe articulo agregado al carrito",
+                        mostrarSegundoBoton: false,
+                        mostrarCamposExtra: false,
+                      );
+                    }
+                  },
                   icon: const Icon(Icons.shopping_cart_checkout),
                   label: const Text("Proceder con la compra"),
                   style: FilledButton.styleFrom(
@@ -510,10 +697,5 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         ),
       ),
     );
-  }
-
-  Widget resumenCompra() {
-    //return ListviewCustom(data: data, titleBuilder: titleBuilder, keyBuilder: keyBuilder);
-    return Text("hola");
   }
 }

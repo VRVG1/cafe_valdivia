@@ -10,7 +10,7 @@ class CompraNotifier extends _$CompraNotifier {
   @override
   Future<List<Map<String, dynamic>>> build() async {
     final repo = ref.watch(compraRepositoryProvider);
-    return repo.getAll();
+    return repo.getAllNombreProveedor();
   }
 
   Future<void> create(Compra compra, List<DetalleCompra> detallesCompra) async {
@@ -21,7 +21,7 @@ class CompraNotifier extends _$CompraNotifier {
   }
 
   Future<Map<String, dynamic>> getFullCompra(int idCompra) async {
-    return ref.read(compraRepositoryProvider).getFullCompra(idCompra);
+    return await ref.read(compraRepositoryProvider).getFullCompra(idCompra);
     //ref.invalidateSelf();
   }
 
@@ -34,4 +34,10 @@ class CompraNotifier extends _$CompraNotifier {
     await ref.read(compraRepositoryProvider).markAsUnpaid(idCompra);
     ref.invalidateSelf();
   }
+}
+
+@riverpod
+Future<Map<String, dynamic>> compraDetallada(Ref ref, int id) async {
+  final repository = ref.watch(compraRepositoryProvider);
+  return repository.getFullCompra(id);
 }

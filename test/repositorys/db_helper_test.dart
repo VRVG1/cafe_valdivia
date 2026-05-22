@@ -146,8 +146,8 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Insumo (
-        id_insumo INTEGER PRIMARY KEY AUTOINCREMENT,
+      CREATE TABLE Articulo (
+        id_articulo INTEGER PRIMARY KEY AUTOINCREMENT,
         nombre TEXT NOT NULL UNIQUE,
         descripcion TEXT,
         id_unidad INTEGER NOT NULL,
@@ -166,14 +166,14 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Insumo_Producto (
-        id_insumo_producto INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_insumo INTEGER NOT NULL,
+      CREATE TABLE Articulo_Producto (
+        id_articulo_producto INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_articulo INTEGER NOT NULL,
         id_producto INTEGER NOT NULL,
         cantidad_requerida REAL DEFAULT 0.0,
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo),
+        FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo),
         FOREIGN KEY (id_producto) REFERENCES Producto (id_producto),
-        UNIQUE (id_insumo, id_producto)
+        UNIQUE (id_articulo, id_producto)
       )
     ''');
     // Compras
@@ -192,11 +192,11 @@ class DatabaseHelper {
       CREATE TABLE Detalle_Compra (
         id_detalle_compra INTEGER PRIMARY KEY AUTOINCREMENT,
         id_compra INTEGER NOT NULL,
-        id_insumo INTEGER NOT NULL,
+        id_articulo INTEGER NOT NULL,
         cantidad INTEGER NOT NULL,
         precio_unitario_compra TEXT NOT NULL,
         FOREIGN KEY (id_compra) REFERENCES Compra (id_compra),
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)
+        FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo)
       )
     ''');
 
@@ -242,30 +242,30 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Detalle_Produccion_Insumo (
+      CREATE TABLE Detalle_Produccion_Articulo (
         id_detalle_produccion INTEGER PRIMARY KEY AUTOINCREMENT,
         id_orden_produccion INTEGER NOT NULL,
-        id_insumo INTEGER NOT NULL,
-        costo_insumo_momento TEXT DEFAULT '0.0',
+        id_articulo INTEGER NOT NULL,
+        costo_articulo_momento TEXT DEFAULT '0.0',
         FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion (id_orden_produccion),
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo)
+        FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo)
       )
       ''');
 
-    // Inventario de Insumo (SOLO MOVIMIENTOS)
+    // Inventario de Articulo (SOLO MOVIMIENTOS)
     await db.execute('''
-      CREATE TABLE Movimiento_Inventario_Insumo (
+      CREATE TABLE Movimiento_Inventario_Articulo (
         id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_insumo INTEGER NOT NULL,
+        id_articulo INTEGER NOT NULL,
         tipo TEXT NOT NULL CHECK (tipo IN ('entrada', 'salida', 'ajuste')),
         cantidad INTEGER NOT NULL, -- Positivo para entradas, Negativo para salidas
         fecha DATETIME NOT NULL,
         id_detalle_compra INTEGER,
         id_detalle_produccion INTEGER,
         motivo TEXT,
-        FOREIGN KEY (id_insumo) REFERENCES Insumo (id_insumo),
+        FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo),
         FOREIGN KEY (id_detalle_compra) REFERENCES Detalle_Compra(id_detalle_compra),
-        FOREIGN KEY (id_detalle_produccion) REFERENCES Detalle_Produccion_Insumo(id_detalle_produccion)
+        FOREIGN KEY (id_detalle_produccion) REFERENCES Detalle_Produccion_Articulo(id_detalle_produccion)
         CHECK (id_detalle_compra IS NULL OR id_detalle_produccion IS NULL)
       )
       ''');
@@ -298,28 +298,28 @@ class DatabaseHelper {
       'CREATE INDEX idx_detalle_venta_producto ON Detalle_Venta (id_producto)',
     );
     await db.execute(
-      'CREATE INDEX idx_insumo_producto_insumo ON Insumo_Producto (id_insumo)',
+      'CREATE INDEX idx_articulo_producto_articulo ON Articulo_Producto (id_articulo)',
     );
     await db.execute(
-      'CREATE INDEX idx_insumo_producto_producto ON Insumo_Producto (id_producto)',
+      'CREATE INDEX idx_articulo_producto_producto ON Articulo_Producto (id_producto)',
     );
     await db.execute(
       'CREATE INDEX idx_compra_proveedor ON Compra (id_proveedor)',
     );
     await db.execute(
-      'CREATE INDEX idx_detalle_compra_insumo ON Detalle_Compra (id_insumo)',
+      'CREATE INDEX idx_detalle_compra_articulo ON Detalle_Compra (id_articulo)',
     );
     await db.execute(
       'CREATE INDEX idx_orden_prod_prod ON Orden_Produccion (id_producto)',
     );
     await db.execute(
-      'CREATE INDEX idx_detalle_prod_orden ON Detalle_Produccion_Insumo (id_orden_produccion)',
+      'CREATE INDEX idx_detalle_prod_orden ON Detalle_Produccion_Articulo (id_orden_produccion)',
     );
     await db.execute(
-      'CREATE INDEX idx_detalle_prod_insumo ON Detalle_Produccion_Insumo (id_insumo)',
+      'CREATE INDEX idx_detalle_prod_articulo ON Detalle_Produccion_Articulo (id_articulo)',
     );
     await db.execute(
-      'CREATE INDEX idx_mov_insumo_insumo ON Movimiento_Inventario_Insumo (id_insumo)',
+      'CREATE INDEX idx_mov_articulo_articulo ON Movimiento_Inventario_Articulo (id_articulo)',
     );
     await db.execute(
       'CREATE INDEX idx_mov_prod_prod ON Movimiento_Inventario_Producto (id_producto)',
@@ -327,21 +327,21 @@ class DatabaseHelper {
 
     // Views
     await db.execute('''
-    CREATE VIEW V_Inventario_Insumo_Stock AS 
+    CREATE VIEW V_Inventario_Articulo_Stock AS 
     SELECT
-      i.id_insumo,
+      i.id_articulo,
       i.nombre,
       i.costo_unitario,
       u.nombre AS unidad_medida,
       COALESCE(SUM(mii.cantidad), 0) AS stock_actual
     FROM
-      Insumo AS i
+      Articulo AS i
     JOIN
       Unidad_Medida AS u ON i.id_unidad = u.id_unidad
     LEFT JOIN
-      Movimiento_Inventario_Insumo AS mii ON i.id_insumo = mii.id_insumo
+      Movimiento_Inventario_Articulo AS mii ON i.id_articulo = mii.id_articulo
     GROUP BY
-      i.id_insumo, i.nombre, i.costo_unitario, u.nombre
+      i.id_articulo, i.nombre, i.costo_unitario, u.nombre
     ''');
 
     await db.execute('''
@@ -371,8 +371,8 @@ class DatabaseHelper {
         dc.id_detalle_compra,
         dc.cantidad,
         dc.precio_unitario_compra,
-        i.id_insumo,
-        i.nombre AS nombre_insumo,
+        i.id_articulo,
+        i.nombre AS nombre_articulo,
         (CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS subtotal
       FROM
         Compra AS c
@@ -381,7 +381,7 @@ class DatabaseHelper {
       JOIN
         Detalle_Compra as dc ON c.id_compra = dc.id_compra
       JOIN
-        Insumo as i ON dc.id_insumo = i.id_insumo
+        Articulo as i ON dc.id_articulo = i.id_articulo
       ''');
 
     await db.execute('''
@@ -421,30 +421,30 @@ class DatabaseHelper {
           p.nombre AS nombre_producto,
           dpi.id_detalle_produccion,
           dpi.cantidad_usada,
-          dpi.costo_insumo_momento,
-          i.id_insumo,
-          i.nombre AS nombre_insumo,
-          (CAST(dpi.cantidad_usada AS REAL) * CAST(dpi.costo_insumo_momento AS REAL)) AS subtotal_linea_costo
+          dpi.costo_articulo_momento,
+          i.id_articulo,
+          i.nombre AS nombre_articulo,
+          (CAST(dpi.cantidad_usada AS REAL) * CAST(dpi.costo_articulo_momento AS REAL)) AS subtotal_linea_costo
       FROM
           Orden_Produccion AS op
       JOIN
           Producto AS p ON op.id_producto = p.id_producto
       JOIN
-          Detalle_Produccion_Insumo AS dpi ON op.id_orden_produccion = dpi.id_orden_produccion
+          Detalle_Produccion_Articulo AS dpi ON op.id_orden_produccion = dpi.id_orden_produccion
       JOIN
-          Insumo AS i ON dpi.id_insumo = i.id_insumo;
+          Articulo AS i ON dpi.id_articulo = i.id_articulo;
       ''');
 
     await db.execute('''
-      CREATE VIEW V_Movimiento_Insumo_Detallado AS
+      CREATE VIEW V_Movimiento_Articulo_Detallado AS
       SELECT
           mi.id_movimiento,
           mi.fecha,
           mi.tipo,
           mi.cantidad,
           mi.motivo,
-          i.id_insumo,
-          i.nombre AS nombre_insumo,
+          i.id_articulo,
+          i.nombre AS nombre_articulo,
           -- Origen del movimiento (Compra, Producción o Ajuste)
           CASE
               WHEN mi.id_detalle_compra IS NOT NULL THEN 'Compra ID: ' || c.id_compra
@@ -452,11 +452,11 @@ class DatabaseHelper {
               ELSE 'Ajuste Manual'
           END AS origen_movimiento
       FROM
-          Movimiento_Inventario_Insumo AS mi
+          Movimiento_Inventario_Articulo AS mi
       JOIN
-          Insumo AS i ON mi.id_insumo = i.id_insumo
+          Articulo AS i ON mi.id_articulo = i.id_articulo
       LEFT JOIN
-          Detalle_Produccion_Insumo AS dpi ON mi.id_detalle_produccion = dpi.id_detalle_produccion
+          Detalle_Produccion_Articulo AS dpi ON mi.id_detalle_produccion = dpi.id_detalle_produccion
       LEFT JOIN
           Orden_Produccion AS op ON dpi.idOrdenProduccion = op.id_orden_produccion
       LEFT JOIN
@@ -493,14 +493,14 @@ class DatabaseHelper {
 
     //TRIGGERS
     await db.execute('''
-      CREATE TRIGGER trg_compra_insumo
+      CREATE TRIGGER trg_compra_articulo
       AFTER INSERT ON Detalle_Compra
       BEGIN
-        INSERT INTO Movimiento_Inventario_Insumo (
-        id_insumo, tipo, cantidad, fecha, id_detalle_compra, motivo
+        INSERT INTO Movimiento_Inventario_Articulo (
+        id_articulo, tipo, cantidad, fecha, id_detalle_compra, motivo
         )
         VALUES (
-        NEW.id_insumo, 
+        NEW.id_articulo, 
         'entrada',
         NEW.cantidad,
         (SELECT fecha FROM Compra WHERE id_compra = NEW.id_compra),
@@ -510,14 +510,14 @@ class DatabaseHelper {
         END
     ''');
     await db.execute('''
-      CREATE TRIGGER trg_produccion_insumo
-      AFTER INSERT ON Detalle_Produccion_Insumo
+      CREATE TRIGGER trg_produccion_articulo
+      AFTER INSERT ON Detalle_Produccion_Articulo
       BEGIN
-        INSERT INTO Movimiento_Inventario_Insumo (
-        id_insumo, tipo, cantidad, fecha, id_detalle_produccion, motivo
+        INSERT INTO Movimiento_Inventario_Articulo (
+        id_articulo, tipo, cantidad, fecha, id_detalle_produccion, motivo
         )
         VALUES (
-        NEW.id_insumo,
+        NEW.id_articulo,
         'salida',
         -NEW.cantidad_usada,
         (SELECT fecha FROM Orden_Produccion WHERE id_orden_produccion = NEW.id_orden_produccion)

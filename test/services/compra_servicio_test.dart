@@ -42,7 +42,7 @@ void main() {
       detallesCompra: [
         DetalleCompra(
           id: 1,
-          idInsumo: 1,
+          idArticulo: 1,
           cantidad: 2,
           precioUnitarioCompra: 50.0,
         ),

@@ -33,7 +33,7 @@ final class CompraNotifierProvider
   CompraNotifier create() => CompraNotifier();
 }
 
-String _$compraNotifierHash() => r'26330291c503a676cbd1a57881c2ab6f7c701311';
+String _$compraNotifierHash() => r'85bea3bd9783f03141ea5e5dd0cfe732fe1b025a';
 
 abstract class _$CompraNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {
@@ -60,4 +60,81 @@ abstract class _$CompraNotifier
             >;
     element.handleCreate(ref, build);
   }
+}
+
+@ProviderFor(compraDetallada)
+final compraDetalladaProvider = CompraDetalladaFamily._();
+
+final class CompraDetalladaProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<String, dynamic>>,
+          Map<String, dynamic>,
+          FutureOr<Map<String, dynamic>>
+        >
+    with
+        $FutureModifier<Map<String, dynamic>>,
+        $FutureProvider<Map<String, dynamic>> {
+  CompraDetalladaProvider._({
+    required CompraDetalladaFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'compraDetalladaProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$compraDetalladaHash();
+
+  @override
+  String toString() {
+    return r'compraDetalladaProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Map<String, dynamic>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Map<String, dynamic>> create(Ref ref) {
+    final argument = this.argument as int;
+    return compraDetallada(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CompraDetalladaProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$compraDetalladaHash() => r'16c937ef9ba0fda5565144ac50b35312af53b647';
+
+final class CompraDetalladaFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>>, int> {
+  CompraDetalladaFamily._()
+    : super(
+        retry: null,
+        name: r'compraDetalladaProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  CompraDetalladaProvider call(int id) =>
+      CompraDetalladaProvider._(argument: id, from: this);
+
+  @override
+  String toString() => r'compraDetalladaProvider';
 }

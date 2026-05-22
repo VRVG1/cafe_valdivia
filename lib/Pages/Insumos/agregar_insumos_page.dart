@@ -1,19 +1,19 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AgregarInsumoPage extends ConsumerStatefulWidget {
-  const AgregarInsumoPage({super.key});
+class AgregarArticuloPage extends ConsumerStatefulWidget {
+  const AgregarArticuloPage({super.key});
 
   @override
-  AgregarInsumoPageState createState() => AgregarInsumoPageState();
+  AgregarArticuloPageState createState() => AgregarArticuloPageState();
 }
 
-class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
+class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _costoUnitarioController =
@@ -38,19 +38,19 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
   }
 
   Future<void> _guardar() async {
-    final Insumo insumo = Insumo(
+    final Articulo articulo = Articulo(
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
       costoUnitario: _costoUnitarioController.text,
     );
-    create<Insumo>(
+    create<Articulo>(
       context: context,
       ref: ref,
-      provider: insumoProviderProvider,
-      element: insumo,
-      mensajeExito: "El Insumo se guardo con exito",
-      mensajeError: "Error al guardar el Insumo. Por favor, inente de nuevo.",
+      provider: articuloProviderProvider,
+      element: articulo,
+      mensajeExito: "El Articulo se guardo con exito",
+      mensajeError: "Error al guardar el Articulo. Por favor, inente de nuevo.",
     );
   }
 
@@ -60,7 +60,7 @@ class AgregarInsumoPageState extends ConsumerState<AgregarInsumoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Agregar Insumo",
+          "Agregar Articulo",
           style: theme.textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onPrimaryContainer,

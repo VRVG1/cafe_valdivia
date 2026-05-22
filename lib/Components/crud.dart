@@ -76,20 +76,29 @@ Future<bool> delete({
   }
 }
 
-Future<void> create<T>({
+Future<bool> create<T>({
   required BuildContext context,
   required WidgetRef ref,
   required provider,
   required T element,
   required String mensajeExito,
   required String mensajeError,
+  bool detalles = false,
+  List<T>? detallesElement,
 }) async {
   try {
-    await ref.read(provider.notifier).create(element);
+    if (detalles) {
+      await ref.read(provider.notifier).create(element, detallesElement);
+    } else {
+      await ref.read(provider.notifier).create(element);
+    }
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
-      Navigator.of(context).pop(element); // Regresar a la pantalla anterior
+      if (!detalles) {
+        Navigator.of(context).pop(element); // Regresar a la pantalla anterior
+      }
     }
+    return true;
   } catch (e, st) {
     appLogger.e(
       "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
@@ -105,6 +114,7 @@ Future<void> create<T>({
         isError: true,
       );
     }
+    return false;
   }
 }
 
@@ -113,13 +123,15 @@ Future<bool> update<T>({
   required WidgetRef ref,
   required provider,
   required T element,
-  required String mensajeExito,
-  required String mensajeError,
+  String? mensajeExito,
+  String? mensajeError,
 }) async {
   try {
     await ref.read(provider.notifier).updateElement(element);
     if (context.mounted) {
-      showCustomSnackBar(context: context, mensaje: mensajeExito);
+      mensajeExito != null
+          ? showCustomSnackBar(context: context, mensaje: mensajeExito ?? "")
+          : null;
       Navigator.of(context).pop(); // Regresar a la pantalla anterior
     }
     return true;
@@ -128,11 +140,13 @@ Future<bool> update<T>({
       "Error al actualizar ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
     );
     if (context.mounted) {
-      showCustomSnackBar(
-        context: context,
-        mensaje: mensajeError,
-        isError: true,
-      );
+      mensajeExito != null
+          ? showCustomSnackBar(
+              context: context,
+              mensaje: mensajeError ?? "",
+              isError: true,
+            )
+          : null;
     }
 
     return false;

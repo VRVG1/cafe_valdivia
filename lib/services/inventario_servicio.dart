@@ -1,6 +1,6 @@
 // import 'package:cafe_valdivia/core/models/movimiento_invetario.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/inventario_repository.dart';
 // import 'package:cafe_valdivia/repositorys/movimiento_inventario_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
@@ -10,7 +10,7 @@ import 'package:cafe_valdivia/services/db_helper.dart';
 class InventarioServicio {
   //  final InventarioRepository inventarioRepository;
   //  //final MovimientoInventarioRepository movimientoInventarioRepository;
-  //  //final InsumoRepository insumoRepository;
+  //  //final ArticuloRepository articuloRepository;
   //  final CompraRepository compraRepository;
   //  final VentaRepository ventaRepository;
   //  final ProductoRepository productoRepository;
@@ -18,7 +18,7 @@ class InventarioServicio {
 
   //  InventarioServicio({
   //    required this.compraRepository,
-  //    //required this.insumoRepository,
+  //    //required this.articuloRepository,
   //    //required this.movimientoInventarioRepository,
   //    required this.inventarioRepository,
   //    required this.ventaRepository,
@@ -32,7 +32,7 @@ class InventarioServicio {
   //    for (final detalles in compra.detallesCompra) {
   //      // Registrar movimiento
   //      await movimientoInventarioRepository.registrarMovimiento(
-  //        detalles.idInsumo,
+  //        detalles.idArticulo,
   //        TipoMovimiento.entrada,
   //        detalles.cantidad,
   //        'Compra #$compraId',
@@ -41,7 +41,7 @@ class InventarioServicio {
   //      );
 
   //      await inventarioRepository.updateStock(
-  //        detalles.idInsumo,
+  //        detalles.idArticulo,
   //        detalles.cantidad,
   //      );
   //    }
@@ -52,16 +52,16 @@ class InventarioServicio {
   //    final venta = await ventaRepository.getFullVenta(ventaId);
 
   //    for (final detalle in venta.detallesVenta) {
-  //      final producto = await productoRepository.getWithInsumo(
+  //      final producto = await productoRepository.getWithArticulo(
   //        detalle.idProducto,
   //      );
 
-  //      for (final insumo in producto.insumos!) {
-  //        final cantidadRequerida = insumo.cantidadRequerida * detalle.cantidad;
+  //      for (final articulo in producto.articulos!) {
+  //        final cantidadRequerida = articulo.cantidadRequerida * detalle.cantidad;
 
   //        // Registrar movimiento
   //        await movimientoInventarioRepository.registrarMovimiento(
-  //          insumo.idInsumo,
+  //          articulo.idArticulo,
   //          TipoMovimiento.salida,
   //          cantidadRequerida,
   //          'Venta #$ventaId - ${producto.nombre}',
@@ -71,7 +71,7 @@ class InventarioServicio {
 
   //        // Actualizar stock
   //        await inventarioRepository.updateStock(
-  //          insumo.idInsumo,
+  //          articulo.idArticulo,
   //          -cantidadRequerida,
   //        );
   //      }
@@ -83,16 +83,16 @@ class InventarioServicio {
   //    final venta = await ventaRepository.getFullVenta(ventaId);
 
   //    for (final detalle in venta.detallesVenta) {
-  //      final producto = await productoRepository.getWithInsumo(
+  //      final producto = await productoRepository.getWithArticulo(
   //        detalle.idProducto,
   //      );
 
-  //      for (final insumo in producto.insumos!) {
-  //        final cantidadRequerida = insumo.cantidadRequerida * detalle.cantidad;
+  //      for (final articulo in producto.articulos!) {
+  //        final cantidadRequerida = articulo.cantidadRequerida * detalle.cantidad;
 
   //        // Registrar movimiento
   //        await movimientoInventarioRepository.registrarMovimiento(
-  //          insumo.idInsumo,
+  //          articulo.idArticulo,
   //          TipoMovimiento.ajusteEntrada,
   //          cantidadRequerida,
   //          'Venta #$ventaId - ${producto.nombre}',
@@ -102,7 +102,7 @@ class InventarioServicio {
 
   //        // Actualizar stock
   //        await inventarioRepository.updateStock(
-  //          insumo.idInsumo,
+  //          articulo.idArticulo,
   //          cantidadRequerida,
   //        );
   //      }
@@ -111,7 +111,7 @@ class InventarioServicio {
 
   //  // Realizar un ajuste de invetario con registro de motivo
   //  Future<void> registrarAjusteInvetario({
-  //    required int insumoId,
+  //    required int articuloId,
   //    required double cantidad,
   //    required String motivo,
   //  }) async {
@@ -122,22 +122,22 @@ class InventarioServicio {
 
   //    await movimientoInventarioRepository.registrarAjuste(
   //      tipo,
-  //      insumoId,
+  //      articuloId,
   //      cantidad.abs(),
   //      motivo,
   //    );
 
-  //    await inventarioRepository.updateStock(insumoId, cantidad);
+  //    await inventarioRepository.updateStock(articuloId, cantidad);
   //  }
 
   //  // Verificar si hay suficiente stock para un producto
   //  Future<bool> verificarStockDisponible(int productoId, int cantidad) async {
-  //    final producto = await productoRepository.getWithInsumo(productoId);
+  //    final producto = await productoRepository.getWithArticulo(productoId);
 
   //    final resultado = await Future.wait(
-  //      producto.insumos!.map((insumo) async {
-  //        final stock = await inventarioRepository.getStock(insumo.idInsumo);
-  //        return stock >= insumo.cantidadRequerida * cantidad;
+  //      producto.articulos!.map((articulo) async {
+  //        final stock = await inventarioRepository.getStock(articulo.idArticulo);
+  //        return stock >= articulo.cantidadRequerida * cantidad;
   //      }),
   //    );
   //    return resultado.every((tieneStock) => tieneStock);
@@ -145,15 +145,15 @@ class InventarioServicio {
 
   //  /// Calcular el costo actual de produccion de un producto
   //  Future<double> calcularCostoProducto(int productoId) async {
-  //    final producto = await productoRepository.getWithInsumo(productoId);
+  //    final producto = await productoRepository.getWithArticulo(productoId);
 
   //    double costoTotal = 0.0;
 
-  //    for (final insumo in producto.insumos!) {
-  //      final costoInsumo = await insumoRepository.getCostoPromedio(
-  //        insumo.idInsumo,
+  //    for (final articulo in producto.articulos!) {
+  //      final costoArticulo = await articuloRepository.getCostoPromedio(
+  //        articulo.idArticulo,
   //      );
-  //      costoTotal += insumo.cantidadRequerida * costoInsumo;
+  //      costoTotal += articulo.cantidadRequerida * costoArticulo;
   //    }
   //    return costoTotal;
   //  }

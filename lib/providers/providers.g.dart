@@ -193,52 +193,52 @@ final class ProveedorRepositoryProvider
 String _$proveedorRepositoryHash() =>
     r'80bc8c9228856bf6de8784f89041e9c51f142f62';
 
-@ProviderFor(insumosRepository)
-final insumosRepositoryProvider = InsumosRepositoryProvider._();
+@ProviderFor(articulosRepository)
+final articulosRepositoryProvider = ArticuloRepositoryProvider._();
 
-final class InsumosRepositoryProvider
+final class ArticuloRepositoryProvider
     extends
         $FunctionalProvider<
-          InsumosRepository,
-          InsumosRepository,
-          InsumosRepository
+          ArticuloRepository,
+          ArticuloRepository,
+          ArticuloRepository
         >
-    with $Provider<InsumosRepository> {
-  InsumosRepositoryProvider._()
+    with $Provider<ArticuloRepository> {
+  ArticuloRepositoryProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'insumosRepositoryProvider',
+        name: r'articulosRepositoryProvider',
         isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$insumosRepositoryHash();
+  String debugGetCreateSourceHash() => _$articulosRepositoryHash();
 
   @$internal
   @override
-  $ProviderElement<InsumosRepository> $createElement(
+  $ProviderElement<ArticuloRepository> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  InsumosRepository create(Ref ref) {
-    return insumosRepository(ref);
+  ArticuloRepository create(Ref ref) {
+    return articulosRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(InsumosRepository value) {
+  Override overrideWithValue(ArticuloRepository value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<InsumosRepository>(value),
+      providerOverride: $SyncValueProvider<ArticuloRepository>(value),
     );
   }
 }
 
-String _$insumosRepositoryHash() => r'2c5ee0b6bb70bfbec29164829804ba1d4a507fc4';
+String _$articulosRepositoryHash() => r'2c5ee0b6bb70bfbec29164829804ba1d4a507fc4';
 
 @ProviderFor(productoRepository)
 final productoRepositoryProvider = ProductoRepositoryProvider._();

@@ -1,18 +1,18 @@
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Insumo', () {
-    final insumo = Insumo(
-      idInsumo: 1,
+  group('Articulo', () {
+    final articulo = Articulo(
+      idArticulo: 1,
       nombre: 'Café en grano',
       descripcion: 'Grano de café de altura',
       idUnidad: 1,
       costoUnitario: '25.50',
     );
 
-    final insumoJson = {
-      'id_insumo': 1,
+    final articuloJson = {
+      'id_articulo': 1,
       'nombre': 'Café en grano',
       'descripcion': 'Grano de café de altura',
       'id_unidad': 1,
@@ -20,36 +20,36 @@ void main() {
     };
 
     test('fromJson crea una instancia correcta', () {
-      final fromJson = Insumo.fromJson(insumoJson);
-      expect(fromJson, insumo);
+      final fromJson = Articulo.fromJson(articuloJson);
+      expect(fromJson, articulo);
     });
 
     test('toJson crea el mapa correcto', () {
-      final toJson = insumo.toJson();
-      expect(toJson, insumoJson);
+      final toJson = articulo.toJson();
+      expect(toJson, articuloJson);
     });
 
     test('copyWith crea una copia con valores actualizados', () {
-      final copia = insumo.copyWith(costoUnitario: '28.00');
+      final copia = articulo.copyWith(costoUnitario: '28.00');
 
       expect(copia.costoUnitario, '28.00');
       // Los demás valores deben permanecer iguales
-      expect(copia.idInsumo, insumo.idInsumo);
-      expect(copia.nombre, insumo.nombre);
-      expect(copia.descripcion, insumo.descripcion);
-      expect(copia.idUnidad, insumo.idUnidad);
+      expect(copia.idArticulo, articulo.idArticulo);
+      expect(copia.nombre, articulo.nombre);
+      expect(copia.descripcion, articulo.descripcion);
+      expect(copia.idUnidad, articulo.idUnidad);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
-      final i1 = Insumo(
-        idInsumo: 1,
+      final i1 = Articulo(
+        idArticulo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
         costoUnitario: '25.50',
       );
-      final i2 = Insumo(
-        idInsumo: 1,
+      final i2 = Articulo(
+        idArticulo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
@@ -60,15 +60,15 @@ void main() {
     });
 
     test('El hashCode es el mismo para instancias iguales', () {
-      final i1 = Insumo(
-        idInsumo: 1,
+      final i1 = Articulo(
+        idArticulo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
         costoUnitario: '25.50',
       );
-      final i2 = Insumo(
-        idInsumo: 1,
+      final i2 = Articulo(
+        idArticulo: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,

@@ -1,7 +1,7 @@
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/repositorys/insumo_repository.dart';
+import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
@@ -18,7 +18,7 @@ void main() {
   group('ProductoRepository Tests', () {
     late DatabaseHelper databaseHelper;
     late ProductoRepository productoRepository;
-    late InsumosRepository insumoRepository;
+    late ArticuloRepository articuloRepository;
     late UnidadMedidaRepository unidadMedidaRepository;
     late Database database;
 
@@ -26,13 +26,13 @@ void main() {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearInsumo(String nombre, int unidadId, String costo) async {
-      final insumo = Insumo(
+    Future<int> _crearArticulo(String nombre, int unidadId, String costo) async {
+      final articulo = Articulo(
         nombre: nombre,
         idUnidad: unidadId,
         costoUnitario: costo,
       );
-      return await insumoRepository.create(insumo);
+      return await articuloRepository.create(articulo);
     }
 
     Future<int> _crearProducto(String nombre, String precio) async {
@@ -59,11 +59,11 @@ void main() {
       databaseHelper.setMockDatabase(database);
 
       unidadMedidaRepository = UnidadMedidaRepository(databaseHelper);
-      insumoRepository = InsumosRepository(
+      articuloRepository = ArticuloRepository(
         databaseHelper,
         unidadMedidaRepository,
       );
-      productoRepository = ProductoRepository(databaseHelper, insumoRepository);
+      productoRepository = ProductoRepository(databaseHelper, articuloRepository);
     });
 
     tearDown(() async {
@@ -142,35 +142,35 @@ void main() {
     });
 
     group('Business Logic', () {
-      group('getProductoByInsumoId', () {
+      group('getProductoByArticuloId', () {
         test('throws exception because of incorrect query logic', () async {
           // ARRANGE: Crear datos
           final unidadId = await _crearUnidad('Unidad');
-          final insumoId = await _crearInsumo('Insumo Test', unidadId, "10.0");
+          final articuloId = await _crearArticulo('Articulo Test', unidadId, "10.0");
           final productoId = await _crearProducto('Producto Test', "100.0");
 
           // Crear relación
-          await database.insert('Insumo_Producto', {
-            'id_insumo': insumoId,
+          await database.insert('Articulo_Producto', {
+            'id_articulo': articuloId,
             'id_producto': productoId,
             'cantidad_requerida': 1.0,
           });
 
           // ACT & ASSERT
-          // La implementación actual de getProductoByInsumoId intenta buscar
-          // 'idInsumo' en la tabla 'Producto', lo cual es incorrecto y causa un error.
+          // La implementación actual de getProductoByArticuloId intenta buscar
+          // 'idArticulo' en la tabla 'Producto', lo cual es incorrecto y causa un error.
           // Esta prueba verifica que se lance una excepción de base de datos.
           expect(
-            () => productoRepository.getProductoByInsumoId(idInsumo: insumoId),
+            () => productoRepository.getProductoByArticuloId(idArticulo: articuloId),
             throwsA(isA<DatabaseException>()),
           );
         });
 
-        test('returns empty list if insumo has no associated products', () async {
+        test('returns empty list if articulo has no associated products', () async {
           // ARRANGE
           final unidadId = await _crearUnidad('Unidad');
-          final insumoId = await _crearInsumo(
-            'Insumo sin productos',
+          final articuloId = await _crearArticulo(
+            'Articulo sin productos',
             unidadId,
             "5.0",
           );
@@ -179,22 +179,22 @@ void main() {
           // Esta prueba también fallará por la misma razón que la anterior,
           // pero su objetivo es documentar el comportamiento esperado si la consulta fuera correcta.
           expect(
-            () => productoRepository.getProductoByInsumoId(idInsumo: insumoId),
+            () => productoRepository.getProductoByArticuloId(idArticulo: articuloId),
             throwsA(isA<DatabaseException>()),
           );
         });
 
-        test('throws exception if the insumoId does not exist', () {
-          // ARRANGE: un ID de insumo que no existe
-          const idInsumoInexistente = 999;
+        test('throws exception if the articuloId does not exist', () {
+          // ARRANGE: un ID de articulo que no existe
+          const idArticuloInexistente = 999;
 
           // ACT & ASSERT
           // La función primero intentará hacer la consulta errónea y fallará.
           // Si la consulta se corrigiera, la función debería lanzar una excepción
-          // al no poder encontrar el insumo con insumoRepo.getById.
+          // al no poder encontrar el articulo con articuloRepo.getById.
           expect(
-            () => productoRepository.getProductoByInsumoId(
-              idInsumo: idInsumoInexistente,
+            () => productoRepository.getProductoByArticuloId(
+              idArticulo: idArticuloInexistente,
             ),
             throwsA(isA<Exception>()),
           );

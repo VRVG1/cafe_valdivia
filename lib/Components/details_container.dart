@@ -4,11 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class DetailsContainer<T> extends ConsumerWidget {
   final List<Widget> elements;
   final String title;
+  final bool padding;
+  final bool color;
 
   const DetailsContainer({
     super.key,
     required this.elements,
     required this.title,
+    this.padding = true,
+    this.color = true,
   });
 
   @override
@@ -31,13 +35,15 @@ class DetailsContainer<T> extends ConsumerWidget {
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHigh,
+            color: color ? colorScheme.surfaceContainerHigh : null,
             borderRadius: BorderRadius.circular(20.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(children: elements),
-          ),
+          child: padding
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(children: elements),
+                )
+              : Column(children: elements),
         ),
       ],
     );

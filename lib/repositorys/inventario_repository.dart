@@ -5,11 +5,11 @@ class InventarioRepository {
 
   InventarioRepository(this.dbHelper);
 
-  Future<double> getStockInsumo({required int insumoId}) async {
+  Future<double> getStockArticulo({required int articuloId}) async {
     final result = await dbHelper.query(
-      "V_Inventario_Insumo_Stock",
-      where: 'id_insumo = ?',
-      whereArgs: [insumoId],
+      "V_Inventario_Articulo_Stock",
+      where: 'id_articulo = ?',
+      whereArgs: [articuloId],
       limit: 1,
     );
     return result.isEmpty
@@ -30,18 +30,18 @@ class InventarioRepository {
         : (result.first['stock_actual'] as num).toDouble();
   }
 
-  Future<List<Map<String, dynamic>>> getMovimientoInsumoDetallado({
-    int? idInsumo,
+  Future<List<Map<String, dynamic>>> getMovimientoArticuloDetallado({
+    int? idArticulo,
   }) async {
     String? where;
     List<dynamic>? whereArgs;
 
-    if (idInsumo != null) {
-      where = 'idInsumo = ?';
-      whereArgs = [idInsumo];
+    if (idArticulo != null) {
+      where = 'idArticulo = ?';
+      whereArgs = [idArticulo];
     }
     final List<Map<String, dynamic>> result = await dbHelper.query(
-      "V_Movimiento_Insumo_Detallado",
+      "V_Movimiento_Articulo_Detallado",
       where: where,
       whereArgs: whereArgs,
       orderBy: 'fecha DESC',
@@ -57,7 +57,7 @@ class InventarioRepository {
     List<dynamic>? whereArgs;
 
     if (idProducto != null) {
-      where = 'id_insumo = ?';
+      where = 'id_articulo = ?';
       whereArgs = [idProducto];
     }
     final List<Map<String, dynamic>> result = await dbHelper.query(

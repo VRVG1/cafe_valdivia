@@ -1,12 +1,12 @@
-import 'package:cafe_valdivia/core/models/movimiento_inventario_insumo.dart';
+import 'package:cafe_valdivia/core/models/movimiento_inventario_articulo.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('MovimientoInventarioInsumo', () {
+  group('MovimientoInventarioArticulo', () {
     final fecha = DateTime.parse('2025-11-01T10:00:00.000Z');
-    final mii = MovimientoInventarioInsumo(
-      idMovimientoInventarioInsumo: 1,
-      idInsumo: 10,
+    final mii = MovimientoInventarioArticulo(
+      idMovimientoInventarioArticulo: 1,
+      idArticulo: 10,
       tipo: 'entrada',
       cantidad: 100,
       fecha: fecha,
@@ -16,8 +16,8 @@ void main() {
     );
 
     final miiJson = {
-      'id_movimiento_inventario_insumo': 1,
-      'id_insumo': 10,
+      'id_movimiento_inventario_articulo': 1,
+      'id_articulo': 10,
       'tipo': 'entrada',
       'cantidad': 100,
       'fecha': '2025-11-01T10:00:00.000Z',
@@ -27,7 +27,7 @@ void main() {
     };
 
     test('fromJson crea una instancia correcta', () {
-      final fromJson = MovimientoInventarioInsumo.fromJson(miiJson);
+      final fromJson = MovimientoInventarioArticulo.fromJson(miiJson);
       expect(fromJson, mii);
     });
 
@@ -47,17 +47,17 @@ void main() {
       expect(miiCopia.tipo, 'salida');
       expect(miiCopia.motivo, 'Uso en producción');
       expect(
-        miiCopia.idMovimientoInventarioInsumo,
-        mii.idMovimientoInventarioInsumo,
+        miiCopia.idMovimientoInventarioArticulo,
+        mii.idMovimientoInventarioArticulo,
       );
-      expect(miiCopia.idInsumo, mii.idInsumo);
+      expect(miiCopia.idArticulo, mii.idArticulo);
       expect(miiCopia.fecha, mii.fecha);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
-      final mii1 = MovimientoInventarioInsumo(
-        idMovimientoInventarioInsumo: 1,
-        idInsumo: 10,
+      final mii1 = MovimientoInventarioArticulo(
+        idMovimientoInventarioArticulo: 1,
+        idArticulo: 10,
         tipo: 'entrada',
         cantidad: 100,
         fecha: fecha,
@@ -65,9 +65,9 @@ void main() {
         idDetalleProduccion: 30,
         motivo: 'Compra inicial',
       );
-      final mii2 = MovimientoInventarioInsumo(
-        idMovimientoInventarioInsumo: 1,
-        idInsumo: 10,
+      final mii2 = MovimientoInventarioArticulo(
+        idMovimientoInventarioArticulo: 1,
+        idArticulo: 10,
         tipo: 'entrada',
         cantidad: 100,
         fecha: fecha,
@@ -80,9 +80,9 @@ void main() {
     });
 
     test('El hashCode es el mismo para instancias iguales', () {
-      final mii1 = MovimientoInventarioInsumo(
-        idMovimientoInventarioInsumo: 1,
-        idInsumo: 10,
+      final mii1 = MovimientoInventarioArticulo(
+        idMovimientoInventarioArticulo: 1,
+        idArticulo: 10,
         tipo: 'entrada',
         cantidad: 100,
         fecha: fecha,
@@ -90,9 +90,9 @@ void main() {
         idDetalleProduccion: 30,
         motivo: 'Compra inicial',
       );
-      final mii2 = MovimientoInventarioInsumo(
-        idMovimientoInventarioInsumo: 1,
-        idInsumo: 10,
+      final mii2 = MovimientoInventarioArticulo(
+        idMovimientoInventarioArticulo: 1,
+        idArticulo: 10,
         tipo: 'entrada',
         cantidad: 100,
         fecha: fecha,

@@ -1,4 +1,4 @@
-import 'package:cafe_valdivia/core/models/detalle_produccion_insumo.dart';
+import 'package:cafe_valdivia/core/models/detalle_produccion_articulo.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:sqflite/sqflite.dart';
@@ -6,14 +6,14 @@ import 'package:sqflite/sqflite.dart';
 class OrdenProduccionRepository {
   final DatabaseHelper databaseHelper;
   final String tableName = 'Orden_Produccion';
-  final String detalleProduccionInsumoTableName = 'Detalle_Produccion_Insumo';
+  final String detalleProduccionArticuloTableName = 'Detalle_Produccion_Articulo';
   final String idColumn = 'id_orden_produccion';
 
   OrdenProduccionRepository(this.databaseHelper);
 
   Future<int> registrarNuevaProduccion({
     required OrdenProduccion ordenProduccion,
-    required List<DetalleProduccionInsumo> detalleProduccionInsumo,
+    required List<DetalleProduccionArticulo> detalleProduccionArticulo,
   }) async {
     return await databaseHelper.transaction<int>((txn) async {
       final Map<String, dynamic> ordenProduccionMap = ordenProduccion.toJson();
@@ -24,12 +24,12 @@ class OrdenProduccionRepository {
       );
 
       //Insertar detalles
-      for (final DetalleProduccionInsumo detalle in detalleProduccionInsumo) {
+      for (final DetalleProduccionArticulo detalle in detalleProduccionArticulo) {
         final Map<String, dynamic> copyDetalle = detalle.toJson();
         copyDetalle['id_orden_produccion'] = ordenProduccionId;
 
         await txn.insert(
-          detalleProduccionInsumoTableName,
+          detalleProduccionArticuloTableName,
           copyDetalle,
           conflictAlgorithm: ConflictAlgorithm.rollback,
         );

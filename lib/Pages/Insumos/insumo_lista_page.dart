@@ -1,10 +1,10 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
-import 'package:cafe_valdivia/Pages/Insumos/editar_insumo_page.dart';
-import 'package:cafe_valdivia/Pages/Insumos/insumo_detallado_page.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
-import 'package:cafe_valdivia/Pages/Insumos/unidad_medida_nombre.dart';
-import 'package:cafe_valdivia/providers/Insumo/insumo_provider.dart';
+import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
+import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,53 +13,53 @@ class InsumoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncInsumo = ref.watch(insumoProviderProvider);
+    final asyncArticulo = ref.watch(articuloProviderProvider);
 
-    return asyncInsumo.when(
-      data: (insumos) {
-        if (insumos.isEmpty) {
-          return const Center(child: Text('No hay insumos para mostrar.'));
+    return asyncArticulo.when(
+      data: (articulos) {
+        if (articulos.isEmpty) {
+          return const Center(child: Text('No hay articulos para mostrar.'));
         }
-        return ListviewCustom<Insumo>(
-          data: insumos,
-          keyBuilder: (insumo) {
+        return ListviewCustom<Articulo>(
+          data: articulos,
+          keyBuilder: (articulo) {
             return ValueKey(
-              insumo.idInsumo != null
-                  ? 'insumo-${insumo.idInsumo}'
-                  : insumo.hashCode,
+              articulo.idArticulo != null
+                  ? 'articulo-${articulo.idArticulo}'
+                  : articulo.hashCode,
             );
           },
-          leadingBuilder: (insumo) => const Icon(Icons.inventory_2_rounded),
-          titleBuilder: (insumo) => Text(insumo.nombre),
-          trailingBuilder: (insumo) => Text(
-            "\$${insumo.costoUnitario}",
+          leadingBuilder: (articulo) => const Icon(Icons.inventory_2_rounded),
+          titleBuilder: (articulo) => Text(articulo.nombre),
+          trailingBuilder: (articulo) => Text(
+            "\$${articulo.costoUnitario}",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          subtitleBuilder: (insumo) =>
-              UnidadMedidaNombre(unidadMedidaId: insumo.idUnidad),
-          onTapCallback: (insumo) {
-            if (insumo.idInsumo != null) {
+          subtitleBuilder: (articulo) =>
+              UnidadMedidaNombre(unidadMedidaId: articulo.idUnidad),
+          onTapCallback: (articulo) {
+            if (articulo.idArticulo != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      InsumoDetalladoPage(insumoId: insumo.idInsumo!),
+                      ArticuloDetalladoPage(articuloId: articulo.idArticulo!),
                 ),
               );
             }
           },
-          onEditDismissed: (insumo) async {
-            if (insumo.idInsumo != null) {
+          onEditDismissed: (articulo) async {
+            if (articulo.idArticulo != null) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditarInsumoPage(insumo: insumo),
+                  builder: (context) => EditarArticuloPage(articulo: articulo),
                 ),
               );
             }
             return false;
           },
-          onDeleteDismissed: (insumo) async {
+          onDeleteDismissed: (articulo) async {
             final bool confirmar =
                 await mostrarDialogoConfirmacion(
                   context: context,
@@ -70,12 +70,12 @@ class InsumoListaPage extends ConsumerWidget {
                     delete(
                       context: context,
                       ref: ref,
-                      provider: insumoProviderProvider,
-                      id: insumo.idInsumo!,
-                      mensajeExito: "El insumo se ha borrado con exito",
+                      provider: articuloProviderProvider,
+                      id: articulo.idArticulo!,
+                      mensajeExito: "El articulo se ha borrado con exito",
                       detalle: false,
                       mensajeError:
-                          "Error al eliminar el Insumo, Por favor, intente de nuevo.",
+                          "Error al eliminar el Articulo, Por favor, intente de nuevo.",
                     ),
                   },
                 ) ??

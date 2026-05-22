@@ -1,47 +1,47 @@
 import 'package:cafe_valdivia/core/utils/busqueda_helper.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:cafe_valdivia/core/models/insumo.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 
-part 'insumo_provider.g.dart';
+part 'articulo_provider.g.dart';
 
 @riverpod
-class InsumoProvider extends _$InsumoProvider {
+class ArticuloProvider extends _$ArticuloProvider {
   @override
-  Future<List<Insumo>> build() async {
-    final repo = ref.watch(insumosRepositoryProvider);
+  Future<List<Articulo>> build() async {
+    final repo = ref.watch(articulosRepositoryProvider);
     return repo.getAll();
   }
 
-  Future<void> create(Insumo insumo) async {
-    await ref.read(insumosRepositoryProvider).create(insumo);
+  Future<void> create(Articulo articulo) async {
+    await ref.read(articulosRepositoryProvider).create(articulo);
     if (!ref.mounted) return;
     ref.invalidateSelf();
-    ref.invalidate(insumosFiltradosProvider);
+    ref.invalidate(articulosFiltradosProvider);
   }
 
-  Future<void> updateElement(Insumo insumo) async {
-    await ref.read(insumosRepositoryProvider).update(insumo);
+  Future<void> updateElement(Articulo articulo) async {
+    await ref.read(articulosRepositoryProvider).update(articulo);
     ref.invalidateSelf();
   }
 
   Future<void> delete(int id) async {
-    await ref.read(insumosRepositoryProvider).delete(id);
+    await ref.read(articulosRepositoryProvider).delete(id);
     ref.invalidateSelf();
   }
 }
 
 @riverpod
-Future<Insumo> insumoDetail(Ref ref, int id) async {
-  final repository = ref.watch(insumosRepositoryProvider);
+Future<Articulo> articuloDetail(Ref ref, int id) async {
+  final repository = ref.watch(articulosRepositoryProvider);
   return repository.getById(id);
 }
 
 @riverpod
-Future<List<Insumo>> insumosFiltrados(Ref ref) async {
+Future<List<Articulo>> articulosFiltrados(Ref ref) async {
   final filtro = ref.watch(filtroBusquedaProvider);
-  final repo = ref.watch(insumosRepositoryProvider);
+  final repo = ref.watch(articulosRepositoryProvider);
 
   return informacionFiltrada(
     query: filtro.getQuery(),
