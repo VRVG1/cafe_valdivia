@@ -19,10 +19,13 @@ abstract class Articulo with _$Articulo {
       _$ArticuloFromJson(json);
 }
 
-//tipo TEXT NOT NULL DEFAULT 'INSUMO' CHECK(tipo IN ('INSUMO', 'PRODUCTO_INTERMEDIO', 'PRODUCTO')),
+@JsonEnum()
 enum ArticuloTipo {
+  @JsonValue('INSUMO')
   insumo('INSUMO'),
+  @JsonValue('PRODUCTO')
   producto('PRODUCTO'),
+  @JsonValue('PRODUCTO_INTERMEDIO')
   productoIntermedio('PRODUCTO_INTERMEDIO');
 
   final String value;

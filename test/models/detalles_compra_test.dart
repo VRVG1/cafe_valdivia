@@ -34,7 +34,7 @@ void main() {
       final copia = detalleCompra.copyWith(cantidad: 8.0);
 
       expect(copia.cantidad, 8.0);
-      // Los demás valores deben permanecer iguales
+
       expect(copia.id, detalleCompra.id);
       expect(copia.idCompra, detalleCompra.idCompra);
       expect(copia.idArticulo, detalleCompra.idArticulo);
@@ -81,7 +81,6 @@ void main() {
 
     group('Extension', () {
       test('subTotal calcula el valor correcto en centavos', () {
-        // 5 * 10.50 = 52.50 -> 5250 centavos
         expect(detalleCompra.subTotal, 52.50);
       });
 

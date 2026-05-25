@@ -4,8 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Articulo', () {
     final articulo = Articulo(
-      nombre: "Cafe verde arabica",
-      descripcion: "Cafe verde de alta calidad",
+      idArticulo: 1,
+      nombre: 'Cafe verde arabica',
+      descripcion: 'Cafe verde de alta calidad',
       idUnidad: 1,
       costoUnitario: 25.50,
       tipo: ArticuloTipo.insumo,
@@ -13,10 +14,11 @@ void main() {
       stock: 0.0,
     );
 
-    final articuloJson = {
+    final articuloJson = <String, dynamic>{
       'id_articulo': 1,
-      'nombre': 'Café en grano',
-      'descripcion': 'Grano de café de altura',
+      'nombre': 'Cafe verde arabica',
+      'descripcion': 'Cafe verde de alta calidad',
+      'tipo': 'INSUMO',
       'id_unidad': 1,
       'costo_unitario': 25.50,
       'precio_venta': 0.0,
@@ -37,7 +39,6 @@ void main() {
       final copia = articulo.copyWith(costoUnitario: 28.00);
 
       expect(copia.costoUnitario, 28.00);
-      // Los demás valores deben permanecer iguales
       expect(copia.idArticulo, articulo.idArticulo);
       expect(copia.nombre, articulo.nombre);
       expect(copia.descripcion, articulo.descripcion);

@@ -29,7 +29,7 @@ Map<String, dynamic> _$ArticuloToJson(_Articulo instance) => <String, dynamic>{
 };
 
 const _$ArticuloTipoEnumMap = {
-  ArticuloTipo.insumo: 'insumo',
-  ArticuloTipo.producto: 'producto',
-  ArticuloTipo.productoIntermedio: 'productoIntermedio',
+  ArticuloTipo.insumo: 'INSUMO',
+  ArticuloTipo.producto: 'PRODUCTO',
+  ArticuloTipo.productoIntermedio: 'PRODUCTO_INTERMEDIO',
 };
