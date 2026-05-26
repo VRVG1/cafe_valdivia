@@ -20,11 +20,12 @@ class ClienteRepository implements BaseRepository<Cliente> {
 
   @override
   Future<int> create(Cliente entity) async {
+    if (entity.nombre.trim().isEmpty) throw Exception('El nombre no puede estar vacío.');
+    if (entity.apellido.trim().isEmpty) throw Exception('El apellido no puede estar vacío.');
     try {
       final db = await dbHelper.database;
       return await db.insert(tableName, entity.toJson());
     } catch (e) {
-      // Verificamos si es un error de restricción de base de datos
       if (e.toString().contains('UNIQUE constraint failed')) {
         throw Exception('El correo ya existe.');
       }
@@ -59,13 +60,15 @@ class ClienteRepository implements BaseRepository<Cliente> {
       whereArgs: [id],
       limit: 1,
     );
-    if (result.isEmpty) throw Exception('Cliente no encontrada');
+    if (result.isEmpty) throw Exception('Cliente no encontrado');
     return fromJson(result.first);
   }
 
   @override
   Future<int> update(Cliente entity) async {
     if (entity.idCliente == null) throw Exception('ID no puede ser nulo');
+    if (entity.nombre.trim().isEmpty) throw Exception('El nombre no puede estar vacío.');
+    if (entity.apellido.trim().isEmpty) throw Exception('El apellido no puede estar vacío.');
     return await dbHelper.update(
       tableName,
       toJson(entity),
@@ -75,9 +78,10 @@ class ClienteRepository implements BaseRepository<Cliente> {
   }
 
   Future<List<Cliente>> search(String query) async {
+    final pattern = '%$query%';
     return getAll(
       where: 'nombre LIKE ? OR apellido LIKE ? OR telefono LIKE ?',
-      whereArgs: ['%$query', '%$query', '%$query'],
+      whereArgs: [pattern, pattern, pattern],
     );
   }
 }
