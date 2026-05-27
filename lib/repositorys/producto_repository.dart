@@ -4,7 +4,7 @@ import 'package:cafe_valdivia/core/models/producto.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 
-class ProductoRepository implements BaseRepository<Producto> {
+class ProductoRepository extends BaseRepository<Producto> {
   @override
   final DatabaseHelper dbHelper;
   @override
@@ -23,59 +23,18 @@ class ProductoRepository implements BaseRepository<Producto> {
   Map<String, dynamic> toJson(Producto entity) => entity.toJson();
 
   @override
+  int? getId(Producto entity) => entity.idProducto;
+
+  @override
   Future<int> create(Producto entity) async {
     try {
-      final db = await dbHelper.database;
-      return await db.insert(tableName, entity.toJson());
+      return await super.create(entity);
     } catch (e) {
-      // Verificamos si es un error de restricción de base de datos
       if (e.toString().contains('UNIQUE constraint failed')) {
         throw Exception('El nombre del producto ya existe.');
       }
       throw Exception('Error desconocido al guardar.');
     }
-  }
-
-  @override
-  Future<int> delete(int id) async {
-    final db = await dbHelper.database;
-    return await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
-  }
-
-  @override
-  Future<List<Producto>> getAll({
-    String? where,
-    List<Object?>? whereArgs,
-  }) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-    );
-    return result.map(fromJson).toList();
-  }
-
-  @override
-  Future<Producto> getById(int id) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-      limit: 1,
-    );
-    if (result.isEmpty) throw Exception('Producto no encontrado');
-    return fromJson(result.first);
-  }
-
-  @override
-  Future<int> update(Producto entity) async {
-    if (entity.idProducto == null) throw Exception('ID no puede ser nulo');
-    return await dbHelper.update(
-      tableName,
-      toJson(entity),
-      where: '$idColumn = ?',
-      whereArgs: [entity.idProducto],
-    );
   }
 
   Future<(Articulo, List<Producto>)> getProductoByArticuloId({

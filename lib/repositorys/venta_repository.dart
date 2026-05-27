@@ -6,13 +6,15 @@ import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
-class VentaRepository implements BaseRepository<Venta> {
+class VentaRepository extends BaseRepository<Venta> {
   @override
   final DatabaseHelper dbHelper;
   @override
   final String tableName = 'Venta';
   @override
   final String idColumn = 'id_venta';
+  @override
+  String get entityName => 'Venta';
 
   final ClienteRepository clienteRepo;
   final ProductoRepository productoRepo;
@@ -26,56 +28,27 @@ class VentaRepository implements BaseRepository<Venta> {
   Map<String, dynamic> toJson(Venta entity) => entity.toJson();
 
   @override
-  Future<int> create(Venta entity) async {
-    final db = await dbHelper.database;
-    final ventaMap = entity.toJson();
-    if (ventaMap.containsKey('pagado') && ventaMap['pagado'] is bool) {
-      ventaMap['pagado'] = (ventaMap['pagado'] as bool) ? 1 : 0;
+  int? getId(Venta entity) => entity.idVenta;
+
+  Map<String, dynamic> _ventaToJson(Venta entity) {
+    final map = entity.toJson();
+    if (map.containsKey('pagado') && map['pagado'] is bool) {
+      map['pagado'] = (map['pagado'] as bool) ? 1 : 0;
     }
-    return await db.insert(tableName, ventaMap);
+    return map;
   }
 
   @override
-  Future<int> delete(int id) async {
-    final db = await dbHelper.database;
-    return await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
-  }
-
-  @override
-  Future<List<Venta>> getAll({
-    String? where,
-    List<Object?>? whereArgs,
-  }) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-    );
-    return result.map(fromJson).toList();
-  }
-
-  @override
-  Future<Venta> getById(int id) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-      limit: 1,
-    );
-    if (result.isEmpty) throw Exception('Venta no encontrada');
-    return fromJson(result.first);
+  Future<int> create(Venta entity) async {
+    return await dbHelper.insert(tableName, _ventaToJson(entity));
   }
 
   @override
   Future<int> update(Venta entity) async {
     if (entity.idVenta == null) throw Exception('ID no puede ser nulo');
-    final ventaMap = entity.toJson();
-    if (ventaMap.containsKey('pagado') && ventaMap['pagado'] is bool) {
-      ventaMap['pagado'] = (ventaMap['pagado'] as bool) ? 1 : 0;
-    }
     return await dbHelper.update(
       tableName,
-      ventaMap,
+      _ventaToJson(entity),
       where: '$idColumn = ?',
       whereArgs: [entity.idVenta],
     );

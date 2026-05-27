@@ -4,7 +4,7 @@ import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 
-class ProveedorRepository implements BaseRepository<Proveedor> {
+class ProveedorRepository extends BaseRepository<Proveedor> {
   @override
   final DatabaseHelper dbHelper;
   @override
@@ -21,10 +21,12 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
   Map<String, dynamic> toJson(Proveedor entity) => entity.toJson();
 
   @override
+  int? getId(Proveedor entity) => entity.idProveedor;
+
+  @override
   Future<int> create(Proveedor entity) async {
     try {
-      final db = await dbHelper.database;
-      return await db.insert(tableName, entity.toJson());
+      return await super.create(entity);
     } on DatabaseException catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
         appLogger.e(e);
@@ -32,48 +34,6 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
       }
       rethrow;
     }
-  }
-
-  @override
-  Future<int> delete(int id) async {
-    final db = await dbHelper.database;
-    return await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
-  }
-
-  @override
-  Future<List<Proveedor>> getAll({
-    String? where,
-    List<Object?>? whereArgs,
-  }) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-    );
-    return result.map(fromJson).toList();
-  }
-
-  @override
-  Future<Proveedor> getById(int id) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-      limit: 1,
-    );
-    if (result.isEmpty) throw Exception('Proveedor no encontrado');
-    return fromJson(result.first);
-  }
-
-  @override
-  Future<int> update(Proveedor entity) async {
-    if (entity.idProveedor == null) throw Exception('ID no puede ser nulo');
-    return await dbHelper.update(
-      tableName,
-      toJson(entity),
-      where: '$idColumn = ?',
-      whereArgs: [entity.idProveedor],
-    );
   }
 
   Future<List<Proveedor>> search(String query) async {

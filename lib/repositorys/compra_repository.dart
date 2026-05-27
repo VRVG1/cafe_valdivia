@@ -7,7 +7,7 @@ import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
-class CompraRepository implements BaseRepository<Compra> {
+class CompraRepository extends BaseRepository<Compra> {
   @override
   final DatabaseHelper dbHelper;
   @override

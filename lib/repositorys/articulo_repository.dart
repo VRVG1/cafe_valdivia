@@ -4,7 +4,7 @@ import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 
-class ArticuloRepository implements BaseRepository<Articulo> {
+class ArticuloRepository extends BaseRepository<Articulo> {
   @override
   final DatabaseHelper dbHelper;
   @override
@@ -23,52 +23,7 @@ class ArticuloRepository implements BaseRepository<Articulo> {
   Map<String, dynamic> toJson(Articulo entity) => entity.toJson();
 
   @override
-  Future<int> create(Articulo entity) async {
-    final db = await dbHelper.database;
-    return await db.insert(tableName, entity.toJson());
-  }
-
-  @override
-  Future<int> delete(int id) async {
-    final db = await dbHelper.database;
-    return await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
-  }
-
-  @override
-  Future<List<Articulo>> getAll({
-    String? where,
-    List<Object?>? whereArgs,
-  }) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-    );
-    return result.map(fromJson).toList();
-  }
-
-  @override
-  Future<Articulo> getById(int id) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-      limit: 1,
-    );
-    if (result.isEmpty) throw Exception('Artículo no encontrado');
-    return fromJson(result.first);
-  }
-
-  @override
-  Future<int> update(Articulo entity) async {
-    if (entity.idArticulo == null) throw Exception('ID no puede ser nulo');
-    return await dbHelper.update(
-      tableName,
-      toJson(entity),
-      where: '$idColumn = ?',
-      whereArgs: [entity.idArticulo],
-    );
-  }
+  int? getId(Articulo entity) => entity.idArticulo;
 
   // VIEWS
   Future<(UnidadMedida, List<Articulo>)> getArticuloByIdUnidad({
