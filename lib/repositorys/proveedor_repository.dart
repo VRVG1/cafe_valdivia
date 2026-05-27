@@ -1,3 +1,4 @@
+import 'package:sqflite/sqflite.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
@@ -24,13 +25,12 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
     try {
       final db = await dbHelper.database;
       return await db.insert(tableName, entity.toJson());
-    } catch (e) {
-      // Verificamos si es un error de restricción de base de datos
+    } on DatabaseException catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
         appLogger.e(e);
-        throw Exception('El proveedor ya existe.');
+        throw Exception('El email del proveedor ya existe.');
       }
-      throw Exception('Error desconocido al guardar.');
+      rethrow;
     }
   }
 
@@ -61,7 +61,7 @@ class ProveedorRepository implements BaseRepository<Proveedor> {
       whereArgs: [id],
       limit: 1,
     );
-    if (result.isEmpty) throw Exception('Unidad no encontrada');
+    if (result.isEmpty) throw Exception('Proveedor no encontrado');
     return fromJson(result.first);
   }
 

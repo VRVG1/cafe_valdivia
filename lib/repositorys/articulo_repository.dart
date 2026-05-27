@@ -55,7 +55,7 @@ class ArticuloRepository implements BaseRepository<Articulo> {
       whereArgs: [id],
       limit: 1,
     );
-    if (result.isEmpty) throw Exception('Unidad no encontrada');
+    if (result.isEmpty) throw Exception('Artículo no encontrado');
     return fromJson(result.first);
   }
 
@@ -102,8 +102,7 @@ class ArticuloRepository implements BaseRepository<Articulo> {
 
   Future<List<Articulo>> search(String query) async {
     return getAll(
-      where: 'LOWER(nombre) LIKE ? OR LOWER(costo_unitario) LIKE ?',
-
+      where: 'LOWER(nombre) LIKE ? OR LOWER(descripcion) LIKE ?',
       whereArgs: ['%${query.toLowerCase()}%', '%${query.toLowerCase()}%'],
     );
   }

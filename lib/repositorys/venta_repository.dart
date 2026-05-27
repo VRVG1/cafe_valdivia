@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
@@ -5,9 +6,12 @@ import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
-class VentaRepository {
+class VentaRepository implements BaseRepository<Venta> {
+  @override
   final DatabaseHelper dbHelper;
+  @override
   final String tableName = 'Venta';
+  @override
   final String idColumn = 'id_venta';
 
   final ClienteRepository clienteRepo;
@@ -15,12 +19,73 @@ class VentaRepository {
 
   VentaRepository(this.dbHelper, this.productoRepo, this.clienteRepo);
 
+  @override
+  Venta fromJson(Map<String, dynamic> map) => Venta.fromJson(map);
+
+  @override
+  Map<String, dynamic> toJson(Venta entity) => entity.toJson();
+
+  @override
+  Future<int> create(Venta entity) async {
+    final db = await dbHelper.database;
+    final ventaMap = entity.toJson();
+    if (ventaMap.containsKey('pagado') && ventaMap['pagado'] is bool) {
+      ventaMap['pagado'] = (ventaMap['pagado'] as bool) ? 1 : 0;
+    }
+    return await db.insert(tableName, ventaMap);
+  }
+
+  @override
+  Future<int> delete(int id) async {
+    final db = await dbHelper.database;
+    return await db.delete(tableName, where: '$idColumn = ?', whereArgs: [id]);
+  }
+
+  @override
+  Future<List<Venta>> getAll({
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
+    final result = await dbHelper.query(
+      tableName,
+      where: where,
+      whereArgs: whereArgs,
+    );
+    return result.map(fromJson).toList();
+  }
+
+  @override
+  Future<Venta> getById(int id) async {
+    final result = await dbHelper.query(
+      tableName,
+      where: '$idColumn = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (result.isEmpty) throw Exception('Venta no encontrada');
+    return fromJson(result.first);
+  }
+
+  @override
+  Future<int> update(Venta entity) async {
+    if (entity.idVenta == null) throw Exception('ID no puede ser nulo');
+    final ventaMap = entity.toJson();
+    if (ventaMap.containsKey('pagado') && ventaMap['pagado'] is bool) {
+      ventaMap['pagado'] = (ventaMap['pagado'] as bool) ? 1 : 0;
+    }
+    return await dbHelper.update(
+      tableName,
+      ventaMap,
+      where: '$idColumn = ?',
+      whereArgs: [entity.idVenta],
+    );
+  }
+
   Future<int> registrarNuevaVenta({
     required Venta venta,
     required List<DetalleVenta> detallesVenta,
   }) async {
     return await dbHelper.transaction<int>((txn) async {
-      // Insert venta principal
       final ventaMap = venta.toJson();
       final ventaId = await txn.insert(
         tableName,
@@ -28,7 +93,6 @@ class VentaRepository {
         conflictAlgorithm: ConflictAlgorithm.rollback,
       );
 
-      //Insert detalleVenta
       for (final DetalleVenta detalle in detallesVenta) {
         final Map<String, dynamic> copyDetalleVenta = detalle.toJson();
         copyDetalleVenta['id_venta'] = ventaId;
@@ -70,7 +134,6 @@ class VentaRepository {
       'nombre_cliente': result.first['nombre_cliente'],
       'apellido_cliente': result.first['apellido_cliente'],
     };
-    //TODO: Ver una manera de obtener todas las cantidades, precio_unitario_compra y su relacion para una muestra mas detallada valgame dios
 
     return <String, dynamic>{
       'venta': infoVenta,
@@ -79,7 +142,7 @@ class VentaRepository {
     };
   }
 
-  Future<List<Map<String, dynamic>>> getAll() async {
+  Future<List<Map<String, dynamic>>> getAllFullVentas() async {
     final maps = await dbHelper.query(tableName, orderBy: 'fecha DESC');
     return await Future.wait(
       maps.map((map) async {

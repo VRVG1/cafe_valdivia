@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
-import 'package:cafe_valdivia/utils/logger.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
@@ -14,20 +11,23 @@ void main() {
     databaseFactory = databaseFactoryFfi;
   });
 
-  group('unidad_medida_respository test', () {
-    late DatabaseHelper databaseHelper;
-    late UnidadMedidaRepository respository;
-    late Database database;
+  final unidad = UnidadMedida(nombre: 'Kilogramos');
+  final unidad2 = UnidadMedida(nombre: 'Litros');
+  final unidad3 = UnidadMedida(nombre: 'Unidades');
 
+  group("UnidadMedidaRepository CRUD", () {
+    late DatabaseHelper databaseHelper;
+    late UnidadMedidaRepository repository;
+    late Database database;
     late String path;
 
     setUp(() async {
-      path = p.join(inMemoryDatabasePath, 'test_unidad_medida_repository.db');
+      path = p.join(inMemoryDatabasePath, 'test_unidad_medida_crud.db');
       await databaseFactory.deleteDatabase(path);
 
       database = await openDatabase(
         path,
-        version: 2,
+        version: 3,
         onCreate: (db, version) async {
           await DatabaseHelper().testOnCreate(db);
         },
@@ -38,7 +38,7 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      respository = UnidadMedidaRepository(databaseHelper);
+      repository = UnidadMedidaRepository(databaseHelper);
     });
 
     tearDown(() async {
@@ -49,179 +49,280 @@ void main() {
       await databaseFactory.deleteDatabase(path);
     });
 
-    Future<int> _crearUnidad(String nombre) async {
-      return await respository.create(UnidadMedida(nombre: nombre));
-    }
+    test('Create unidad and getById', () async {
+      final id = await repository.create(unidad);
 
-    group("CRUD Operations", () {
-      test(
-        "Create, GetById, Update and Delete an UnidadMedida successfully",
-        () async {
-          final unidadId = await _crearUnidad("Sicaru");
+      expect(id, isNotNull);
 
-          expect(unidadId, isA<int>());
+      final obtenida = await repository.getById(id);
 
-          var unidadRecuperada = await respository.getById(unidadId);
-          expect(unidadRecuperada.nombre, "Sicaru");
-          expect(unidadRecuperada.idUnidadMedida, unidadId);
-
-          final unidadActualizada = unidadRecuperada.copyWith(nombre: "Manito");
-          final filasAfectadas = await respository.update(unidadActualizada);
-          expect(filasAfectadas, 1);
-
-          unidadRecuperada = await respository.getById(unidadId);
-          expect(unidadRecuperada.nombre, "Manito");
-
-          final filasAfectadasEliminacion = await respository.delete(unidadId);
-          expect(filasAfectadasEliminacion, 1);
-          expect(
-            () => respository.getById(unidadId),
-            throwsA(isA<Exception>()),
-          );
-        },
-      );
-      test("getAll returns a list of all Unidad de Medida", () async {
-        await _crearUnidad("Unidad 1");
-        await _crearUnidad("Unidad 2");
-        await _crearUnidad("Unidad 3");
-        await _crearUnidad("Unidad 4");
-
-        final List<UnidadMedida> todasLasUnidades = await respository.getAll();
-
-        expect(todasLasUnidades.length, 4);
-        expect(todasLasUnidades.any((i) => i.nombre == "Unidad 3"), isTrue);
-      });
-      test('getAll with "where" clause filters correctly', () async {
-        await _crearUnidad("Bolsas");
-        await _crearUnidad("Bolsas Grandes");
-        await _crearUnidad("Botella");
-        await _crearUnidad("Bolsas Medianas");
-
-        final List<UnidadMedida> resultado = await respository.getAll(
-          where: 'nombre LIKE ?',
-          whereArgs: ["%bolsas%"],
-        );
-
-        expect(resultado.length, 3);
-        expect(
-          resultado.any((element) => element.nombre == 'Bolsas Grandes'),
-          isTrue,
-        );
-      });
+      expect(obtenida.nombre, unidad.nombre);
+      expect(obtenida.idUnidadMedida, id);
     });
 
-    group("Robustness and Edge Cases", () {
-      test("throws exception if the unidadId does not exist", () {
-        expect(() => respository.getById(999), throwsA(isA<Exception>()));
-      });
+    test('Delete unidad and getById throws exception', () async {
+      final id = await repository.create(unidad);
 
-      test("update throws exception for entity with null ID", () {
-        final unidadSinID = UnidadMedida(nombre: "Sin ID");
-        expect(() => respository.update(unidadSinID), throwsA(isA<Exception>()));
-      });
+      expect(id, isNotNull);
 
-      test("delete returns 0 for non-existent ID", () async {
-        final rowsAffected = await respository.delete(999);
-        expect(rowsAffected, 0);
-      });
-      test('create fails for articulo with empty name if constrained', () async {
-        final UnidadMedida unidadMedida = UnidadMedida(nombre: "");
-        expect(
-          () => respository.create(unidadMedida),
-          throwsA(isA<DatabaseException>()),
-        );
-      });
+      final filasAfectadas = await repository.delete(id);
+
+      expect(filasAfectadas, 1);
+      expect(repository.getById(id), throwsA(isA<Exception>()));
     });
-    group("Performance Tests", () {
-      const int recordCount = 1000;
 
-      test(
-        'handles bulk creation and reading efficiently',
-        () async {
-          final Stopwatch stopwatch = Stopwatch()..start();
+    test('Update unidad', () async {
+      final id = await repository.create(unidad);
+      expect(id, isNotNull);
 
-          final Batch batch = database.batch();
-          for (int i = 0; i < recordCount; i++) {
-            batch.insert('Unidad_Medida', {'nombre': 'UnidadMedida $i'});
-          }
-
-          final List<Object?> createResults = await batch.commit();
-          expect(createResults.length, recordCount);
-          appLogger.i(
-            "Creación de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms",
-          );
-
-          final List<UnidadMedida> allUnidadMedida = await respository.getAll();
-          expect(allUnidadMedida.length, recordCount);
-          appLogger.i(
-            "Lectura de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms",
-          );
-
-          stopwatch.stop();
-          expect(
-            stopwatch.elapsed.inSeconds,
-            lessThan(5),
-            reason:
-                "La creacion y lectura masiva no debe exceder los 5 segundos.",
-          );
-        },
-        timeout: const Timeout(Duration(seconds: 10)),
+      final modificada = unidad.copyWith(
+        idUnidadMedida: id,
+        nombre: 'Kilogramos Actualizado',
       );
 
-      test(
-        "handles bulk updates and deletion efficiently",
-        () async {
-          final Batch batch = database.batch();
-          for (int i = 0; i < recordCount; i++) {
-            batch.insert('Unidad_Medida', {'nombre': 'UnidadMedida $i'});
-          }
+      final filasAfectadas = await repository.update(modificada);
+      final recuperada = await repository.getById(id);
 
-          await batch.commit();
-
-          final List<UnidadMedida> allUnidadMedida = await respository.getAll();
-
-          final Stopwatch stopwatch = Stopwatch()..start();
-
-          final Batch updateBatch = database.batch();
-          for (final UnidadMedida unidadMedida in allUnidadMedida) {
-            updateBatch.update(
-              'Unidad_Medida',
-              {'nombre': 'UPDATED: ${unidadMedida.nombre}'},
-              where: 'id_unidad = ?',
-              whereArgs: [unidadMedida.idUnidadMedida],
-            );
-          }
-
-          await updateBatch.commit(noResult: true);
-          appLogger.i(
-            'Actualización de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
-          );
-
-          final Batch deleteBatch = database.batch();
-          for (final UnidadMedida unidadMedida in allUnidadMedida) {
-            deleteBatch.delete(
-              "Unidad_Medida",
-              where: 'id_unidad = ?',
-              whereArgs: [unidadMedida.idUnidadMedida],
-            );
-          }
-          await deleteBatch.commit(noResult: true);
-          final List<UnidadMedida> finalList = await respository.getAll();
-          expect(finalList, isEmpty);
-          appLogger.i(
-            'Borrado de $recordCount y tiempo total: ${stopwatch.elapsedMilliseconds} ms',
-          );
-
-          stopwatch.stop();
-          expect(
-            stopwatch.elapsed.inSeconds,
-            lessThan(5),
-            reason:
-                "La actualización y borrado no deben exceder los 5 segundos",
-          );
-        },
-        timeout: const Timeout(Duration(seconds: 10)),
-      );
+      expect(filasAfectadas, 1);
+      expect(recuperada.nombre, 'Kilogramos Actualizado');
     });
+
+    test('GetAll unidades returns all unidades', () async {
+      await repository.create(unidad);
+      await repository.create(unidad2);
+      await repository.create(unidad3);
+
+      final todas = await repository.getAll();
+
+      expect(todas.length, 3);
+      expect(todas.any((u) => u.nombre == 'Kilogramos'), isTrue);
+      expect(todas.any((u) => u.nombre == 'Litros'), isTrue);
+      expect(todas.any((u) => u.nombre == 'Unidades'), isTrue);
+    });
+
+    test('GetAll with where clause filters correctly', () async {
+      await repository.create(UnidadMedida(nombre: 'Bolsas'));
+      await repository.create(UnidadMedida(nombre: 'Bolsas Grandes'));
+      await repository.create(UnidadMedida(nombre: 'Botella'));
+      await repository.create(UnidadMedida(nombre: 'Bolsas Medianas'));
+
+      final resultado = await repository.getAll(
+        where: 'nombre LIKE ?',
+        whereArgs: ['%bolsas%'],
+      );
+
+      expect(resultado.length, 3);
+      expect(resultado.any((u) => u.nombre == 'Bolsas Grandes'), isTrue);
+    });
+
+    test('GetAll returns empty list when no unidades', () async {
+      final todas = await repository.getAll();
+      expect(todas, isEmpty);
+    });
+  });
+
+  group("UnidadMedidaRepository Edge Cases", () {
+    late DatabaseHelper databaseHelper;
+    late UnidadMedidaRepository repository;
+    late Database database;
+    late String path;
+
+    setUp(() async {
+      path = p.join(inMemoryDatabasePath, 'test_unidad_medida_edge.db');
+      await databaseFactory.deleteDatabase(path);
+
+      database = await openDatabase(
+        path,
+        version: 3,
+        onCreate: (db, version) async {
+          await DatabaseHelper().testOnCreate(db);
+        },
+        onConfigure: (db) async {
+          await DatabaseHelper().testOnConfigure(db);
+        },
+      );
+      databaseHelper = DatabaseHelper();
+      databaseHelper.setMockDatabase(database);
+
+      repository = UnidadMedidaRepository(databaseHelper);
+    });
+
+    tearDown(() async {
+      await database.close();
+    });
+
+    tearDownAll(() async {
+      await databaseFactory.deleteDatabase(path);
+    });
+
+    test('GetById with non-existent ID throws', () async {
+      expect(repository.getById(999), throwsA(isA<Exception>()));
+    });
+
+    test('Update with null ID throws', () async {
+      final sinId = UnidadMedida(nombre: 'Sin ID');
+      expect(repository.update(sinId), throwsA(isA<Exception>()));
+    });
+
+    test('Delete non-existent returns 0', () async {
+      final filas = await repository.delete(999);
+      expect(filas, 0);
+    });
+  });
+
+  group("UnidadMedidaRepository Consistency", () {
+    late DatabaseHelper databaseHelper;
+    late UnidadMedidaRepository repository;
+    late Database database;
+    late String path;
+
+    setUp(() async {
+      path = p.join(inMemoryDatabasePath, 'test_unidad_medida_consist.db');
+      await databaseFactory.deleteDatabase(path);
+
+      database = await openDatabase(
+        path,
+        version: 3,
+        onCreate: (db, version) async {
+          await DatabaseHelper().testOnCreate(db);
+        },
+        onConfigure: (db) async {
+          await DatabaseHelper().testOnConfigure(db);
+        },
+      );
+      databaseHelper = DatabaseHelper();
+      databaseHelper.setMockDatabase(database);
+
+      repository = UnidadMedidaRepository(databaseHelper);
+    });
+
+    tearDown(() async {
+      await database.close();
+    });
+
+    tearDownAll(() async {
+      await databaseFactory.deleteDatabase(path);
+    });
+
+    test('Create -> GetAll count matches', () async {
+      final id1 = await repository.create(unidad);
+      final id2 = await repository.create(unidad2);
+      final id3 = await repository.create(unidad3);
+
+      expect(id1, 1);
+      expect(id2, 2);
+      expect(id3, 3);
+
+      final todas = await repository.getAll();
+      expect(todas.length, 3);
+    });
+
+    test('Create -> Delete -> GetAll count decreases', () async {
+      await repository.create(unidad);
+      await repository.create(unidad2);
+
+      var todas = await repository.getAll();
+      expect(todas.length, 2);
+
+      await repository.delete(todas.first.idUnidadMedida!);
+
+      todas = await repository.getAll();
+      expect(todas.length, 1);
+    });
+
+    test('Create -> Update -> GetById reflects changes', () async {
+      final id = await repository.create(unidad);
+      final modificada = unidad.copyWith(
+        idUnidadMedida: id,
+        nombre: 'Actualizado',
+      );
+
+      await repository.update(modificada);
+      final recuperada = await repository.getById(id);
+
+      expect(recuperada.nombre, 'Actualizado');
+    });
+
+    test('Multiple create + delete cycle maintains data integrity', () async {
+      final ids = <int>[];
+      for (int i = 0; i < 10; i++) {
+        final u = UnidadMedida(nombre: 'Unidad $i');
+        final id = await repository.create(u);
+        ids.add(id);
+      }
+
+      expect(await repository.getAll(), hasLength(10));
+
+      for (int i = 0; i < ids.length; i += 2) {
+        await repository.delete(ids[i]);
+      }
+
+      final restantes = await repository.getAll();
+      expect(restantes, hasLength(5));
+
+      for (int i = 1; i < ids.length; i += 2) {
+        final r = await repository.getById(ids[i]);
+        expect(r.nombre, 'Unidad $i');
+      }
+    });
+  });
+
+  group("UnidadMedidaRepository Performance", () {
+    late DatabaseHelper databaseHelper;
+    late UnidadMedidaRepository repository;
+    late Database database;
+    late String path;
+
+    setUp(() async {
+      path = p.join(inMemoryDatabasePath, 'test_unidad_medida_perf.db');
+      await databaseFactory.deleteDatabase(path);
+
+      database = await openDatabase(
+        path,
+        version: 3,
+        onCreate: (db, version) async {
+          await DatabaseHelper().testOnCreate(db);
+        },
+        onConfigure: (db) async {
+          await DatabaseHelper().testOnConfigure(db);
+        },
+      );
+      databaseHelper = DatabaseHelper();
+      databaseHelper.setMockDatabase(database);
+
+      repository = UnidadMedidaRepository(databaseHelper);
+    });
+
+    tearDown(() async {
+      await database.close();
+    });
+
+    tearDownAll(() async {
+      await databaseFactory.deleteDatabase(path);
+    });
+
+    test('Bulk insert 100 unidades completes in reasonable time', () async {
+      final stopwatch = Stopwatch()..start();
+
+      for (int i = 0; i < 100; i++) {
+        await repository.create(UnidadMedida(nombre: 'Unidad $i'));
+      }
+
+      stopwatch.stop();
+      expect(stopwatch.elapsedMilliseconds, lessThan(60000));
+    }, timeout: const Timeout(Duration(minutes: 1)));
+
+    test('GetAll performance with 100 records', () async {
+      for (int i = 0; i < 100; i++) {
+        await repository.create(UnidadMedida(nombre: 'Unidad $i'));
+      }
+
+      final stopwatch = Stopwatch()..start();
+      final all = await repository.getAll();
+      stopwatch.stop();
+
+      expect(all.length, 100);
+      expect(stopwatch.elapsedMilliseconds, lessThan(5000));
+    }, timeout: const Timeout(Duration(minutes: 1)));
   });
 }

@@ -63,7 +63,7 @@ class ProductoRepository implements BaseRepository<Producto> {
       whereArgs: [id],
       limit: 1,
     );
-    if (result.isEmpty) throw Exception('Unidad no encontrada');
+    if (result.isEmpty) throw Exception('Producto no encontrado');
     return fromJson(result.first);
   }
 
