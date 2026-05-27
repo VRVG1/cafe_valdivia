@@ -26,7 +26,9 @@ enum ArticuloTipo {
   @JsonValue('PRODUCTO')
   producto('PRODUCTO'),
   @JsonValue('PRODUCTO_INTERMEDIO')
-  productoIntermedio('PRODUCTO_INTERMEDIO');
+  productoIntermedio('PRODUCTO_INTERMEDIO'),
+  @JsonValue('INSUMO_PRODUCTO')
+  insumoProducto('INSUMO_PRODUCTO');
 
   final String value;
   const ArticuloTipo(this.value);

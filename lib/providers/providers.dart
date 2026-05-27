@@ -2,7 +2,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
-import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/repositorys/venta_repository.dart';
@@ -39,18 +38,9 @@ ArticuloRepository articulosRepository(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-ProductoRepository productoRepository(Ref ref) {
-  return ProductoRepository(
-    ref.watch(databaseHelperProvider),
-    ref.watch(articulosRepositoryProvider),
-  );
-}
-
-@Riverpod(keepAlive: true)
 VentaRepository ventaRepository(Ref ref) {
   return VentaRepository(
     ref.watch(databaseHelperProvider),
-    ref.watch(productoRepositoryProvider),
     ref.watch(clienteRepositoryProvider),
   );
 }

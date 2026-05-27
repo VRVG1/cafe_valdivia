@@ -241,54 +241,6 @@ final class ArticulosRepositoryProvider
 String _$articulosRepositoryHash() =>
     r'4c4230d203bf35ba8444b943799828f2e13376ac';
 
-@ProviderFor(productoRepository)
-final productoRepositoryProvider = ProductoRepositoryProvider._();
-
-final class ProductoRepositoryProvider
-    extends
-        $FunctionalProvider<
-          ProductoRepository,
-          ProductoRepository,
-          ProductoRepository
-        >
-    with $Provider<ProductoRepository> {
-  ProductoRepositoryProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'productoRepositoryProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$productoRepositoryHash();
-
-  @$internal
-  @override
-  $ProviderElement<ProductoRepository> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  ProductoRepository create(Ref ref) {
-    return productoRepository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ProductoRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<ProductoRepository>(value),
-    );
-  }
-}
-
-String _$productoRepositoryHash() =>
-    r'e09323effbad93dc7af3f1564e227c36891bec7c';
-
 @ProviderFor(ventaRepository)
 final ventaRepositoryProvider = VentaRepositoryProvider._();
 
@@ -329,7 +281,7 @@ final class VentaRepositoryProvider
   }
 }
 
-String _$ventaRepositoryHash() => r'2400a42a70ad4728ca332b14e1feda04b7e19f53';
+String _$ventaRepositoryHash() => r'4842f8b25de9e27cac2d754ff1303d694394d1f6';
 
 @ProviderFor(compraRepository)
 final compraRepositoryProvider = CompraRepositoryProvider._();

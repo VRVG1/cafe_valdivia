@@ -45,30 +45,6 @@ class DatabaseHelper {
   }
 
   Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {
-    if (oldversion < 10) {
-      _migrateToV4(db);
-    }
-  }
-
-  Future<void> _migrateToV4(Database db) async {
-    await db.execute('''
-    CREATE VIEW IF NOT EXISTS v_compras_list AS 
-      SELECT
-        c.id_compra,
-        c.fecha,
-        c.pagado,
-        p.id_proveedor,
-        p.nombre AS nombre_proveedor,
-        SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
-      FROM
-        Compra AS c
-      JOIN
-        Proveedor AS p ON c.id_proveedor = p.id_proveedor
-      JOIN
-        Detalle_Compra as dc ON c.id_compra = dc.id_compra
-      GROUP BY C.id_compra
-      ORDER BY c.fecha ASC
-  ''');
   }
 
   // ============== MÉTODOS DE UTILIDAD ==============
@@ -174,7 +150,7 @@ class DatabaseHelper {
     id_articulo INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
     descripcion TEXT,
-    tipo TEXT NOT NULL DEFAULT 'INSUMO' CHECK(tipo IN ('INSUMO', 'PRODUCTO_INTERMEDIO', 'PRODUCTO')),
+    tipo TEXT NOT NULL DEFAULT 'INSUMO' CHECK(tipo IN ('INSUMO', 'PRODUCTO_INTERMEDIO', 'PRODUCTO', 'INSUMO_PRODUCTO')),
     id_unidad INTEGER NOT NULL,
     costo_unitario REAL DEFAULT 0.0,
     precio_venta REAL DEFAULT 0.0,
@@ -384,7 +360,7 @@ class DatabaseHelper {
     v.detalles,
     v.pagado,
     v.estado,
-    cl.nombre || ' '  AS cliente,
+    cl.nombre || ' ' || cl.apellido AS cliente,
     cl.telefono AS telefono_cliente,
     cl.email AS email_cliente,
     COUNT(dv.id_detalle_venta) AS cantidad_items,
@@ -502,6 +478,63 @@ class DatabaseHelper {
 ''');
 
     await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_compras_list AS 
+    SELECT
+      c.id_compra,
+      c.fecha,
+      c.pagado,
+      p.id_proveedor,
+      p.nombre AS nombre_proveedor,
+      SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
+    FROM Compra AS c
+    JOIN Proveedor AS p ON c.id_proveedor = p.id_proveedor
+    JOIN Detalle_Compra as dc ON c.id_compra = dc.id_compra
+    GROUP BY c.id_compra
+    ORDER BY c.fecha ASC
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS V_Venta_Detallada AS
+  SELECT 
+    v.id_venta,
+    v.fecha,
+    v.detalles AS detalles_venta,
+    v.pagado,
+    v.id_cliente,
+    cl.nombre AS nombre_cliente,
+    cl.apellido AS apellido_cliente,
+    dv.id_detalle_venta,
+    dv.id_articulo,
+    a.nombre AS nombre_articulo,
+    dv.cantidad,
+    dv.precio_unitario_venta,
+    (dv.cantidad * dv.precio_unitario_venta) AS subtotal
+  FROM Venta v
+  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
+  JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+  JOIN Articulo a ON dv.id_articulo = a.id_articulo
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS V_Compra_Detallada AS
+  SELECT 
+    c.id_compra,
+    c.fecha,
+    c.pagado,
+    p.nombre AS nombre_proveedor,
+    dc.id_detalle_compra,
+    dc.id_articulo,
+    a.nombre AS nombre_articulo,
+    dc.cantidad,
+    dc.precio_unitario_compra,
+    (dc.cantidad * dc.precio_unitario_compra) AS subtotal
+  FROM Compra c
+  JOIN Proveedor p ON c.id_proveedor = p.id_proveedor
+  JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+  JOIN Articulo a ON dc.id_articulo = a.id_articulo
+''');
+
+    await db.execute('''
   CREATE TRIGGER IF NOT EXISTS trg_validar_stock_venta
   BEFORE INSERT ON Detalle_Venta
   BEGIN
@@ -530,7 +563,7 @@ class DatabaseHelper {
     UPDATE Articulo
     SET 
       stock = stock + NEW.cantidad,
-      costo_unitario = NEW.precio_unitario_compra
+      costo_unitario = (stock * costo_unitario + NEW.cantidad * NEW.precio_unitario_compra) / (stock + NEW.cantidad)
     WHERE id_articulo = NEW.id_articulo;
   END;
 ''');

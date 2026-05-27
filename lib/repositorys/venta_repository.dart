@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
-import 'package:cafe_valdivia/repositorys/producto_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
 class VentaRepository extends BaseRepository<Venta> {
@@ -17,9 +16,8 @@ class VentaRepository extends BaseRepository<Venta> {
   String get entityName => 'Venta';
 
   final ClienteRepository clienteRepo;
-  final ProductoRepository productoRepo;
 
-  VentaRepository(this.dbHelper, this.productoRepo, this.clienteRepo);
+  VentaRepository(this.dbHelper, this.clienteRepo);
 
   @override
   Venta fromJson(Map<String, dynamic> map) => Venta.fromJson(map);

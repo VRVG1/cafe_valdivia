@@ -32,4 +32,5 @@ const _$ArticuloTipoEnumMap = {
   ArticuloTipo.insumo: 'INSUMO',
   ArticuloTipo.producto: 'PRODUCTO',
   ArticuloTipo.productoIntermedio: 'PRODUCTO_INTERMEDIO',
+  ArticuloTipo.insumoProducto: 'INSUMO_PRODUCTO',
 };

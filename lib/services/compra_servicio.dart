@@ -1,11 +1,9 @@
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
-import 'package:cafe_valdivia/services/inventario_servicio.dart';
 
 class CompraServicio {
   final CompraRepository _compraRepository;
-  final InventarioServicio _inventarioServicio;
 
-  CompraServicio(this._compraRepository, this._inventarioServicio);
+  CompraServicio(this._compraRepository);
 
   // Future<int> registrarCompra(Compra compra) async {
   //   try {
