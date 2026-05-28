@@ -328,3 +328,51 @@ final class CompraRepositoryProvider
 }
 
 String _$compraRepositoryHash() => r'f150562ffcb30118b20332353c485245b2c41ccc';
+
+@ProviderFor(ordenProduccionRepository)
+final ordenProduccionRepositoryProvider = OrdenProduccionRepositoryProvider._();
+
+final class OrdenProduccionRepositoryProvider
+    extends
+        $FunctionalProvider<
+          OrdenProduccionRepository,
+          OrdenProduccionRepository,
+          OrdenProduccionRepository
+        >
+    with $Provider<OrdenProduccionRepository> {
+  OrdenProduccionRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ordenProduccionRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$ordenProduccionRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<OrdenProduccionRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  OrdenProduccionRepository create(Ref ref) {
+    return ordenProduccionRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(OrdenProduccionRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<OrdenProduccionRepository>(value),
+    );
+  }
+}
+
+String _$ordenProduccionRepositoryHash() =>
+    r'9e8cff56c6df6786f388e897ace26596202d97b8';
