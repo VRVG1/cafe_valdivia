@@ -2,11 +2,10 @@ import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
-import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
-import 'package:cafe_valdivia/core/models/producto.dart';
-import 'package:cafe_valdivia/core/models/producto_extension.dart';
-import 'package:cafe_valdivia/providers/Producto/producto_notifier.dart';
-import 'package:cafe_valdivia/providers/Producto/producto_provider.dart';
+import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
+import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,16 +16,16 @@ class ProductoDetallePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncValue = ref.watch(productoDetailProvider(id));
+    final asyncValue = ref.watch(articuloDetailProvider(id));
 
-    void onEditPressed(Producto producto) {
+    void onEditPressed(Articulo producto) {
       if (context.mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductoEditarPage(producto: producto),
+            builder: (context) => EditarArticuloPage(articulo: producto),
           ),
-        ).then((_) => ref.invalidate(productoDetailProvider(id)));
+        ).then((_) => ref.invalidate(articuloDetailProvider(id)));
       }
     }
 
@@ -39,7 +38,7 @@ class ProductoDetallePage extends ConsumerWidget {
         onConfirm: () => delete(
           context: context,
           ref: ref,
-          provider: productoProvider,
+          provider: articuloProviderProvider,
           id: id,
           mensajeExito: "El Producto se elimino con exito",
           mensajeError: "Error al eliminar el producto",
@@ -48,15 +47,15 @@ class ProductoDetallePage extends ConsumerWidget {
     }
 
     return asyncValue.when(
-      data: (Producto producto) => Scaffold(
-        appBar: AppBarDetalles<Producto>(
+      data: (producto) => Scaffold(
+        appBar: AppBarDetalles<Articulo>(
           title: "Producto",
           model: producto,
           onEditPressed: () => onEditPressed(producto),
           onDeletePressed: () => onDeletePressed(),
         ),
         body: RefreshIndicator(
-          onRefresh: () async => ref.invalidate(productoDetailProvider(id)),
+          onRefresh: () async => ref.invalidate(articuloDetailProvider(id)),
           child: ListView(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -68,7 +67,7 @@ class ProductoDetallePage extends ConsumerWidget {
                   backgroundColor: theme.colorScheme.primaryContainer,
                   radius: 64,
                   child: Text(
-                    producto.iniciales,
+                    producto.nombre[0].toUpperCase(),
                     style: theme.textTheme.displayMedium?.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
                       fontWeight: FontWeight.bold,
@@ -92,11 +91,25 @@ class ProductoDetallePage extends ConsumerWidget {
                   DetailElement(
                     icon: Icon(Icons.attach_money_rounded),
                     title: Text("Precio de Venta"),
-                    description: Text(producto.precioVenta.toString()),
+                    description: Text(
+                      "\$${producto.precioVenta.toStringAsFixed(2)}",
+                    ),
+                  ),
+                  DetailElement(
+                    icon: Icon(Icons.inventory_rounded),
+                    title: Text("Stock"),
+                    description: Text(producto.stock.toString()),
+                  ),
+                  DetailElement(
+                    icon: Icon(Icons.balance_rounded),
+                    title: Text("Unidad de Medida"),
+                    description: UnidadMedidaNombre(
+                      unidadMedidaId: producto.idUnidad,
+                    ),
                   ),
                   DetailElement(
                     icon: Icon(Icons.description_rounded),
-                    title: Text("Descricion"),
+                    title: Text("Descripcion"),
                     description: Text(
                       producto.descripcion ?? "No especificado",
                     ),
@@ -107,7 +120,6 @@ class ProductoDetallePage extends ConsumerWidget {
           ),
         ),
       ),
-
       error: (err, stack) => Center(child: Text('Error: $err')),
       loading: () => Scaffold(
         appBar: AppBar(),

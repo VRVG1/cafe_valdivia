@@ -1,6 +1,6 @@
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_page.dart';
-import 'package:cafe_valdivia/Pages/Articulos/agregar_articulos_page.dart';
+import 'package:cafe_valdivia/Pages/Articulos/agregar_articulo_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';

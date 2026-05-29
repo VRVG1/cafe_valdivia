@@ -1,13 +1,15 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/core/models/producto.dart';
-import 'package:cafe_valdivia/providers/Producto/producto_notifier.dart';
-import 'package:cafe_valdivia/providers/Producto/producto_provider.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
+import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
+import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductoEditarPage extends ConsumerStatefulWidget {
-  final Producto producto;
+  final Articulo producto;
   const ProductoEditarPage({super.key, required this.producto});
 
   @override
@@ -17,7 +19,9 @@ class ProductoEditarPage extends ConsumerStatefulWidget {
 class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   late final TextEditingController _nombreController;
   late final TextEditingController _precioController;
+  late final TextEditingController _stockController;
   late final TextEditingController _descriptionController;
+  UnidadMedida? _selectedUnidadMedidad;
 
   bool _isLoading = false;
 
@@ -30,6 +34,9 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
     _precioController = TextEditingController(
       text: widget.producto.precioVenta.toString(),
     );
+    _stockController = TextEditingController(
+      text: widget.producto.stock.toString(),
+    );
     _descriptionController = TextEditingController(
       text: widget.producto.descripcion,
     );
@@ -39,16 +46,17 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   void dispose() {
     _nombreController.dispose();
     _precioController.dispose();
+    _stockController.dispose();
     _descriptionController.dispose();
     super.dispose();
   }
 
   void _update() async {
     final productoUpdate = widget.producto.copyWith(
-      idProducto: widget.producto.idProducto,
       nombre: _nombreController.text,
       descripcion: _descriptionController.text,
       precioVenta: double.parse(_precioController.text),
+      stock: double.parse(_stockController.text),
     );
     mostrarDialogoConfirmacion(
       context: context,
@@ -56,10 +64,10 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
       contenido: "Se actualizaran los cambios el Producto",
       textoBotonConfirmacion: "Actualizar",
       onConfirm: () => {
-        update<Producto>(
+        update<Articulo>(
           context: context,
           ref: ref,
-          provider: productoProvider,
+          provider: articuloProviderProvider,
           element: productoUpdate,
           mensajeExito: "El Producto se a actualizado correctamente",
           mensajeError: "Erro al actualizar el Producto, intente de nuevo",
@@ -72,17 +80,17 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final AsyncValue<Producto> asyncValue = ref.watch(
-      productoDetailProvider(widget.producto.idProducto!),
+    final unidadMedidaAsync = ref.watch(
+      unidadMedidaDetailProvider(widget.producto.idUnidad),
     );
 
-    return asyncValue.when(
+    return unidadMedidaAsync.when(
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(
         body: Center(child: Text('Error cargando unidad de medida: $e')),
       ),
-      data: (Producto producto) {
+      data: (unidadInicial) {
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -129,6 +137,8 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  _buildDropDownMenu(unidadInicial),
+                  const SizedBox(height: 16),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     enabled: !_isLoading,
@@ -152,6 +162,29 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    enabled: !_isLoading,
+                    controller: _stockController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingrese el Stock';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Ingresar un valor numerico correcto';
+                      }
+                      if ((double.tryParse(value) ?? 0.0) < 0.0) {
+                        return "El stock no puede ser negativo";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Stock",
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.inventory_rounded),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -166,6 +199,65 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDropDownMenu(UnidadMedida unidadInicial) {
+    return Consumer(
+      builder: (context, ref, child) {
+        final asyncUM = ref.watch(unidadMedidaProvider);
+        return asyncUM.when(
+          data: (ums) {
+            return FormField<UnidadMedida>(
+              initialValue: unidadInicial,
+              validator: (value) {
+                if (_selectedUnidadMedidad == null) {
+                  return 'Por favor, selecciona una unidad';
+                }
+                return null;
+              },
+              builder: (FormFieldState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownMenu<UnidadMedida>(
+                      label: const Text("Unidad de Medida"),
+                      leadingIcon: const Icon(Icons.balance_rounded),
+                      expandedInsets: EdgeInsets.zero,
+                      initialSelection: _selectedUnidadMedidad,
+                      onSelected: (UnidadMedida? unidadMedida) {
+                        setState(() {
+                          _selectedUnidadMedidad = unidadMedida;
+                          FormFieldState.didChange(unidadMedida);
+                        });
+                      },
+                      dropdownMenuEntries: ums.map((unidadMedida) {
+                        return DropdownMenuEntry<UnidadMedida>(
+                          value: unidadMedida,
+                          label: unidadMedida.nombre,
+                        );
+                      }).toList(),
+                    ),
+                    if (FormFieldState.hasError)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, top: 8),
+                        child: Text(
+                          FormFieldState.errorText!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            );
+          },
+          error: (err, stack) => Center(child: Text("Error: $err")),
+          loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
     );

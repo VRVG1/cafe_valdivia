@@ -104,9 +104,12 @@ class ArticuloDetalladoPage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditarArticuloPage(articulo: articulo),
+                    builder: (context) =>
+                        EditarArticuloPage(articulo: articulo),
                   ),
-                ).then((_) => ref.invalidate(articuloDetailProvider(articuloId)));
+                ).then(
+                  (_) => ref.invalidate(articuloDetailProvider(articuloId)),
+                );
               },
             ),
             PopupMenuButton<String>(
@@ -126,7 +129,8 @@ class ArticuloDetalladoPage extends ConsumerWidget {
           ],
         ),
         body: RefreshIndicator(
-          onRefresh: () async => ref.invalidate(articuloDetailProvider(articuloId)),
+          onRefresh: () async =>
+              ref.invalidate(articuloDetailProvider(articuloId)),
           child: ListView(
             padding: const EdgeInsets.symmetric(
               horizontal: 24.0,
@@ -167,7 +171,7 @@ class ArticuloDetalladoPage extends ConsumerWidget {
                   DetailElement(
                     icon: Icon(Icons.attach_money),
                     title: Text("Costo Unitario"),
-                    description: Text(articulo.costoUnitario),
+                    description: Text(articulo.costoUnitario.toString()),
                   ),
                   DetailElement(
                     icon: Icon(Icons.balance_rounded),
@@ -179,7 +183,9 @@ class ArticuloDetalladoPage extends ConsumerWidget {
                   DetailElement(
                     icon: Icon(Icons.description_rounded),
                     title: Text("Descripcion"),
-                    description: Text(articulo.descripcion ?? "No especificado"),
+                    description: Text(
+                      articulo.descripcion ?? "No especificado",
+                    ),
                   ),
                 ],
               ),
@@ -211,7 +217,8 @@ class ArticuloDetalladoPage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.invalidate(articuloDetailProvider(articuloId)),
+                onPressed: () =>
+                    ref.invalidate(articuloDetailProvider(articuloId)),
                 child: const Text("Reintentar"),
               ),
             ],

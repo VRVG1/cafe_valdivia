@@ -162,3 +162,42 @@ final class ArticulosFiltradosProvider
 
 String _$articulosFiltradosHash() =>
     r'20843ff9b58b58aaecb179d393314ab12816d335';
+
+@ProviderFor(productosProvider)
+final productosProviderProvider = ProductosProviderProvider._();
+
+final class ProductosProviderProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Articulo>>,
+          List<Articulo>,
+          FutureOr<List<Articulo>>
+        >
+    with $FutureModifier<List<Articulo>>, $FutureProvider<List<Articulo>> {
+  ProductosProviderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'productosProviderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$productosProviderHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Articulo>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Articulo>> create(Ref ref) {
+    return productosProvider(ref);
+  }
+}
+
+String _$productosProviderHash() => r'42d8b0a724a0eccd80db87b9190148337be4c34c';

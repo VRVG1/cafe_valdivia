@@ -49,3 +49,10 @@ Future<List<Articulo>> articulosFiltrados(Ref ref) async {
     search: repo.search,
   );
 }
+
+@riverpod
+Future<List<Articulo>> productosProvider(Ref ref) async {
+  final repo = ref.watch(articulosRepositoryProvider);
+  final articulos = await repo.getAll();
+  return articulos.where((a) => a.tipo == ArticuloTipo.producto).toList();
+}

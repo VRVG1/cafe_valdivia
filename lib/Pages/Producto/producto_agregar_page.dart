@@ -1,6 +1,8 @@
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/core/models/producto.dart';
-import 'package:cafe_valdivia/providers/Producto/producto_notifier.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
+import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,37 +14,39 @@ class ProductoAgregarPage extends ConsumerStatefulWidget {
 }
 
 class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
-  final TextEditingController _precioController = TextEditingController();
-  final TextEditingController _descripcionController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
+  final TextEditingController _precioController = TextEditingController();
+  final TextEditingController _stockController = TextEditingController();
+  UnidadMedida? _selectedUnidadMedidad;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
-    _precioController.dispose();
-    _descripcionController.dispose();
     _nombreController.dispose();
+    _descripcionController.dispose();
+    _precioController.dispose();
+    _stockController.dispose();
     super.dispose();
   }
 
   void _crearProducto() {
-    final Producto producto = Producto(
+    final Articulo producto = Articulo(
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
-      precioVenta: _precioController.text,
+      tipo: ArticuloTipo.producto,
+      idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
+      costoUnitario: 0.0,
+      precioVenta: double.tryParse(_precioController.text) ?? 0.0,
+      stock: double.tryParse(_stockController.text) ?? 0.0,
     );
-    create<Producto>(
+    create<Articulo>(
       context: context,
       ref: ref,
-      provider: productoProvider,
+      provider: articuloProviderProvider,
       element: producto,
       mensajeExito: "Producto creado con exito",
       mensajeError: "Error al crear el producto, Por favor, intente de nuevo",
@@ -89,6 +93,8 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
                 icon: Icons.category_rounded,
               ),
               const SizedBox(height: 16),
+              _buildDropDownMenu(),
+              const SizedBox(height: 16),
               TextFormField(
                 keyboardType: TextInputType.number,
                 enabled: !_isLoading,
@@ -109,6 +115,29 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
                   labelText: "Precio de venta",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.attach_money_rounded),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                enabled: !_isLoading,
+                controller: _stockController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, ingrese el Stock';
+                  }
+                  if (double.tryParse(value) == null) {
+                    return 'Ingresar un valor numerico correcto';
+                  }
+                  if ((double.tryParse(value) ?? 0.0) < 0.0) {
+                    return "El stock no puede ser negativo";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  labelText: "Stock",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.inventory_rounded),
                 ),
               ),
               const SizedBox(height: 16),
@@ -151,13 +180,71 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
     );
   }
 
+  Widget _buildDropDownMenu() {
+    return Consumer(
+      builder: (context, ref, child) {
+        final asyncUM = ref.watch(unidadMedidaProvider);
+
+        return asyncUM.when(
+          data: (ums) {
+            return FormField<UnidadMedida>(
+              validator: (value) {
+                if (_selectedUnidadMedidad == null) {
+                  return 'Por favor, selecciona una unidad';
+                }
+                return null;
+              },
+              builder: (FormFieldState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DropdownMenu<UnidadMedida>(
+                      label: const Text("Unidad de Medida"),
+                      leadingIcon: const Icon(Icons.balance_rounded),
+                      expandedInsets: EdgeInsets.zero,
+                      initialSelection: _selectedUnidadMedidad,
+                      onSelected: (UnidadMedida? unidadMedida) {
+                        setState(() {
+                          _selectedUnidadMedidad = unidadMedida;
+                          FormFieldState.didChange(unidadMedida);
+                        });
+                      },
+                      dropdownMenuEntries: ums.map((unidadMedida) {
+                        return DropdownMenuEntry<UnidadMedida>(
+                          value: unidadMedida,
+                          label: unidadMedida.nombre,
+                        );
+                      }).toList(),
+                    ),
+                    if (FormFieldState.hasError)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12, top: 8),
+                        child: Text(
+                          FormFieldState.errorText!,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            );
+          },
+          error: (err, stack) => Center(child: Text("Error: $err")),
+          loading: () => const Center(child: CircularProgressIndicator()),
+        );
+      },
+    );
+  }
+
   Widget _buildActionButtons(BuildContext context) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         FilledButton(
-          // El botón se deshabilita si el formulario no es válido
           onPressed: _isLoading
               ? null
               : () async {

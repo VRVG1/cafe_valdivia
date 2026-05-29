@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
+import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_page.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
