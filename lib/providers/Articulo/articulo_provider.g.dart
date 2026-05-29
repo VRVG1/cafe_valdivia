@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'insumo_provider.dart';
+part of 'articulo_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator

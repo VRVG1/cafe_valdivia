@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 
-part 'insumo_provider.g.dart';
+part 'articulo_provider.g.dart';
 
 @riverpod
 class ArticuloProvider extends _$ArticuloProvider {
