@@ -57,7 +57,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ProductoAgregarPage(),
+                  builder: (context) => ProveedorAgregar(),
                   fullscreenDialog: true,
                 ),
               );
@@ -70,6 +70,18 @@ class _NavigationScreenState extends State<NavigationScreen> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => AgregarArticuloPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        case 5:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductoAgregarPage(),
                   fullscreenDialog: true,
                 ),
               );

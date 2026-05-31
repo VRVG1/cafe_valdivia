@@ -61,4 +61,11 @@ class ArticuloRepository extends BaseRepository<Articulo> {
       whereArgs: ['%${query.toLowerCase()}%', '%${query.toLowerCase()}%'],
     );
   }
+
+  Future<List<Articulo>> getAllProductos() async {
+    return getAll(
+      where: 'tipo = ?',
+      whereArgs: [ArticuloTipo.producto.value],
+    );
+  }
 }

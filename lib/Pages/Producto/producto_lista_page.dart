@@ -1,7 +1,8 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
-import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
+import 'package:cafe_valdivia/Pages/Producto/producto_detalle_page.dart';
+import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,8 @@ class ProductoListaPage extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ArticuloDetalladoPage(
-                    articuloId: producto.idArticulo!,
-                  ),
+                  builder: (context) =>
+                      ProductoDetallePage(id: producto.idArticulo!),
                 ),
               );
             }
@@ -53,7 +53,7 @@ class ProductoListaPage extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditarArticuloPage(articulo: producto),
+                  builder: (context) => ProductoEditarPage(producto: producto),
                 ),
               );
             }

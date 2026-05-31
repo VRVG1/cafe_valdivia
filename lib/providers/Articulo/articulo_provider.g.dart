@@ -200,4 +200,4 @@ final class ProductosProviderProvider
   }
 }
 
-String _$productosProviderHash() => r'42d8b0a724a0eccd80db87b9190148337be4c34c';
+String _$productosProviderHash() => r'b6c7baf32959f5eaa59b9254ca3922bc1c788c3a';
