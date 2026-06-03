@@ -33,7 +33,7 @@ final class ArticuloProviderProvider
   ArticuloProvider create() => ArticuloProvider();
 }
 
-String _$articuloProviderHash() => r'bb9619ad361897d97149e1efb135d6413217518a';
+String _$articuloProviderHash() => r'204097117968ad3cbd4c7151104c66ffb75070ff';
 
 abstract class _$ArticuloProvider extends $AsyncNotifier<List<Articulo>> {
   FutureOr<List<Articulo>> build();

@@ -9,6 +9,8 @@ import 'package:cafe_valdivia/Pages/Producto/producto_agregar_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_lista_page.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/proveedor_agregar.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/proveedor_lista.dart';
+import 'package:cafe_valdivia/Pages/Receta/receta_agregar_page.dart';
+import 'package:cafe_valdivia/Pages/Receta/receta_lista_page.dart';
 import 'package:flutter/material.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -88,6 +90,18 @@ class _NavigationScreenState extends State<NavigationScreen> {
             },
             child: const Icon(Icons.add),
           );
+        case 6:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AgregarRecetaPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
         default:
           return null;
       }
@@ -109,6 +123,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ProveedorLista(),
       InsumoListaPage(),
       ProductoListaPage(),
+      RecetaListaPage(),
     ];
 
     final List<Widget> destinos = [
@@ -144,6 +159,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
         selectedIcon: Icon(Icons.coffee_rounded),
         icon: Icon(Icons.coffee_outlined),
         label: Text("Producto"),
+      ),
+      NavigationDrawerDestination(
+        selectedIcon: Icon(Icons.receipt_rounded),
+        icon: Icon(Icons.receipt_outlined),
+        label: Text("Recetas"),
       ),
     ];
 

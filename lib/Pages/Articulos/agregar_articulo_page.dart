@@ -2,7 +2,7 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
-import 'package:cafe_valdivia/providers/Unidad Medida/unidad_medida_notifier.dart';
+import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,10 +19,12 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   final TextEditingController _costoUnitarioController =
       TextEditingController();
   UnidadMedida? _selectedUnidadMedidad;
+  String? tipoSeleccionado;
 
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
+  bool _submitted = false;
 
   @override
   void initState() {
@@ -38,6 +40,9 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   }
 
   Future<void> _guardar() async {
+    if (_selectedUnidadMedidad == null || tipoSeleccionado == null) return;
+    if (_selectedUnidadMedidad!.idUnidadMedida == null) return;
+
     final Articulo articulo = Articulo(
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
@@ -45,7 +50,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
       costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
       precioVenta: 0.0,
       stock: 0.0,
-      tipo: ArticuloTipo.insumo,
+      tipo: ArticuloTipo.fromValue(tipoSeleccionado!),
     );
     create<Articulo>(
       context: context,
@@ -60,6 +65,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final asyncUM = ref.watch(unidadMedidaProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -87,7 +93,6 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildTextField(
@@ -96,7 +101,29 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                 icon: Icons.person_outline,
               ),
               const SizedBox(height: 16),
-              _buildDropDownMenu(),
+              _buildDropDownMenu(asyncUM),
+              const SizedBox(height: 16),
+              DropdownMenu<String>(
+                initialSelection: ArticuloTipo.insumo.value,
+                expandedInsets: EdgeInsets.zero,
+                requestFocusOnTap: true,
+                label: const Text("Tipo"),
+                onSelected: (String? tipo) {
+                  setState(() {
+                    tipoSeleccionado = tipo;
+                  });
+                },
+                dropdownMenuEntries: [
+                  DropdownMenuEntry(
+                    value: ArticuloTipo.insumo.value,
+                    label: "Insumo",
+                  ),
+                  DropdownMenuEntry(
+                    value: ArticuloTipo.productoIntermedio.value,
+                    label: "Producto Intermedio",
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Descripcion",
@@ -117,9 +144,9 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   }
 
   Widget _buildTextField({
-    String? text,
-    TextEditingController? controller,
-    IconData? icon,
+    required String text,
+    required TextEditingController controller,
+    required IconData icon,
   }) {
     return TextFormField(
       enabled: !_isLoading,
@@ -138,63 +165,45 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
     );
   }
 
-  //TODO: Hay que refactorizar esta funcion, ya que esta elaborada con las patas.
-  Widget _buildDropDownMenu() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final asyncUM = ref.watch(unidadMedidaProvider);
-
-        return asyncUM.when(
-          data: (ums) {
-            return FormField<UnidadMedida>(
-              validator: (value) {
-                if (_selectedUnidadMedidad == null) {
-                  return 'Por favor, selecciona una unidad';
-                }
-                return null;
+  Widget _buildDropDownMenu(AsyncValue<List<UnidadMedida>> asyncUM) {
+    return asyncUM.when(
+      data: (ums) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownMenu<UnidadMedida>(
+              label: const Text("Unidad de Medida"),
+              expandedInsets: EdgeInsets.zero,
+              leadingIcon: const Icon(Icons.balance_rounded),
+              initialSelection: _selectedUnidadMedidad,
+              onSelected: (UnidadMedida? unidadMedida) {
+                setState(() {
+                  _selectedUnidadMedidad = unidadMedida;
+                });
               },
-              builder: (FormFieldState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DropdownMenu<UnidadMedida>(
-                      label: const Text("Unidad de Medida"),
-                      leadingIcon: const Icon(Icons.balance_rounded),
-                      expandedInsets: EdgeInsets.zero,
-                      initialSelection: _selectedUnidadMedidad,
-                      onSelected: (UnidadMedida? unidadMedida) {
-                        setState(() {
-                          _selectedUnidadMedidad = unidadMedida;
-                          FormFieldState.didChange(unidadMedida);
-                        });
-                      },
-                      dropdownMenuEntries: ums.map((unidadMedida) {
-                        return DropdownMenuEntry<UnidadMedida>(
-                          value: unidadMedida,
-                          label: unidadMedida.nombre,
-                        );
-                      }).toList(),
-                    ),
-                    if (FormFieldState.hasError)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, top: 8),
-                        child: Text(
-                          FormFieldState.errorText!,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                  ],
+              dropdownMenuEntries: ums.map((unidadMedida) {
+                return DropdownMenuEntry<UnidadMedida>(
+                  value: unidadMedida,
+                  label: unidadMedida.nombre,
                 );
-              },
-            );
-          },
-          error: (err, stack) => Center(child: Text("Error: $err")),
-          loading: () => const Center(child: CircularProgressIndicator()),
+              }).toList(),
+            ),
+            if (_submitted && _selectedUnidadMedidad == null)
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 8),
+                child: Text(
+                  'Por favor, selecciona una unidad',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
         );
       },
+      error: (err, stack) => Center(child: Text("Error: $err")),
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 

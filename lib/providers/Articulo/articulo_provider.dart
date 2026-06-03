@@ -12,7 +12,7 @@ class ArticuloProvider extends _$ArticuloProvider {
   @override
   Future<List<Articulo>> build() async {
     final repo = ref.watch(articulosRepositoryProvider);
-    return repo.getAll();
+    return repo.getAllInsumos();
   }
 
   Future<void> create(Articulo articulo) async {

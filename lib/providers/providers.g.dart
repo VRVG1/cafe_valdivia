@@ -376,3 +376,49 @@ final class OrdenProduccionRepositoryProvider
 
 String _$ordenProduccionRepositoryHash() =>
     r'9e8cff56c6df6786f388e897ace26596202d97b8';
+
+@ProviderFor(recetaRepository)
+final recetaRepositoryProvider = RecetaRepositoryProvider._();
+
+final class RecetaRepositoryProvider
+    extends
+        $FunctionalProvider<
+          RecetaRepository,
+          RecetaRepository,
+          RecetaRepository
+        >
+    with $Provider<RecetaRepository> {
+  RecetaRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recetaRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$recetaRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<RecetaRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  RecetaRepository create(Ref ref) {
+    return recetaRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RecetaRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RecetaRepository>(value),
+    );
+  }
+}
+
+String _$recetaRepositoryHash() => r'0b1669555ec3c841caeab3ec54f64902d86714a3';
