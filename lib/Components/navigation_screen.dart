@@ -2,6 +2,10 @@ import 'package:cafe_valdivia/Pages/Clientes/agregar_cliente.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page.dart';
 import 'package:cafe_valdivia/Pages/Compras/compra_list_page.dart';
+import 'package:cafe_valdivia/Pages/Venta/agregar_venta_page.dart';
+import 'package:cafe_valdivia/Pages/Venta/venta_lista_page.dart';
+import 'package:cafe_valdivia/Pages/OrdenProduccion/agregar_orden_produccion_page.dart';
+import 'package:cafe_valdivia/Pages/OrdenProduccion/orden_produccion_lista_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/agregar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_lista_page.dart';
 import 'package:cafe_valdivia/Pages/Options/options_list.dart';
@@ -102,6 +106,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
             },
             child: const Icon(Icons.add),
           );
+        case 7:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AgregarVentaPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
+        case 8:
+          return FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AgregarOrdenProduccionPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+          );
         default:
           return null;
       }
@@ -124,6 +152,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
       InsumoListaPage(),
       ProductoListaPage(),
       RecetaListaPage(),
+      VentaListaPage(),
+      OrdenProduccionListaPage(),
     ];
 
     final List<Widget> destinos = [
@@ -164,6 +194,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
         selectedIcon: Icon(Icons.receipt_rounded),
         icon: Icon(Icons.receipt_outlined),
         label: Text("Recetas"),
+      ),
+      NavigationDrawerDestination(
+        selectedIcon: Icon(Icons.point_of_sale),
+        icon: Icon(Icons.point_of_sale_outlined),
+        label: Text("Ventas"),
+      ),
+      NavigationDrawerDestination(
+        selectedIcon: Icon(Icons.precision_manufacturing_rounded),
+        icon: Icon(Icons.precision_manufacturing_outlined),
+        label: Text("Prod. Órdenes"),
       ),
     ];
 

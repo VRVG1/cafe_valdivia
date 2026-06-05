@@ -1,0 +1,62 @@
+import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/core/models/receta.dart';
+import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
+  const OrdenProduccionSeleccionRecetaPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncRecetas = ref.watch(recetaProviderProvider);
+    final theme = Theme.of(context);
+    final ColorScheme cs = theme.colorScheme;
+
+    return asyncRecetas.when(
+      data: (recetas) {
+        if (recetas.isEmpty) {
+          return Scaffold(
+            appBar: AppBar(title: const Text("Seleccionar Receta")),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.menu_book_outlined, size: 80, color: cs.outline),
+                  const SizedBox(height: 16),
+                  Text(
+                    "No hay recetas registradas",
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        return Scaffold(
+          appBar: AppBar(title: const Text("Seleccionar Receta")),
+          body: ListviewCustom<Receta>(
+            data: recetas,
+            keyBuilder: (receta) => ValueKey(receta.idReceta),
+            titleBuilder: (receta) => Text(receta.nombre),
+            subtitleBuilder: (receta) =>
+                Text('Cantidad base: ${receta.cantidad_base}'),
+            trailingBuilder: (receta) => Icon(
+              Icons.chevron_right_rounded,
+              color: cs.onSurfaceVariant,
+            ),
+            onTapCallback: (receta) => Navigator.pop(context, receta),
+          ),
+        );
+      },
+      error: (err, stack) => Scaffold(
+        appBar: AppBar(title: const Text("Error")),
+        body: Center(child: Text('Error: $err')),
+      ),
+      loading: () => Scaffold(
+        appBar: AppBar(title: const Text("Seleccionar Receta")),
+        body: const Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+}
