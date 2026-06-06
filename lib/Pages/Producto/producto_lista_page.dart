@@ -1,6 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
-import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_detalle_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -87,7 +87,7 @@ class ProductoListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => const ErrorView(message: 'Error al cargar los productos'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

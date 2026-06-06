@@ -1,5 +1,7 @@
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
+import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -11,70 +13,22 @@ class ArticuloDetalladoPage extends ConsumerWidget {
 
   const ArticuloDetalladoPage({super.key, required this.articuloId});
 
-  void _mostrarDialogoConfirmacion(
-    BuildContext context,
-    WidgetRef ref,
-    ThemeData theme,
-  ) {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirmar eliminación'),
-          content: const Text(
-            '¿Estás seguro de que deseas eliminar este Articulo? Esta acción no se puede deshacer.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Cierra el diálogo
-              },
-            ),
-            TextButton(
-              child: const Text('Eliminar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Cierra el diálogo
-                _eliminar(context, ref, theme);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _eliminar(BuildContext context, WidgetRef ref, ThemeData theme) async {
+  Future<void> _eliminar(BuildContext context, WidgetRef ref) async {
     try {
       await ref.read(articuloProviderProvider.notifier).delete(articuloId);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Articulo eliminado con éxito',
-              style: TextStyle(
-                color: theme.colorScheme.onTertiaryContainer,
-                fontSize: 18,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.tertiaryContainer,
-          ),
+        showCustomSnackBar(
+          context: context,
+          mensaje: 'Articulo eliminado con éxito',
         );
         Navigator.of(context).pop();
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Error al eliminar el articulo: $e',
-              style: TextStyle(
-                color: theme.colorScheme.onErrorContainer,
-                fontSize: 18,
-              ),
-            ),
-            backgroundColor: theme.colorScheme.errorContainer,
-          ),
+        showCustomSnackBar(
+          context: context,
+          mensaje: 'Error al eliminar el articulo: $e',
+          isError: true,
         );
       }
     }
@@ -116,7 +70,15 @@ class ArticuloDetalladoPage extends ConsumerWidget {
               icon: const Icon(Icons.more_vert_rounded),
               onSelected: (String result) {
                 if (result == 'eliminar') {
-                  _mostrarDialogoConfirmacion(context, ref, theme);
+                  mostrarDialogoConfirmacion(
+                    context: context,
+                    titulo: "Confirmar eliminación",
+                    contenido:
+                        "¿Estás seguro de que deseas eliminar este Articulo? "
+                        "Esta acción no se puede deshacer.",
+                    textoBotonConfirmacion: "Eliminar",
+                    onConfirm: () => _eliminar(context, ref),
+                  );
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

@@ -5,7 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppbarChips extends ConsumerStatefulWidget
     implements PreferredSizeWidget {
-  const AppbarChips({super.key, this.extraFilters = const []});
+  const AppbarChips({
+    super.key,
+    this.extraFilters = const [],
+    this.labelText = 'Buscar proveedor...',
+  });
 
   @override
   ConsumerState<AppbarChips> createState() => _AppbarChipsState();
@@ -14,6 +18,7 @@ class AppbarChips extends ConsumerStatefulWidget
   Size get preferredSize => const Size.fromHeight(120.0);
 
   final List<TipoBusqueda> extraFilters;
+  final String labelText;
 }
 
 class _AppbarChipsState extends ConsumerState<AppbarChips> {
@@ -119,7 +124,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   filled: true,
                   fillColor: colorScheme.secondaryContainer.withOpacity(0.4),
 
-                  labelText: 'Buscar proveedor...',
+                  labelText: widget.labelText,
                   labelStyle: TextStyle(
                     color: colorScheme.onSurfaceVariant,
                     fontSize: 16,

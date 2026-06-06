@@ -1,3 +1,5 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
@@ -20,29 +22,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
     super.dispose();
   }
 
-  void _showFeedBackSnackBar({required String message, bool isError = false}) {
-    if (!mounted) return;
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-            color: isError
-                ? colorScheme.onErrorContainer
-                : colorScheme.onTertiaryContainer,
-            fontSize: 16,
-          ),
-        ),
-        backgroundColor: isError
-            ? colorScheme.errorContainer
-            : colorScheme.tertiaryContainer,
-      ),
-    );
-  }
 
   void _showAddOrEditDialog({UnidadMedida? um}) {
     // Si estamos editando se llena el valor del controlador
@@ -93,8 +73,9 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                         .updateElement(updateUM)
                         .then((success) {
                           if (success && mounted) {
-                            _showFeedBackSnackBar(
-                              message: "Actualizado exitosamente",
+                            showCustomSnackBar(
+                              context: context,
+                              mensaje: "Actualizado exitosamente",
                             );
                             Navigator.of(context).pop();
                           }
@@ -105,8 +86,9 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                         .create(_umController.text)
                         .then((success) {
                           if (success && mounted) {
-                            _showFeedBackSnackBar(
-                              message: "Guardado exitosamente",
+                            showCustomSnackBar(
+                              context: context,
+                              mensaje: "Guardado exitosamente",
                             );
                             Navigator.of(context).pop();
                           }
@@ -129,15 +111,17 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
     try {
       await ref.read(unidadMedidaProvider.notifier).delete(um.idUnidadMedida!);
       if (mounted) {
-        _showFeedBackSnackBar(
-          message: "La unidad de Medida se elimino correctamente.",
+        showCustomSnackBar(
+          context: context,
+          mensaje: "La unidad de Medida se elimino correctamente.",
         );
         Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
-        _showFeedBackSnackBar(
-          message:
+        showCustomSnackBar(
+          context: context,
+          mensaje:
               "Error al eliminar la Unidad de Medida, Por favor, intenta de nuevo",
         );
         Navigator.of(context).pop();
@@ -184,7 +168,11 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
     final colorScheme = Theme.of(context).colorScheme;
     ref.listen<AsyncValue>(unidadMedidaProvider, (_, state) {
       if (state is AsyncError) {
-        _showFeedBackSnackBar(message: state.error.toString(), isError: true);
+        showCustomSnackBar(
+        context: context,
+        mensaje: state.error.toString(),
+        isError: true,
+      );
       }
     });
 
@@ -310,7 +298,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
             },
           );
         },
-        error: (err, stack) => Center(child: Text('Error: $err')),
+        error: (err, stack) => const ErrorView(message: 'Error al cargar las unidades de medida'),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );

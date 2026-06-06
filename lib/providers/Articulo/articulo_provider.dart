@@ -30,6 +30,7 @@ class ArticuloProvider extends _$ArticuloProvider {
   Future<void> delete(int id) async {
     await ref.read(articulosRepositoryProvider).delete(id);
     ref.invalidateSelf();
+    ref.invalidate(productosProviderProvider);
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/proveedor_detallado.dart';
@@ -105,7 +106,7 @@ class ProveedorListaState extends ConsumerState {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => const ErrorView(message: 'Error al cargar los proveedores'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

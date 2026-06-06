@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_detallado.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
@@ -106,7 +107,7 @@ class Clientelista extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => const ErrorView(message: 'Error al cargar los clientes'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

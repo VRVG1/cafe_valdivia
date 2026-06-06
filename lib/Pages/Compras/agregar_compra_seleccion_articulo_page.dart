@@ -20,7 +20,10 @@ class AgregarCompraSeleccionArticuloPage
 
   @override
   PreferredSizeWidget buildAppBar(BuildContext context, WidgetRef ref) {
-    return AppbarChips(extraFilters: [TipoBusqueda.costo]);
+    return AppbarChips(
+      labelText: 'Buscar artículo...',
+      extraFilters: [TipoBusqueda.costo],
+    );
   }
 
   @override

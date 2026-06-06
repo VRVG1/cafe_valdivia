@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
@@ -88,7 +89,7 @@ class InsumoListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => const ErrorView(message: 'Error al cargar los artículos'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

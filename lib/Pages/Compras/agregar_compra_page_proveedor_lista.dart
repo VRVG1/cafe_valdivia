@@ -21,6 +21,7 @@ class AgregarCompraPageProveedorLista
   @override
   PreferredSizeWidget buildAppBar(BuildContext context, WidgetRef ref) {
     return AppbarChips(
+      labelText: 'Buscar proveedor...',
       extraFilters: [TipoBusqueda.email, TipoBusqueda.telefono],
     );
   }

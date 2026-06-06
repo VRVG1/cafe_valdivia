@@ -1,7 +1,6 @@
 import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
@@ -33,39 +32,7 @@ class DetalleCompraPage extends ConsumerWidget {
   String _calcularTotal(List<double> cantidades) {
     double total = cantidades.fold(0.0, (t, e) => t + e);
 
-    return "\$${total.toString()}";
-  }
-
-  void _mostrarDialogoConfirmacion(
-    BuildContext context,
-    WidgetRef ref,
-    ThemeData theme,
-  ) {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Confirmar eliminación'),
-          content: const Text(
-            '¿Estás seguro de que deseas eliminar este Articulo? Esta acción no se puede deshacer.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Cierra el diálogo
-              },
-            ),
-            TextButton(
-              child: const Text('Eliminar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop(); // Cierra el diálogo
-              },
-            ),
-          ],
-        );
-      },
-    );
+    return "\$${total.toStringAsFixed(2)}";
   }
 
   @override
@@ -88,15 +55,7 @@ class DetalleCompraPage extends ConsumerWidget {
             ),
             centerTitle: false,
             elevation: 0,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit_rounded),
-                color: theme.colorScheme.primary,
-                onPressed: () {
-                  appLogger.i(compra);
-                },
-              ),
-            ],
+            actions: const [],
           ),
           body: RefreshIndicator(
             onRefresh: () async => ref.invalidate(compraDetalladaProvider(id)),
