@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/core/models/cliente_extension.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
@@ -70,29 +71,6 @@ class EditarClienteDetalladoState
     super.dispose();
   }
 
-  Future<bool> _showExitConfirmDialog(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('¿Descartar cambios?'),
-            content: const Text(
-              'Hay cambios sin guardar. Si sales, se perderán.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancelar'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Descartar'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
-
   void dialog(BuildContext context) {
     showDialog(
       context: context,
@@ -163,17 +141,8 @@ class EditarClienteDetalladoState
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return PopScope(
-      canPop: !_isDirty,
-      onPopInvokedWithResult: (bool didPop, Object? result) async {
-        if (didPop) {
-          return;
-        }
-        final bool shouldPop = await _showExitConfirmDialog(context);
-        if (shouldPop && context.mounted) {
-          Navigator.pop(context);
-        }
-      },
+    return PopScopeGuard(
+      isDirty: _isDirty,
       child: Scaffold(
         appBar: AppBar(
           title: Text(

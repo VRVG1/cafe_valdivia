@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
@@ -63,29 +64,6 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
     _telefonoController.dispose();
     _emailController.dispose();
     super.dispose();
-  }
-
-  Future<bool> _showExitConfirmDialog(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('¿Descartar cambios?'),
-            content: const Text(
-              'Hay cambios sin guardar. Si sales, se perderán.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancelar'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Descartar'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
   }
 
   void dialog(BuildContext context) {
@@ -159,45 +137,14 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
         _isLoading = false;
       });
     }
-
-    // try {
-    //   await ref
-    //       .read(proveedorProvider.notifier)
-    //       .updateElement(proveedorModificado);
-
-    //   if (mounted) {
-    //     Navigator.of(dialogContext).pop(); // Close dialog
-    //     Navigator.of(context).pop(); // Close edit screen
-    //   }
-    // } catch (e) {
-    //   if (mounted) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('Error al guardar los cambios: $e')),
-    //     );
-    //   }
-    // } finally {
-    //   if (mounted) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //   }
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    return PopScope(
-      canPop: !_isDirty || _isLoading,
-      onPopInvokedWithResult: (bool didPop, Object? result) async {
-        if (didPop) {
-          return;
-        }
-        final bool shouldPop = await _showExitConfirmDialog(context);
-        if (shouldPop && context.mounted) {
-          Navigator.pop(context);
-        }
-      },
+    return PopScopeGuard(
+      isDirty: _isDirty,
+      isLoading: _isLoading,
       child: Scaffold(
         appBar: AppBar(
           title: Text(

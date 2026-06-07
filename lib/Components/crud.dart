@@ -45,6 +45,29 @@ Future<bool?> mostrarDialogoConfirmacion({
   );
 }
 
+Future<bool> mostrarDialogoDescartarCambios(BuildContext context) async {
+  return await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('¿Descartar cambios?'),
+          content: const Text(
+            'Hay cambios sin guardar. Si sales, se perderán.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Descartar'),
+            ),
+          ],
+        ),
+      ) ??
+      false;
+}
+
 Future<bool> delete({
   required BuildContext context,
   required WidgetRef ref,

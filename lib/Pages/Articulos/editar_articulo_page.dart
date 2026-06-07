@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -21,8 +22,14 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
   late final TextEditingController _costoUnitarioController;
   UnidadMedida? _selectedUnidadMedidad;
   bool _isLoading = false;
+  bool _initialized = false;
 
   final _formKey = GlobalKey<FormState>();
+
+  late String _initialDescripcion;
+  late String _initialNombre;
+  late double _initialCostoUnitario;
+  late int _initialUnidadMedida;
 
   @override
   void initState() {
@@ -34,6 +41,19 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     _costoUnitarioController = TextEditingController(
       text: widget.articulo.costoUnitario.toString(),
     );
+
+    _initialDescripcion = widget.articulo.descripcion ?? '';
+    _initialNombre = widget.articulo.nombre;
+    _initialCostoUnitario = widget.articulo.costoUnitario;
+    _initialUnidadMedida = widget.articulo.idUnidad;
+  }
+
+  bool get _isDirty {
+    return _nombreController.text != _initialNombre ||
+        _descripcionController.text != _initialDescripcion ||
+        _costoUnitarioController.text != _initialCostoUnitario.toString() ||
+        (_selectedUnidadMedidad?.idUnidadMedida ?? _initialUnidadMedida) !=
+            _initialUnidadMedida;
   }
 
   @override
@@ -84,56 +104,64 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
         body: Center(child: Text('Error cargando unidad de medida: $e')),
       ),
       data: (unidadInicial) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Editar Articulo",
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onPrimaryContainer,
+        if (!_initialized) {
+          _selectedUnidadMedidad = unidadInicial;
+          _initialized = true;
+        }
+        return PopScopeGuard(
+          isDirty: _isDirty,
+          isLoading: _isLoading,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "Editar Articulo",
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onPrimaryContainer,
+                ),
               ),
+              leading: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.close),
+              ),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: _buildActionButtons(context, unidadInicial),
+                ),
+              ],
             ),
-            leading: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.close),
-            ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: _buildActionButtons(context, unidadInicial),
-              ),
-            ],
-          ),
-          body: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 32.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildTextField(
-                    label: "Nombre",
-                    controller: _nombreController,
-                    icon: Icons.label_outline,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildDropDownMenu(unidadInicial),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    label: "Descripcion",
-                    controller: _descripcionController,
-                    icon: Icons.description_outlined,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    label: "Costo Unitario",
-                    controller: _costoUnitarioController,
-                    icon: Icons.attach_money,
-                  ),
-                ],
+            body: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 32.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildTextField(
+                      label: "Nombre",
+                      controller: _nombreController,
+                      icon: Icons.label_outline,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildDropDownMenu(unidadInicial),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      label: "Descripcion",
+                      controller: _descripcionController,
+                      icon: Icons.description_outlined,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      label: "Costo Unitario",
+                      controller: _costoUnitarioController,
+                      icon: Icons.attach_money,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -150,6 +178,9 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     return TextFormField(
       enabled: !_isLoading,
       controller: controller,
+      onChanged: (value) {
+        setState(() {});
+      },
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Por favor, ingrese el $label';
