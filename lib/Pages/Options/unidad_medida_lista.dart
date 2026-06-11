@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
@@ -192,109 +193,28 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
             );
           }
 
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: uMs.length,
-            itemBuilder: (context, index) {
-              final um = uMs[index];
-              // BorderRadius
-              final bool isFirst = index == 0;
-              final bool isLast = index == uMs.length - 1;
-
-              final BorderRadius borderRadius;
-              if (isFirst && isLast) {
-                borderRadius = BorderRadius.circular(14.0);
-              } else if (isFirst) {
-                borderRadius = const BorderRadius.only(
-                  topLeft: Radius.circular(14.0),
-                  topRight: Radius.circular(14.0),
-                );
-              } else if (isLast) {
-                borderRadius = const BorderRadius.only(
-                  bottomLeft: Radius.circular(14.0),
-                  bottomRight: Radius.circular(14.0),
-                );
-              } else {
-                borderRadius = BorderRadius.all(Radius.circular(4.0));
-              }
-              return Card(
-                color: colorScheme.surfaceContainerLowest,
-                //color: surfaceContainerLowest
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 2.0,
-                ),
-                shape: RoundedRectangleBorder(borderRadius: borderRadius),
-                child: Dismissible(
-                  key: ValueKey(um.idUnidadMedida),
-                  direction: DismissDirection.horizontal,
-                  dismissThresholds: const {
-                    DismissDirection.startToEnd: 0.25,
-                    DismissDirection.endToStart: 0.25,
-                  },
-                  confirmDismiss: (direction) async {
-                    if (direction == DismissDirection.endToStart) {
-                      // Deslizar de Derecha a Izquierda (Borrar)
-                      _confirmationDelete(um);
-                      // Devolver True para confirmar y remover el elemento
-                      // visualmente
-                      return false;
-                    } else if (direction == DismissDirection.startToEnd) {
-                      // Deslizar de Izquierda a Derecha (Modificar)
-                      _showAddOrEditDialog(um: um);
-                      // Devolver false para mantener el elemento en su lugar
-                      return false;
-                    }
-                    return false;
-                  },
-
-                  background: Container(
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: colorScheme.tertiaryContainer,
-                    ),
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Icon(
-                        Icons.edit,
-                        color: colorScheme.onTertiaryContainer,
-                      ),
-                    ),
-                  ),
-
-                  secondaryBackground: Container(
-                    alignment: Alignment.centerRight,
-                    decoration: BoxDecoration(
-                      color: colorScheme.errorContainer,
-                    ),
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Icon(
-                      Icons.delete_rounded,
-                      color: colorScheme.onErrorContainer,
-                    ),
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    leading: Icon(
-                      Icons.scale_rounded,
-                      color: colorScheme.primary,
-                    ),
-                    title: Text(
-                      um.nombre,
-                      style: TextStyle(
-                        color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    onTap: () => _showAddOrEditDialog(um: um),
-                  ),
-                ),
-              );
+          return ListviewCustom<UnidadMedida>(
+            data: uMs,
+            keyBuilder: (um) => ValueKey(um.idUnidadMedida),
+            titleBuilder: (um) => Text(
+              um.nombre,
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            leadingBuilder: (um) => Icon(
+              Icons.scale_rounded,
+              color: colorScheme.primary,
+            ),
+            onTapCallback: (um) => _showAddOrEditDialog(um: um),
+            onEditDismissed: (um) async {
+              _showAddOrEditDialog(um: um);
+              return false;
+            },
+            onDeleteDismissed: (um) async {
+              _confirmationDelete(um);
+              return false;
             },
           );
         },
