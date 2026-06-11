@@ -112,10 +112,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     }
   }
 
-  void _procesarVenta(
-    Venta venta,
-    List<DetalleVenta> detalleVenta,
-  ) async {
+  void _procesarVenta(Venta venta, List<DetalleVenta> detalleVenta) async {
     await create(
       context: context,
       ref: ref,
@@ -152,6 +149,87 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     }
 
     _procesarVenta(venta, detallesVentaList);
+  }
+
+  void _mostrarOpcionesItem(Map<String, dynamic> item) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                item['nombre'],
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text("Modificar cantidad"),
+              onTap: () {
+                Navigator.pop(ctx);
+                _mostrarDialogoModificarCantidad(item);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.delete_rounded,
+                color: Theme.of(ctx).colorScheme.error,
+              ),
+              title: Text(
+                "Eliminar del carrito",
+                style: TextStyle(color: Theme.of(ctx).colorScheme.error),
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                setState(() {
+                  carritoDeVentas.remove(item);
+                });
+              },
+            ),
+            SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _mostrarDialogoModificarCantidad(Map<String, dynamic> item) {
+    final controller = TextEditingController(text: item['cantidad'].toString());
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Modificar cantidad"),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: "Nueva cantidad",
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text("Cancelar"),
+          ),
+          FilledButton(
+            onPressed: () {
+              final nueva = int.tryParse(controller.text);
+              if (nueva != null && nueva > 0) {
+                setState(() {
+                  item['cantidad'] = nueva;
+                });
+                Navigator.pop(ctx);
+              }
+            },
+            child: Text("Aceptar"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -403,10 +481,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       expand: true,
       snap: true,
       builder: (context, scrollController) {
-        final double totalDinero = carritoDeVentas.fold<double>(0, (
-          sum,
-          item,
-        ) {
+        final double totalDinero = carritoDeVentas.fold<double>(0, (sum, item) {
           return sum + ((item['precio'] ?? 0) * (item['cantidad'] ?? 0));
         });
 
@@ -431,6 +506,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
               "\$ ${item['precio'].toString()}",
               style: tt.labelLarge?.copyWith(color: cs.primary),
             ),
+            onLongPressCallback: (item) => _mostrarOpcionesItem(item),
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
               child: SizedBox(
@@ -486,6 +562,24 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                 SizedBox(height: 12),
               ],
             ),
+            secondaryBackgroundIcon: Icons.remove_rounded,
+            onDeleteDismissed: (value) async {
+              setState(() {
+                if ((value['cantidad'] as int) - 1 < 1) {
+                  carritoDeVentas.remove(value);
+                } else {
+                  value['cantidad'] = (value['cantidad'] as int) - 1;
+                }
+              });
+              return false;
+            },
+            primaryBackgroundIcon: Icons.add_rounded,
+            onEditDismissed: (value) async {
+              setState(() {
+                value['cantidad'] = (value['cantidad'] as int) + 1;
+              });
+              return false;
+            },
           ),
         );
       },

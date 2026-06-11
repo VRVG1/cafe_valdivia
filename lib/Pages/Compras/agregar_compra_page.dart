@@ -206,6 +206,88 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       //esperamos a que jale xd
     }
   }
+
+  void _mostrarOpcionesItem(Map<String, dynamic> item) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                item['nombre'],
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text("Modificar cantidad"),
+              onTap: () {
+                Navigator.pop(ctx);
+                _mostrarDialogoModificarCantidad(item);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.delete_rounded,
+                color: Theme.of(ctx).colorScheme.error,
+              ),
+              title: Text(
+                "Eliminar del carrito",
+                style: TextStyle(color: Theme.of(ctx).colorScheme.error),
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                setState(() {
+                  carritoDeCompras.remove(item);
+                });
+              },
+            ),
+            SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _mostrarDialogoModificarCantidad(Map<String, dynamic> item) {
+    final controller = TextEditingController(text: item['cantidad'].toString());
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Modificar cantidad"),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: "Nueva cantidad",
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text("Cancelar"),
+          ),
+          FilledButton(
+            onPressed: () {
+              final nueva = int.tryParse(controller.text);
+              if (nueva != null && nueva > 0) {
+                setState(() {
+                  item['cantidad'] = nueva;
+                });
+                Navigator.pop(ctx);
+              }
+            },
+            child: Text("Aceptar"),
+          ),
+        ],
+      ),
+    );
+  }
+
   // fin funciones
 
   @override
@@ -490,6 +572,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
               "\$ ${item['precio'].toString()}",
               style: tt.labelLarge?.copyWith(color: cs.primary),
             ),
+            onLongPressCallback: (item) => _mostrarOpcionesItem(item),
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
               child: SizedBox(
@@ -546,7 +629,24 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 SizedBox(height: 12),
               ],
             ),
-            //TODO: EL onDelete y onEdit, que uno agregue y que el otro elimine
+            secondaryBackgroundIcon: Icons.remove_rounded,
+            onDeleteDismissed: (value) async {
+              setState(() {
+                if ((value['cantidad'] as int) - 1 < 1) {
+                  carritoDeCompras.remove(value);
+                } else {
+                  value['cantidad'] = (value['cantidad'] as int) - 1;
+                }
+              });
+              return false;
+            },
+            primaryBackgroundIcon: Icons.add_rounded,
+            onEditDismissed: (value) async {
+              setState(() {
+                value['cantidad'] = (value['cantidad'] as int) + 1;
+              });
+              return false;
+            },
           ),
         );
       },

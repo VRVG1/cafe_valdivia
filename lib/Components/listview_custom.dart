@@ -15,8 +15,13 @@ class ListviewCustom<T> extends ConsumerWidget {
 
   // Functions
   final void Function(T element)? onTapCallback;
+  final void Function(T element)? onLongPressCallback;
   final Future<bool?> Function(T element)? onEditDismissed;
   final Future<bool?> Function(T element)? onDeleteDismissed;
+
+  // icono del deslazamiento
+  final IconData? secondaryBackgroundIcon;
+  final IconData? primaryBackgroundIcon;
 
   const ListviewCustom({
     super.key,
@@ -27,11 +32,14 @@ class ListviewCustom<T> extends ConsumerWidget {
     this.trailingBuilder,
     required this.keyBuilder,
     this.onTapCallback,
+    this.onLongPressCallback,
     this.onEditDismissed,
     this.onDeleteDismissed,
     this.controller,
     this.footer,
     this.header,
+    this.secondaryBackgroundIcon,
+    this.primaryBackgroundIcon,
   });
 
   @override
@@ -107,7 +115,7 @@ class ListviewCustom<T> extends ConsumerWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Icon(
-                      Icons.edit,
+                      primaryBackgroundIcon ?? Icons.edit,
                       color: colorScheme.onTertiaryContainer,
                     ),
                   ),
@@ -122,7 +130,7 @@ class ListviewCustom<T> extends ConsumerWidget {
                 ),
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Icon(
-                  Icons.delete_rounded,
+                  secondaryBackgroundIcon ?? Icons.delete_rounded,
                   color: colorScheme.onErrorContainer,
                 ),
               ),
@@ -142,6 +150,9 @@ class ListviewCustom<T> extends ConsumerWidget {
                   onTap: onTapCallback == null
                       ? null
                       : () => onTapCallback!(element),
+                  onLongPress: onLongPressCallback == null
+                      ? null
+                      : () => onLongPressCallback!(element),
                 ),
               ),
             ),
