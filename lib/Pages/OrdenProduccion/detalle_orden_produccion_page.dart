@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -148,10 +149,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
         ),
       ),
       error: (err, stack) => ErrorView(message: 'Error al cargar la orden de producción'),
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator.adaptive()),
-      ),
+      loading: () => const SkeletonOrdenProduccionDetalle(),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -123,10 +124,7 @@ class ProductoDetallePage extends ConsumerWidget {
         ),
       ),
       error: (err, stack) => ErrorView(message: 'Error al cargar el producto'),
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator.adaptive()),
-      ),
+      loading: () => const SkeletonProductoDetalle(),
     );
   }
 }
