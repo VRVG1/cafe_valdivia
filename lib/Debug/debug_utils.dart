@@ -7,6 +7,9 @@ AsyncValue<T> debugOverride<T>(
   AsyncValue<T> actual,
 ) {
   final debug = ref.watch(debugStateProvider);
+  if (debug.shouldLoad(pageName)) {
+    return const AsyncValue.loading();
+  }
   if (debug.shouldFail(pageName)) {
     return AsyncValue.error(
       Exception('${debug.errors[pageName] ?? "Error forzado [$pageName]"}'),

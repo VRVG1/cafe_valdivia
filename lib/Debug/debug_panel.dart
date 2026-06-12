@@ -62,9 +62,11 @@ class DebugPanel extends ConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                if (debug.pagesWithErrors.isNotEmpty)
+                if (debug.pagesWithErrors.isNotEmpty ||
+                    debug.loadings.isNotEmpty)
                   TextButton(
-                    onPressed: () => ref.read(debugStateProvider.notifier).clearAll(),
+                    onPressed: () =>
+                        ref.read(debugStateProvider.notifier).clearAll(),
                     child: const Text('Limpiar todo'),
                   ),
                 IconButton(
@@ -82,7 +84,7 @@ class DebugPanel extends ConsumerWidget {
                 for (final pagina in _paginas) ...[
                   SwitchListTile(
                     title: Text(pagina['label']!),
-                    subtitle: Text('Key: ${pagina['key']}'),
+                    subtitle: Text('Error => Key: ${pagina['key']}'),
                     value: debug.shouldFail(pagina['key']!),
                     onChanged: (value) {
                       final notifier = ref.read(debugStateProvider.notifier);
@@ -96,7 +98,21 @@ class DebugPanel extends ConsumerWidget {
                       }
                     },
                   ),
-                  if (pagina != _paginas.last) const Divider(height: 1, indent: 16),
+                  SwitchListTile(
+                    title: Text(pagina['label']!),
+                    subtitle: Text('Loading => Key: ${pagina['key']}'),
+                    value: debug.shouldLoad(pagina['key']!),
+                    onChanged: (value) {
+                      final notifier = ref.read(debugStateProvider.notifier);
+                      if (value) {
+                        notifier.forceLoading(pagina['key']!);
+                      } else {
+                        notifier.clearLoading(pagina['key']!);
+                      }
+                    },
+                  ),
+                  if (pagina != _paginas.last)
+                    const Divider(height: 1, indent: 16),
                 ],
               ],
             ),
