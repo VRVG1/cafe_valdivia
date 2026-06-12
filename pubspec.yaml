@@ -50,6 +50,7 @@ dependencies:
   json_annotation: ^4.9.0
   analyzer: ^8.4.0
   email_validator: ^3.0.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

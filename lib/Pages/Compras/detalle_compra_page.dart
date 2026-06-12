@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
@@ -140,10 +141,7 @@ class DetalleCompraPage extends ConsumerWidget {
           onRetry: () => ref.invalidate(compraDetalladaProvider(id)),
         ),
       ),
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator()),
-      ),
+      loading: () => const SkeletonCompraDetalle(),
     );
   }
 
