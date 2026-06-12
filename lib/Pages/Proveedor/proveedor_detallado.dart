@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
@@ -40,7 +41,7 @@ class ProveedorDetallado extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncProveedor = ref.watch(proveedorDetailProvider(proveedorId));
+    final asyncProveedor = debugOverride(ref, 'proveedor_detalle', ref.watch(proveedorDetailProvider(proveedorId)));
 
     return asyncProveedor.when(
       loading: () => Scaffold(

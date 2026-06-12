@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_detalle_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -13,7 +14,7 @@ class ProductoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncProductos = ref.watch(productosProviderProvider);
+    final asyncProductos = debugOverride(ref, 'productos', ref.watch(productosProviderProvider));
 
     return asyncProductos.when(
       data: (productos) {

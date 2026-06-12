@@ -16,7 +16,10 @@ import 'package:cafe_valdivia/Pages/Proveedor/proveedor_agregar.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_agregar_page.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_lista_page.dart';
+import 'package:cafe_valdivia/Debug/debug_panel.dart';
+import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key, required this.colorScheme});
@@ -217,9 +220,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
     return Scaffold(
       floatingActionButton: addButton(),
       appBar: AppBar(
-        title: const Text("Cafe Valdivia"),
+        title: GestureDetector(
+          onLongPress: () {
+            ProviderScope.containerOf(context)
+                .read(debugStateProvider.notifier)
+                .toggle();
+          },
+          child: const Text("Cafe Valdivia"),
+        ),
         centerTitle: true,
         actions: <Widget>[
+          if (ProviderScope.containerOf(context)
+              .read(debugStateProvider)
+              .enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {

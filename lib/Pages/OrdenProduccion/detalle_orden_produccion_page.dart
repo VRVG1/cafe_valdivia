@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
@@ -19,7 +20,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncOrden = ref.watch(ordenProduccionDetalladaProvider(id));
+    final asyncOrden = debugOverride(ref, 'detalle_op', ref.watch(ordenProduccionDetalladaProvider(id)));
 
     return asyncOrden.when(
       data: (orden) => Scaffold(
@@ -295,7 +296,7 @@ class _ArticuloNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulos = ref.watch(articuloProviderProvider);
+    final asyncArticulos = debugOverride(ref, 'detalle_op_articulo', ref.watch(articuloProviderProvider));
     return asyncArticulos.when(
       data: (articulos) {
         final match = articulos.where(

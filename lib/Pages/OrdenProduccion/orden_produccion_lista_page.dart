@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/detalle_orden_produccion_page.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/editar_orden_produccion_page.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
@@ -14,7 +15,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncOrdenes = ref.watch(ordenProduccionProvider);
+    final asyncOrdenes = debugOverride(ref, 'orden_produccion', ref.watch(ordenProduccionProvider));
     final ColorScheme cs = Theme.of(context).colorScheme;
 
     return asyncOrdenes.when(

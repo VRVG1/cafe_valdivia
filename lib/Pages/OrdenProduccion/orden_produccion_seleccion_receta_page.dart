@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncRecetas = ref.watch(recetaProviderProvider);
+    final asyncRecetas = debugOverride(ref, 'seleccion_receta', ref.watch(recetaProviderProvider));
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 

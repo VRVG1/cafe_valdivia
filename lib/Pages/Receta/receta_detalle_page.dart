@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -21,9 +22,9 @@ class RecetaDetallePage extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncReceta = ref.watch(recetaDetailProvider(recetaId));
-    final asyncDetalles = ref.watch(recetaDetallesProvider(recetaId));
-    final asyncProductos = ref.watch(productosProviderProvider);
+    final asyncReceta = debugOverride(ref, 'receta_detalle', ref.watch(recetaDetailProvider(recetaId)));
+    final asyncDetalles = debugOverride(ref, 'receta_detalles', ref.watch(recetaDetallesProvider(recetaId)));
+    final asyncProductos = debugOverride(ref, 'receta_productos', ref.watch(productosProviderProvider));
 
     return Scaffold(
       appBar: AppBarDetalles<Receta>(
@@ -219,7 +220,7 @@ class _ArticuloNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulos = ref.watch(articuloProviderProvider);
+    final asyncArticulos = debugOverride(ref, 'detalle_receta_articulo', ref.watch(articuloProviderProvider));
     return asyncArticulos.when(
       data: (articulos) {
         final match = articulos.where(
@@ -248,7 +249,7 @@ class _UnidadNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUnidad = ref.watch(unidadMedidaDetailProvider(unidadId));
+    final asyncUnidad = debugOverride(ref, 'detalle_receta_unidad', ref.watch(unidadMedidaDetailProvider(unidadId)));
     return asyncUnidad.when(
       data: (unidad) => Text(
         unidad.nombre,

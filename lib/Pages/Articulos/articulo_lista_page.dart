@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -14,7 +15,7 @@ class InsumoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulo = ref.watch(articuloProviderProvider);
+    final asyncArticulo = debugOverride(ref, 'articulos', ref.watch(articuloProviderProvider));
 
     return asyncArticulo.when(
       data: (articulos) {

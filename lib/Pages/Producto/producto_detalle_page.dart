@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
@@ -17,7 +18,7 @@ class ProductoDetallePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncValue = ref.watch(articuloDetailProvider(id));
+    final asyncValue = debugOverride(ref, 'productos', ref.watch(articuloDetailProvider(id)));
 
     void onEditPressed(Articulo producto) {
       if (context.mounted) {

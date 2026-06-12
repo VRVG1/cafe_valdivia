@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
@@ -160,9 +161,9 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncProductos = ref.watch(productosProviderProvider);
-    final asyncInsumos = ref.watch(articuloProviderProvider);
-    final asyncUms = ref.watch(unidadMedidaProvider);
+    final asyncProductos = debugOverride(ref, 'receta_editar_productos', ref.watch(productosProviderProvider));
+    final asyncInsumos = debugOverride(ref, 'receta_editar_insumos', ref.watch(articuloProviderProvider));
+    final asyncUms = debugOverride(ref, 'receta_editar_ums', ref.watch(unidadMedidaProvider));
 
     return Scaffold(
       appBar: AppBar(

@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class DetalleVentaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ventaAsync = ref.watch(ventaDetalladaProvider(id));
+    final ventaAsync = debugOverride(ref, 'detalle_venta', ref.watch(ventaDetalladaProvider(id)));
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 

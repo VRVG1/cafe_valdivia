@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Compras/detalle_compra_page.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
@@ -11,7 +12,7 @@ class CompraListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncCompra = ref.watch(compraProvider);
+    final asyncCompra = debugOverride(ref, 'compras', ref.watch(compraProvider));
     final ColorScheme cs = Theme.of(context).colorScheme;
     final TextTheme tt = Theme.of(context).textTheme;
 

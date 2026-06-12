@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,7 +61,7 @@ class _AgregarCompraSeleccionPageState<T>
     final theme = Theme.of(context);
     final TextTheme tt = theme.textTheme;
     final ColorScheme cs = theme.colorScheme;
-    final asyncData = ref.watch(widget.provider);
+    final asyncData = debugOverride(ref, 'seleccion_compra', ref.watch(widget.provider));
 
     return asyncData.when(
       //skipLoadingOnReload: true,

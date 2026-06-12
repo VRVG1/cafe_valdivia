@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_detalle_page.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_editar_page.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
@@ -13,7 +14,7 @@ class RecetaListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncRecetas = ref.watch(recetaProviderProvider);
+    final asyncRecetas = debugOverride(ref, 'recetas', ref.watch(recetaProviderProvider));
 
     return asyncRecetas.when(
       data: (recetas) {

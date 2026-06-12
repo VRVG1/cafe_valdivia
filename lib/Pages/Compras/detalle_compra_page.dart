@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class DetalleCompraPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compraAsync = ref.watch(compraDetalladaProvider(id));
+    final compraAsync = debugOverride(ref, 'detalle_compra', ref.watch(compraDetalladaProvider(id)));
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 

@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -66,7 +67,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final asyncUM = ref.watch(unidadMedidaProvider);
+    final asyncUM = debugOverride(ref, 'agregar_articulo', ref.watch(unidadMedidaProvider));
     return Scaffold(
       appBar: AppBar(
         title: Text(

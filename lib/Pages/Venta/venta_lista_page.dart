@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Venta/detalle_venta_page.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
@@ -11,7 +12,7 @@ class VentaListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncVentas = ref.watch(ventaProvider);
+    final asyncVentas = debugOverride(ref, 'ventas', ref.watch(ventaProvider));
     final ColorScheme cs = Theme.of(context).colorScheme;
 
     return asyncVentas.when(

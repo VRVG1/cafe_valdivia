@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
@@ -81,8 +82,9 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final unidadMedidaAsync = ref.watch(
-      unidadMedidaDetailProvider(widget.producto.idUnidad),
+    final unidadMedidaAsync = debugOverride(
+      ref, 'editar_producto',
+      ref.watch(unidadMedidaDetailProvider(widget.producto.idUnidad)),
     );
 
     return unidadMedidaAsync.when(
@@ -212,7 +214,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   Widget _buildDropDownMenu(UnidadMedida unidadInicial) {
     return Consumer(
       builder: (context, ref, child) {
-        final asyncUM = ref.watch(unidadMedidaProvider);
+        final asyncUM = debugOverride(ref, 'editar_producto', ref.watch(unidadMedidaProvider));
         return asyncUM.when(
           data: (ums) {
             return FormField<UnidadMedida>(

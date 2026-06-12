@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/orden_produccion_seleccion_receta_page.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
@@ -287,7 +288,7 @@ class AgregarOrdenProduccionPageState
 
     return Consumer(
       builder: (context, ref, child) {
-        final asyncInsumos = ref.watch(articuloProviderProvider);
+        final asyncInsumos = debugOverride(ref, 'agregar_op_insumos', ref.watch(articuloProviderProvider));
         return asyncInsumos.when(
           data: (insumos) {
             double total = 0;

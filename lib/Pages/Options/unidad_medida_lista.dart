@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
@@ -177,7 +178,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
       }
     });
 
-    final asyncUM = ref.watch(unidadMedidaProvider);
+    final asyncUM = debugOverride(ref, 'unidad_medida', ref.watch(unidadMedidaProvider));
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(

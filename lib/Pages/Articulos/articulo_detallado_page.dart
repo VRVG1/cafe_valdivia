@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
+import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -38,7 +39,7 @@ class ArticuloDetalladoPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncArticulo = ref.watch(articuloDetailProvider(articuloId));
+    final asyncArticulo = debugOverride(ref, 'articulo_detalle', ref.watch(articuloDetailProvider(articuloId)));
 
     return asyncArticulo.when(
       data: (articulo) => Scaffold(
