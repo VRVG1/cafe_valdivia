@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/carta_resume.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
@@ -125,33 +126,10 @@ class DetalleVentaPage extends ConsumerWidget {
       },
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: theme.colorScheme.error,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "Error al cargar la venta",
-                style: theme.textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Error: $err",
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(ventaDetalladaProvider(id)),
-                child: const Text("Reintentar"),
-              ),
-            ],
-          ),
+        body: ErrorView(
+          message: 'Error al cargar la venta',
+          description: err.toString(),
+          onRetry: () => ref.invalidate(ventaDetalladaProvider(id)),
         ),
       ),
       loading: () => Scaffold(

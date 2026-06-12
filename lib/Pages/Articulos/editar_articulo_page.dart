@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -101,7 +102,10 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(
-        body: Center(child: Text('Error cargando unidad de medida: $e')),
+        body: ErrorView(
+          message: 'Error cargando unidad de medida',
+          description: e.toString(),
+        ),
       ),
       data: (unidadInicial) {
         if (!_initialized) {

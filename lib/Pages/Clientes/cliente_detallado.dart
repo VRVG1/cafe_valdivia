@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente_extension.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
@@ -23,7 +24,10 @@ class ClienteDetallado extends ConsumerWidget {
       ),
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
-        body: Center(child: Text("Error: $err")),
+        body: ErrorView(
+          message: 'Error al cargar el cliente',
+          description: err.toString(),
+        ),
       ),
       data: (cliente) => Scaffold(
         appBar: AppBar(

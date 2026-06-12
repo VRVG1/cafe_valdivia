@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Venta/detalle_venta_page.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
@@ -68,7 +69,7 @@ class VentaListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => ErrorView(message: 'Error al cargar las ventas'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

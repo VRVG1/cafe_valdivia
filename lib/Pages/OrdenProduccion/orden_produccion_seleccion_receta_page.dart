@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
@@ -51,7 +52,7 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
       },
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
-        body: Center(child: Text('Error: $err')),
+        body: ErrorView(message: 'Error al cargar las recetas'),
       ),
       loading: () => Scaffold(
         appBar: AppBar(title: const Text("Seleccionar Receta")),

@@ -330,7 +330,7 @@ class AgregarOrdenProduccionPageState
               ),
             );
           },
-          error: (_, __) => const SizedBox.shrink(),
+          error: (e, _) => Text('Error: $e', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           loading: () => const SizedBox.shrink(),
         );
       },

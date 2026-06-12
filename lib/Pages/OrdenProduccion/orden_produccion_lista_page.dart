@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/detalle_orden_produccion_page.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/editar_orden_produccion_page.dart';
@@ -104,7 +105,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => ErrorView(message: 'Error al cargar las órdenes de producción'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

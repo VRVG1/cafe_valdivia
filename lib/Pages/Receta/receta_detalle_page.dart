@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -122,7 +123,7 @@ class RecetaDetallePage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Error: $e")),
+        error: (e, _) => ErrorView(message: 'Error al cargar la receta'),
       ),
     );
   }

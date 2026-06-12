@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/card_almacen.dart';
 import 'package:cafe_valdivia/Pages/Clientes/agregar_cliente.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page.dart';
@@ -136,15 +137,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
     }
 
     final List<Widget> pages = [
-      Card(
-        shadowColor: Colors.transparent,
-        margin: const EdgeInsets.all(8.0),
-        child: SizedBox.expand(
-          child: Center(
-            child: Text('Home page', style: theme.textTheme.titleLarge),
-          ),
-        ),
-      ),
+      // Card(
+      //   shadowColor: Colors.transparent,
+      //   margin: const EdgeInsets.all(8.0),
+      //   child: SizedBox.expand(
+      //     child: Center(
+      //       child: Text('Home page', style: theme.textTheme.titleLarge),
+      //     ),
+      //   ),
+      // ),
+      Cardalmacen(titulo: "Pene", cuerpo: "Sexo"),
 
       CompraListPage(),
       Clientelista(),
@@ -157,10 +159,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     ];
 
     final List<Widget> destinos = [
-      Padding(
-        padding: EdgeInsets.fromLTRB(28, 16, 16, 10),
-        child: Text('Menú Principal'),
-      ),
       NavigationDrawerDestination(
         selectedIcon: Icon(Icons.home),
         icon: Icon(Icons.home_outlined),
@@ -230,15 +228,30 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ),
         ],
       ),
-      drawer: NavigationDrawer(
-        selectedIndex: currentPageIndex,
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-          Navigator.pop(context);
-        },
-        children: destinos,
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.fromLTRB(28, 16, 16, 10),
+                child: Text("Menu Principal"),
+              ),
+              Expanded(
+                child: NavigationDrawer(
+                  selectedIndex: currentPageIndex,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      currentPageIndex = index;
+                    });
+                    Navigator.pop(context);
+                  },
+                  children: destinos,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: pages[currentPageIndex],
     );

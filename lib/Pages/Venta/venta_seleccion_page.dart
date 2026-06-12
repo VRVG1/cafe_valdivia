@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -110,34 +111,10 @@ class _VentaSeleccionPageState<T>
   }
 
   Widget _buildErrorState(ColorScheme cs, TextTheme tt, Object error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outlined, size: 60, color: cs.error),
-            const SizedBox(height: 16),
-            Text(
-              widget.mensajeError ?? 'Ocurrió un error inesperado',
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              error.toString(),
-              style: tt.bodySmall,
-              textAlign: TextAlign.center,
-            ),
-            if (widget.onRetry != null) ...[
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: widget.onRetry,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Reintentar'),
-              ),
-            ],
-          ],
-        ),
-      ),
+    return ErrorView(
+      message: widget.mensajeError ?? 'Ocurrió un error inesperado',
+      description: error.toString(),
+      onRetry: widget.onRetry,
     );
   }
 

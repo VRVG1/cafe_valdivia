@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
@@ -157,34 +158,10 @@ class ArticuloDetalladoPage extends ConsumerWidget {
       ),
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: theme.colorScheme.error,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "Error al cargar el articulo",
-                style: theme.textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "Error: $err",
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () =>
-                    ref.invalidate(articuloDetailProvider(articuloId)),
-                child: const Text("Reintentar"),
-              ),
-            ],
-          ),
+        body: ErrorView(
+          message: 'Error al cargar el artículo',
+          description: err.toString(),
+          onRetry: () => ref.invalidate(articuloDetailProvider(articuloId)),
         ),
       ),
       loading: () => Scaffold(

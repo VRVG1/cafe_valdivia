@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -133,6 +134,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Costo Unitario",
+                textInputType: TextInputType.number,
                 controller: _costoUnitarioController,
                 icon: Icons.attach_money,
               ),
@@ -147,9 +149,11 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
     required String text,
     required TextEditingController controller,
     required IconData icon,
+    TextInputType? textInputType,
   }) {
     return TextFormField(
       enabled: !_isLoading,
+      keyboardType: textInputType,
       controller: controller,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -202,7 +206,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
           ],
         );
       },
-      error: (err, stack) => Center(child: Text("Error: $err")),
+      error: (err, stack) => ErrorView(message: 'Error al cargar los artículos'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
@@ -48,7 +49,10 @@ class ProveedorDetallado extends ConsumerWidget {
       ),
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
-        body: Center(child: Text('Error al cargar el proveedor: $err')),
+        body: ErrorView(
+          message: 'Error al cargar el proveedor',
+          description: err.toString(),
+        ),
       ),
       data: (proveedor) {
         return Scaffold(

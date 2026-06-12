@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -232,7 +233,7 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
               },
             );
           },
-          error: (err, stack) => Center(child: Text("Error: $err")),
+          error: (err, stack) => ErrorView(message: 'Error al cargar los productos'),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
       },

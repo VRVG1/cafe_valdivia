@@ -372,7 +372,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       decoration: InputDecoration(
         labelText: "Proveedor",
         border: OutlineInputBorder(),
-        prefixIcon: Icon(Icons.fax_rounded),
+        prefixIcon: Icon(Icons.person_rounded),
       ),
     );
   }
@@ -398,7 +398,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       decoration: InputDecoration(
         labelText: "Articulo",
         border: OutlineInputBorder(),
-        prefixIcon: Icon(Icons.fax_rounded),
+        prefixIcon: Icon(Icons.widgets_rounded),
       ),
     );
   }
@@ -434,7 +434,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             decoration: InputDecoration(
               labelText: "Precio",
               border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.fax_rounded),
+              prefixIcon: Icon(Icons.attach_money),
             ),
           ),
         ),
@@ -463,7 +463,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
               decoration: InputDecoration(
                 labelText: "Cantidad",
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.fax_rounded),
+                prefixIcon: Icon(Icons.numbers_rounded),
               ),
             ),
           ),

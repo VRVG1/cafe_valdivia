@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_detalle_page.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_editar_page.dart';
@@ -86,7 +87,7 @@ class RecetaListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => ErrorView(message: 'Error al cargar las recetas'),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
