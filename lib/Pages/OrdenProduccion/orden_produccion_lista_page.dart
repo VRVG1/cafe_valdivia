@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/detalle_orden_produccion_page.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/editar_orden_produccion_page.dart';
@@ -15,7 +16,11 @@ class OrdenProduccionListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncOrdenes = debugOverride(ref, 'orden_produccion', ref.watch(ordenProduccionProvider));
+    final asyncOrdenes = debugOverride(
+      ref,
+      'orden_produccion',
+      ref.watch(ordenProduccionProvider),
+    );
     final ColorScheme cs = Theme.of(context).colorScheme;
 
     return asyncOrdenes.when(
@@ -29,9 +34,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
           data: ordenes,
           keyBuilder: (Map<String, dynamic> orden) {
             final id = orden['id_orden_produccion'];
-            return ValueKey<Object>(
-              id != null ? 'op-$id' : orden.hashCode,
-            );
+            return ValueKey<Object>(id != null ? 'op-$id' : orden.hashCode);
           },
           leadingBuilder: (Map<String, dynamic> orden) =>
               const Icon(Icons.precision_manufacturing_rounded),
@@ -39,15 +42,11 @@ class OrdenProduccionListaPage extends ConsumerWidget {
             orden['producto_producido']?.toString() ?? 'Sin producto',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          subtitleBuilder: (Map<String, dynamic> orden) => Text(
-            '${fecha(orden['fecha'] ?? '')} · ${orden['receta'] ?? ''}',
-          ),
+          subtitleBuilder: (Map<String, dynamic> orden) =>
+              Text('${fecha(orden['fecha'] ?? '')} · ${orden['receta'] ?? ''}'),
           trailingBuilder: (Map<String, dynamic> orden) => Text(
             '\$${double.tryParse(orden['costo_total_produccion']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00'}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: cs.primary,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, color: cs.primary),
           ),
           onTapCallback: (Map<String, dynamic> orden) {
             final id = orden['id_orden_produccion'];
@@ -55,8 +54,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      DetalleOrdenProduccionPage(id: id),
+                  builder: (context) => DetalleOrdenProduccionPage(id: id),
                 ),
               );
             }
@@ -90,10 +88,8 @@ class OrdenProduccionListaPage extends ConsumerWidget {
                       ref: ref,
                       provider: ordenProduccionProvider,
                       id: id,
-                      mensajeExito:
-                          "Orden de producción eliminada con exito",
-                      mensajeError:
-                          "Error al eliminar la orden de producción",
+                      mensajeExito: "Orden de producción eliminada con exito",
+                      mensajeError: "Error al eliminar la orden de producción",
                       detalle: false,
                     ),
                   },
@@ -106,8 +102,9 @@ class OrdenProduccionListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => ErrorView(message: 'Error al cargar las órdenes de producción'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) =>
+          ErrorView(message: 'Error al cargar las órdenes de producción'),
+      loading: () => SkeletonListTiles(n: 10),
     );
   }
 }

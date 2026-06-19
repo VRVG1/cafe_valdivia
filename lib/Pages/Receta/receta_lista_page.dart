@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_detalle_page.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_editar_page.dart';
@@ -14,7 +15,11 @@ class RecetaListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncRecetas = debugOverride(ref, 'recetas', ref.watch(recetaProviderProvider));
+    final asyncRecetas = debugOverride(
+      ref,
+      'recetas',
+      ref.watch(recetaProviderProvider),
+    );
 
     return asyncRecetas.when(
       data: (recetas) {
@@ -30,12 +35,10 @@ class RecetaListaPage extends ConsumerWidget {
                   : receta.hashCode,
             );
           },
-          leadingBuilder: (receta) =>
-              const Icon(Icons.menu_book_rounded),
+          leadingBuilder: (receta) => const Icon(Icons.menu_book_rounded),
           titleBuilder: (receta) => Text(receta.nombre),
-          subtitleBuilder: (receta) => Text(
-            'Cantidad base: ${receta.cantidad_base}',
-          ),
+          subtitleBuilder: (receta) =>
+              Text('Cantidad base: ${receta.cantidad_base}'),
           onTapCallback: (receta) {
             if (receta.idReceta != null) {
               Navigator.push(
@@ -63,8 +66,7 @@ class RecetaListaPage extends ConsumerWidget {
                 await mostrarDialogoConfirmacion(
                   context: context,
                   titulo: "Eliminar receta",
-                  contenido:
-                      "Esta accion no se puede deshacer",
+                  contenido: "Esta accion no se puede deshacer",
                   textoBotonConfirmacion: "Eliminar",
                   onConfirm: () => {
                     delete(
@@ -74,8 +76,7 @@ class RecetaListaPage extends ConsumerWidget {
                       id: receta.idReceta!,
                       mensajeExito: "Receta eliminada con exito",
                       detalle: false,
-                      mensajeError:
-                          "Error al eliminar la receta",
+                      mensajeError: "Error al eliminar la receta",
                     ),
                   },
                 ) ??
@@ -89,7 +90,7 @@ class RecetaListaPage extends ConsumerWidget {
         );
       },
       error: (err, stack) => ErrorView(message: 'Error al cargar las recetas'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => SkeletonListTiles(n: 10),
     );
   }
 }

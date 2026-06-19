@@ -2,40 +2,107 @@ import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const List<Map<String, String>> _paginas = [
-  {'key': 'unidad_medida', 'label': 'Unidad de Medida'},
-  {'key': 'productos', 'label': 'Productos'},
-  {'key': 'clientes', 'label': 'Clientes'},
-  {'key': 'proveedores', 'label': 'Proveedores'},
-  {'key': 'articulos', 'label': 'Artículos'},
-  {'key': 'compras', 'label': 'Compras'},
-  {'key': 'detalle_compra', 'label': 'Detalle Compra'},
-  {'key': 'articulo_detalle', 'label': 'Detalle Artículo'},
-  {'key': 'proveedor_detalle', 'label': 'Detalle Proveedor'},
-  {'key': 'cliente_detalle', 'label': 'Detalle Cliente'},
-  {'key': 'ventas', 'label': 'Ventas'},
-  {'key': 'detalle_venta', 'label': 'Detalle Venta'},
-  {'key': 'recetas', 'label': 'Recetas'},
-  {'key': 'receta_detalle', 'label': 'Detalle Receta'},
-  {'key': 'orden_produccion', 'label': 'Órdenes Producción'},
-  {'key': 'detalle_op', 'label': 'Detalle OP'},
-  {'key': 'seleccion_receta', 'label': 'Seleccionar Receta'},
-  {'key': 'agregar_articulo', 'label': 'Agregar Artículo'},
-  {'key': 'agregar_producto', 'label': 'Agregar Producto'},
-  {'key': 'editar_articulo', 'label': 'Editar Artículo'},
-  {'key': 'editar_producto', 'label': 'Editar Producto'},
-  {'key': 'seleccion_compra', 'label': 'Selección Compra'},
-  {'key': 'seleccion_venta', 'label': 'Selección Venta'},
-  {'key': 'receta_agregar_productos', 'label': 'Agregar Receta (Prod.)'},
-  {'key': 'receta_agregar_insumos', 'label': 'Agregar Receta (Insum.)'},
-  {'key': 'receta_agregar_ums', 'label': 'Agregar Receta (UMed.)'},
-  {'key': 'receta_editar_productos', 'label': 'Editar Receta (Prod.)'},
-  {'key': 'receta_editar_insumos', 'label': 'Editar Receta (Insum.)'},
-  {'key': 'receta_editar_ums', 'label': 'Editar Receta (UMed.)'},
-  {'key': 'detalle_receta_articulo', 'label': 'Detalle Receta (Art.)'},
-  {'key': 'detalle_receta_unidad', 'label': 'Detalle Receta (UM)'},
-  {'key': 'detalle_op_articulo', 'label': 'Detalle OP (Art.)'},
-  {'key': 'agregar_op_insumos', 'label': 'Agregar OP (Insum.)'},
+class _GrupoPagina {
+  final String nombre;
+  final IconData icono;
+  final List<Map<String, String>> paginas;
+
+  const _GrupoPagina({
+    required this.nombre,
+    required this.icono,
+    required this.paginas,
+  });
+}
+
+const List<_GrupoPagina> _grupos = [
+  _GrupoPagina(
+    nombre: 'Unidad Medida',
+    icono: Icons.straighten,
+    paginas: [
+      {'key': 'unidad_medida', 'label': 'Lista'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Productos',
+    icono: Icons.inventory_2,
+    paginas: [
+      {'key': 'productos', 'label': 'Lista'},
+      {'key': 'agregar_producto', 'label': 'Agregar'},
+      {'key': 'editar_producto', 'label': 'Editar'},
+      {'key': 'productos_detalles', 'label': 'Detalles'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Clientes',
+    icono: Icons.people,
+    paginas: [
+      {'key': 'clientes', 'label': 'Lista'},
+      {'key': 'cliente_detalle', 'label': 'Detalle'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Proveedores',
+    icono: Icons.store,
+    paginas: [
+      {'key': 'proveedores', 'label': 'Lista'},
+      {'key': 'proveedor_detalle', 'label': 'Detalle'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Artículos',
+    icono: Icons.science,
+    paginas: [
+      {'key': 'articulos', 'label': 'Lista'},
+      {'key': 'agregar_articulo', 'label': 'Agregar'},
+      {'key': 'editar_articulo', 'label': 'Editar'},
+      {'key': 'articulo_detalle', 'label': 'Detalle'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Compras',
+    icono: Icons.shopping_cart,
+    paginas: [
+      {'key': 'compras', 'label': 'Lista'},
+      {'key': 'detalle_compra', 'label': 'Detalle'},
+      {'key': 'seleccion_compra', 'label': 'Selección'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Ventas',
+    icono: Icons.point_of_sale,
+    paginas: [
+      {'key': 'ventas', 'label': 'Lista'},
+      {'key': 'detalle_venta', 'label': 'Detalle'},
+      {'key': 'seleccion_venta', 'label': 'Selección'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Recetas',
+    icono: Icons.menu_book,
+    paginas: [
+      {'key': 'recetas', 'label': 'Lista'},
+      {'key': 'receta_detalle', 'label': 'Detalle'},
+      {'key': 'detalle_receta_articulo', 'label': 'Detalle (Art.)'},
+      {'key': 'detalle_receta_unidad', 'label': 'Detalle (UM)'},
+      {'key': 'receta_agregar_productos', 'label': 'Agregar (Prod.)'},
+      {'key': 'receta_agregar_insumos', 'label': 'Agregar (Insum.)'},
+      {'key': 'receta_agregar_ums', 'label': 'Agregar (UMed.)'},
+      {'key': 'receta_editar_productos', 'label': 'Editar (Prod.)'},
+      {'key': 'receta_editar_insumos', 'label': 'Editar (Insum.)'},
+      {'key': 'receta_editar_ums', 'label': 'Editar (UMed.)'},
+    ],
+  ),
+  _GrupoPagina(
+    nombre: 'Órdenes Producción',
+    icono: Icons.factory,
+    paginas: [
+      {'key': 'orden_produccion', 'label': 'Lista'},
+      {'key': 'detalle_op', 'label': 'Detalle'},
+      {'key': 'detalle_op_articulo', 'label': 'Detalle (Art.)'},
+      {'key': 'seleccion_receta', 'label': 'Seleccionar Receta'},
+      {'key': 'agregar_op_insumos', 'label': 'Agregar (Insum.)'},
+    ],
+  ),
 ];
 
 class DebugPanel extends ConsumerWidget {
@@ -81,38 +148,55 @@ class DebugPanel extends ConsumerWidget {
             child: ListView(
               shrinkWrap: true,
               children: [
-                for (final pagina in _paginas) ...[
-                  SwitchListTile(
-                    title: Text(pagina['label']!),
-                    subtitle: Text('Error => Key: ${pagina['key']}'),
-                    value: debug.shouldFail(pagina['key']!),
-                    onChanged: (value) {
-                      final notifier = ref.read(debugStateProvider.notifier);
-                      if (value) {
-                        notifier.forceError(
-                          pagina['key']!,
-                          'Error forzado [${pagina['label']}]',
-                        );
-                      } else {
-                        notifier.clearError(pagina['key']!);
-                      }
-                    },
+                for (final grupo in _grupos) ...[
+                  ExpansionTile(
+                    leading: Icon(grupo.icono),
+                    title: Text(
+                      grupo.nombre,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    initiallyExpanded: false,
+                    children: [
+                      for (final pagina in grupo.paginas) ...[
+                        SwitchListTile(
+                          title: Text(pagina['label']!),
+                          subtitle: Text('Error => Key: ${pagina['key']}'),
+                          value: debug.shouldFail(pagina['key']!),
+                          onChanged: (value) {
+                            final notifier = ref.read(
+                              debugStateProvider.notifier,
+                            );
+                            if (value) {
+                              notifier.forceError(
+                                pagina['key']!,
+                                'Error forzado [${pagina['label']}]',
+                              );
+                            } else {
+                              notifier.clearError(pagina['key']!);
+                            }
+                          },
+                        ),
+                        SwitchListTile(
+                          title: Text(pagina['label']!),
+                          subtitle: Text('Loading => Key: ${pagina['key']}'),
+                          value: debug.shouldLoad(pagina['key']!),
+                          onChanged: (value) {
+                            final notifier = ref.read(
+                              debugStateProvider.notifier,
+                            );
+                            if (value) {
+                              notifier.forceLoading(pagina['key']!);
+                            } else {
+                              notifier.clearLoading(pagina['key']!);
+                            }
+                          },
+                        ),
+                        if (pagina != grupo.paginas.last)
+                          const Divider(height: 1, indent: 16),
+                      ],
+                    ],
                   ),
-                  SwitchListTile(
-                    title: Text(pagina['label']!),
-                    subtitle: Text('Loading => Key: ${pagina['key']}'),
-                    value: debug.shouldLoad(pagina['key']!),
-                    onChanged: (value) {
-                      final notifier = ref.read(debugStateProvider.notifier);
-                      if (value) {
-                        notifier.forceLoading(pagina['key']!);
-                      } else {
-                        notifier.clearLoading(pagina['key']!);
-                      }
-                    },
-                  ),
-                  if (pagina != _paginas.last)
-                    const Divider(height: 1, indent: 16),
+                  if (grupo != _grupos.last) const Divider(height: 1),
                 ],
               ],
             ),

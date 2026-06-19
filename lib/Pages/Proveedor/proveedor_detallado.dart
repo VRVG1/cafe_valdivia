@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
@@ -41,13 +42,15 @@ class ProveedorDetallado extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncProveedor = debugOverride(ref, 'proveedor_detalle', ref.watch(proveedorDetailProvider(proveedorId)));
+    final asyncProveedor = debugOverride(
+      ref,
+      'proveedor_detalle',
+      ref.watch(proveedorDetailProvider(proveedorId)),
+    );
 
     return asyncProveedor.when(
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          SkeletonProductoDetalle(detalleName: "Proveedor", rowDetails: 3),
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
         body: ErrorView(
@@ -86,16 +89,16 @@ class ProveedorDetallado extends ConsumerWidget {
                 icon: const Icon(Icons.more_vert_rounded),
                 onSelected: (String result) {
                   if (result == 'eliminar') {
-                  mostrarDialogoConfirmacion(
-                    context: context,
-                    titulo: "Confirmar eliminación",
-                    contenido:
-                        "¿Estás seguro de que deseas eliminar este proveedor? "
-                        "Esta acción no se puede deshacer.",
-                    textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => _eliminar(context, ref),
-                  );
-                }
+                    mostrarDialogoConfirmacion(
+                      context: context,
+                      titulo: "Confirmar eliminación",
+                      contenido:
+                          "¿Estás seguro de que deseas eliminar este proveedor? "
+                          "Esta acción no se puede deshacer.",
+                      textoBotonConfirmacion: "Eliminar",
+                      onConfirm: () => _eliminar(context, ref),
+                    );
+                  }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(

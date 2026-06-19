@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
@@ -39,7 +40,11 @@ class ArticuloDetalladoPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncArticulo = debugOverride(ref, 'articulo_detalle', ref.watch(articuloDetailProvider(articuloId)));
+    final asyncArticulo = debugOverride(
+      ref,
+      'articulo_detalle',
+      ref.watch(articuloDetailProvider(articuloId)),
+    );
 
     return asyncArticulo.when(
       data: (articulo) => Scaffold(
@@ -165,10 +170,8 @@ class ArticuloDetalladoPage extends ConsumerWidget {
           onRetry: () => ref.invalidate(articuloDetailProvider(articuloId)),
         ),
       ),
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          SkeletonProductoDetalle(detalleName: "Articulo", rowDetails: 4),
     );
   }
 }

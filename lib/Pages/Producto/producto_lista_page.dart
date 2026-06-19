@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_detalle_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_editar_page.dart';
@@ -14,7 +15,11 @@ class ProductoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncProductos = debugOverride(ref, 'productos', ref.watch(productosProviderProvider));
+    final asyncProductos = debugOverride(
+      ref,
+      'productos',
+      ref.watch(productosProviderProvider),
+    );
 
     return asyncProductos.when(
       data: (productos) {
@@ -88,8 +93,9 @@ class ProductoListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => const ErrorView(message: 'Error al cargar los productos'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) =>
+          const ErrorView(message: 'Error al cargar los productos'),
+      loading: () => SkeletonListTiles(n: 10),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -23,8 +24,6 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
     _umController.dispose();
     super.dispose();
   }
-
-
 
   void _showAddOrEditDialog({UnidadMedida? um}) {
     // Si estamos editando se llena el valor del controlador
@@ -171,14 +170,18 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
     ref.listen<AsyncValue>(unidadMedidaProvider, (_, state) {
       if (state is AsyncError) {
         showCustomSnackBar(
-        context: context,
-        mensaje: state.error.toString(),
-        isError: true,
-      );
+          context: context,
+          mensaje: state.error.toString(),
+          isError: true,
+        );
       }
     });
 
-    final asyncUM = debugOverride(ref, 'unidad_medida', ref.watch(unidadMedidaProvider));
+    final asyncUM = debugOverride(
+      ref,
+      'unidad_medida',
+      ref.watch(unidadMedidaProvider),
+    );
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -204,10 +207,8 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            leadingBuilder: (um) => Icon(
-              Icons.scale_rounded,
-              color: colorScheme.primary,
-            ),
+            leadingBuilder: (um) =>
+                Icon(Icons.scale_rounded, color: colorScheme.primary),
             onTapCallback: (um) => _showAddOrEditDialog(um: um),
             onEditDismissed: (um) async {
               _showAddOrEditDialog(um: um);
@@ -219,8 +220,9 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
             },
           );
         },
-        error: (err, stack) => const ErrorView(message: 'Error al cargar las unidades de medida'),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) =>
+            const ErrorView(message: 'Error al cargar las unidades de medida'),
+        loading: () => SkeletonListTiles(n: 10),
       ),
     );
   }

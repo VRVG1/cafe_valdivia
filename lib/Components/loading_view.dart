@@ -1,3 +1,7 @@
+import 'package:cafe_valdivia/Debug/debug_panel.dart';
+import 'package:cafe_valdivia/Pages/Options/options_list.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -41,8 +45,8 @@ class ShimmerDetailElement extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 24,
-            height: 24,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(8),
@@ -53,9 +57,9 @@ class ShimmerDetailElement extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
-                ShimmerLine(width: 80, height: 12),
+                ShimmerLine(width: 80, height: 16),
                 SizedBox(height: 4),
-                ShimmerLine(width: 160, height: 14),
+                ShimmerLine(width: 160, height: 18),
               ],
             ),
           ),
@@ -91,10 +95,7 @@ class ShimmerDetailsContainer extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
-          decoration: BoxDecoration(
-            color: cs.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(20),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
           padding: const EdgeInsets.all(16),
           child:
               customContent ??
@@ -110,43 +111,95 @@ class ShimmerDetailsContainer extends StatelessWidget {
   }
 }
 
-class ShimmerHeaderCard extends StatelessWidget {
-  const ShimmerHeaderCard({super.key});
+class SkeletonAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final int chipsCount;
+  const SkeletonAppBar({super.key, this.chipsCount = 1});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(120);
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                ShimmerLine(width: 50, height: 11),
-                SizedBox(height: 4),
-                ShimmerLine(width: 180, height: 14),
-                SizedBox(height: 4),
-                ShimmerLine(width: 140, height: 12),
-                SizedBox(height: 4),
-                ShimmerLine(width: 120, height: 12),
-              ],
-            ),
+    // baseColor: cs.primaryContainer.withAlpha(80),
+    // highlightColor: cs.onPrimary,
+    return AppBar(
+      backgroundColor: cs.surface,
+      flexibleSpace: SafeArea(
+        child: Shimmer.fromColors(
+          baseColor: cs.primaryContainer.withAlpha(80),
+          highlightColor: cs.onPrimary,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 8),
+
+              Container(
+                width: 320,
+                height: 48,
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: cs.primary, width: 2),
+                    ),
+
+                    filled: true,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...List.generate(
+                      chipsCount,
+                      (index) => [
+                        ShimmerLine(width: 40, height: 20),
+                        const SizedBox(width: 10),
+                      ],
+                    ).expand((e) => e),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Container(
-            width: 80,
-            height: 28,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
+        ),
+      ),
+    );
+  }
+}
+
+class ShimmerListTile extends StatelessWidget {
+  const ShimmerListTile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    // baseColor: cs.primaryContainer.withAlpha(80),
+    // highlightColor: cs.onPrimary,
+    //
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(vertical: 12, horizontal: 12),
+      child: Column(
+        children: [
+          ListTile(
+            leading: CircleAvatar(),
+            title: ShimmerLine(width: 2, height: 16),
+            subtitle: ShimmerLine(width: 2, height: 12),
+            trailing: ShimmerLine(width: 20),
           ),
         ],
       ),
@@ -161,120 +214,97 @@ class ShimmerTableResume extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Table(
-        columnWidths: const {
-          0: FlexColumnWidth(3.0),
-          1: FlexColumnWidth(1.5),
-          2: FlexColumnWidth(1.8),
-          3: FlexColumnWidth(1.8),
-        },
-        children: [
-          TableRow(
-            decoration: BoxDecoration(color: cs.primary),
-            children: List.generate(
-              4,
-              (_) => Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 11,
-                ),
-                child: Container(
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
+    return Table(
+      columnWidths: const {
+        0: FlexColumnWidth(3.0),
+        1: FlexColumnWidth(1.5),
+        2: FlexColumnWidth(1.8),
+        3: FlexColumnWidth(1.8),
+      },
+      children: [
+        TableRow(
+          children: List.generate(
+            4,
+            (_) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+              child: Container(
+                height: 14,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ),
           ),
-          ...List.generate(rowCount, (i) {
-            final isEven = i.isEven;
-            return TableRow(
-              decoration: BoxDecoration(
-                color: isEven ? cs.surface : cs.surfaceContainerLowest,
-                border: Border(
-                  bottom: BorderSide(
-                    color: cs.outlineVariant.withOpacity(0.5),
-                    width: 0.5,
+        ),
+        ...List.generate(rowCount, (i) {
+          return TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                child: Container(
+                  height: 14,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
               ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Center(
                   child: Container(
-                    height: 14,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Center(
-                    child: Container(
-                      height: 24,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        color: cs.primaryContainer,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Center(
-                        child: Container(
-                          height: 10,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
+                    height: 24,
+                    width: 50,
+                    child: Center(
+                      child: Container(
+                        height: 10,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  child: Container(
-                    height: 14,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                child: Container(
+                  height: 14,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  child: Container(
-                    height: 14,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                child: Container(
+                  height: 14,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-              ],
-            );
-          }),
-        ],
-      ),
+              ),
+            ],
+          );
+        }),
+      ],
     );
   }
 }
@@ -288,21 +318,12 @@ class ShimmerCartaResume extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(18),
-      ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
           ...List.generate(rowCount, (_) => _buildRow()),
           const SizedBox(height: 4),
-          Container(
-            height: 1,
-            width: double.infinity,
-            color: cs.outlineVariant,
-          ),
           const SizedBox(height: 4),
           _buildRow(isTotal: true),
         ],
@@ -338,40 +359,479 @@ class ShimmerCartaResume extends StatelessWidget {
   }
 }
 
+class ShimmerOrden extends StatelessWidget {
+  const ShimmerOrden({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShimmerLine(width: 50),
+                SizedBox(height: 8),
+                ShimmerLine(width: 120),
+                SizedBox(height: 8),
+                ShimmerLine(width: 100),
+                SizedBox(height: 8),
+                ShimmerLine(width: 70),
+                SizedBox(height: 8),
+              ],
+            ),
+          ),
+          Chip(
+            label: const Text("No Pagado"),
+            side: BorderSide.none,
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+          ),
+        ],
+      ),
+    );
+  }
+}
 // ═════════════════════════════════════════════════════════
 // PAGE-SPECIFIC SKELETONS
 // ═════════════════════════════════════════════════════════
 
-class SkeletonProductoDetalle extends StatelessWidget {
-  const SkeletonProductoDetalle({super.key});
+// ── Compra ──
+
+class SkeletonDropMenu extends StatelessWidget {
+  const SkeletonDropMenu({super.key});
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme cs = Theme.of(context).colorScheme;
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          const SizedBox(width: 32),
+          Expanded(child: ShimmerLine(height: 32)),
+        ],
+      ),
+    );
+  }
+}
+
+class SkeletonCompraDetalle extends StatelessWidget {
+  final String title;
+  const SkeletonCompraDetalle({
+    super.key,
+    this.title = "Si ves esto, soy malo programando",
+  });
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+    final ColorScheme cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        actions: <Widget>[
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OptionsList(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
       body: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          children: [
-            Center(
-              child: Container(
-                width: 128,
-                height: 128,
-                decoration: BoxDecoration(
-                  color: cs.primaryContainer,
-                  shape: BoxShape.circle,
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              _SectionLabel(),
+              SizedBox(height: 10),
+              ShimmerOrden(),
+              _SectionLabel(),
+              SizedBox(height: 10),
+              ShimmerTableResume(rowCount: 3),
+              SizedBox(height: 20),
+              _SectionLabel(),
+              SizedBox(height: 12),
+              ShimmerCartaResume(rowCount: 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SkeletonOrdenProduccionDetalle extends StatelessWidget {
+  final String title;
+  const SkeletonOrdenProduccionDetalle({
+    super.key,
+    this.title = "Si ves esto, soy malo programando",
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    final ColorScheme cs = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        actions: <Widget>[
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OptionsList(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
+      body: Shimmer.fromColors(
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              _SectionLabel(),
+              SizedBox(height: 10),
+              ShimmerOrden(),
+              ShimmerDetailsContainer(title: "Detalle", elementCount: 5),
+              SizedBox(height: 10),
+              ShimmerDetailsContainer(title: "Detalle", elementCount: 2),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SkeletonListTiles extends StatelessWidget {
+  final int n;
+  const SkeletonListTiles({super.key, this.n = 5});
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme cs = Theme.of(context).colorScheme;
+
+    // baseColor: cs.primaryContainer.withAlpha(80),
+    // highlightColor: cs.onPrimary,
+    return ListView.builder(
+      itemCount: n,
+      itemBuilder: (BuildContext context, int index) {
+        return Shimmer.fromColors(
+          baseColor: cs.primaryContainer.withAlpha(80),
+          highlightColor: cs.onPrimary,
+          child: ShimmerListTile(),
+        );
+      },
+    );
+  }
+}
+
+class SkeletonProductoDetalle extends StatelessWidget {
+  final String detalleName;
+  final int rowDetails;
+  const SkeletonProductoDetalle({
+    super.key,
+    this.detalleName = "Detalles",
+    this.rowDetails = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    final ColorScheme cs = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          detalleName,
+          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        actions: <Widget>[
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OptionsList(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
+      body: Shimmer.fromColors(
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(child: CircleAvatar(radius: 64)),
+              SizedBox(height: 24),
+              Center(child: ShimmerLine(width: 360, height: 30)),
+              SizedBox(height: 60),
+              ShimmerDetailsContainer(
+                title: "Detalles",
+                elementCount: rowDetails,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SkeletonEditar extends StatelessWidget {
+  final String editarName;
+  final int rowEditField;
+
+  const SkeletonEditar({
+    super.key,
+    this.editarName = "Editar",
+    this.rowEditField = 4,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme cs = Theme.of(context).colorScheme;
+    final TextTheme tt = Theme.of(context).textTheme;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          editarName,
+          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        actions: <Widget>[
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OptionsList(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
+      body: Shimmer.fromColors(
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...List.generate(
+                rowEditField,
+                (i) => [SkeletonDropMenu(), SizedBox(height: 24)],
+              ).expand((e) => e),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SkeletonClienteDetalle extends StatelessWidget {
+  final String detalleName;
+  final int rowDetails;
+  const SkeletonClienteDetalle({
+    super.key,
+    this.detalleName = "Detalles",
+    this.rowDetails = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final tt = Theme.of(context).textTheme;
+    final ColorScheme cs = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          detalleName,
+          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        actions: <Widget>[
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OptionsList(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+
+      body: Shimmer.fromColors(
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(child: CircleAvatar(radius: 64)),
+              SizedBox(height: 24),
+              Center(child: ShimmerLine(width: 360, height: 30)),
+              SizedBox(height: 60),
+              ShimmerDetailsContainer(
+                title: "Detalles",
+                elementCount: rowDetails,
+              ),
+              SizedBox(height: 32),
+              ShimmerDetailsContainer(title: "Ventas", elementCount: 0),
+              Center(
+                child: Container(
+                  width: 500,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            const Center(child: ShimmerLine(width: 200, height: 28)),
-            const SizedBox(height: 48),
-            const ShimmerDetailsContainer(title: "Detalles", elementCount: 4),
-          ],
+              SizedBox(height: 12),
+              Center(
+                child: Container(
+                  width: 500,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -484,11 +944,47 @@ class SkeletonRecetaDetalle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme cs = Theme.of(context).colorScheme;
+    final TextTheme tt = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          "Detalle de Receta",
+          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        elevation: 0,
+        actions: <Widget>[
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
+            IconButton(
+              icon: const Icon(Icons.bug_report),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  useSafeArea: true,
+                  builder: (_) => const DebugPanel(),
+                );
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OptionsList(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -502,50 +998,6 @@ class SkeletonRecetaDetalle extends StatelessWidget {
                 title: "Componentes",
                 customContent: _ShimmerTablaComponentes(),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Compra ──
-
-class SkeletonCompraDetalle extends StatelessWidget {
-  const SkeletonCompraDetalle({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Detalle de Compra",
-          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        elevation: 0,
-      ),
-      body: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              SizedBox(height: 8),
-              ShimmerHeaderCard(),
-              SizedBox(height: 20),
-              _SectionLabel(),
-              SizedBox(height: 8),
-              ShimmerTableResume(rowCount: 3),
-              SizedBox(height: 20),
-              _SectionLabel(),
-              SizedBox(height: 8),
-              ShimmerCartaResume(rowCount: 4),
             ],
           ),
         ),
@@ -581,7 +1033,7 @@ class SkeletonVentaDetalle extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               SizedBox(height: 8),
-              ShimmerHeaderCard(),
+              ShimmerListTile(),
               SizedBox(height: 20),
               _SectionLabel(),
               SizedBox(height: 8),
@@ -600,37 +1052,16 @@ class SkeletonVentaDetalle extends StatelessWidget {
 
 // ── Orden de Producción ──
 
-class SkeletonOrdenProduccionDetalle extends StatelessWidget {
-  const SkeletonOrdenProduccionDetalle({super.key});
+class SkeletonLine extends StatelessWidget {
+  const SkeletonLine({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: const [
-              ShimmerHeaderCard(),
-              SizedBox(height: 16),
-              ShimmerDetailsContainer(
-                title: "Información general",
-                elementCount: 5,
-              ),
-              SizedBox(height: 16),
-              ShimmerDetailsContainer(title: "Costos", elementCount: 4),
-              SizedBox(height: 16),
-              ShimmerDetailsContainer(
-                title: "Consumo de insumos",
-                customContent: _ShimmerTablaInsumos(),
-              ),
-            ],
-          ),
-        ),
-      ),
+    final ColorScheme cs = Theme.of(context).colorScheme;
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: ShimmerLine(),
     );
   }
 }

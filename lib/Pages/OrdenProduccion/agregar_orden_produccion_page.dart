@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/orden_produccion_seleccion_receta_page.dart';
@@ -21,8 +22,9 @@ class AgregarOrdenProduccionPage extends ConsumerStatefulWidget {
 
 class AgregarOrdenProduccionPageState
     extends ConsumerState<AgregarOrdenProduccionPage> {
-  final TextEditingController _cantidadController =
-      TextEditingController(text: '1');
+  final TextEditingController _cantidadController = TextEditingController(
+    text: '1',
+  );
   final TextEditingController _notasController = TextEditingController();
   final TextEditingController _recetaController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -77,8 +79,7 @@ class AgregarOrdenProduccionPageState
     if (_recetaSeleccionada == null || _recetaDetalles == null) return;
     if (_recetaSeleccionada!.idReceta == null) return;
 
-    final cantidad =
-        double.tryParse(_cantidadController.text) ?? 0;
+    final cantidad = double.tryParse(_cantidadController.text) ?? 0;
     if (cantidad <= 0) return;
 
     final insumos = await ref.read(articuloProviderProvider.future);
@@ -89,9 +90,9 @@ class AgregarOrdenProduccionPageState
 
     for (final detalle in _recetaDetalles!) {
       final cantidadUsada = detalle.cantidad * factor;
-      final insumo = insumos.where(
-        (a) => a.idArticulo == detalle.idArticulo,
-      ).firstOrNull;
+      final insumo = insumos
+          .where((a) => a.idArticulo == detalle.idArticulo)
+          .firstOrNull;
       final costoArticulo = insumo?.costoUnitario ?? 0;
       costoTotal += cantidadUsada * costoArticulo;
 
@@ -110,15 +111,11 @@ class AgregarOrdenProduccionPageState
       cantidadProducida: cantidad,
       fecha: DateTime.now(),
       costoTotalProduccion: costoTotal,
-      notas: _notasController.text.isNotEmpty
-          ? _notasController.text
-          : null,
+      notas: _notasController.text.isNotEmpty ? _notasController.text : null,
     );
 
     try {
-      await ref
-          .read(ordenProduccionProvider.notifier)
-          .create(orden, consumos);
+      await ref.read(ordenProduccionProvider.notifier).create(orden, consumos);
 
       if (!context.mounted) return;
 
@@ -191,8 +188,7 @@ class AgregarOrdenProduccionPageState
                 _buildRecetaInfoCard(cs, tt),
                 const SizedBox(height: 16),
               ],
-              if (_cargandoDetalles)
-                const LinearProgressIndicator(),
+              if (_cargandoDetalles) const LinearProgressIndicator(),
               TextFormField(
                 enabled: !_isLoading,
                 controller: _cantidadController,
@@ -209,8 +205,9 @@ class AgregarOrdenProduccionPageState
                 decoration: InputDecoration(
                   labelText: "Cantidad a producir",
                   border: const OutlineInputBorder(),
-                  prefixIcon:
-                      const Icon(Icons.production_quantity_limits_rounded),
+                  prefixIcon: const Icon(
+                    Icons.production_quantity_limits_rounded,
+                  ),
                   suffixText: "unidades",
                 ),
               ),
@@ -253,23 +250,17 @@ class AgregarOrdenProduccionPageState
               children: [
                 Text(
                   _recetaSeleccionada!.nombre,
-                  style: tt.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: tt.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'Base: ${_recetaSeleccionada!.cantidad_base} unidades',
-                  style: tt.bodySmall?.copyWith(
-                    color: cs.onSurfaceVariant,
-                  ),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
                 if (_recetaDetalles != null)
                   Text(
                     '${_recetaDetalles!.length} componentes',
-                    style: tt.bodySmall?.copyWith(
-                      color: cs.onSurfaceVariant,
-                    ),
+                    style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                   ),
               ],
             ),
@@ -280,23 +271,26 @@ class AgregarOrdenProduccionPageState
   }
 
   Widget _buildCostoEstimado(ColorScheme cs, TextTheme tt) {
-    final cantidad =
-        double.tryParse(_cantidadController.text) ?? 0;
+    final cantidad = double.tryParse(_cantidadController.text) ?? 0;
     if (cantidad <= 0) return const SizedBox.shrink();
 
     final factor = cantidad / _recetaSeleccionada!.cantidad_base;
 
     return Consumer(
       builder: (context, ref, child) {
-        final asyncInsumos = debugOverride(ref, 'agregar_op_insumos', ref.watch(articuloProviderProvider));
+        final asyncInsumos = debugOverride(
+          ref,
+          'agregar_op_insumos',
+          ref.watch(articuloProviderProvider),
+        );
         return asyncInsumos.when(
           data: (insumos) {
             double total = 0;
             for (final detalle in _recetaDetalles!) {
               final cantidadUsada = detalle.cantidad * factor;
-              final insumo = insumos.where(
-                (a) => a.idArticulo == detalle.idArticulo,
-              ).firstOrNull;
+              final insumo = insumos
+                  .where((a) => a.idArticulo == detalle.idArticulo)
+                  .firstOrNull;
               total += cantidadUsada * (insumo?.costoUnitario ?? 0);
             }
 
@@ -331,8 +325,11 @@ class AgregarOrdenProduccionPageState
               ),
             );
           },
-          error: (e, _) => Text('Error: $e', style: TextStyle(color: Theme.of(context).colorScheme.error)),
-          loading: () => const SizedBox.shrink(),
+          error: (e, _) => Text(
+            'Error: $e',
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+          loading: () => SkeletonListTiles(n: 10),
         );
       },
     );

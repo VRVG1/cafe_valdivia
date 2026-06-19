@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -83,13 +84,13 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
     final unidadMedidaAsync = debugOverride(
-      ref, 'editar_producto',
+      ref,
+      'editar_producto',
       ref.watch(unidadMedidaDetailProvider(widget.producto.idUnidad)),
     );
 
     return unidadMedidaAsync.when(
-      loading: () =>
-          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => SkeletonDropMenu(),
       error: (e, _) => Scaffold(
         body: ErrorView(
           message: 'Error cargando unidad de medida',
@@ -214,7 +215,11 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   Widget _buildDropDownMenu(UnidadMedida unidadInicial) {
     return Consumer(
       builder: (context, ref, child) {
-        final asyncUM = debugOverride(ref, 'editar_producto', ref.watch(unidadMedidaProvider));
+        final asyncUM = debugOverride(
+          ref,
+          'editar_producto',
+          ref.watch(unidadMedidaProvider),
+        );
         return asyncUM.when(
           data: (ums) {
             return FormField<UnidadMedida>(

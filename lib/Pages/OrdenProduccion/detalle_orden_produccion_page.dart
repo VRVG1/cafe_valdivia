@@ -21,7 +21,11 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncOrden = debugOverride(ref, 'detalle_op', ref.watch(ordenProduccionDetalladaProvider(id)));
+    final asyncOrden = debugOverride(
+      ref,
+      'detalle_op',
+      ref.watch(ordenProduccionDetalladaProvider(id)),
+    );
 
     return asyncOrden.when(
       data: (orden) => Scaffold(
@@ -41,8 +45,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                 provider: ordenProduccionProvider,
                 id: id,
                 mensajeExito: "Orden eliminada con exito",
-                mensajeError:
-                    "Error al eliminar la orden. Intente de nuevo.",
+                mensajeError: "Error al eliminar la orden. Intente de nuevo.",
               ),
             );
           },
@@ -63,14 +66,14 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                     DetailElement(
                       icon: const Icon(Icons.calendar_month_rounded),
                       title: const Text("Fecha"),
-                      description:
-                          Text(fecha(orden['fecha']?.toString() ?? '')),
+                      description: Text(
+                        fecha(orden['fecha']?.toString() ?? ''),
+                      ),
                     ),
                     DetailElement(
                       icon: const Icon(Icons.menu_book_rounded),
                       title: const Text("Receta"),
-                      description:
-                          Text(orden['receta']?.toString() ?? ''),
+                      description: Text(orden['receta']?.toString() ?? ''),
                     ),
                     DetailElement(
                       icon: const Icon(Icons.coffee_rounded),
@@ -140,7 +143,13 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                   DetailsContainer(
                     title: "Consumo de insumos",
                     elements: [
-                      _buildConsumosList(context, ref, orden['consumos'], cs, tt),
+                      _buildConsumosList(
+                        context,
+                        ref,
+                        orden['consumos'],
+                        cs,
+                        tt,
+                      ),
                     ],
                   ),
               ],
@@ -148,8 +157,10 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
           ),
         ),
       ),
-      error: (err, stack) => ErrorView(message: 'Error al cargar la orden de producción'),
-      loading: () => const SkeletonOrdenProduccionDetalle(),
+      error: (err, stack) =>
+          ErrorView(message: 'Error al cargar la orden de producción'),
+      loading: () =>
+          SkeletonOrdenProduccionDetalle(title: "Orden de Producción"),
     );
   }
 
@@ -265,9 +276,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                   child: Text(
                     (consumo['cantidad_usada'] as num).toStringAsFixed(2),
                     textAlign: TextAlign.center,
-                    style: tt.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ),
                 Expanded(
@@ -294,17 +303,17 @@ class _ArticuloNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulos = debugOverride(ref, 'detalle_op_articulo', ref.watch(articuloProviderProvider));
+    final asyncArticulos = debugOverride(
+      ref,
+      'detalle_op_articulo',
+      ref.watch(articuloProviderProvider),
+    );
     return asyncArticulos.when(
       data: (articulos) {
-        final match = articulos.where(
-          (a) => a.idArticulo == articuloId,
-        );
-        return Text(
-          match.isNotEmpty ? match.first.nombre : "ID: $articuloId",
-        );
+        final match = articulos.where((a) => a.idArticulo == articuloId);
+        return Text(match.isNotEmpty ? match.first.nombre : "ID: $articuloId");
       },
-      loading: () => const Text("..."),
+      loading: () => SkeletonLine(),
       error: (_, __) => Text("ID: $articuloId"),
     );
   }

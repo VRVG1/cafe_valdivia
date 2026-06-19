@@ -5,6 +5,7 @@ import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
+import 'package:cafe_valdivia/Pages/Receta/receta_editar_page.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -23,14 +24,34 @@ class RecetaDetallePage extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncReceta = debugOverride(ref, 'receta_detalle', ref.watch(recetaDetailProvider(recetaId)));
-    final asyncDetalles = debugOverride(ref, 'receta_detalles', ref.watch(recetaDetallesProvider(recetaId)));
-    final asyncProductos = debugOverride(ref, 'receta_productos', ref.watch(productosProviderProvider));
+    final asyncReceta = debugOverride(
+      ref,
+      'receta_detalle',
+      ref.watch(recetaDetailProvider(recetaId)),
+    );
+    final asyncDetalles = debugOverride(
+      ref,
+      'receta_detalles',
+      ref.watch(recetaDetallesProvider(recetaId)),
+    );
+    final asyncProductos = debugOverride(
+      ref,
+      'receta_productos',
+      ref.watch(productosProviderProvider),
+    );
 
     return asyncReceta.when(
       data: (receta) {
         return Scaffold(
           appBar: AppBarDetalles<Receta>(
+            onEditPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditarRecetaPage(receta: receta),
+                ),
+              ).then((_) => ref.invalidate(recetaDetailProvider(recetaId)));
+            },
             title: "Detalle Receta",
             onDeletePressed: () {
               mostrarDialogoConfirmacion(
@@ -71,8 +92,7 @@ class RecetaDetallePage extends ConsumerWidget {
                       description: asyncProductos.when(
                         data: (productos) {
                           final match = productos.where(
-                            (p) =>
-                                p.idArticulo == receta.idArticuloProducto,
+                            (p) => p.idArticulo == receta.idArticuloProducto,
                           );
                           return Text(
                             match.isNotEmpty
@@ -80,18 +100,17 @@ class RecetaDetallePage extends ConsumerWidget {
                                 : "ID: ${receta.idArticuloProducto}",
                           );
                         },
-                        loading: () => const Text("..."),
-                        error: (_, __) => Text(
-                          "ID: ${receta.idArticuloProducto}",
-                        ),
+                        loading: () => const Text("pene"),
+                        error: (_, __) =>
+                            Text("ID: ${receta.idArticuloProducto}"),
                       ),
                     ),
                     DetailElement(
-                      icon:
-                          const Icon(Icons.production_quantity_limits_rounded),
+                      icon: const Icon(
+                        Icons.production_quantity_limits_rounded,
+                      ),
                       title: const Text("Cantidad base"),
-                      description:
-                          Text("${receta.cantidad_base} unidades"),
+                      description: Text("${receta.cantidad_base} unidades"),
                     ),
                   ],
                 ),
@@ -102,9 +121,7 @@ class RecetaDetallePage extends ConsumerWidget {
                     asyncDetalles.when(
                       data: (detalles) {
                         if (detalles.isEmpty) {
-                          return const Text(
-                            "No hay componentes registrados",
-                          );
+                          return const Text("No hay componentes registrados");
                         }
                         return _buildComponentesList(
                           context,
@@ -183,18 +200,14 @@ class RecetaDetallePage extends ConsumerWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: _ArticuloNombre(
-                    articuloId: d.idArticulo,
-                  ),
+                  child: _ArticuloNombre(articuloId: d.idArticulo),
                 ),
                 Expanded(
                   flex: 1,
                   child: Text(
                     d.cantidad.toStringAsFixed(2),
                     textAlign: TextAlign.center,
-                    style: tt.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ),
                 Expanded(
@@ -221,17 +234,17 @@ class _ArticuloNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulos = debugOverride(ref, 'detalle_receta_articulo', ref.watch(articuloProviderProvider));
+    final asyncArticulos = debugOverride(
+      ref,
+      'detalle_receta_articulo',
+      ref.watch(articuloProviderProvider),
+    );
     return asyncArticulos.when(
       data: (articulos) {
-        final match = articulos.where(
-          (a) => a.idArticulo == articuloId,
-        );
-        return Text(
-          match.isNotEmpty ? match.first.nombre : "ID: $articuloId",
-        );
+        final match = articulos.where((a) => a.idArticulo == articuloId);
+        return Text(match.isNotEmpty ? match.first.nombre : "ID: $articuloId");
       },
-      loading: () => const Text("..."),
+      loading: () => SkeletonLine(),
       error: (_, __) => Text("ID: $articuloId"),
     );
   }
@@ -250,18 +263,15 @@ class _UnidadNombre extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncUnidad = debugOverride(ref, 'detalle_receta_unidad', ref.watch(unidadMedidaDetailProvider(unidadId)));
+    final asyncUnidad = debugOverride(
+      ref,
+      'detalle_receta_unidad',
+      ref.watch(unidadMedidaDetailProvider(unidadId)),
+    );
     return asyncUnidad.when(
-      data: (unidad) => Text(
-        unidad.nombre,
-        textAlign: textAlign,
-        style: style,
-      ),
-      loading: () => Text("...", textAlign: textAlign),
-      error: (_, __) => Text(
-        "ID: $unidadId",
-        textAlign: textAlign,
-      ),
+      data: (unidad) => Text(unidad.nombre, textAlign: textAlign, style: style),
+      loading: () => SkeletonLine(),
+      error: (_, __) => Text("ID: $unidadId", textAlign: textAlign),
     );
   }
 }

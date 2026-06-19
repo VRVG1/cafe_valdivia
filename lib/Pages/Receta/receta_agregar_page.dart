@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -34,8 +35,9 @@ class AgregarRecetaPage extends ConsumerStatefulWidget {
 
 class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _cantidadBaseController =
-      TextEditingController(text: '1');
+  final TextEditingController _cantidadBaseController = TextEditingController(
+    text: '1',
+  );
   Articulo? _productoSeleccionado;
   final List<_ComponenteRow> _componentes = [];
   final _formKey = GlobalKey<FormState>();
@@ -91,10 +93,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
 
       if (!context.mounted) return;
 
-      showCustomSnackBar(
-        context: context,
-        mensaje: "Receta creada con exito",
-      );
+      showCustomSnackBar(context: context, mensaje: "Receta creada con exito");
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!context.mounted) return;
@@ -111,9 +110,21 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncProductos = debugOverride(ref, 'receta_agregar_productos', ref.watch(productosProviderProvider));
-    final asyncInsumos = debugOverride(ref, 'receta_agregar_insumos', ref.watch(articuloProviderProvider));
-    final asyncUms = debugOverride(ref, 'receta_agregar_ums', ref.watch(unidadMedidaProvider));
+    final asyncProductos = debugOverride(
+      ref,
+      'receta_agregar_productos',
+      ref.watch(productosProviderProvider),
+    );
+    final asyncInsumos = debugOverride(
+      ref,
+      'receta_agregar_insumos',
+      ref.watch(articuloProviderProvider),
+    );
+    final asyncUms = debugOverride(
+      ref,
+      'receta_agregar_ums',
+      ref.watch(unidadMedidaProvider),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -138,10 +149,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 32,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -177,7 +185,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   }).toList(),
                 ),
                 error: (e, _) => Text("Error: $e"),
-                loading: () => const LinearProgressIndicator(),
+                loading: () => SkeletonDropMenu(),
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -196,8 +204,9 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                 decoration: InputDecoration(
                   labelText: "Cantidad base",
                   border: const OutlineInputBorder(),
-                  prefixIcon:
-                      const Icon(Icons.production_quantity_limits_rounded),
+                  prefixIcon: const Icon(
+                    Icons.production_quantity_limits_rounded,
+                  ),
                   suffixText: "unidades",
                 ),
               ),
@@ -222,10 +231,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   decoration: BoxDecoration(
                     color: cs.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: cs.outlineVariant,
-                      width: 1,
-                    ),
+                    border: Border.all(color: cs.outlineVariant, width: 1),
                   ),
                   child: Center(
                     child: Column(
@@ -307,10 +313,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   const Spacer(),
                   IconButton(
                     onPressed: () => _removerComponente(index),
-                    icon: Icon(
-                      Icons.delete_outline_rounded,
-                      color: cs.error,
-                    ),
+                    icon: Icon(Icons.delete_outline_rounded, color: cs.error),
                     visualDensity: VisualDensity.compact,
                   ),
                 ],
@@ -344,7 +347,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   }).toList(),
                 ),
                 error: (e, _) => Text("Error: $e"),
-                loading: () => const LinearProgressIndicator(),
+                loading: () => SkeletonDropMenu(),
               ),
               const SizedBox(height: 12),
               Row(
@@ -380,7 +383,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                         }).toList(),
                       ),
                       error: (e, _) => Text("Error: $e"),
-                      loading: () => const LinearProgressIndicator(),
+                      loading: () => SkeletonDropMenu(),
                     ),
                   ),
                 ],
@@ -405,7 +408,8 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     for (final c in _componentes) {
       if (!c.isValid) continue;
       final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
-      final costo = insumos
+      final costo =
+          insumos
               .where((i) => i.idArticulo == c.articulo!.idArticulo)
               .firstOrNull
               ?.costoUnitario ??
@@ -428,15 +432,11 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
             children: [
               Text(
                 "Costo estimado",
-                style: tt.bodySmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
               ),
               Text(
                 "\$${total.toStringAsFixed(2)}",
-                style: tt.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -185,7 +186,11 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
   Widget _buildDropDownMenu() {
     return Consumer(
       builder: (context, ref, child) {
-        final asyncUM = debugOverride(ref, 'agregar_producto', ref.watch(unidadMedidaProvider));
+        final asyncUM = debugOverride(
+          ref,
+          'agregar_producto',
+          ref.watch(unidadMedidaProvider),
+        );
 
         return asyncUM.when(
           data: (ums) {
@@ -234,8 +239,9 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
               },
             );
           },
-          error: (err, stack) => ErrorView(message: 'Error al cargar los productos'),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) =>
+              ErrorView(message: 'Error al cargar los productos'),
+          loading: () => SkeletonDropMenu(),
         );
       },
     );

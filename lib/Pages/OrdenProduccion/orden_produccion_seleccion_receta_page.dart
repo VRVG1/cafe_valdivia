@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
@@ -11,7 +12,11 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncRecetas = debugOverride(ref, 'seleccion_receta', ref.watch(recetaProviderProvider));
+    final asyncRecetas = debugOverride(
+      ref,
+      'seleccion_receta',
+      ref.watch(recetaProviderProvider),
+    );
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
@@ -43,10 +48,8 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
             titleBuilder: (receta) => Text(receta.nombre),
             subtitleBuilder: (receta) =>
                 Text('Cantidad base: ${receta.cantidad_base}'),
-            trailingBuilder: (receta) => Icon(
-              Icons.chevron_right_rounded,
-              color: cs.onSurfaceVariant,
-            ),
+            trailingBuilder: (receta) =>
+                Icon(Icons.chevron_right_rounded, color: cs.onSurfaceVariant),
             onTapCallback: (receta) => Navigator.pop(context, receta),
           ),
         );
@@ -55,10 +58,12 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
         appBar: AppBar(title: const Text("Error")),
         body: ErrorView(message: 'Error al cargar las recetas'),
       ),
-      loading: () => Scaffold(
-        appBar: AppBar(title: const Text("Seleccionar Receta")),
-        body: const Center(child: CircularProgressIndicator()),
-      ),
+      loading: () {
+        return Scaffold(
+          appBar: SkeletonAppBar(chipsCount: 3),
+          body: SkeletonListTiles(),
+        );
+      },
     );
   }
 }

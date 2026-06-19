@@ -37,7 +37,6 @@ class AppBarDetalles<T> extends ConsumerWidget implements PreferredSizeWidget {
           color: theme.colorScheme.primary,
           onPressed: onEditPressed,
         ),
-        // Botón de Menú (Eliminar)
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert_rounded),
           onSelected: (String result) async {

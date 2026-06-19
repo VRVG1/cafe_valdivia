@@ -19,7 +19,11 @@ class ProductoDetallePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncValue = debugOverride(ref, 'productos', ref.watch(articuloDetailProvider(id)));
+    final asyncValue = debugOverride(
+      ref,
+      'productos_detalles',
+      ref.watch(articuloDetailProvider(id)),
+    );
 
     void onEditPressed(Articulo producto) {
       if (context.mounted) {
@@ -124,7 +128,8 @@ class ProductoDetallePage extends ConsumerWidget {
         ),
       ),
       error: (err, stack) => ErrorView(message: 'Error al cargar el producto'),
-      loading: () => const SkeletonProductoDetalle(),
+      loading: () =>
+          SkeletonProductoDetalle(detalleName: "Productos", rowDetails: 4),
     );
   }
 }

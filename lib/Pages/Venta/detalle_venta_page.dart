@@ -39,7 +39,11 @@ class DetalleVentaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ventaAsync = debugOverride(ref, 'detalle_venta', ref.watch(ventaDetalladaProvider(id)));
+    final ventaAsync = debugOverride(
+      ref,
+      'detalle_venta',
+      ref.watch(ventaDetalladaProvider(id)),
+    );
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
@@ -69,10 +73,7 @@ class DetalleVentaPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _headerCard(
-                    cs,
-                    infoVenta,
-                  ),
+                  _headerCard(cs, infoVenta),
                   const SizedBox(height: 20),
                   seccionEtiqueta("Productos", cs),
                   const SizedBox(height: 8),
@@ -95,11 +96,7 @@ class DetalleVentaPage extends ConsumerWidget {
                             '\$${double.tryParse(venta['total']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00'}',
                         cs: cs,
                       ),
-                      resumenFila(
-                        label: "Descuento",
-                        value: "0",
-                        cs: cs,
-                      ),
+                      resumenFila(label: "Descuento", value: "0", cs: cs),
                       resumenFila(
                         label: "IVA(16%) - no aplica",
                         value: "0",
@@ -112,7 +109,8 @@ class DetalleVentaPage extends ConsumerWidget {
                         label: "Total",
                         isTotal: true,
                         value: _calcularTotal([
-                          double.tryParse(venta['total']?.toString() ?? '0') ?? 0,
+                          double.tryParse(venta['total']?.toString() ?? '0') ??
+                              0,
                           0,
                           0,
                         ]),
@@ -134,7 +132,7 @@ class DetalleVentaPage extends ConsumerWidget {
           onRetry: () => ref.invalidate(ventaDetalladaProvider(id)),
         ),
       ),
-      loading: () => const SkeletonVentaDetalle(),
+      loading: () => const SkeletonCompraDetalle(title: "Detalle de Venta"),
     );
   }
 
@@ -189,9 +187,7 @@ class DetalleVentaPage extends ConsumerWidget {
                 ? cs.tertiaryContainer
                 : cs.errorContainer,
             labelStyle: TextStyle(
-              color: pagado == 1
-                  ? cs.onTertiaryContainer
-                  : cs.onErrorContainer,
+              color: pagado == 1 ? cs.onTertiaryContainer : cs.onErrorContainer,
               fontWeight: FontWeight.w500,
               fontSize: 12,
             ),

@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -67,7 +68,11 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final asyncUM = debugOverride(ref, 'agregar_articulo', ref.watch(unidadMedidaProvider));
+    final asyncUM = debugOverride(
+      ref,
+      'agregar_articulo',
+      ref.watch(unidadMedidaProvider),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -207,8 +212,9 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
           ],
         );
       },
-      error: (err, stack) => ErrorView(message: 'Error al cargar los artículos'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) =>
+          ErrorView(message: 'Error al cargar los artículos'),
+      loading: () => SkeletonDropMenu(),
     );
   }
 

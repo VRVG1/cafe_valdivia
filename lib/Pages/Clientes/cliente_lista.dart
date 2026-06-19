@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_detallado.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
@@ -18,7 +19,11 @@ class Clientelista extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncClientes = debugOverride(ref, 'clientes', ref.watch(clienteProvider));
+    final asyncClientes = debugOverride(
+      ref,
+      'clientes',
+      ref.watch(clienteProvider),
+    );
 
     return asyncClientes.when(
       data: (clientes) {
@@ -108,8 +113,9 @@ class Clientelista extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => const ErrorView(message: 'Error al cargar los clientes'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) =>
+          const ErrorView(message: 'Error al cargar los clientes'),
+      loading: () => SkeletonListTiles(n: 10),
     );
   }
 }

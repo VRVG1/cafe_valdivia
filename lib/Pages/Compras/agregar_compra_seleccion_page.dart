@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,7 +62,11 @@ class _AgregarCompraSeleccionPageState<T>
     final theme = Theme.of(context);
     final TextTheme tt = theme.textTheme;
     final ColorScheme cs = theme.colorScheme;
-    final asyncData = debugOverride(ref, 'seleccion_compra', ref.watch(widget.provider));
+    final asyncData = debugOverride(
+      ref,
+      'seleccion_compra',
+      ref.watch(widget.provider),
+    );
 
     return asyncData.when(
       //skipLoadingOnReload: true,
@@ -99,23 +104,10 @@ class _AgregarCompraSeleccionPageState<T>
       },
       loading: () {
         return Scaffold(
-          appBar: widget.buildAppBar(context, ref),
-          body: _buildLoadingState(cs),
+          appBar: SkeletonAppBar(chipsCount: 3),
+          body: SkeletonListTiles(),
         );
       },
-    );
-  }
-
-  Widget _buildLoadingState(ColorScheme cs) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(color: cs.primary),
-          const SizedBox(height: 24),
-          Text("Cargando...", style: TextStyle(color: cs.onSurfaceVariant)),
-        ],
-      ),
     );
   }
 

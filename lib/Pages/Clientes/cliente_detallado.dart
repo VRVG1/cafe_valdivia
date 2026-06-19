@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente_extension.dart';
@@ -16,13 +17,15 @@ class ClienteDetallado extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncCliente = debugOverride(ref, 'cliente_detalle', ref.watch(clienteDetailProvider(clienteId)));
+    final asyncCliente = debugOverride(
+      ref,
+      'cliente_detalle',
+      ref.watch(clienteDetailProvider(clienteId)),
+    );
 
     return asyncCliente.when(
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          SkeletonClienteDetalle(detalleName: "Cliente", rowDetails: 2),
       error: (err, stack) => Scaffold(
         appBar: AppBar(title: const Text("Error")),
         body: ErrorView(

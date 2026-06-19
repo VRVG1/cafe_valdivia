@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Venta/detalle_venta_page.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
@@ -24,9 +25,7 @@ class VentaListaPage extends ConsumerWidget {
           data: ventas,
           keyBuilder: (Map<String, dynamic> venta) {
             final id = venta['venta']?['id_venta'];
-            return ValueKey<Object>(
-              id != null ? 'venta-$id' : venta.hashCode,
-            );
+            return ValueKey<Object>(id != null ? 'venta-$id' : venta.hashCode);
           },
           leadingBuilder: (Map<String, dynamic> venta) {
             final pagado = venta['venta']?['pagado'];
@@ -51,10 +50,7 @@ class VentaListaPage extends ConsumerWidget {
           trailingBuilder: (Map<String, dynamic> venta) {
             return Text(
               '\$${venta['total']?.toString() ?? '0.00'}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: cs.primary,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, color: cs.primary),
             );
           },
           onTapCallback: (Map<String, dynamic> venta) {
@@ -71,7 +67,7 @@ class VentaListaPage extends ConsumerWidget {
         );
       },
       error: (err, stack) => ErrorView(message: 'Error al cargar las ventas'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => SkeletonListTiles(n: 10),
     );
   }
 }

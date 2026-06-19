@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
@@ -15,7 +16,11 @@ class InsumoListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulo = debugOverride(ref, 'articulos', ref.watch(articuloProviderProvider));
+    final asyncArticulo = debugOverride(
+      ref,
+      'articulos',
+      ref.watch(articuloProviderProvider),
+    );
 
     return asyncArticulo.when(
       data: (articulos) {
@@ -90,8 +95,11 @@ class InsumoListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => const ErrorView(message: 'Error al cargar los artículos'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) =>
+          const ErrorView(message: 'Error al cargar los artículos'),
+      loading: () => const SkeletonListTiles(
+        n: 10,
+      ), //TODO: Ver si existe una forma de poner el numero de items dependiendo del dispositivo o poner un numero fijo
     );
   }
 }

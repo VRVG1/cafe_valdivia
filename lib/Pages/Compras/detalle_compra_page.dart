@@ -40,7 +40,11 @@ class DetalleCompraPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compraAsync = debugOverride(ref, 'detalle_compra', ref.watch(compraDetalladaProvider(id)));
+    final compraAsync = debugOverride(
+      ref,
+      'detalle_compra',
+      ref.watch(compraDetalladaProvider(id)),
+    );
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
@@ -142,7 +146,7 @@ class DetalleCompraPage extends ConsumerWidget {
           onRetry: () => ref.invalidate(compraDetalladaProvider(id)),
         ),
       ),
-      loading: () => const SkeletonCompraDetalle(),
+      loading: () => const SkeletonCompraDetalle(title: "Detalle de Compra"),
     );
   }
 
