@@ -581,7 +581,9 @@ class SkeletonListTiles extends StatelessWidget {
 
     // baseColor: cs.primaryContainer.withAlpha(80),
     // highlightColor: cs.onPrimary,
-    return ListView.builder(
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       itemCount: n,
       itemBuilder: (BuildContext context, int index) {
         return Shimmer.fromColors(
@@ -590,6 +592,7 @@ class SkeletonListTiles extends StatelessWidget {
           child: ShimmerListTile(),
         );
       },
+      separatorBuilder: (context, index) => const Divider(height: 1),
     );
   }
 }
