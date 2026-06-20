@@ -1,9 +1,12 @@
+import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/carta_resume.dart';
+import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
@@ -53,16 +56,26 @@ class DetalleCompraPage extends ConsumerWidget {
         final itemsFormateados = _reagruparDetalles(compra['detalles']);
         final int numeroDeArticulos = _numeroDeArticulos(itemsFormateados);
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Detalle de Compra",
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            centerTitle: false,
-            elevation: 0,
-            actions: const [],
+          appBar: AppBarDetalles<DetalleCompra>(
+            title: "Detalle de Compra",
+            hasMenu: true,
+            onDeletePressed: () {
+              mostrarDialogoConfirmacion(
+                context: context,
+                titulo: "Desea eliminar la compra?",
+                contenido: "Esta accion no se puede deshacer.\n",
+                textoBotonConfirmacion: "Eliminar",
+                onConfirm: () => delete(
+                  context: context,
+                  ref: ref,
+                  provider: compraProvider,
+                  id: id,
+                  mensajeExito: "Receta eliminada con exito",
+                  mensajeError:
+                      "Error al eliminar la receta. Por favor, intente de nuevo.",
+                ),
+              );
+            },
           ),
           body: RefreshIndicator(
             onRefresh: () async => ref.invalidate(compraDetalladaProvider(id)),
@@ -97,7 +110,7 @@ class DetalleCompraPage extends ConsumerWidget {
                       resumenFila(
                         label: "Subtotal ($numeroDeArticulos articulos)",
                         value:
-                            '\$${double.tryParse(compra['total']) ?? 0.toStringAsFixed(0)}',
+                            '\$${double.tryParse(compra['total']) ?? 0.toStringAsFixed(2)}',
                         cs: cs,
                       ),
                       resumenFila(

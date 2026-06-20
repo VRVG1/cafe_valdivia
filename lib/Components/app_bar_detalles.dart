@@ -3,16 +3,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AppBarDetalles<T> extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
+  final bool hasMenu;
+  final IconData iconShow;
   final T? model;
-  final VoidCallback? onEditPressed;
+  final VoidCallback? onPrimaryPressed;
   final VoidCallback? onDeletePressed;
 
   const AppBarDetalles({
     super.key,
     required this.title,
     this.model,
-    this.onEditPressed,
+    this.onPrimaryPressed,
     this.onDeletePressed,
+    this.iconShow = Icons.edit_rounded,
+    this.hasMenu = false,
   });
 
   @override
@@ -33,24 +37,25 @@ class AppBarDetalles<T> extends ConsumerWidget implements PreferredSizeWidget {
       actions: [
         // Botón de Edición
         IconButton(
-          icon: const Icon(Icons.edit_rounded),
+          icon: Icon(iconShow),
           color: theme.colorScheme.primary,
-          onPressed: onEditPressed,
+          onPressed: onPrimaryPressed,
         ),
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert_rounded),
-          onSelected: (String result) async {
-            if (result == 'Eliminar') {
-              onDeletePressed?.call();
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            const PopupMenuItem<String>(
-              value: 'Eliminar',
-              child: Row(children: [Text('Eliminar')]),
-            ),
-          ],
-        ),
+        if (hasMenu)
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: (String result) async {
+              if (result == 'Eliminar') {
+                onDeletePressed?.call();
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Eliminar',
+                child: Row(children: [Text('Eliminar')]),
+              ),
+            ],
+          ),
       ],
     );
   }

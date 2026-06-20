@@ -34,6 +34,12 @@ class CompraNotifier extends _$CompraNotifier {
     await ref.read(compraRepositoryProvider).markAsUnpaid(idCompra);
     ref.invalidateSelf();
   }
+
+  Future<void> delete(int idCompra) async {
+    // await ref.read(compraRepositoryProvider).delete(idCompra);
+    // ref.invalidateSelf();
+    print("Implementar el soft delete");
+  }
 }
 
 @riverpod

@@ -1,7 +1,6 @@
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
-import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
@@ -13,27 +12,6 @@ class ProveedorDetallado extends ConsumerWidget {
   final int proveedorId;
 
   const ProveedorDetallado({super.key, required this.proveedorId});
-
-  Future<void> _eliminar(BuildContext context, WidgetRef ref) async {
-    try {
-      await ref.read(proveedorListProvider.notifier).delete(proveedorId);
-      if (context.mounted) {
-        showCustomSnackBar(
-          context: context,
-          mensaje: 'Proveedor eliminado con éxito',
-        );
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (context.mounted) {
-        showCustomSnackBar(
-          context: context,
-          mensaje: 'Error al eliminar el proveedor: $e',
-          isError: true,
-        );
-      }
-    }
-  }
 
   bool _esVacioONulo(String? text) {
     return text == null || text.trim().isEmpty;
@@ -96,7 +74,15 @@ class ProveedorDetallado extends ConsumerWidget {
                           "¿Estás seguro de que deseas eliminar este proveedor? "
                           "Esta acción no se puede deshacer.",
                       textoBotonConfirmacion: "Eliminar",
-                      onConfirm: () => _eliminar(context, ref),
+                      onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: proveedorListProvider,
+                      id: proveedorId,
+                      mensajeExito: 'Proveedor eliminado con éxito',
+                      mensajeError:
+                          'Error al eliminar el proveedor. Por favor, intente de nuevo.',
+                    ),
                     );
                   }
                 },

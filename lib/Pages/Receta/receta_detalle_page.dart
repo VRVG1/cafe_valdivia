@@ -44,7 +44,8 @@ class RecetaDetallePage extends ConsumerWidget {
       data: (receta) {
         return Scaffold(
           appBar: AppBarDetalles<Receta>(
-            onEditPressed: () {
+            hasMenu: true,
+            onPrimaryPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(

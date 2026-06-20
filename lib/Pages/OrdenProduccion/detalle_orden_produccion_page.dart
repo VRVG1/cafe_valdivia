@@ -31,6 +31,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
       data: (orden) => Scaffold(
         appBar: AppBarDetalles<Map<String, dynamic>>(
           title: "Orden de Producción",
+          hasMenu: true,
           onDeletePressed: () {
             mostrarDialogoConfirmacion(
               context: context,

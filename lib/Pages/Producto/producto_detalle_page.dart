@@ -58,7 +58,8 @@ class ProductoDetallePage extends ConsumerWidget {
         appBar: AppBarDetalles<Articulo>(
           title: "Producto",
           model: producto,
-          onEditPressed: () => onEditPressed(producto),
+          hasMenu: true,
+          onPrimaryPressed: () => onEditPressed(producto),
           onDeletePressed: () => onDeletePressed(),
         ),
         body: RefreshIndicator(

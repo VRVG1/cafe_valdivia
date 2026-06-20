@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
-import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
@@ -15,27 +14,6 @@ class ArticuloDetalladoPage extends ConsumerWidget {
   final int articuloId;
 
   const ArticuloDetalladoPage({super.key, required this.articuloId});
-
-  Future<void> _eliminar(BuildContext context, WidgetRef ref) async {
-    try {
-      await ref.read(articuloProviderProvider.notifier).delete(articuloId);
-      if (context.mounted) {
-        showCustomSnackBar(
-          context: context,
-          mensaje: 'Articulo eliminado con éxito',
-        );
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (context.mounted) {
-        showCustomSnackBar(
-          context: context,
-          mensaje: 'Error al eliminar el articulo: $e',
-          isError: true,
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,7 +62,15 @@ class ArticuloDetalladoPage extends ConsumerWidget {
                         "¿Estás seguro de que deseas eliminar este Articulo? "
                         "Esta acción no se puede deshacer.",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => _eliminar(context, ref),
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: articuloProviderProvider,
+                      id: articuloId,
+                      mensajeExito: 'Articulo eliminado con éxito',
+                      mensajeError:
+                          'Error al eliminar el articulo. Por favor, intente de nuevo.',
+                    ),
                   );
                 }
               },
