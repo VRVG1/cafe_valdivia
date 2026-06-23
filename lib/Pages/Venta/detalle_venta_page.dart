@@ -1,9 +1,11 @@
+import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
+import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:flutter/material.dart';
@@ -47,25 +49,18 @@ class DetalleVentaPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
-    return ventaAsync.when(
-      data: (venta) {
-        final infoVenta = venta['venta'] as Map<String, dynamic>;
-        final detalles = venta['detalles'] as List<dynamic>;
-        final itemsFormateados = _reagruparDetalles(detalles);
-        final int numeroDeArticulos = _numeroDeArticulos(itemsFormateados);
+    return Scaffold(
+      appBar: AppBarDetalles<DetalleCompra>(
+        title: "Detalle de Venta",
+      ),
+      body: ventaAsync.when(
+        data: (venta) {
+          final infoVenta = venta['venta'] as Map<String, dynamic>;
+          final detalles = venta['detalles'] as List<dynamic>;
+          final itemsFormateados = _reagruparDetalles(detalles);
+          final int numeroDeArticulos = _numeroDeArticulos(itemsFormateados);
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Detalle de Venta",
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            centerTitle: false,
-            elevation: 0,
-          ),
-          body: RefreshIndicator(
+          return RefreshIndicator(
             onRefresh: () async => ref.invalidate(ventaDetalladaProvider(id)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -121,18 +116,15 @@ class DetalleVentaPage extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
-        );
-      },
-      error: (err, stack) => Scaffold(
-        appBar: AppBar(title: const Text("Error")),
-        body: ErrorView(
+          );
+        },
+        error: (err, stack) => ErrorView(
           message: 'Error al cargar la venta',
           description: err.toString(),
           onRetry: () => ref.invalidate(ventaDetalladaProvider(id)),
         ),
+        loading: () => const SkeletonCompraDetalle(),
       ),
-      loading: () => const SkeletonCompraDetalle(title: "Detalle de Venta"),
     );
   }
 

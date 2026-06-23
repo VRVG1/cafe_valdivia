@@ -89,7 +89,10 @@ class RecetaListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => ErrorView(message: 'Error al cargar las recetas'),
+      error: (err, stack) => ErrorView(
+            message: 'Error al cargar las recetas',
+            onRetry: () => ref.invalidate(recetaProviderProvider),
+          ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

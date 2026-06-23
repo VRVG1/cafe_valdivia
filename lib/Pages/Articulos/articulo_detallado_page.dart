@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
@@ -6,6 +7,7 @@ import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,66 +26,45 @@ class ArticuloDetalladoPage extends ConsumerWidget {
       ref.watch(articuloDetailProvider(articuloId)),
     );
 
-    return asyncArticulo.when(
-      data: (articulo) => Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Articulo",
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBarDetalles<Articulo>(
+        title: "Articulo",
+        hasMenu: true,
+        onPrimaryPressed: () {
+          final articulo = asyncArticulo.asData?.value;
+          if (articulo != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditarArticuloPage(articulo: articulo),
+              ),
+            ).then(
+              (_) => ref.invalidate(articuloDetailProvider(articuloId)),
+            );
+          }
+        },
+        onDeletePressed: () {
+          mostrarDialogoConfirmacion(
+            context: context,
+            titulo: "Confirmar eliminación",
+            contenido:
+                "¿Estás seguro de que deseas eliminar este Articulo? "
+                "Esta acción no se puede deshacer.",
+            textoBotonConfirmacion: "Eliminar",
+            onConfirm: () => delete(
+              context: context,
+              ref: ref,
+              provider: articuloProviderProvider,
+              id: articuloId,
+              mensajeExito: 'Articulo eliminado con éxito',
+              mensajeError:
+                  'Error al eliminar el articulo. Por favor, intente de nuevo.',
             ),
-          ),
-          centerTitle: false,
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.edit_rounded),
-              color: theme.colorScheme.primary,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        EditarArticuloPage(articulo: articulo),
-                  ),
-                ).then(
-                  (_) => ref.invalidate(articuloDetailProvider(articuloId)),
-                );
-              },
-            ),
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert_rounded),
-              onSelected: (String result) {
-                if (result == 'eliminar') {
-                  mostrarDialogoConfirmacion(
-                    context: context,
-                    titulo: "Confirmar eliminación",
-                    contenido:
-                        "¿Estás seguro de que deseas eliminar este Articulo? "
-                        "Esta acción no se puede deshacer.",
-                    textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => delete(
-                      context: context,
-                      ref: ref,
-                      provider: articuloProviderProvider,
-                      id: articuloId,
-                      mensajeExito: 'Articulo eliminado con éxito',
-                      mensajeError:
-                          'Error al eliminar el articulo. Por favor, intente de nuevo.',
-                    ),
-                  );
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'eliminar',
-                  child: Row(children: [Text('Eliminar')]),
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: RefreshIndicator(
+          );
+        },
+      ),
+      body: asyncArticulo.when(
+        data: (articulo) => RefreshIndicator(
           onRefresh: () async =>
               ref.invalidate(articuloDetailProvider(articuloId)),
           child: ListView(
@@ -147,17 +128,13 @@ class ArticuloDetalladoPage extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-      error: (err, stack) => Scaffold(
-        appBar: AppBar(title: const Text("Error")),
-        body: ErrorView(
+        error: (err, stack) => ErrorView(
           message: 'Error al cargar el artículo',
           description: err.toString(),
           onRetry: () => ref.invalidate(articuloDetailProvider(articuloId)),
         ),
+        loading: () => const SkeletonProductoDetalle(rowDetails: 4),
       ),
-      loading: () =>
-          SkeletonProductoDetalle(detalleName: "Articulo", rowDetails: 4),
     );
   }
 }

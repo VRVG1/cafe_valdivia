@@ -110,26 +110,57 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
               const SizedBox(height: 16),
               _buildDropDownMenu(asyncUM),
               const SizedBox(height: 16),
-              DropdownMenu<String>(
-                initialSelection: ArticuloTipo.insumo.value,
-                expandedInsets: EdgeInsets.zero,
-                requestFocusOnTap: true,
-                label: const Text("Tipo"),
-                onSelected: (String? tipo) {
-                  setState(() {
-                    tipoSeleccionado = tipo;
-                  });
+              FormField<String>(
+                initialValue: ArticuloTipo.insumo.value,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Tienes que elegir algún tipo de artículo";
+                  }
+                  return null;
                 },
-                dropdownMenuEntries: [
-                  DropdownMenuEntry(
-                    value: ArticuloTipo.insumo.value,
-                    label: "Insumo",
-                  ),
-                  DropdownMenuEntry(
-                    value: ArticuloTipo.productoIntermedio.value,
-                    label: "Producto Intermedio",
-                  ),
-                ],
+                builder: (FormFieldState<String> state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DropdownMenu<String>(
+                        initialSelection: state.value,
+                        leadingIcon: const Icon(
+                          Icons.category,
+                        ), // ✅ Ahora sí funciona
+                        label: const Text("Tipo"),
+                        expandedInsets: EdgeInsets.zero,
+                        requestFocusOnTap: true,
+                        onSelected: (String? tipo) {
+                          state.didChange(tipo);
+                          setState(() {
+                            tipoSeleccionado = tipo;
+                          });
+                        },
+                        dropdownMenuEntries: [
+                          DropdownMenuEntry(
+                            value: ArticuloTipo.insumo.value,
+                            label: "Insumo",
+                          ),
+                          DropdownMenuEntry(
+                            value: ArticuloTipo.productoIntermedio.value,
+                            label: "Producto Intermedio",
+                          ),
+                        ],
+                      ),
+                      if (state.hasError)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0, left: 12),
+                          child: Text(
+                            state.errorText!,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 16),
               _buildTextField(
@@ -178,42 +209,63 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   Widget _buildDropDownMenu(AsyncValue<List<UnidadMedida>> asyncUM) {
     return asyncUM.when(
       data: (ums) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DropdownMenu<UnidadMedida>(
-              label: const Text("Unidad de Medida"),
-              expandedInsets: EdgeInsets.zero,
-              leadingIcon: const Icon(Icons.balance_rounded),
-              initialSelection: _selectedUnidadMedidad,
-              onSelected: (UnidadMedida? unidadMedida) {
-                setState(() {
-                  _selectedUnidadMedidad = unidadMedida;
-                });
-              },
-              dropdownMenuEntries: ums.map((unidadMedida) {
-                return DropdownMenuEntry<UnidadMedida>(
-                  value: unidadMedida,
-                  label: unidadMedida.nombre,
-                );
-              }).toList(),
-            ),
-            if (_submitted && _selectedUnidadMedidad == null)
-              Padding(
-                padding: const EdgeInsets.only(left: 12, top: 8),
-                child: Text(
-                  'Por favor, selecciona una unidad',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                    fontSize: 12,
-                  ),
+        return FormField<UnidadMedida>(
+          initialValue:
+              _selectedUnidadMedidad, // ← importante para el estado inicial
+          validator: (value) {
+            if (value == null) {
+              return "Ingresa una unidad de medida";
+            }
+            return null;
+          },
+          builder: (FormFieldState<UnidadMedida> state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownMenu<UnidadMedida>(
+                  label: const Text("Unidad de Medida"),
+                  leadingIcon: const Icon(
+                    Icons.balance_rounded,
+                  ), // ✅ Ahora sí funciona
+                  expandedInsets: EdgeInsets.zero,
+                  initialSelection:
+                      state.value, // ← toma el valor del FormField
+                  onSelected: (UnidadMedida? unidadMedida) {
+                    state.didChange(unidadMedida); // ← notifica al FormField
+                    setState(() {
+                      _selectedUnidadMedidad = unidadMedida;
+                    });
+                  },
+                  dropdownMenuEntries: ums.map((unidadMedida) {
+                    return DropdownMenuEntry<UnidadMedida>(
+                      value: unidadMedida,
+                      label: unidadMedida.nombre,
+                    );
+                  }).toList(),
                 ),
-              ),
-          ],
+                // ← Muestra el error de validación
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0, left: 12),
+                    child: Text(
+                      state.errorText!,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         );
       },
-      error: (err, stack) =>
-          ErrorView(message: 'Error al cargar los artículos'),
+      error: (err, stack) => ErrorRetryField(
+        label: "Unidad de Medida",
+        leadingIcon: Icons.balance_rounded,
+        showCarita: true,
+        onRetry: () => ref.invalidate(unidadMedidaProvider),
+      ),
       loading: () => SkeletonDropMenu(),
     );
   }

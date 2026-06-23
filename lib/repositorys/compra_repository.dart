@@ -167,10 +167,6 @@ class CompraRepository extends BaseRepository<Compra> {
   }) async {
     final db = await dbHelper.database;
 
-    // Obtener el costo promedio ponderado de las utimas compras
-    // final result = await db.rawQuery('''
-    //   SELECT c.*, p.nombre AS nombreProveedor FROM $tableName AS c INNER JOIN proveedor AS p ON c.id_proveedor = p.id_proveedor ${where != null ? 'WHERE $where' : ''}
-    //   ''');
     final List<Map<String, dynamic>> result = await db.query("v_compras_list");
     appLogger.i(result);
     return List<Map<String, dynamic>>.from(result);

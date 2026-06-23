@@ -98,7 +98,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       final producto = {
         'nombre': _clienteProducto['producto'].nombre,
         'cantidad': int.tryParse(_cantidadController.text),
-        'precio': double.parse(_precioController.text),
+        'precio': double.tryParse(_precioController.text),
         'articulo': _clienteProducto['producto'],
         'cliente': _clienteProducto['cliente'],
       };
@@ -120,8 +120,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       element: venta,
       detalles: true,
       detallesElement: detalleVenta,
-      mensajeExito: "Venta realizada con exito",
-      mensajeError: "Error al procesar la venta, intente mas tarde",
+      mensajeExito: "Venta realizada con éxito",
+      mensajeError: "Error al procesar la venta, intenta más tarde",
     );
   }
 
@@ -294,7 +294,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Favor de seleccionar un Cliente.";
+          return "Selecciona un cliente";
         }
         return null;
       },
@@ -320,7 +320,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Favor de seleccionar un Producto.";
+          return "Selecciona un producto";
         }
         return null;
       },
@@ -366,7 +366,10 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
             controller: _precioController,
             validator: (value) {
               if (value == null || value == "0") {
-                return "El monto no puede ser 0.";
+                return "El precio no puede ser 0";
+              }
+              if (double.tryParse(value) == null) {
+                return "Ingresa un precio válido";
               }
               return null;
             },
@@ -390,7 +393,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
             child: TextFormField(
               validator: (value) {
                 if (value == null || value == "0") {
-                  return "La cantidad no puede ser 0.";
+                  return "La cantidad debe ser mayor a 0";
                 }
                 return null;
               },
@@ -518,13 +521,13 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                       if (await _mostrarModal(
                         context: context,
                         titulo: "Realizar Venta",
-                        cuerpo: "Desea realizar la venta de \$$totalDinero",
+                        cuerpo: "¿Confirmar venta por \$$totalDinero?",
                       )) {
                         _resumenVenta();
                         if (context.mounted) {
                           showCustomSnackBar(
                             context: context,
-                            mensaje: "Venta realizada con exito",
+                            mensaje: "Venta realizada con éxito",
                           );
                           Navigator.pop(context);
                         }
@@ -532,8 +535,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                     } else {
                       _mostrarModal(
                         context: context,
-                        titulo: "Carrito Vacio",
-                        cuerpo: "No existe producto agregado al carrito",
+                        titulo: "Carrito vacío",
+                        cuerpo: "No hay productos en el carrito",
                         mostrarSegundoBoton: false,
                         mostrarCamposExtra: false,
                       );

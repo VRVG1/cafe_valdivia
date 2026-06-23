@@ -1,6 +1,8 @@
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class ClienteRepository extends BaseRepository<Cliente> {
   @override
@@ -23,8 +25,10 @@ class ClienteRepository extends BaseRepository<Cliente> {
 
   @override
   Future<int> create(Cliente entity) async {
-    if (entity.nombre.trim().isEmpty) throw Exception('El nombre no puede estar vacío.');
-    if (entity.apellido.trim().isEmpty) throw Exception('El apellido no puede estar vacío.');
+    if (entity.nombre.trim().isEmpty)
+      throw Exception('El nombre no puede estar vacío.');
+    if (entity.apellido.trim().isEmpty)
+      throw Exception('El apellido no puede estar vacío.');
     try {
       return await super.create(entity);
     } catch (e) {
@@ -37,8 +41,10 @@ class ClienteRepository extends BaseRepository<Cliente> {
 
   @override
   Future<int> update(Cliente entity) async {
-    if (entity.nombre.trim().isEmpty) throw Exception('El nombre no puede estar vacío.');
-    if (entity.apellido.trim().isEmpty) throw Exception('El apellido no puede estar vacío.');
+    if (entity.nombre.trim().isEmpty)
+      throw Exception('El nombre no puede estar vacío.');
+    if (entity.apellido.trim().isEmpty)
+      throw Exception('El apellido no puede estar vacío.');
     return await super.update(entity);
   }
 
@@ -48,5 +54,18 @@ class ClienteRepository extends BaseRepository<Cliente> {
       where: 'nombre LIKE ? OR apellido LIKE ? OR telefono LIKE ?',
       whereArgs: [pattern, pattern, pattern],
     );
+  }
+
+  Future<List<Map<String, dynamic>>> getAllWithKilosAndTotal({
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
+    final Database db = await dbHelper.database;
+
+    final List<Map<String, dynamic>> result = await db.query(
+      "v_clientes_kilos",
+    );
+    appLogger.i(result);
+    return List<Map<String, dynamic>>.from(result);
   }
 }

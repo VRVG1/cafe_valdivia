@@ -112,8 +112,10 @@ class ProveedorListaState extends ConsumerState {
           },
         );
       },
-      error: (err, stack) =>
-          const ErrorView(message: 'Error al cargar los proveedores'),
+      error: (err, stack) => ErrorView(
+            message: 'Error al cargar los proveedores',
+            onRetry: () => ref.invalidate(proveedorListProvider),
+          ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

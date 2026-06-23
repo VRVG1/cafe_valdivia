@@ -19,7 +19,6 @@ class CompraListPage extends ConsumerWidget {
       ref.watch(compraProvider),
     );
     final ColorScheme cs = Theme.of(context).colorScheme;
-    final TextTheme tt = Theme.of(context).textTheme;
 
     return asyncCompra.when(
       data: (compras) {
@@ -61,7 +60,10 @@ class CompraListPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => ErrorView(message: 'Error al cargar las compras'),
+      error: (err, stack) => ErrorView(
+        message: 'Error al cargar las compras',
+        onRetry: () => ref.invalidate(compraProvider),
+      ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

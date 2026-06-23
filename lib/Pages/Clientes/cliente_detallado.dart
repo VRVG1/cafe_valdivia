@@ -1,8 +1,10 @@
+import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
+import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/core/models/cliente_extension.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
@@ -23,151 +25,140 @@ class ClienteDetallado extends ConsumerWidget {
       ref.watch(clienteDetailProvider(clienteId)),
     );
 
-    return asyncCliente.when(
-      loading: () =>
-          SkeletonClienteDetalle(detalleName: "Cliente", rowDetails: 2),
-      error: (err, stack) => Scaffold(
-        appBar: AppBar(title: const Text("Error")),
-        body: ErrorView(
+    return Scaffold(
+      appBar: AppBarDetalles<Cliente>(
+        title: "Cliente",
+        hasMenu: true,
+        onPrimaryPressed: () {
+          final cliente = asyncCliente.asData?.value;
+          if (cliente != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditarClienteDetallado(cliente: cliente),
+              ),
+            ).then((_) => ref.invalidate(clienteDetailProvider(clienteId)));
+          }
+        },
+        onDeletePressed: () {
+          mostrarDialogoConfirmacion(
+            context: context,
+            titulo: "Seguro que quiere eliminar este cliente?",
+            contenido: "Esta accion no se puede deshacer",
+            textoBotonConfirmacion: "Eliminar",
+            onConfirm: () async {
+              final bool exito = await delete(
+                context: context,
+                ref: ref,
+                provider: clienteProvider,
+                id: asyncCliente.asData?.value.idCliente ?? clienteId,
+                mensajeExito: "El cliente se ha borrado con exito",
+                mensajeError:
+                    "Error al eliminar el cliente,Por favor, intente de nuevo",
+              );
+              if (exito && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+          );
+        },
+      ),
+      body: asyncCliente.when(
+        loading: () => const SkeletonClienteDetalle(rowDetails: 2),
+        error: (err, stack) => ErrorView(
           message: 'Error al cargar el cliente',
           description: err.toString(),
         ),
-      ),
-      data: (cliente) => Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Cliente",
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: false,
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.edit_rounded),
-              color: theme.colorScheme.primary,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        EditarClienteDetallado(cliente: cliente),
-                  ),
-                ).then((_) => ref.invalidate(clienteDetailProvider(clienteId)));
-              },
-            ),
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert_rounded),
-              onSelected: (String result) async {
-                if (result == 'eliminar') {
-                  mostrarDialogoConfirmacion(
-                    context: context,
-                    titulo: "Seguro que quiere eliminar este cliente?",
-                    contenido: "Esta accion no se puede deshacer",
-                    textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () async {
-                      final bool exito = await delete(
-                        context: context,
-                        ref: ref,
-                        provider: clienteProvider,
-                        id: cliente.idCliente!,
-                        mensajeExito: "El cliente se ha borrado con exito",
-                        mensajeError:
-                            "Error al eliminar el cliente,Por favor, intente de nuevo",
-                      );
-                      if (exito && context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  );
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'eliminar',
-                  child: Row(children: [Text('Eliminar')]),
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: RefreshIndicator(
-          onRefresh: () async =>
-              ref.invalidate(clienteDetailProvider(clienteId)),
-          child: ListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 16.0,
-            ),
-            children: [
-              Center(
-                child: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primaryContainer,
-                  radius: 64,
-                  child: Text(
-                    cliente.iniciales,
-                    style: theme.textTheme.displayMedium?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
+        data: (cliente) {
+          final asyncKilos = ref.watch(clienteKilosProvider(clienteId));
+          return RefreshIndicator(
+            onRefresh: () async =>
+                ref.invalidate(clienteDetailProvider(clienteId)),
+            child: ListView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 16.0,
+              ),
+              children: [
+                Center(
+                  child: CircleAvatar(
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    radius: 64,
+                    child: Text(
+                      cliente.iniciales,
+                      style: theme.textTheme.displayMedium?.copyWith(
+                        color: theme.colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                cliente.nombreYApellido,
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
+                const SizedBox(height: 24),
+                Text(
+                  cliente.nombreYApellido,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
-              _buildInfoSection(
-                context: context,
-                title: "Datos de Contacto",
-                children: [
-                  _buildDataTile(
-                    context: context,
-                    icon: Icons.phone_android_rounded,
-                    label: "Teléfono",
-                    value: cliente.telefono.toString(),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildDataTile(
-                    context: context,
-                    icon: Icons.email_rounded,
-                    label: "Email",
-                    value: cliente.email ?? 'No especificado',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              _buildInfoSection(
-                context: context,
-                title: "Ventas Totales",
-                children: [
-                  _buildSalesCard(
-                    context: context,
-                    label: "Kilos",
-                    value: "100", // TODO: Replace with actual data
-                    unit: "KG",
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildSalesCard(
-                    context: context,
-                    label: "Monto",
-                    value: "\${100}", // TODO: Replace with actual data
-                    unit: "MXN",
-                    color: theme.colorScheme.secondary,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+                const SizedBox(height: 48),
+                _buildInfoSection(
+                  context: context,
+                  title: "Datos de Contacto",
+                  children: [
+                    _buildDataTile(
+                      context: context,
+                      icon: Icons.phone_android_rounded,
+                      label: "Teléfono",
+                      value: cliente.telefono.toString(),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildDataTile(
+                      context: context,
+                      icon: Icons.email_rounded,
+                      label: "Email",
+                      value: cliente.email ?? 'No especificado',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                _buildInfoSection(
+                  context: context,
+                  title: "Ventas Totales",
+                  children: [
+                    _buildSalesCard(
+                      context: context,
+                      label: "Kilos",
+                      value: asyncKilos.when(
+                        data: (data) => data?['kilos']?.toStringAsFixed(2) ?? '0',
+                        loading: () => '...',
+                        error: (_, _) => 'Error',
+                      ),
+                      unit: "KG",
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSalesCard(
+                      context: context,
+                      label: "Monto",
+                      value: asyncKilos.when(
+                        data: (data) {
+                          final total = data?['total'] ?? 0;
+                          return '\$${(total as num).toStringAsFixed(2)}';
+                        },
+                        loading: () => '...',
+                        error: (_, _) => 'Error',
+                      ),
+                      unit: "MXN",
+                      color: theme.colorScheme.secondary,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

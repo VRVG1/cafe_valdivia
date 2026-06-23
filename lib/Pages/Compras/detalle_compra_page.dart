@@ -51,33 +51,33 @@ class DetalleCompraPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
-    return compraAsync.when(
-      data: (compra) {
-        final itemsFormateados = _reagruparDetalles(compra['detalles']);
-        final int numeroDeArticulos = _numeroDeArticulos(itemsFormateados);
-        return Scaffold(
-          appBar: AppBarDetalles<DetalleCompra>(
-            title: "Detalle de Compra",
-            hasMenu: true,
-            onDeletePressed: () {
-              mostrarDialogoConfirmacion(
-                context: context,
-                titulo: "Desea eliminar la compra?",
-                contenido: "Esta accion no se puede deshacer.\n",
-                textoBotonConfirmacion: "Eliminar",
-                onConfirm: () => delete(
-                  context: context,
-                  ref: ref,
-                  provider: compraProvider,
-                  id: id,
-                  mensajeExito: "Receta eliminada con exito",
-                  mensajeError:
-                      "Error al eliminar la receta. Por favor, intente de nuevo.",
-                ),
-              );
-            },
-          ),
-          body: RefreshIndicator(
+    return Scaffold(
+      appBar: AppBarDetalles<DetalleCompra>(
+        title: "Detalle de Compra",
+        hasMenu: true,
+        onDeletePressed: () {
+          mostrarDialogoConfirmacion(
+            context: context,
+            titulo: "Desea eliminar la compra?",
+            contenido: "Esta accion no se puede deshacer.\n",
+            textoBotonConfirmacion: "Eliminar",
+            onConfirm: () => delete(
+              context: context,
+              ref: ref,
+              provider: compraProvider,
+              id: id,
+              mensajeExito: "Receta eliminada con exito",
+              mensajeError:
+                  "Error al eliminar la receta. Por favor, intente de nuevo.",
+            ),
+          );
+        },
+      ),
+      body: compraAsync.when(
+        data: (compra) {
+          final itemsFormateados = _reagruparDetalles(compra['detalles']);
+          final int numeroDeArticulos = _numeroDeArticulos(itemsFormateados);
+          return RefreshIndicator(
             onRefresh: () async => ref.invalidate(compraDetalladaProvider(id)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -85,11 +85,13 @@ class DetalleCompraPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
+                  seccionEtiqueta("ORDEN", cs),
                   _headerCard(
                     cs,
                     compra['id_compra'],
-                    fechaORD(compra["fecha"]),
+                    compra["fecha"],
                     compra['pagado'] ?? 0,
+                    compra['nombre_proveedor'],
                   ),
                   const SizedBox(height: 20),
                   seccionEtiqueta("Productos", cs),
@@ -148,22 +150,27 @@ class DetalleCompraPage extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
-        );
-      },
-      error: (err, stack) => Scaffold(
-        appBar: AppBar(title: const Text("Error")),
-        body: ErrorView(
+          );
+        },
+        error: (err, stack) => ErrorView(
           message: 'Error al cargar la compra',
           description: err.toString(),
           onRetry: () => ref.invalidate(compraDetalladaProvider(id)),
         ),
+        loading: () => const SkeletonCompraDetalle(),
       ),
-      loading: () => const SkeletonCompraDetalle(title: "Detalle de Compra"),
     );
   }
 
-  Widget _headerCard(ColorScheme cs, int idCompra, String fecha, int pagado) {
+  Widget _headerCard(
+    ColorScheme cs,
+    int idCompra,
+    String fechaRaw,
+    int pagado,
+    String nombreProveedor,
+  ) {
+    final fechaID = fechaORD(fechaRaw);
+    final fechaChida = fechaHoraHumano(fechaRaw);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -177,17 +184,7 @@ class DetalleCompraPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'ORDEN',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.8,
-                    color: cs.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '#ORD-$idCompra-$fecha',
+                  '#CPR-$idCompra-$fechaID', //TODO: ESTARIA BIEN PONER AL FINAL EL NUMERO DE COMPRAS DE ESE DIA 001
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -196,12 +193,13 @@ class DetalleCompraPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Nombre proveedor',
+                  nombreProveedor,
                   style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '24 abr 2026 · 10:32 AM',
+                  //'24 abr 2026 · 10:32 AM',
+                  fechaChida,
                   style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
                 ),
               ],
@@ -226,134 +224,4 @@ class DetalleCompraPage extends ConsumerWidget {
       ),
     );
   }
-
-  //  Widget _tableResume(ColorScheme cs, List<Map<String, dynamic>> items) {
-  //    return ClipRRect(
-  //      borderRadius: BorderRadius.circular(16),
-  //      child: Table(
-  //        columnWidths: const {
-  //          0: FlexColumnWidth(3.0),
-  //          1: FlexColumnWidth(1.5),
-  //          2: FlexColumnWidth(1.8),
-  //          3: FlexColumnWidth(1.8),
-  //        },
-  //        children: [
-  //          TableRow(
-  //            decoration: BoxDecoration(color: cs.primary),
-  //            children: ['Producto', 'Cantidad', 'Precio', 'Total']
-  //                .map(
-  //                  (h) => Padding(
-  //                    padding: const EdgeInsets.symmetric(
-  //                      horizontal: 12,
-  //                      vertical: 11,
-  //                    ),
-  //                    child: Text(
-  //                      h,
-  //                      style: TextStyle(
-  //                        color: cs.onPrimary,
-  //                        fontSize: 14,
-  //                        fontWeight: FontWeight.w600,
-  //                      ),
-  //                      textAlign: h == 'Precio' || h == 'Total'
-  //                          ? TextAlign.right
-  //                          : TextAlign.left,
-  //                    ),
-  //                  ),
-  //                )
-  //                .toList(),
-  //          ),
-  //          ...items.asMap().entries.map((entry) {
-  //            final i = entry.key;
-  //            final item = entry.value;
-  //            final isEven = i.isEven;
-
-  //            return TableRow(
-  //              decoration: BoxDecoration(
-  //                color: isEven ? cs.surface : cs.surfaceContainerLowest,
-  //                border: Border(
-  //                  bottom: BorderSide(
-  //                    color: cs.outlineVariant.withOpacity(0.5),
-  //                    width: 0.5,
-  //                  ),
-  //                ),
-  //              ),
-  //              children: [
-  //                Padding(
-  //                  padding: const EdgeInsets.symmetric(
-  //                    horizontal: 12,
-  //                    vertical: 10,
-  //                  ),
-  //                  child: Row(
-  //                    children: [
-  //                      Expanded(
-  //                        child: Column(
-  //                          crossAxisAlignment: CrossAxisAlignment.start,
-  //                          children: [
-  //                            Text(
-  //                              item['producto'],
-  //                              style: const TextStyle(
-  //                                fontSize: 14,
-  //                                fontWeight: FontWeight.w500,
-  //                              ),
-  //                              overflow: TextOverflow.ellipsis,
-  //                            ),
-  //                          ],
-  //                        ),
-  //                      ),
-  //                    ],
-  //                  ),
-  //                ),
-  //                //Cantidad
-  //                Padding(
-  //                  padding: const EdgeInsets.symmetric(vertical: 10),
-  //                  child: Center(
-  //                    child: Container(
-  //                      padding: const EdgeInsets.symmetric(
-  //                        horizontal: 8,
-  //                        vertical: 3,
-  //                      ),
-  //                      decoration: BoxDecoration(
-  //                        color: cs.primaryContainer,
-  //                        borderRadius: BorderRadius.circular(20),
-  //                      ),
-  //                      child: Text(
-  //                        item['cantidad'],
-  //                        style: TextStyle(
-  //                          fontSize: 14,
-  //                          fontWeight: FontWeight.w600,
-  //                          color: cs.onPrimaryContainer,
-  //                        ),
-  //                      ),
-  //                    ),
-  //                  ),
-  //                ),
-  //                Padding(
-  //                  padding: const EdgeInsets.symmetric(
-  //                    horizontal: 12,
-  //                    vertical: 10,
-  //                  ),
-  //                  child: Text(
-  //                    item['precio'],
-  //                    style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
-  //                    textAlign: TextAlign.right,
-  //                  ),
-  //                ),
-  //                Padding(
-  //                  padding: const EdgeInsets.symmetric(
-  //                    horizontal: 12,
-  //                    vertical: 10,
-  //                  ),
-  //                  child: Text(
-  //                    item['total'],
-  //                    style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
-  //                    textAlign: TextAlign.right,
-  //                  ),
-  //                ),
-  //              ],
-  //            );
-  //          }),
-  //        ],
-  //      ),
-  //    );
-  //  }
 }

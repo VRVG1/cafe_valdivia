@@ -20,12 +20,12 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
-    return asyncRecetas.when(
-      data: (recetas) {
-        if (recetas.isEmpty) {
-          return Scaffold(
-            appBar: AppBar(title: const Text("Seleccionar Receta")),
-            body: Center(
+    return Scaffold(
+      appBar: AppBar(title: const Text("Seleccionar Receta")),
+      body: asyncRecetas.when(
+        data: (recetas) {
+          if (recetas.isEmpty) {
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -37,12 +37,9 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
                   ),
                 ],
               ),
-            ),
-          );
-        }
-        return Scaffold(
-          appBar: AppBar(title: const Text("Seleccionar Receta")),
-          body: ListviewCustom<Receta>(
+            );
+          }
+          return ListviewCustom<Receta>(
             data: recetas,
             keyBuilder: (receta) => ValueKey(receta.idReceta),
             titleBuilder: (receta) => Text(receta.nombre),
@@ -51,19 +48,12 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
             trailingBuilder: (receta) =>
                 Icon(Icons.chevron_right_rounded, color: cs.onSurfaceVariant),
             onTapCallback: (receta) => Navigator.pop(context, receta),
-          ),
-        );
-      },
-      error: (err, stack) => Scaffold(
-        appBar: AppBar(title: const Text("Error")),
-        body: ErrorView(message: 'Error al cargar las recetas'),
+          );
+        },
+        error: (err, stack) =>
+            ErrorView(message: 'Error al cargar las recetas'),
+        loading: () => SkeletonListTiles(),
       ),
-      loading: () {
-        return Scaffold(
-          appBar: SkeletonAppBar(chipsCount: 3),
-          body: SkeletonListTiles(),
-        );
-      },
     );
   }
 }

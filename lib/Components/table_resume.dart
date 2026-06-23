@@ -110,7 +110,7 @@ Widget tableResume(
                   vertical: 10,
                 ),
                 child: Text(
-                  item['precio'], //TODO: Esto tiene que cambiar
+                  "\$${item['precio']}", //TODO: Esto tiene que cambiar
                   style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
                   textAlign: TextAlign.right,
                 ),
@@ -121,7 +121,7 @@ Widget tableResume(
                   vertical: 10,
                 ),
                 child: Text(
-                  item['total'], //TODO: Esto tiene que cambiar
+                  "\$${item['total']}", //TODO: Esto tiene que cambiar
                   style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
                   textAlign: TextAlign.right,
                 ),

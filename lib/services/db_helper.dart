@@ -44,8 +44,7 @@ class DatabaseHelper {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-  Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {
-  }
+  Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {}
 
   // ============== MÉTODOS DE UTILIDAD ==============
   Future<int> insert(String table, Map<String, dynamic> data) async {
@@ -692,6 +691,24 @@ class DatabaseHelper {
       WHERE id_receta = OLD.id_receta
     );
   END;
+''');
+
+    await db.execute('''
+CREATE VIEW IF NOT EXISTS v_clientes_kilos AS
+SELECT 
+  c.id_cliente,
+  c.nombre,
+  c.apellido,
+  c.telefono,
+  c.email,
+  COALESCE(SUM(CASE WHEN um.nombre LIKE '%Kg%' OR um.nombre LIKE '%kilo%' THEN dv.cantidad END), 0) AS kilos,
+  COALESCE(SUM(CASE WHEN um.nombre LIKE '%Kg%' OR um.nombre LIKE '%kilo%' THEN dv.cantidad * dv.precio_unitario_venta END), 0) AS total
+FROM Cliente c
+LEFT JOIN Venta v ON c.id_cliente = v.id_cliente
+LEFT JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+LEFT JOIN Articulo a ON dv.id_articulo = a.id_articulo
+LEFT JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+GROUP BY c.id_cliente
 ''');
   }
 }

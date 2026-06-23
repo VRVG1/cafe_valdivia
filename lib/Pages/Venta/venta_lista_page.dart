@@ -66,7 +66,10 @@ class VentaListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) => ErrorView(message: 'Error al cargar las ventas'),
+      error: (err, stack) => ErrorView(
+            message: 'Error al cargar las ventas',
+            onRetry: () => ref.invalidate(ventaProvider),
+          ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

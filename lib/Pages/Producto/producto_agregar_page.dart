@@ -239,8 +239,12 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
               },
             );
           },
-          error: (err, stack) =>
-              ErrorView(message: 'Error al cargar los productos'),
+          error: (err, stack) => ErrorRetryField(
+                label: "Unidad de Medida",
+                leadingIcon: Icons.balance_rounded,
+                showCarita: true,
+                onRetry: () => ref.invalidate(unidadMedidaProvider),
+              ),
           loading: () => SkeletonDropMenu(),
         );
       },

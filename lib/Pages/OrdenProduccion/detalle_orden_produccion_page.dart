@@ -27,31 +27,31 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
       ref.watch(ordenProduccionDetalladaProvider(id)),
     );
 
-    return asyncOrden.when(
-      data: (orden) => Scaffold(
-        appBar: AppBarDetalles<Map<String, dynamic>>(
-          title: "Orden de Producción",
-          hasMenu: true,
-          onDeletePressed: () {
-            mostrarDialogoConfirmacion(
+    return Scaffold(
+      appBar: AppBarDetalles<Map<String, dynamic>>(
+        title: "Orden de Producción",
+        hasMenu: true,
+        onDeletePressed: () {
+          mostrarDialogoConfirmacion(
+            context: context,
+            titulo: "Eliminar orden",
+            contenido:
+                "Esta acción no se puede deshacer.\n"
+                "Se eliminará la orden y sus consumos.",
+            textoBotonConfirmacion: "Eliminar",
+            onConfirm: () => delete(
               context: context,
-              titulo: "Eliminar orden",
-              contenido:
-                  "Esta acción no se puede deshacer.\n"
-                  "Se eliminará la orden y sus consumos.",
-              textoBotonConfirmacion: "Eliminar",
-              onConfirm: () => delete(
-                context: context,
-                ref: ref,
-                provider: ordenProduccionProvider,
-                id: id,
-                mensajeExito: "Orden eliminada con exito",
-                mensajeError: "Error al eliminar la orden. Intente de nuevo.",
-              ),
-            );
-          },
-        ),
-        body: RefreshIndicator(
+              ref: ref,
+              provider: ordenProduccionProvider,
+              id: id,
+              mensajeExito: "Orden eliminada con exito",
+              mensajeError: "Error al eliminar la orden. Intente de nuevo.",
+            ),
+          );
+        },
+      ),
+      body: asyncOrden.when(
+        data: (orden) => RefreshIndicator(
           onRefresh: () async =>
               ref.invalidate(ordenProduccionDetalladaProvider(id)),
           child: SingleChildScrollView(
@@ -157,11 +157,10 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
             ),
           ),
         ),
+        error: (err, stack) =>
+            ErrorView(message: 'Error al cargar la orden de producción'),
+        loading: () => const SkeletonOrdenProduccionDetalle(),
       ),
-      error: (err, stack) =>
-          ErrorView(message: 'Error al cargar la orden de producción'),
-      loading: () =>
-          SkeletonOrdenProduccionDetalle(title: "Orden de Producción"),
     );
   }
 

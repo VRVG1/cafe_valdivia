@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cafe_valdivia/Components/navigation_screen.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() async {
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     sqfliteFfiInit();
+    await initializeDateFormatting("es");
 
     databaseFactory = databaseFactoryFfi;
   }

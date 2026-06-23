@@ -95,8 +95,10 @@ class InsumoListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) =>
-          const ErrorView(message: 'Error al cargar los artículos'),
+      error: (err, stack) => ErrorView(
+            message: 'Error al cargar los artículos',
+            onRetry: () => ref.invalidate(articuloProviderProvider),
+          ),
       loading: () => const SkeletonListTiles(
         n: 10,
       ), //TODO: Ver si existe una forma de poner el numero de items dependiendo del dispositivo o poner un numero fijo

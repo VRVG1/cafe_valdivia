@@ -53,16 +53,18 @@ class ProductoDetallePage extends ConsumerWidget {
       );
     }
 
-    return asyncValue.when(
-      data: (producto) => Scaffold(
-        appBar: AppBarDetalles<Articulo>(
-          title: "Producto",
-          model: producto,
-          hasMenu: true,
-          onPrimaryPressed: () => onEditPressed(producto),
-          onDeletePressed: () => onDeletePressed(),
-        ),
-        body: RefreshIndicator(
+    return Scaffold(
+      appBar: AppBarDetalles<Articulo>(
+        title: "Producto",
+        hasMenu: true,
+        onPrimaryPressed: () {
+          final producto = asyncValue.asData?.value;
+          if (producto != null) onEditPressed(producto);
+        },
+        onDeletePressed: onDeletePressed,
+      ),
+      body: asyncValue.when(
+        data: (producto) => RefreshIndicator(
           onRefresh: () async => ref.invalidate(articuloDetailProvider(id)),
           child: ListView(
             padding: const EdgeInsets.symmetric(
@@ -127,10 +129,10 @@ class ProductoDetallePage extends ConsumerWidget {
             ],
           ),
         ),
+        error: (err, stack) => ErrorView(message: 'Error al cargar el producto'),
+        loading: () =>
+            const SkeletonProductoDetalle(rowDetails: 4),
       ),
-      error: (err, stack) => ErrorView(message: 'Error al cargar el producto'),
-      loading: () =>
-          SkeletonProductoDetalle(detalleName: "Productos", rowDetails: 4),
     );
   }
 }

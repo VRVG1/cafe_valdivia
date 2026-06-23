@@ -1,8 +1,10 @@
+import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
+import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:flutter/material.dart';
@@ -26,76 +28,52 @@ class ProveedorDetallado extends ConsumerWidget {
       ref.watch(proveedorDetailProvider(proveedorId)),
     );
 
-    return asyncProveedor.when(
-      loading: () =>
-          SkeletonProductoDetalle(detalleName: "Proveedor", rowDetails: 3),
-      error: (err, stack) => Scaffold(
-        appBar: AppBar(title: const Text("Error")),
-        body: ErrorView(
+    return Scaffold(
+      appBar: AppBarDetalles<Proveedor>(
+        title: "Proveedor",
+        hasMenu: true,
+        onPrimaryPressed: () {
+          final proveedor = asyncProveedor.asData?.value;
+          if (proveedor != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditarProveedor(proveedor: proveedor),
+              ),
+            ).then(
+              (_) => ref.invalidate(proveedorDetailProvider(proveedorId)),
+            );
+          }
+        },
+        onDeletePressed: () {
+          mostrarDialogoConfirmacion(
+            context: context,
+            titulo: "Confirmar eliminación",
+            contenido:
+                "¿Estás seguro de que deseas eliminar este proveedor? "
+                "Esta acción no se puede deshacer.",
+            textoBotonConfirmacion: "Eliminar",
+            onConfirm: () => delete(
+              context: context,
+              ref: ref,
+              provider: proveedorListProvider,
+              id: proveedorId,
+              mensajeExito: 'Proveedor eliminado con éxito',
+              mensajeError:
+                  'Error al eliminar el proveedor. Por favor, intente de nuevo.',
+            ),
+          );
+        },
+      ),
+      body: asyncProveedor.when(
+        loading: () =>
+            const SkeletonProductoDetalle(rowDetails: 3),
+        error: (err, stack) => ErrorView(
           message: 'Error al cargar el proveedor',
           description: err.toString(),
         ),
-      ),
-      data: (proveedor) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Proveedor",
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            centerTitle: false,
-            elevation: 0,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit_rounded),
-                color: theme.colorScheme.primary,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          EditarProveedor(proveedor: proveedor),
-                    ),
-                  ).then(
-                    (_) => ref.invalidate(proveedorDetailProvider(proveedorId)),
-                  );
-                },
-              ),
-              PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert_rounded),
-                onSelected: (String result) {
-                  if (result == 'eliminar') {
-                    mostrarDialogoConfirmacion(
-                      context: context,
-                      titulo: "Confirmar eliminación",
-                      contenido:
-                          "¿Estás seguro de que deseas eliminar este proveedor? "
-                          "Esta acción no se puede deshacer.",
-                      textoBotonConfirmacion: "Eliminar",
-                      onConfirm: () => delete(
-                      context: context,
-                      ref: ref,
-                      provider: proveedorListProvider,
-                      id: proveedorId,
-                      mensajeExito: 'Proveedor eliminado con éxito',
-                      mensajeError:
-                          'Error al eliminar el proveedor. Por favor, intente de nuevo.',
-                    ),
-                    );
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'eliminar',
-                    child: Row(children: [Text('Eliminar')]),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          body: RefreshIndicator(
+        data: (proveedor) {
+          return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(proveedorDetailProvider(proveedorId));
             },
@@ -160,9 +138,9 @@ class ProveedorDetallado extends ConsumerWidget {
                 ),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

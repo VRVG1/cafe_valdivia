@@ -93,8 +93,10 @@ class ProductoListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) =>
-          const ErrorView(message: 'Error al cargar los productos'),
+      error: (err, stack) => ErrorView(
+            message: 'Error al cargar los productos',
+            onRetry: () => ref.invalidate(productosProviderProvider),
+          ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

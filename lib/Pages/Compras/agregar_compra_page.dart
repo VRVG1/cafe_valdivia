@@ -109,7 +109,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       final producto = {
         'nombre': _proveedorArticulo['articulo'].nombre,
         'cantidad': int.tryParse(_cantidadController.text),
-        'precio': double.parse(_precioController.text),
+        'precio': double.tryParse(_precioController.text),
         'articulo': _proveedorArticulo['articulo'],
         'proveedor': _proveedorArticulo['proveedor'],
       };
@@ -158,8 +158,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       element: compra,
       detalles: true,
       detallesElement: detalleCompra,
-      mensajeExito: "Compra realizada con exito",
-      mensajeError: "Error al procesar la compra, intente mas tarde",
+      mensajeExito: "Compra realizada con éxito",
+      mensajeError: "Error al procesar la compra, intenta más tarde",
     );
     // TODO: Se supone que en los triggers se tiene que realizar dicha operacion de cambios
     // if (result) {
@@ -355,7 +355,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Favor de seleccionar un Proveedor.";
+          return "Selecciona un proveedor";
         }
         return null;
       },
@@ -381,7 +381,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return "Favor de seleccionar un Articulo.";
+          return "Selecciona un artículo";
         }
         return null;
       },
@@ -427,7 +427,10 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             controller: _precioController,
             validator: (value) {
               if (value == null || value == "0") {
-                return "El monto no puede ser 0.";
+                return "El precio no puede ser 0";
+              }
+              if (double.tryParse(value) == null) {
+                return "Ingresa un precio válido";
               }
               return null;
             },
@@ -452,7 +455,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             child: TextFormField(
               validator: (value) {
                 if (value == null || value == "0") {
-                  return "La cantidad no puede ser 0.";
+                  return "La cantidad debe ser mayor a 0";
                 }
                 return null;
               },
@@ -584,13 +587,13 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                       if (await _mostrarModal(
                         context: context,
                         titulo: "Realizar Compra",
-                        cuerpo: "Desea realizar la compra de \$$totalDinero",
+                        cuerpo: "¿Confirmar compra por \$$totalDinero?",
                       )) {
                         _resumenCompra();
                         if (context.mounted) {
                           showCustomSnackBar(
                             context: context,
-                            mensaje: "Compra realizada con exito",
+                            mensaje: "Compra realizada con éxito",
                           );
                           Navigator.pop(context);
                         }
@@ -598,8 +601,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                     } else {
                       _mostrarModal(
                         context: context,
-                        titulo: "Carrito Vacio",
-                        cuerpo: "No existe articulo agregado al carrito",
+                        titulo: "Carrito vacío",
+                        cuerpo: "No hay artículos en el carrito",
                         mostrarSegundoBoton: false,
                         mostrarCamposExtra: false,
                       );

@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -241,7 +242,13 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                     }).toList(),
                   );
                 },
-                error: (e, _) => Text("Error: $e"),
+                error: (e, _) => ErrorRetryField(
+                      label: "Producto final",
+                      leadingIcon: Icons.category_rounded,
+                      showCarita: true,
+                      onRetry: () =>
+                          ref.invalidate(productosProviderProvider),
+                    ),
                 loading: () => const LinearProgressIndicator(),
               ),
               const SizedBox(height: 16),
@@ -375,7 +382,13 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                     );
                   }).toList(),
                 ),
-                error: (e, _) => Text("Error: $e"),
+                error: (e, _) => ErrorRetryField(
+                      label: "Artículo",
+                      leadingIcon: Icons.inventory_2_rounded,
+                      showCarita: true,
+                      onRetry: () =>
+                          ref.invalidate(articuloProviderProvider),
+                    ),
                 loading: () => const LinearProgressIndicator(),
               ),
               const SizedBox(height: 12),
@@ -411,7 +424,13 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                           );
                         }).toList(),
                       ),
-                      error: (e, _) => Text("Error: $e"),
+                      error: (e, _) => ErrorRetryField(
+                            label: "Unidad",
+                            leadingIcon: Icons.balance_rounded,
+                            showCarita: true,
+                            onRetry: () =>
+                                ref.invalidate(unidadMedidaProvider),
+                          ),
                       loading: () => const LinearProgressIndicator(),
                     ),
                   ),

@@ -268,7 +268,12 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
               },
             );
           },
-          error: (err, stack) => Center(child: Text("Error: $err")),
+          error: (err, stack) => ErrorRetryField(
+                label: "Unidad de Medida",
+                leadingIcon: Icons.balance_rounded,
+                showCarita: true,
+                onRetry: () => ref.invalidate(unidadMedidaProvider),
+              ),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
       },

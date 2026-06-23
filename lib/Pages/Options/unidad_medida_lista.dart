@@ -220,8 +220,10 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
             },
           );
         },
-        error: (err, stack) =>
-            const ErrorView(message: 'Error al cargar las unidades de medida'),
+        error: (err, stack) => ErrorView(
+          message: 'Error al cargar las unidades de medida',
+          onRetry: () => ref.invalidate(unidadMedidaProvider),
+        ),
         loading: () => SkeletonListTiles(n: 10),
       ),
     );

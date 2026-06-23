@@ -427,74 +427,31 @@ class SkeletonDropMenu extends StatelessWidget {
 }
 
 class SkeletonCompraDetalle extends StatelessWidget {
-  final String title;
-  const SkeletonCompraDetalle({
-    super.key,
-    this.title = "Si ves esto, soy malo programando",
-  });
+  const SkeletonCompraDetalle({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        elevation: 0,
-        actions: <Widget>[
-          if (ProviderScope.containerOf(
-            context,
-          ).read(debugStateProvider).enabled)
-            IconButton(
-              icon: const Icon(Icons.bug_report),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (_) => const DebugPanel(),
-                );
-              },
-            ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OptionsList(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      body: Shimmer.fromColors(
-        baseColor: cs.primaryContainer.withAlpha(80),
-        highlightColor: cs.onPrimary,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              _SectionLabel(),
-              SizedBox(height: 10),
-              ShimmerOrden(),
-              _SectionLabel(),
-              SizedBox(height: 10),
-              ShimmerTableResume(rowCount: 3),
-              SizedBox(height: 20),
-              _SectionLabel(),
-              SizedBox(height: 12),
-              ShimmerCartaResume(rowCount: 4),
-            ],
-          ),
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            _SectionLabel(),
+            SizedBox(height: 10),
+            ShimmerOrden(),
+            _SectionLabel(),
+            SizedBox(height: 10),
+            ShimmerTableResume(rowCount: 3),
+            SizedBox(height: 20),
+            _SectionLabel(),
+            SizedBox(height: 12),
+            ShimmerCartaResume(rowCount: 4),
+          ],
         ),
       ),
     );
@@ -502,70 +459,27 @@ class SkeletonCompraDetalle extends StatelessWidget {
 }
 
 class SkeletonOrdenProduccionDetalle extends StatelessWidget {
-  final String title;
-  const SkeletonOrdenProduccionDetalle({
-    super.key,
-    this.title = "Si ves esto, soy malo programando",
-  });
+  const SkeletonOrdenProduccionDetalle({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          title,
-          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        elevation: 0,
-        actions: <Widget>[
-          if (ProviderScope.containerOf(
-            context,
-          ).read(debugStateProvider).enabled)
-            IconButton(
-              icon: const Icon(Icons.bug_report),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (_) => const DebugPanel(),
-                );
-              },
-            ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OptionsList(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      body: Shimmer.fromColors(
-        baseColor: cs.primaryContainer.withAlpha(80),
-        highlightColor: cs.onPrimary,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              _SectionLabel(),
-              SizedBox(height: 10),
-              ShimmerOrden(),
-              ShimmerDetailsContainer(title: "Detalle", elementCount: 5),
-              SizedBox(height: 10),
-              ShimmerDetailsContainer(title: "Detalle", elementCount: 2),
-            ],
-          ),
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            _SectionLabel(),
+            SizedBox(height: 10),
+            ShimmerOrden(),
+            ShimmerDetailsContainer(title: "Detalle", elementCount: 5),
+            SizedBox(height: 10),
+            ShimmerDetailsContainer(title: "Detalle", elementCount: 2),
+          ],
         ),
       ),
     );
@@ -597,74 +511,30 @@ class SkeletonListTiles extends StatelessWidget {
 }
 
 class SkeletonProductoDetalle extends StatelessWidget {
-  final String detalleName;
   final int rowDetails;
-  const SkeletonProductoDetalle({
-    super.key,
-    this.detalleName = "Detalles",
-    this.rowDetails = 1,
-  });
+  const SkeletonProductoDetalle({super.key, this.rowDetails = 1});
 
   @override
   Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          detalleName,
-          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        elevation: 0,
-        actions: <Widget>[
-          if (ProviderScope.containerOf(
-            context,
-          ).read(debugStateProvider).enabled)
-            IconButton(
-              icon: const Icon(Icons.bug_report),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (_) => const DebugPanel(),
-                );
-              },
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: CircleAvatar(radius: 64)),
+            SizedBox(height: 24),
+            Center(child: ShimmerLine(width: 360, height: 30)),
+            SizedBox(height: 60),
+            ShimmerDetailsContainer(
+              title: "Detalles",
+              elementCount: rowDetails,
             ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OptionsList(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      body: Shimmer.fromColors(
-        baseColor: cs.primaryContainer.withAlpha(80),
-        highlightColor: cs.onPrimary,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: CircleAvatar(radius: 64)),
-              SizedBox(height: 24),
-              Center(child: ShimmerLine(width: 360, height: 30)),
-              SizedBox(height: 60),
-              ShimmerDetailsContainer(
-                title: "Detalles",
-                elementCount: rowDetails,
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -743,97 +613,53 @@ class SkeletonEditar extends StatelessWidget {
 }
 
 class SkeletonClienteDetalle extends StatelessWidget {
-  final String detalleName;
   final int rowDetails;
-  const SkeletonClienteDetalle({
-    super.key,
-    this.detalleName = "Detalles",
-    this.rowDetails = 1,
-  });
+  const SkeletonClienteDetalle({super.key, this.rowDetails = 1});
 
   @override
   Widget build(BuildContext context) {
-    final tt = Theme.of(context).textTheme;
     final ColorScheme cs = Theme.of(context).colorScheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          detalleName,
-          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        elevation: 0,
-        actions: <Widget>[
-          if (ProviderScope.containerOf(
-            context,
-          ).read(debugStateProvider).enabled)
-            IconButton(
-              icon: const Icon(Icons.bug_report),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (_) => const DebugPanel(),
-                );
-              },
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: CircleAvatar(radius: 64)),
+            SizedBox(height: 24),
+            Center(child: ShimmerLine(width: 360, height: 30)),
+            SizedBox(height: 60),
+            ShimmerDetailsContainer(
+              title: "Detalles",
+              elementCount: rowDetails,
             ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OptionsList(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      body: Shimmer.fromColors(
-        baseColor: cs.primaryContainer.withAlpha(80),
-        highlightColor: cs.onPrimary,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: CircleAvatar(radius: 64)),
-              SizedBox(height: 24),
-              Center(child: ShimmerLine(width: 360, height: 30)),
-              SizedBox(height: 60),
-              ShimmerDetailsContainer(
-                title: "Detalles",
-                elementCount: rowDetails,
-              ),
-              SizedBox(height: 32),
-              ShimmerDetailsContainer(title: "Ventas", elementCount: 0),
-              Center(
-                child: Container(
-                  width: 500,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+            SizedBox(height: 32),
+            ShimmerDetailsContainer(title: "Ventas", elementCount: 0),
+            Center(
+              child: Container(
+                width: 500,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              SizedBox(height: 12),
-              Center(
-                child: Container(
-                  width: 500,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+            ),
+            SizedBox(height: 12),
+            Center(
+              child: Container(
+                width: 500,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -947,61 +773,23 @@ class SkeletonRecetaDetalle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme cs = Theme.of(context).colorScheme;
-    final TextTheme tt = Theme.of(context).textTheme;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Detalle de Receta",
-          style: tt.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        elevation: 0,
-        actions: <Widget>[
-          if (ProviderScope.containerOf(
-            context,
-          ).read(debugStateProvider).enabled)
-            IconButton(
-              icon: const Icon(Icons.bug_report),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  builder: (_) => const DebugPanel(),
-                );
-              },
+    return Shimmer.fromColors(
+      baseColor: cs.primaryContainer.withAlpha(80),
+      highlightColor: cs.onPrimary,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: const [
+            ShimmerDetailsContainer(
+              title: "Informacion general",
+              elementCount: 3,
             ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OptionsList(),
-                  fullscreenDialog: true,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Shimmer.fromColors(
-        baseColor: cs.primaryContainer.withAlpha(80),
-        highlightColor: cs.onPrimary,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: const [
-              ShimmerDetailsContainer(
-                title: "Informacion general",
-                elementCount: 3,
-              ),
-              SizedBox(height: 16),
-              ShimmerDetailsContainer(
-                title: "Componentes",
-                customContent: _ShimmerTablaComponentes(),
-              ),
-            ],
-          ),
+            SizedBox(height: 16),
+            ShimmerDetailsContainer(
+              title: "Componentes",
+              customContent: _ShimmerTablaComponentes(),
+            ),
+          ],
         ),
       ),
     );

@@ -102,8 +102,10 @@ class OrdenProduccionListaPage extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) =>
-          ErrorView(message: 'Error al cargar las órdenes de producción'),
+      error: (err, stack) => ErrorView(
+            message: 'Error al cargar las órdenes de producción',
+            onRetry: () => ref.invalidate(ordenProduccionProvider),
+          ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

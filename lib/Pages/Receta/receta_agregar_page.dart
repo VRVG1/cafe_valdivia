@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
@@ -184,7 +185,12 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                     );
                   }).toList(),
                 ),
-                error: (e, _) => Text("Error: $e"),
+                error: (e, _) => ErrorRetryField(
+                  label: "Producto final",
+                  leadingIcon: Icons.category_rounded,
+                  onRetry: () => ref.invalidate(productosProviderProvider),
+                  showCarita: true,
+                ),
                 loading: () => SkeletonDropMenu(),
               ),
               const SizedBox(height: 16),
@@ -346,7 +352,12 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                     );
                   }).toList(),
                 ),
-                error: (e, _) => Text("Error: $e"),
+                error: (e, _) => ErrorRetryField(
+                  label: "Artículo",
+                  leadingIcon: Icons.inventory_2_rounded,
+                  showCarita: false,
+                  onRetry: () => ref.invalidate(articuloProviderProvider),
+                ),
                 loading: () => SkeletonDropMenu(),
               ),
               const SizedBox(height: 12),
@@ -382,7 +393,12 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                           );
                         }).toList(),
                       ),
-                      error: (e, _) => Text("Error: $e"),
+                      error: (e, _) => ErrorRetryField(
+                        label: "Unidad",
+                        leadingIcon: Icons.balance_rounded,
+                        showCarita: true,
+                        onRetry: () => ref.invalidate(unidadMedidaProvider),
+                      ),
                       loading: () => SkeletonDropMenu(),
                     ),
                   ),

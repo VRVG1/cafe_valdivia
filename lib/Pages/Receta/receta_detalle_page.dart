@@ -40,41 +40,44 @@ class RecetaDetallePage extends ConsumerWidget {
       ref.watch(productosProviderProvider),
     );
 
-    return asyncReceta.when(
-      data: (receta) {
-        return Scaffold(
-          appBar: AppBarDetalles<Receta>(
-            hasMenu: true,
-            onPrimaryPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditarRecetaPage(receta: receta),
-                ),
-              ).then((_) => ref.invalidate(recetaDetailProvider(recetaId)));
-            },
-            title: "Detalle Receta",
-            onDeletePressed: () {
-              mostrarDialogoConfirmacion(
-                context: context,
-                titulo: "Eliminar receta",
-                contenido:
-                    "Esta accion no se puede deshacer.\n"
-                    "Se eliminara la receta y sus componentes.",
-                textoBotonConfirmacion: "Eliminar",
-                onConfirm: () => delete(
-                  context: context,
-                  ref: ref,
-                  provider: recetaProviderProvider,
-                  id: recetaId,
-                  mensajeExito: "Receta eliminada con exito",
-                  mensajeError:
-                      "Error al eliminar la receta. Por favor, intente de nuevo.",
-                ),
-              );
-            },
-          ),
-          body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBarDetalles<Receta>(
+        hasMenu: true,
+        onPrimaryPressed: () {
+          final receta = asyncReceta.asData?.value;
+          if (receta != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditarRecetaPage(receta: receta),
+              ),
+            ).then((_) => ref.invalidate(recetaDetailProvider(recetaId)));
+          }
+        },
+        title: "Detalle Receta",
+        onDeletePressed: () {
+          mostrarDialogoConfirmacion(
+            context: context,
+            titulo: "Eliminar receta",
+            contenido:
+                "Esta accion no se puede deshacer.\n"
+                "Se eliminara la receta y sus componentes.",
+            textoBotonConfirmacion: "Eliminar",
+            onConfirm: () => delete(
+              context: context,
+              ref: ref,
+              provider: recetaProviderProvider,
+              id: recetaId,
+              mensajeExito: "Receta eliminada con exito",
+              mensajeError:
+                  "Error al eliminar la receta. Por favor, intente de nuevo.",
+            ),
+          );
+        },
+      ),
+      body: asyncReceta.when(
+        data: (receta) {
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -140,11 +143,11 @@ class RecetaDetallePage extends ConsumerWidget {
                 ),
               ],
             ),
-          ),
-        );
-      },
-      loading: () => const SkeletonRecetaDetalle(),
-      error: (e, _) => ErrorView(message: 'Error al cargar la receta'),
+          );
+        },
+        loading: () => const SkeletonRecetaDetalle(),
+        error: (e, _) => ErrorView(message: 'Error al cargar la receta'),
+      ),
     );
   }
 

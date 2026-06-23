@@ -6,7 +6,6 @@ import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_detallado.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
-import 'package:cafe_valdivia/core/models/cliente_extension.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
@@ -19,13 +18,13 @@ class Clientelista extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncClientes = debugOverride(
+    final asyncClientesKilos = debugOverride(
       ref,
-      'clientes',
-      ref.watch(clienteProvider),
+      'clientes_kilos',
+      ref.watch(clientesKilosListProvider),
     );
 
-    return asyncClientes.when(
+    return asyncClientesKilos.when(
       data: (clientes) {
         if (clientes.isEmpty) {
           return const Center(child: Text('No hay clientes para mostrar.'));
@@ -33,59 +32,69 @@ class Clientelista extends ConsumerWidget {
           appLogger.i(clientes);
         }
 
-        return ListviewCustom<Cliente>(
+        return ListviewCustom<Map<String, dynamic>>(
           data: clientes,
           keyBuilder: (cliente) {
-            return ValueKey(
-              cliente.idCliente != null
-                  ? 'cliente-${cliente.idCliente}'
-                  : cliente.hashCode,
+            final id = cliente['id_cliente'] as int?;
+            return ValueKey(id != null ? 'cliente-$id' : cliente.hashCode);
+          },
+          titleBuilder: (cliente) {
+            final nombre = cliente['nombre'] as String? ?? '';
+            final apellido = cliente['apellido'] as String? ?? '';
+            final nombreCompleto = '$nombre $apellido'.trim();
+            return Text(
+              nombreCompleto.isNotEmpty ? nombreCompleto : 'John Doe',
             );
           },
-          titleBuilder: (cliente) =>
-              cliente.nombre.isEmpty ? Text('Jonh Doe') : Text(cliente.nombre),
-          subtitleBuilder: (cliente) => cliente.telefono.toString().isEmpty
-              ? Text('xxxxxxxxxx')
-              : Text(cliente.telefono.toString()),
-          leadingBuilder: (cliente) => CircleAvatar(
-            backgroundColor: theme.colorScheme.primaryContainer,
-            child: Text(
-              cliente.iniciales.isNotEmpty ? cliente.iniciales : "JD",
-              style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
-            ),
-          ),
-          trailingBuilder: (cliente) => Text(
-            //TODO: Aqui se tiene que poner los kilos
-            cliente.idCliente != null ? '${cliente.idCliente} KG' : '0 KG',
-          ),
-          onTapCallback: (cliente) => {
-            if (cliente.idCliente != null)
-              {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ClienteDetallado(clienteId: cliente.idCliente!),
-                  ),
+          subtitleBuilder: (cliente) {
+            final telefono = cliente['telefono'] as String? ?? '';
+            return Text(telefono.isNotEmpty ? telefono : 'xxxxxxxxxx');
+          },
+          leadingBuilder: (cliente) {
+            final nombre = cliente['nombre'] as String? ?? '';
+            final apellido = cliente['apellido'] as String? ?? '';
+            final iniciales =
+                '${nombre.isNotEmpty ? nombre[0] : ''}${apellido.isNotEmpty ? apellido[0] : ''}';
+            return CircleAvatar(
+              backgroundColor: theme.colorScheme.primaryContainer,
+              child: Text(
+                iniciales.isNotEmpty ? iniciales : 'JD',
+                style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+              ),
+            );
+          },
+          trailingBuilder: (cliente) {
+            final kilos = (cliente['kilos'] as num?) ?? 0;
+            return Text('${kilos.toStringAsFixed(1)} KG');
+          },
+          onTapCallback: (cliente) {
+            final id = cliente['id_cliente'] as int?;
+            if (id != null) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ClienteDetallado(clienteId: id),
                 ),
-              },
+              );
+            }
           },
           onEditDismissed: (cliente) async {
-            if (cliente.idCliente != null) {
+            final id = cliente['id_cliente'] as int?;
+            if (id != null) {
+              final clienteObj = Cliente.fromJson(cliente);
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      EditarClienteDetallado(cliente: cliente),
+                      EditarClienteDetallado(cliente: clienteObj),
                 ),
-              ).then(
-                (_) =>
-                    ref.invalidate(clienteDetailProvider(cliente.idCliente!)),
-              );
+              ).then((_) => ref.invalidate(clienteDetailProvider(id)));
             }
             return null;
           },
           onDeleteDismissed: (cliente) async {
+            final id = cliente['id_cliente'] as int?;
+            if (id == null) return false;
             final bool confirmacion =
                 await mostrarDialogoConfirmacion(
                   context: context,
@@ -97,7 +106,7 @@ class Clientelista extends ConsumerWidget {
                       context: context,
                       ref: ref,
                       provider: clienteProvider,
-                      id: cliente.idCliente!,
+                      id: id,
                       mensajeExito: "El cliente se ha borrado con exito",
                       detalle: false,
                       mensajeError:
@@ -113,8 +122,10 @@ class Clientelista extends ConsumerWidget {
           },
         );
       },
-      error: (err, stack) =>
-          const ErrorView(message: 'Error al cargar los clientes'),
+      error: (err, stack) => ErrorView(
+        message: 'Error al cargar los clientes',
+        onRetry: () => ref.invalidate(clientesKilosListProvider),
+      ),
       loading: () => SkeletonListTiles(n: 10),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
@@ -325,10 +326,12 @@ class AgregarOrdenProduccionPageState
               ),
             );
           },
-          error: (e, _) => Text(
-            'Error: $e',
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
+          error: (e, _) => ErrorRetryField(
+                label: "Insumos",
+                leadingIcon: Icons.inventory_2_rounded,
+                showCarita: true,
+                onRetry: () => ref.invalidate(articuloProviderProvider),
+              ),
           loading: () => SkeletonListTiles(n: 10),
         );
       },
