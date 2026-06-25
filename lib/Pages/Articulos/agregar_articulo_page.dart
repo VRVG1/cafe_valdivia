@@ -22,12 +22,11 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   final TextEditingController _costoUnitarioController =
       TextEditingController();
   UnidadMedida? _selectedUnidadMedidad;
-  String? tipoSeleccionado;
+  String tipoSeleccionado = ArticuloTipo.insumo.value;
 
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
-  bool _submitted = false;
 
   @override
   void initState() {
@@ -43,7 +42,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
   }
 
   Future<void> _guardar() async {
-    if (_selectedUnidadMedidad == null || tipoSeleccionado == null) return;
+    if (_selectedUnidadMedidad == null) return;
     if (_selectedUnidadMedidad!.idUnidadMedida == null) return;
 
     final Articulo articulo = Articulo(
@@ -53,7 +52,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
       costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
       precioVenta: 0.0,
       stock: 0.0,
-      tipo: ArticuloTipo.fromValue(tipoSeleccionado!),
+      tipo: ArticuloTipo.fromValue(tipoSeleccionado),
     );
     create<Articulo>(
       context: context,
@@ -106,6 +105,12 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                 text: "Nombre",
                 controller: _nombreController,
                 icon: Icons.person_outline,
+                customValidator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Por favor, ingrese el Nombre";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
               _buildDropDownMenu(asyncUM),
@@ -123,18 +128,14 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DropdownMenu<String>(
-                        initialSelection: state.value,
-                        leadingIcon: const Icon(
-                          Icons.category,
-                        ), // ✅ Ahora sí funciona
+                        initialSelection: tipoSeleccionado,
+                        leadingIcon: const Icon(Icons.category),
                         label: const Text("Tipo"),
                         expandedInsets: EdgeInsets.zero,
                         requestFocusOnTap: true,
                         onSelected: (String? tipo) {
+                          tipoSeleccionado = tipo ?? ArticuloTipo.insumo.value;
                           state.didChange(tipo);
-                          setState(() {
-                            tipoSeleccionado = tipo;
-                          });
                         },
                         dropdownMenuEntries: [
                           DropdownMenuEntry(
@@ -174,6 +175,16 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                 textInputType: TextInputType.number,
                 controller: _costoUnitarioController,
                 icon: Icons.attach_money,
+                customValidator: (value) {
+                  final numero = double.tryParse(value ?? "Necesito ayuda");
+                  if (numero == null) {
+                    return 'Ingrese un número válido';
+                  }
+                  if (numero < 0) {
+                    return 'El costo no puede ser negativo';
+                  }
+                  return null;
+                },
               ),
             ],
           ),
@@ -187,17 +198,13 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
     required TextEditingController controller,
     required IconData icon,
     TextInputType? textInputType,
+    String? Function(String?)? customValidator,
   }) {
     return TextFormField(
       enabled: !_isLoading,
       keyboardType: textInputType,
       controller: controller,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Por favor, ingrese el $text';
-        }
-        return null;
-      },
+      validator: customValidator,
       decoration: InputDecoration(
         labelText: text,
         border: OutlineInputBorder(),
@@ -210,8 +217,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
     return asyncUM.when(
       data: (ums) {
         return FormField<UnidadMedida>(
-          initialValue:
-              _selectedUnidadMedidad, // ← importante para el estado inicial
+          initialValue: _selectedUnidadMedidad,
           validator: (value) {
             if (value == null) {
               return "Ingresa una unidad de medida";
@@ -224,14 +230,11 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
               children: [
                 DropdownMenu<UnidadMedida>(
                   label: const Text("Unidad de Medida"),
-                  leadingIcon: const Icon(
-                    Icons.balance_rounded,
-                  ), // ✅ Ahora sí funciona
+                  leadingIcon: const Icon(Icons.balance_rounded),
                   expandedInsets: EdgeInsets.zero,
-                  initialSelection:
-                      state.value, // ← toma el valor del FormField
+                  initialSelection: state.value,
                   onSelected: (UnidadMedida? unidadMedida) {
-                    state.didChange(unidadMedida); // ← notifica al FormField
+                    state.didChange(unidadMedida);
                     setState(() {
                       _selectedUnidadMedidad = unidadMedida;
                     });

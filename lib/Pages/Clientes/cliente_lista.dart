@@ -27,7 +27,10 @@ class Clientelista extends ConsumerWidget {
     return asyncClientesKilos.when(
       data: (clientes) {
         if (clientes.isEmpty) {
-          return const Center(child: Text('No hay clientes para mostrar.'));
+          return ErrorView(
+            message: 'No hay clientes para mostrar',
+            onRetry: () => ref.invalidate(clientesKilosListProvider),
+          );
         } else {
           appLogger.i(clientes);
         }
@@ -70,6 +73,7 @@ class Clientelista extends ConsumerWidget {
           onTapCallback: (cliente) {
             final id = cliente['id_cliente'] as int?;
             if (id != null) {
+              appLogger.w(id);
               Navigator.push(
                 context,
                 MaterialPageRoute(

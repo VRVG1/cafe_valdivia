@@ -64,6 +64,8 @@ class ClienteRepository extends BaseRepository<Cliente> {
 
     final List<Map<String, dynamic>> result = await db.query(
       "v_clientes_kilos",
+      where: where,
+      whereArgs: whereArgs,
     );
     appLogger.i(result);
     return List<Map<String, dynamic>>.from(result);

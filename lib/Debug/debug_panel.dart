@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Debug/debug_state.dart';
+import 'package:cafe_valdivia/services/seed_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -141,6 +142,30 @@ class DebugPanel extends ConsumerWidget {
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
+            ),
+          ),
+          const Divider(height: 1),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () async {
+                  await seedDatabase();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Base de datos poblada con datos de prueba',
+                        ),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+                icon: const Icon(Icons.dataset_linked),
+                label: const Text('Cargar datos de prueba'),
+              ),
             ),
           ),
           const Divider(height: 1),

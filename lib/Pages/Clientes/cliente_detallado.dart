@@ -5,7 +5,7 @@ import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
-import 'package:cafe_valdivia/core/models/cliente_extension.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:flutter/material.dart';
@@ -22,15 +22,28 @@ class ClienteDetallado extends ConsumerWidget {
     final asyncCliente = debugOverride(
       ref,
       'cliente_detalle',
-      ref.watch(clienteDetailProvider(clienteId)),
+      ref.watch(clienteKilosProvider(clienteId)),
     );
+
+    String getKilos(AsyncValue<Map<String, dynamic>?> asyncKilos) {
+      final data = asyncKilos.asData?.value;
+      final String kilo = data != null ? data['kilos'].toString() : "X";
+      return kilo;
+    }
+
+    String getTotal(AsyncValue<Map<String, dynamic>?> asyncKilos) {
+      final data = asyncKilos.asData?.value;
+      final total = data?['total'] ?? 0;
+      return '\$${(total as num).toStringAsFixed(2)}';
+    }
 
     return Scaffold(
       appBar: AppBarDetalles<Cliente>(
         title: "Cliente",
         hasMenu: true,
         onPrimaryPressed: () {
-          final cliente = asyncCliente.asData?.value;
+          final data = asyncCliente.asData?.value;
+          final Cliente? cliente = data != null ? Cliente.fromJson(data) : null;
           if (cliente != null) {
             Navigator.push(
               context,
@@ -41,26 +54,30 @@ class ClienteDetallado extends ConsumerWidget {
           }
         },
         onDeletePressed: () {
-          mostrarDialogoConfirmacion(
-            context: context,
-            titulo: "Seguro que quiere eliminar este cliente?",
-            contenido: "Esta accion no se puede deshacer",
-            textoBotonConfirmacion: "Eliminar",
-            onConfirm: () async {
-              final bool exito = await delete(
-                context: context,
-                ref: ref,
-                provider: clienteProvider,
-                id: asyncCliente.asData?.value.idCliente ?? clienteId,
-                mensajeExito: "El cliente se ha borrado con exito",
-                mensajeError:
-                    "Error al eliminar el cliente,Por favor, intente de nuevo",
-              );
-              if (exito && context.mounted) {
-                Navigator.of(context).pop();
-              }
-            },
-          );
+          final data = asyncCliente.asData?.value;
+          final Cliente? cliente = data != null ? Cliente.fromJson(data) : null;
+          if (cliente != null) {
+            mostrarDialogoConfirmacion(
+              context: context,
+              titulo: "Seguro que quiere eliminar este cliente?",
+              contenido: "Esta accion no se puede deshacer",
+              textoBotonConfirmacion: "Eliminar",
+              onConfirm: () async {
+                final bool exito = await delete(
+                  context: context,
+                  ref: ref,
+                  provider: clienteProvider,
+                  id: cliente.idCliente ?? clienteId,
+                  mensajeExito: "El cliente se ha borrado con exito",
+                  mensajeError:
+                      "Error al eliminar el cliente,Por favor, intente de nuevo",
+                );
+                if (exito && context.mounted) {
+                  Navigator.of(context).pop();
+                }
+              },
+            );
+          }
         },
       ),
       body: asyncCliente.when(
@@ -71,93 +88,89 @@ class ClienteDetallado extends ConsumerWidget {
         ),
         data: (cliente) {
           final asyncKilos = ref.watch(clienteKilosProvider(clienteId));
-          return RefreshIndicator(
-            onRefresh: () async =>
-                ref.invalidate(clienteDetailProvider(clienteId)),
-            child: ListView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 16.0,
-              ),
-              children: [
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    radius: 64,
-                    child: Text(
-                      cliente.iniciales,
-                      style: theme.textTheme.displayMedium?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
+
+          return cliente != null
+              ? RefreshIndicator(
+                  onRefresh: () async =>
+                      ref.invalidate(clienteDetailProvider(clienteId)),
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 16.0,
                     ),
+                    children: [
+                      Center(
+                        child: CircleAvatar(
+                          backgroundColor: theme.colorScheme.primaryContainer,
+                          radius: 64,
+                          child: Text(
+                            "${cliente['nombre'].isNotEmpty ? cliente['nombre'][0] : ''}${cliente['apellido'].isNotEmpty ? cliente['apellido'][0] : ''}",
+                            style: theme.textTheme.displayMedium?.copyWith(
+                              color: theme.colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        "${cliente['nombre'].isNotEmpty ? cliente['nombre'] : ''} ${cliente['apellido'].isNotEmpty ? cliente['apellido'] : ''}",
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 48),
+                      _buildInfoSection(
+                        context: context,
+                        title: "Datos de Contacto",
+                        children: [
+                          _buildDataTile(
+                            context: context,
+                            icon: Icons.phone_android_rounded,
+                            label: "Teléfono",
+                            value: cliente['telefono'].isNotEmpty
+                                ? cliente['telefono']
+                                : 'xxxxxxxxxx',
+                          ),
+                          const SizedBox(height: 16),
+                          _buildDataTile(
+                            context: context,
+                            icon: Icons.email_rounded,
+                            label: "Email",
+                            value: cliente['email'].isNotEmpty
+                                ? cliente['email']
+                                : '404@404.com',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      _buildInfoSection(
+                        context: context,
+                        title: "Ventas Totales",
+                        children: [
+                          _buildSalesCard(
+                            context: context,
+                            label: "Kilos",
+                            value: getKilos(asyncKilos),
+                            unit: "KG",
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildSalesCard(
+                            context: context,
+                            label: "Monto",
+                            value: getTotal(asyncKilos),
+                            unit: "MXN",
+                            color: theme.colorScheme.secondary,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  cliente.nombreYApellido,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 48),
-                _buildInfoSection(
-                  context: context,
-                  title: "Datos de Contacto",
-                  children: [
-                    _buildDataTile(
-                      context: context,
-                      icon: Icons.phone_android_rounded,
-                      label: "Teléfono",
-                      value: cliente.telefono.toString(),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildDataTile(
-                      context: context,
-                      icon: Icons.email_rounded,
-                      label: "Email",
-                      value: cliente.email ?? 'No especificado',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                _buildInfoSection(
-                  context: context,
-                  title: "Ventas Totales",
-                  children: [
-                    _buildSalesCard(
-                      context: context,
-                      label: "Kilos",
-                      value: asyncKilos.when(
-                        data: (data) => data?['kilos']?.toStringAsFixed(2) ?? '0',
-                        loading: () => '...',
-                        error: (_, _) => 'Error',
-                      ),
-                      unit: "KG",
-                      color: theme.colorScheme.primary,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSalesCard(
-                      context: context,
-                      label: "Monto",
-                      value: asyncKilos.when(
-                        data: (data) {
-                          final total = data?['total'] ?? 0;
-                          return '\$${(total as num).toStringAsFixed(2)}';
-                        },
-                        loading: () => '...',
-                        error: (_, _) => 'Error',
-                      ),
-                      unit: "MXN",
-                      color: theme.colorScheme.secondary,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
+                )
+              : ErrorView(message: "No se pudo cargar el Cliente");
         },
       ),
     );

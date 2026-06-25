@@ -38,9 +38,7 @@ class ArticuloDetalladoPage extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => EditarArticuloPage(articulo: articulo),
               ),
-            ).then(
-              (_) => ref.invalidate(articuloDetailProvider(articuloId)),
-            );
+            ).then((_) => ref.invalidate(articuloDetailProvider(articuloId)));
           }
         },
         onDeletePressed: () {
@@ -122,6 +120,11 @@ class ArticuloDetalladoPage extends ConsumerWidget {
                     description: Text(
                       articulo.descripcion ?? "No especificado",
                     ),
+                  ),
+                  DetailElement(
+                    icon: Icon(Icons.inventory_2_rounded),
+                    title: Text("Tipo de Articulo"),
+                    description: Text(articulo.tipo.displayName),
                   ),
                 ],
               ),

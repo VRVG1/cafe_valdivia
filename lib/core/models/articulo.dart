@@ -37,4 +37,15 @@ enum ArticuloTipo {
       orElse: () => throw ArgumentError('Tipo de artículo desconocido: $value'),
     );
   }
+
+  String get displayName {
+    switch (this) {
+      case ArticuloTipo.insumo:
+        return 'Insumo';
+      case ArticuloTipo.producto:
+        return 'Producto';
+      case ArticuloTipo.productoIntermedio:
+        return 'Producto intermedio';
+    }
+  }
 }
