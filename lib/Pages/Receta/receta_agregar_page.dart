@@ -137,6 +137,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close),
         ),
@@ -318,9 +319,9 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   ),
                   const Spacer(),
                   IconButton(
+                    tooltip: "Eliminar componente",
                     onPressed: () => _removerComponente(index),
                     icon: Icon(Icons.delete_outline_rounded, color: cs.error),
-                    visualDensity: VisualDensity.compact,
                   ),
                 ],
               ),

@@ -3,6 +3,14 @@ import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+Widget _botonConSemantics({
+  required String label,
+  required String hint,
+  required Widget child,
+}) {
+  return Semantics(button: true, label: label, hint: hint, child: child);
+}
+
 Future<bool?> mostrarDialogoConfirmacion({
   required BuildContext context,
   required String titulo,
@@ -17,27 +25,36 @@ Future<bool?> mostrarDialogoConfirmacion({
         title: Text(titulo),
         content: Text(contenido),
         actions: <Widget>[
-          TextButton(
-            child: const Text('Cancelar'),
-            onPressed: () {
-              Navigator.of(dialogContext).pop(false); // Cierra el diálogo
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: textoBotonConfirmacion == 'Eliminar'
-                  ? Theme.of(context).colorScheme.onErrorContainer
-                  : null,
-              backgroundColor: textoBotonConfirmacion == 'Eliminar'
-                  ? Theme.of(context).colorScheme.errorContainer
-                  : null,
-              elevation: 0,
+          _botonConSemantics(
+            label: "Cancelar",
+            hint: "Cerrar el diálogo sin realizar cambios",
+            child: TextButton(
+              autofocus: true,
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop(false); // Cierra el diálogo
+              },
             ),
-            onPressed: () {
-              onConfirm();
-              Navigator.of(dialogContext).pop(true); // Cierra el diálogo
-            },
-            child: Text(textoBotonConfirmacion),
+          ),
+          _botonConSemantics(
+            label: "textoBotonConfirmacion",
+            hint: "Confirmar la accion",
+            child: TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: textoBotonConfirmacion == 'Eliminar'
+                    ? Theme.of(context).colorScheme.onErrorContainer
+                    : null,
+                backgroundColor: textoBotonConfirmacion == 'Eliminar'
+                    ? Theme.of(context).colorScheme.errorContainer
+                    : null,
+                elevation: 0,
+              ),
+              onPressed: () {
+                onConfirm();
+                Navigator.of(dialogContext).pop(true); // Cierra el diálogo
+              },
+              child: Text(textoBotonConfirmacion),
+            ),
           ),
         ],
       );
@@ -54,13 +71,21 @@ Future<bool> mostrarDialogoDescartarCambios(BuildContext context) async {
             'Hay cambios sin guardar. Si sales, se perderán.',
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+            _botonConSemantics(
+              label: "Cancelar",
+              hint: "Cancel la accion de retroceso",
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
+              ),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Descartar'),
+            _botonConSemantics(
+              label: "Descartar",
+              hint: "Cancela los cambios",
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Descartar'),
+              ),
             ),
           ],
         ),

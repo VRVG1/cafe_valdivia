@@ -132,12 +132,17 @@ class DebugPanel extends ConsumerWidget {
                 const Spacer(),
                 if (debug.pagesWithErrors.isNotEmpty ||
                     debug.loadings.isNotEmpty)
-                  TextButton(
-                    onPressed: () =>
-                        ref.read(debugStateProvider.notifier).clearAll(),
-                    child: const Text('Limpiar todo'),
+                  Semantics(
+                    label: "Limpiar todo",
+                    hint: "Limpia debug seleccionado",
+                    child: TextButton(
+                      onPressed: () =>
+                          ref.read(debugStateProvider.notifier).clearAll(),
+                      child: const Text('Limpiar todo'),
+                    ),
                   ),
                 IconButton(
+                  tooltip: "Cerrar panel de Depuración",
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
                 ),

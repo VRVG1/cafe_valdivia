@@ -83,6 +83,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       backgroundColor: colorScheme.surface,
       toolbarHeight: 120, // Más alto para acomodar chips
       leading: IconButton(
+        tooltip: "Volver",
         onPressed: () {
           ref.invalidate(filtroBusquedaProvider);
           Navigator.of(context).pop();

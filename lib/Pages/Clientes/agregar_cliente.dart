@@ -69,6 +69,7 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -159,36 +160,39 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        FilledButton(
-          // El botón se deshabilita si el formulario no es válido
-          onPressed: _isLoading
-              ? null
-              : () async {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    try {
-                      await _guardarCliente();
-                    } finally {
-                      if (context.mounted) {
-                        setState(() {
-                          _isLoading = false;
-                        });
+        Semantics(
+          label: "Guardar cliente",
+          child: FilledButton(
+            // El botón se deshabilita si el formulario no es válido
+            onPressed: _isLoading
+                ? null
+                : () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      try {
+                        await _guardarCliente();
+                      } finally {
+                        if (context.mounted) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
                       }
                     }
-                  }
-                },
-          child: _isLoading
-              ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: theme.colorScheme.onSecondaryContainer,
-                    strokeWidth: 2,
-                  ),
-                )
-              : const Text("Guardar"),
+                  },
+            child: _isLoading
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.onSecondaryContainer,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Text("Guardar"),
+          ),
         ),
       ],
     );

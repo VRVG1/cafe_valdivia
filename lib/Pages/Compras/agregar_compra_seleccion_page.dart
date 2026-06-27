@@ -82,6 +82,7 @@ class _AgregarCompraSeleccionPageState<T>
           appBar: widget.buildAppBar(context, ref),
           body: _buildDataState(elements),
           floatingActionButton: FloatingActionButton(
+            tooltip: "Agregar",
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(

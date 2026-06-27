@@ -150,6 +150,7 @@ class AgregarOrdenProduccionPageState
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close),
         ),
@@ -327,11 +328,11 @@ class AgregarOrdenProduccionPageState
             );
           },
           error: (e, _) => ErrorRetryField(
-                label: "Insumos",
-                leadingIcon: Icons.inventory_2_rounded,
-                showCarita: true,
-                onRetry: () => ref.invalidate(articuloProviderProvider),
-              ),
+            label: "Insumos",
+            leadingIcon: Icons.inventory_2_rounded,
+            showCarita: true,
+            onRetry: () => ref.invalidate(articuloProviderProvider),
+          ),
           loading: () => SkeletonListTiles(n: 10),
         );
       },

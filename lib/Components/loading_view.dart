@@ -568,6 +568,7 @@ class SkeletonEditar extends StatelessWidget {
             context,
           ).read(debugStateProvider).enabled)
             IconButton(
+              tooltip: "Abrir panel de depuración",
               icon: const Icon(Icons.bug_report),
               onPressed: () {
                 showModalBottomSheet(
@@ -579,6 +580,7 @@ class SkeletonEditar extends StatelessWidget {
               },
             ),
           IconButton(
+            tooltip: "Opciones",
             icon: const Icon(Icons.more_vert),
             onPressed: () {
               Navigator.of(context).push(

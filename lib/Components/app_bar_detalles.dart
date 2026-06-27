@@ -37,12 +37,14 @@ class AppBarDetalles<T> extends ConsumerWidget implements PreferredSizeWidget {
       actions: [
         // Botón de Edición
         IconButton(
+          tooltip: "Editar",
           icon: Icon(iconShow),
           color: theme.colorScheme.primary,
           onPressed: onPrimaryPressed,
         ),
         if (hasMenu)
           PopupMenuButton<String>(
+            tooltip: "Más opciones",
             icon: const Icon(Icons.more_vert_rounded),
             onSelected: (String result) async {
               if (result == 'Eliminar') {

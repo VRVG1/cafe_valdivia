@@ -67,19 +67,17 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     if (!mounted) return;
 
     try {
-      final detalles = await repo.getRecetaDetalles(
-        widget.receta.idReceta!,
-      );
+      final detalles = await repo.getRecetaDetalles(widget.receta.idReceta!);
 
       setState(() {
         for (final d in detalles) {
           final row = _ComponenteRow();
-          row.articulo = insumos.where(
-            (a) => a.idArticulo == d.idArticulo,
-          ).firstOrNull;
-          row.unidad = ums.where(
-            (u) => u.idUnidadMedida == d.idUnidad,
-          ).firstOrNull;
+          row.articulo = insumos
+              .where((a) => a.idArticulo == d.idArticulo)
+              .firstOrNull;
+          row.unidad = ums
+              .where((u) => u.idUnidadMedida == d.idUnidad)
+              .firstOrNull;
           row.cantidadController.text = d.cantidad.toString();
           _componentes.add(row);
         }
@@ -131,10 +129,9 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     }).toList();
 
     try {
-      await ref.read(recetaRepositoryProvider).updateReceta(
-            receta: receta,
-            detalles: detalles,
-          );
+      await ref
+          .read(recetaRepositoryProvider)
+          .updateReceta(receta: receta, detalles: detalles);
 
       if (!context.mounted) return;
 
@@ -162,9 +159,21 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final asyncProductos = debugOverride(ref, 'receta_editar_productos', ref.watch(productosProviderProvider));
-    final asyncInsumos = debugOverride(ref, 'receta_editar_insumos', ref.watch(articuloProviderProvider));
-    final asyncUms = debugOverride(ref, 'receta_editar_ums', ref.watch(unidadMedidaProvider));
+    final asyncProductos = debugOverride(
+      ref,
+      'receta_editar_productos',
+      ref.watch(productosProviderProvider),
+    );
+    final asyncInsumos = debugOverride(
+      ref,
+      'receta_editar_insumos',
+      ref.watch(articuloProviderProvider),
+    );
+    final asyncUms = debugOverride(
+      ref,
+      'receta_editar_ums',
+      ref.watch(unidadMedidaProvider),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -176,6 +185,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close),
         ),
@@ -213,16 +223,12 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                 data: (productos) {
                   if (_productoSeleccionado == null && productos.isNotEmpty) {
                     final match = productos.where(
-                      (p) =>
-                          p.idArticulo ==
-                          widget.receta.idArticuloProducto,
+                      (p) => p.idArticulo == widget.receta.idArticuloProducto,
                     );
                     if (match.isNotEmpty) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (mounted) {
-                          setState(
-                            () => _productoSeleccionado = match.first,
-                          );
+                          setState(() => _productoSeleccionado = match.first);
                         }
                       });
                     }
@@ -243,12 +249,11 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                   );
                 },
                 error: (e, _) => ErrorRetryField(
-                      label: "Producto final",
-                      leadingIcon: Icons.category_rounded,
-                      showCarita: true,
-                      onRetry: () =>
-                          ref.invalidate(productosProviderProvider),
-                    ),
+                  label: "Producto final",
+                  leadingIcon: Icons.category_rounded,
+                  showCarita: true,
+                  onRetry: () => ref.invalidate(productosProviderProvider),
+                ),
                 loading: () => const LinearProgressIndicator(),
               ),
               const SizedBox(height: 16),
@@ -268,8 +273,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                 decoration: const InputDecoration(
                   labelText: "Cantidad base",
                   border: OutlineInputBorder(),
-                  prefixIcon:
-                      Icon(Icons.production_quantity_limits_rounded),
+                  prefixIcon: Icon(Icons.production_quantity_limits_rounded),
                   suffixText: "unidades",
                 ),
               ),
@@ -345,12 +349,9 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                   ),
                   const Spacer(),
                   IconButton(
+                    tooltip: "Eliminar Componente",
                     onPressed: () => _removerComponente(index),
-                    icon: Icon(
-                      Icons.delete_outline_rounded,
-                      color: cs.error,
-                    ),
-                    visualDensity: VisualDensity.compact,
+                    icon: Icon(Icons.delete_outline_rounded, color: cs.error),
                   ),
                 ],
               ),
@@ -383,12 +384,11 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                   }).toList(),
                 ),
                 error: (e, _) => ErrorRetryField(
-                      label: "Artículo",
-                      leadingIcon: Icons.inventory_2_rounded,
-                      showCarita: true,
-                      onRetry: () =>
-                          ref.invalidate(articuloProviderProvider),
-                    ),
+                  label: "Artículo",
+                  leadingIcon: Icons.inventory_2_rounded,
+                  showCarita: true,
+                  onRetry: () => ref.invalidate(articuloProviderProvider),
+                ),
                 loading: () => const LinearProgressIndicator(),
               ),
               const SizedBox(height: 12),
@@ -425,12 +425,11 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                         }).toList(),
                       ),
                       error: (e, _) => ErrorRetryField(
-                            label: "Unidad",
-                            leadingIcon: Icons.balance_rounded,
-                            showCarita: true,
-                            onRetry: () =>
-                                ref.invalidate(unidadMedidaProvider),
-                          ),
+                        label: "Unidad",
+                        leadingIcon: Icons.balance_rounded,
+                        showCarita: true,
+                        onRetry: () => ref.invalidate(unidadMedidaProvider),
+                      ),
                       loading: () => const LinearProgressIndicator(),
                     ),
                   ),

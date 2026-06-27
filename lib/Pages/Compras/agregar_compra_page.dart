@@ -305,6 +305,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -710,6 +711,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     VoidCallback onPressed,
   ) {
     return IconButton(
+      tooltip: "Accion especial",
       onPressed: onPressed,
       icon: Container(
         width: 60,

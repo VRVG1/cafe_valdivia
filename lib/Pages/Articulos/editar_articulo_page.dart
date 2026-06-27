@@ -128,6 +128,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                 ),
               ),
               leading: IconButton(
+                tooltip: "Cerrar",
                 onPressed: () => Navigator.of(context).pop(),
                 icon: Icon(Icons.close),
               ),
@@ -260,11 +261,11 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
             );
           },
           error: (err, stack) => ErrorRetryField(
-                label: "Unidad de Medida",
-                leadingIcon: Icons.balance_rounded,
-                showCarita: true,
-                onRetry: () => ref.invalidate(unidadMedidaProvider),
-              ),
+            label: "Unidad de Medida",
+            leadingIcon: Icons.balance_rounded,
+            showCarita: true,
+            onRetry: () => ref.invalidate(unidadMedidaProvider),
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
@@ -274,35 +275,38 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
   Widget _buildActionButtons(BuildContext context, UnidadMedida unidadInicial) {
     final theme = Theme.of(context);
 
-    return FilledButton(
-      onPressed: _isLoading
-          ? null
-          : () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                setState(() {
-                  _isLoading = true;
-                });
-                try {
-                  await _update(unidadInicial);
-                } finally {
-                  if (context.mounted) {
-                    setState(() {
-                      _isLoading = false;
-                    });
+    return Semantics(
+      label: "Guardar Cambios",
+      child: FilledButton(
+        onPressed: _isLoading
+            ? null
+            : () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  try {
+                    await _update(unidadInicial);
+                  } finally {
+                    if (context.mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
                   }
                 }
-              }
-            },
-      child: _isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-          : const Text("Guardar"),
+              },
+        child: _isLoading
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.onSecondaryContainer,
+                  strokeWidth: 2,
+                ),
+              )
+            : const Text("Guardar"),
+      ),
     );
   }
 }

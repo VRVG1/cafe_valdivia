@@ -70,6 +70,7 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -240,11 +241,11 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
             );
           },
           error: (err, stack) => ErrorRetryField(
-                label: "Unidad de Medida",
-                leadingIcon: Icons.balance_rounded,
-                showCarita: true,
-                onRetry: () => ref.invalidate(unidadMedidaProvider),
-              ),
+            label: "Unidad de Medida",
+            leadingIcon: Icons.balance_rounded,
+            showCarita: true,
+            onRetry: () => ref.invalidate(unidadMedidaProvider),
+          ),
           loading: () => SkeletonDropMenu(),
         );
       },
@@ -256,35 +257,38 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        FilledButton(
-          onPressed: _isLoading
-              ? null
-              : () async {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    try {
-                      _crearProducto();
-                    } finally {
-                      if (context.mounted) {
-                        setState(() {
-                          _isLoading = false;
-                        });
+        Semantics(
+          label: "Guardar producto",
+          child: FilledButton(
+            onPressed: _isLoading
+                ? null
+                : () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      try {
+                        _crearProducto();
+                      } finally {
+                        if (context.mounted) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
                       }
                     }
-                  }
-                },
-          child: _isLoading
-              ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: theme.colorScheme.onSecondaryContainer,
-                    strokeWidth: 2,
-                  ),
-                )
-              : const Text("Guardar"),
+                  },
+            child: _isLoading
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: theme.colorScheme.onSecondaryContainer,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Text("Guardar"),
+          ),
         ),
       ],
     );

@@ -23,9 +23,7 @@ class EditarOrdenProduccionPageState
   @override
   void initState() {
     super.initState();
-    _notasController = TextEditingController(
-      text: widget.orden.notas ?? '',
-    );
+    _notasController = TextEditingController(text: widget.orden.notas ?? '');
   }
 
   @override
@@ -36,9 +34,7 @@ class EditarOrdenProduccionPageState
 
   Future<void> _guardar() async {
     final ordenActualizada = widget.orden.copyWith(
-      notas: _notasController.text.isNotEmpty
-          ? _notasController.text
-          : null,
+      notas: _notasController.text.isNotEmpty ? _notasController.text : null,
     );
 
     try {
@@ -48,9 +44,9 @@ class EditarOrdenProduccionPageState
 
       if (!context.mounted) return;
 
-      ref.invalidate(ordenProduccionDetalladaProvider(
-        widget.orden.idOrdenProduccion!,
-      ));
+      ref.invalidate(
+        ordenProduccionDetalladaProvider(widget.orden.idOrdenProduccion!),
+      );
 
       showCustomSnackBar(
         context: context,
@@ -82,6 +78,7 @@ class EditarOrdenProduccionPageState
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close),
         ),
@@ -184,10 +181,11 @@ class EditarOrdenProduccionPageState
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(color: cs.onSurfaceVariant, fontSize: 14)),
-          Text(value,
-              style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(color: cs.onSurfaceVariant, fontSize: 14),
+          ),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
         ],
       ),
     );

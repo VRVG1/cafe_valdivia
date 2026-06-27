@@ -185,6 +185,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        tooltip: "Agregar unidad de medida",
         onPressed: _showAddOrEditDialog,
         child: Icon(Icons.add),
       ),

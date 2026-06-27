@@ -63,6 +63,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () {
             if (!_isLoading) {
               Navigator.of(context).pop();
@@ -159,18 +160,21 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
 
   Widget _buildActionButtons(BuildContext context) {
     final theme = Theme.of(context);
-    return FilledButton(
-      onPressed: _isLoading ? null : _guardar,
-      child: _isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-          : const Text("Guardar"),
+    return Semantics(
+      label: "Guardar proveedor",
+      child: FilledButton(
+        onPressed: _isLoading ? null : _guardar,
+        child: _isLoading
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.onSecondaryContainer,
+                  strokeWidth: 2,
+                ),
+              )
+            : const Text("Guardar"),
+      ),
     );
   }
 }

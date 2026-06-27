@@ -247,6 +247,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
           ),
         ),
         leading: IconButton(
+          tooltip: "Cerrar",
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -642,6 +643,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     VoidCallback onPressed,
   ) {
     return IconButton(
+      tooltip: "Accion especial",
       onPressed: onPressed,
       icon: Container(
         width: 60,

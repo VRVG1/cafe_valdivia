@@ -40,6 +40,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       switch (currentPageIndex) {
         case 1:
           return FloatingActionButton(
+            tooltip: "Agregar Compra",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -52,6 +53,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 2:
           return FloatingActionButton(
+            tooltip: "Agregar Cliente",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -64,6 +66,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 3:
           return FloatingActionButton(
+            tooltip: "Agregar Proveedor",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -76,6 +79,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 4:
           return FloatingActionButton(
+            tooltip: "Agregar Articulo",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -88,6 +92,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 5:
           return FloatingActionButton(
+            tooltip: "Agregar Producto",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -100,6 +105,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 6:
           return FloatingActionButton(
+            tooltip: "Agregar Receta",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -112,6 +118,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 7:
           return FloatingActionButton(
+            tooltip: "Agregar Venta",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -124,6 +131,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           );
         case 8:
           return FloatingActionButton(
+            tooltip: "Agregar Produccion",
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -140,15 +148,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     }
 
     final List<Widget> pages = [
-      // Card(
-      //   shadowColor: Colors.transparent,
-      //   margin: const EdgeInsets.all(8.0),
-      //   child: SizedBox.expand(
-      //     child: Center(
-      //       child: Text('Home page', style: theme.textTheme.titleLarge),
-      //     ),
-      //   ),
-      // ),
       Cardalmacen(titulo: "Pene", cuerpo: "Sexo"),
 
       CompraListPage(),
@@ -222,18 +221,19 @@ class _NavigationScreenState extends State<NavigationScreen> {
       appBar: AppBar(
         title: GestureDetector(
           onLongPress: () {
-            ProviderScope.containerOf(context)
-                .read(debugStateProvider.notifier)
-                .toggle();
+            ProviderScope.containerOf(
+              context,
+            ).read(debugStateProvider.notifier).toggle();
           },
           child: const Text("Cafe Valdivia"),
         ),
         centerTitle: true,
         actions: <Widget>[
-          if (ProviderScope.containerOf(context)
-              .read(debugStateProvider)
-              .enabled)
+          if (ProviderScope.containerOf(
+            context,
+          ).read(debugStateProvider).enabled)
             IconButton(
+              tooltip: "Abrir panel de depuración",
               icon: const Icon(Icons.bug_report),
               onPressed: () {
                 showModalBottomSheet(
@@ -246,6 +246,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             ),
           IconButton(
             icon: const Icon(Icons.more_vert),
+            tooltip: "Opciones",
             onPressed: () {
               openOptions();
             },

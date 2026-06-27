@@ -122,46 +122,53 @@ class ErrorRetryField extends StatelessWidget {
 
     return SizedBox(
       height: 56,
-      child: OutlinedButton(
-        onPressed: onRetry,
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(color: cs.error.withAlpha(80)),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-        ),
-        child: Row(
-          children: [
-            if (leadingIcon != null) ...[
-              Icon(leadingIcon, color: cs.error, size: 20),
-              const SizedBox(width: 12),
-            ],
-            Expanded(
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '$label\n',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: cs.error.withAlpha(180),
+
+      child: Semantics(
+        label: "Reintentar",
+        hint: "Reintenta la carga de datos",
+        child: OutlinedButton(
+          onPressed: onRetry,
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: cs.error.withAlpha(80)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+          ),
+          child: Row(
+            children: [
+              if (leadingIcon != null) ...[
+                Icon(leadingIcon, color: cs.error, size: 20),
+                const SizedBox(width: 12),
+              ],
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '$label\n',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: cs.error.withAlpha(180),
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: message ?? 'Error al cargar',
-                      style: TextStyle(fontSize: 16, color: cs.error),
-                    ),
-                  ],
+                      TextSpan(
+                        text: message ?? 'Error al cargar',
+                        style: TextStyle(fontSize: 16, color: cs.error),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Text(
-              carita ?? '🔄',
-              style: TextStyle(
-                fontSize: carita != null ? 18 : 16,
-                color: cs.error,
+              Text(
+                carita ?? '🔄',
+                style: TextStyle(
+                  fontSize: carita != null ? 18 : 16,
+                  color: cs.error,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

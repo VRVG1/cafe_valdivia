@@ -108,6 +108,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
               ),
             ),
             leading: IconButton(
+              tooltip: "Cerrar",
               onPressed: () => Navigator.of(context).pop(),
               icon: Icon(Icons.close),
             ),
@@ -269,11 +270,11 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
             );
           },
           error: (err, stack) => ErrorRetryField(
-                label: "Unidad de Medida",
-                leadingIcon: Icons.balance_rounded,
-                showCarita: true,
-                onRetry: () => ref.invalidate(unidadMedidaProvider),
-              ),
+            label: "Unidad de Medida",
+            leadingIcon: Icons.balance_rounded,
+            showCarita: true,
+            onRetry: () => ref.invalidate(unidadMedidaProvider),
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
@@ -283,37 +284,40 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   Widget _buildActionButtons(BuildContext context) {
     final theme = Theme.of(context);
 
-    return FilledButton(
-      onPressed: _isLoading
-          ? null
-          : () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                setState(() => _isLoading = true);
-                try {
-                  if (mounted) {
-                    _update();
+    return Semantics(
+      label: "Guardar Cambios",
+      child: FilledButton(
+        onPressed: _isLoading
+            ? null
+            : () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() => _isLoading = true);
+                  try {
+                    if (mounted) {
+                      _update();
+                    }
+                  } catch (e, st) {
+                    appLogger.e(
+                      "Error al actualizar el producto",
+                      error: e,
+                      stackTrace: st,
+                    );
+                  } finally {
+                    if (mounted) setState(() => _isLoading = false);
                   }
-                } catch (e, st) {
-                  appLogger.e(
-                    "Error al actualizar el producto",
-                    error: e,
-                    stackTrace: st,
-                  );
-                } finally {
-                  if (mounted) setState(() => _isLoading = false);
                 }
-              }
-            },
-      child: _isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-          : const Text("Guardar"),
+              },
+        child: _isLoading
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.onSecondaryContainer,
+                  strokeWidth: 2,
+                ),
+              )
+            : const Text("Guardar"),
+      ),
     );
   }
 }

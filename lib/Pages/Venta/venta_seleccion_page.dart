@@ -47,15 +47,18 @@ abstract class VentaSeleccionPage<T> extends ConsumerStatefulWidget {
       _VentaSeleccionPageState<T>();
 }
 
-class _VentaSeleccionPageState<T>
-    extends ConsumerState<VentaSeleccionPage<T>>
+class _VentaSeleccionPageState<T> extends ConsumerState<VentaSeleccionPage<T>>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final TextTheme tt = theme.textTheme;
     final ColorScheme cs = theme.colorScheme;
-    final asyncData = debugOverride(ref, 'seleccion_venta', ref.watch(widget.provider));
+    final asyncData = debugOverride(
+      ref,
+      'seleccion_venta',
+      ref.watch(widget.provider),
+    );
 
     return asyncData.when(
       data: (elements) {
@@ -69,6 +72,7 @@ class _VentaSeleccionPageState<T>
           appBar: widget.buildAppBar(context, ref),
           body: _buildDataState(elements),
           floatingActionButton: FloatingActionButton(
+            tooltip: "Agregar",
             onPressed: () async {
               final result = await Navigator.of(context).push(
                 MaterialPageRoute(
