@@ -6,6 +6,7 @@ import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_pa
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -405,9 +406,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   }
 
   Widget _buildAgregarButton() {
-    return Padding(
-      padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
+    return Center(
       child: SizedBox(
+        width: 320,
         height: 56,
         child: FilledButton(
           onPressed: () {
@@ -561,7 +562,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         return Container(
           decoration: BoxDecoration(
             color: cs.surfaceContainerLow,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: AppRadius.modalTopCircular,
           ),
           child: ListviewCustom(
             controller: scrollController,
@@ -697,7 +698,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         height: 4,
         decoration: BoxDecoration(
           color: cs.outlineVariant,
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: AppRadius.xxsCircular,
         ),
       ),
     );

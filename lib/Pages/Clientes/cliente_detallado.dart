@@ -5,6 +5,7 @@ import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
@@ -188,7 +189,7 @@ class ClienteDetallado extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
         color: color.withAlpha(40),
-        borderRadius: BorderRadius.circular(28.0),
+        borderRadius: AppRadius.modalCircular,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,10 +247,10 @@ Widget _buildInfoSection({
       Container(
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: AppRadius.lgCircular,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: AppPadding.allMd,
           child: Column(children: children),
         ),
       ),

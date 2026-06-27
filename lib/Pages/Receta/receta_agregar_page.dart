@@ -6,6 +6,7 @@ import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
@@ -143,7 +144,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: AppPadding.hMd,
             child: _buildSaveButton(cs),
           ),
         ],
@@ -151,7 +152,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: AppPadding.formPage,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -237,7 +238,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     color: cs.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: AppRadius.mdCircular,
                     border: Border.all(color: cs.outlineVariant, width: 1),
                   ),
                   child: Center(
@@ -300,11 +301,11 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.mdCircular,
           side: BorderSide(color: cs.outlineVariant),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: AppPadding.allMd,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -435,10 +436,10 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppPadding.allMd,
       decoration: BoxDecoration(
         color: cs.tertiaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.mdCircular,
       ),
       child: Row(
         children: [

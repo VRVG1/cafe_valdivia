@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 
 Widget tableResume(
   ColorScheme cs,
+  TextTheme tt,
   List<Map<String, dynamic>> items,
   List<String> headers,
 ) {
   return ClipRRect(
-    borderRadius: BorderRadius.circular(16),
+    borderRadius: AppRadius.mdCircular,
     child: Table(
       columnWidths: const {
         0: FlexColumnWidth(3.0),
@@ -26,9 +28,8 @@ Widget tableResume(
                   ),
                   child: Text(
                     h,
-                    style: TextStyle(
+                    style: tt.bodyMedium?.copyWith(
                       color: cs.onPrimary,
-                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                     textAlign: h == 'Precio' || h == 'Total'
@@ -68,8 +69,7 @@ Widget tableResume(
                         children: [
                           Text(
                             item['producto'], // TODO: Esto se tiene que cambiar
-                            style: const TextStyle(
-                              fontSize: 14,
+                            style: tt.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -91,12 +91,11 @@ Widget tableResume(
                     ),
                     decoration: BoxDecoration(
                       color: cs.primaryContainer,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: AppRadius.lgCircular,
                     ),
                     child: Text(
                       item['cantidad'], //TODO: Esto se tiene que cambiar
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: tt.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: cs.onPrimaryContainer,
                       ),
@@ -111,7 +110,7 @@ Widget tableResume(
                 ),
                 child: Text(
                   "\$${item['precio']}", //TODO: Esto tiene que cambiar
-                  style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
+                  style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                   textAlign: TextAlign.right,
                 ),
               ),
@@ -122,7 +121,7 @@ Widget tableResume(
                 ),
                 child: Text(
                   "\$${item['total']}", //TODO: Esto tiene que cambiar
-                  style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant),
+                  style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                   textAlign: TextAlign.right,
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -191,7 +192,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: AppPadding.hMd,
             child: _buildSaveButton(cs),
           ),
         ],
@@ -199,7 +200,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: AppPadding.formPage,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -330,11 +331,11 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.mdCircular,
           side: BorderSide(color: cs.outlineVariant),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: AppPadding.allMd,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

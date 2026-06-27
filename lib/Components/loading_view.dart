@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 
 // ═════════════════════════════════════════════════════════
 // BUILDING BLOCKS
@@ -23,11 +24,12 @@ class ShimmerLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cs.surface,
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     );
@@ -39,6 +41,7 @@ class ShimmerDetailElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -48,8 +51,8 @@ class ShimmerDetailElement extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              color: cs.surface,
+              borderRadius: AppRadius.smCircular,
             ),
           ),
           const SizedBox(width: 16),
@@ -95,7 +98,7 @@ class ShimmerDetailsContainer extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(borderRadius: AppRadius.lgCircular),
           padding: const EdgeInsets.all(16),
           child:
               customContent ??
@@ -143,11 +146,11 @@ class SkeletonAppBar extends StatelessWidget implements PreferredSizeWidget {
                     border: InputBorder.none,
 
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: AppRadius.xlCircular,
                       borderSide: BorderSide.none,
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: AppRadius.xlCircular,
                       borderSide: BorderSide(color: cs.primary, width: 2),
                     ),
 
@@ -214,6 +217,7 @@ class ShimmerTableResume extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Table(
       columnWidths: const {
         0: FlexColumnWidth(3.0),
@@ -227,30 +231,30 @@ class ShimmerTableResume extends StatelessWidget {
             4,
             (_) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
-              child: Container(
-                height: 14,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(4),
+                child: Container(
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: cs.surface,
+                    borderRadius: AppRadius.xsCircular,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        ...List.generate(rowCount, (i) {
-          return TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                child: Container(
-                  height: 14,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
+          ...List.generate(rowCount, (i) {
+            return TableRow(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: Container(
+                    height: 14,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: cs.surface,
+                      borderRadius: AppRadius.xsCircular,
                   ),
                 ),
               ),
@@ -261,12 +265,12 @@ class ShimmerTableResume extends StatelessWidget {
                     height: 24,
                     width: 50,
                     child: Center(
-                      child: Container(
-                        height: 10,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
+                    child: Container(
+                      height: 10,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        color: cs.surface,
+                        borderRadius: AppRadius.xsCircular,
                         ),
                       ),
                     ),
@@ -282,8 +286,8 @@ class ShimmerTableResume extends StatelessWidget {
                   height: 14,
                   width: 60,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
+                    color: cs.surface,
+                    borderRadius: AppRadius.xsCircular,
                   ),
                 ),
               ),
@@ -296,8 +300,8 @@ class ShimmerTableResume extends StatelessWidget {
                   height: 14,
                   width: 60,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
+                    color: cs.surface,
+                    borderRadius: AppRadius.xsCircular,
                   ),
                 ),
               ),
@@ -322,16 +326,16 @@ class ShimmerCartaResume extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
-          ...List.generate(rowCount, (_) => _buildRow()),
+          ...List.generate(rowCount, (_) => _buildRow(cs: cs)),
           const SizedBox(height: 4),
           const SizedBox(height: 4),
-          _buildRow(isTotal: true),
+          _buildRow(isTotal: true, cs: cs),
         ],
       ),
     );
   }
 
-  Widget _buildRow({bool isTotal = false}) {
+  Widget _buildRow({bool isTotal = false, required ColorScheme cs}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
@@ -341,16 +345,16 @@ class ShimmerCartaResume extends StatelessWidget {
             width: isTotal ? 100 : 140,
             height: isTotal ? 16 : 15,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
+              color: cs.surface,
+              borderRadius: AppRadius.xsCircular,
             ),
           ),
           Container(
             width: isTotal ? 80 : 60,
             height: isTotal ? 16 : 15,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
+              color: cs.surface,
+              borderRadius: AppRadius.xsCircular,
             ),
           ),
         ],
@@ -414,8 +418,8 @@ class SkeletonDropMenu extends StatelessWidget {
             height: 32,
 
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+              color: cs.surface,
+              borderRadius: AppRadius.smCircular,
             ),
           ),
           const SizedBox(width: 32),
@@ -645,8 +649,8 @@ class SkeletonClienteDetalle extends StatelessWidget {
                 width: 500,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: cs.surface,
+                  borderRadius: AppRadius.smCircular,
                 ),
               ),
             ),
@@ -656,8 +660,8 @@ class SkeletonClienteDetalle extends StatelessWidget {
                 width: 500,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: cs.surface,
+                  borderRadius: AppRadius.smCircular,
                 ),
               ),
             ),
@@ -805,6 +809,7 @@ class SkeletonVentaDetalle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
     return Scaffold(
@@ -817,8 +822,8 @@ class SkeletonVentaDetalle extends StatelessWidget {
         elevation: 0,
       ),
       body: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
+        baseColor: cs.primaryContainer.withAlpha(80),
+        highlightColor: cs.onPrimary,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(

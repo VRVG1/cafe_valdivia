@@ -12,10 +12,11 @@ void showCustomSnackBar({
 
   final backgroundColor =
       isError ? colorScheme.errorContainer : colorScheme.tertiaryContainer;
+  final tt = Theme.of(context).textTheme;
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(mensaje, style: TextStyle(color: textColor, fontSize: 16)),
+      content: Text(mensaje, style: tt.bodyLarge?.copyWith(color: textColor)),
       backgroundColor: backgroundColor,
       duration: const Duration(seconds: 3),
     ),

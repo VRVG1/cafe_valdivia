@@ -5,6 +5,7 @@ import 'package:cafe_valdivia/Pages/Venta/venta_seleccion_cliente_page.dart';
 import 'package:cafe_valdivia/Pages/Venta/venta_seleccion_producto_page.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -344,9 +345,9 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
   }
 
   Widget _buildAgregarButton() {
-    return Padding(
-      padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
+    return Center(
       child: SizedBox(
+        width: 320,
         height: 56,
         child: FilledButton(
           onPressed: () {
@@ -495,7 +496,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         return Container(
           decoration: BoxDecoration(
             color: cs.surfaceContainerLow,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            borderRadius: AppRadius.modalTopCircular,
           ),
           child: ListviewCustom(
             controller: scrollController,
@@ -629,7 +630,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         height: 4,
         decoration: BoxDecoration(
           color: cs.outlineVariant,
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: AppRadius.xxsCircular,
         ),
       ),
     );

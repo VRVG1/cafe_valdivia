@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 
 class DetailsContainer<T> extends ConsumerWidget {
   final List<Widget> elements;
@@ -36,11 +37,11 @@ class DetailsContainer<T> extends ConsumerWidget {
         Container(
           decoration: BoxDecoration(
             color: color ? colorScheme.surfaceContainerHigh : null,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: AppRadius.lgCircular,
           ),
           child: padding
               ? Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: AppPadding.allMd,
                   child: Column(children: elements),
                 )
               : Column(children: elements),

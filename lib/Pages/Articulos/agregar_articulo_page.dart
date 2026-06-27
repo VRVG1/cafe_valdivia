@@ -154,9 +154,8 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                           padding: const EdgeInsets.only(top: 4.0, left: 12),
                           child: Text(
                             state.errorText!,
-                            style: TextStyle(
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context).colorScheme.error,
-                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -248,24 +247,23 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                   }).toList(),
                 ),
                 // ← Muestra el error de validación
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0, left: 12),
-                    child: Text(
-                      state.errorText!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
-                        fontSize: 12,
+                  if (state.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 12),
+                      child: Text(
+                        state.errorText!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            );
-          },
-        );
-      },
-      error: (err, stack) => ErrorRetryField(
-        label: "Unidad de Medida",
+                ],
+              );
+            },
+          );
+        },
+        error: (err, stack) => ErrorRetryField(
+          label: "Unidad de Medida",
         leadingIcon: Icons.balance_rounded,
         showCarita: true,
         onRetry: () => ref.invalidate(unidadMedidaProvider),

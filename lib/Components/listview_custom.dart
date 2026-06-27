@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 
 class ListviewCustom<T> extends ConsumerWidget {
   final List<T> data;
@@ -49,7 +50,7 @@ class ListviewCustom<T> extends ConsumerWidget {
     final bool hasFooter = footer != null;
     return ListView.builder(
       controller: controller,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: AppPadding.hMdVSm,
       physics: const ClampingScrollPhysics(),
       itemCount: data.length + (hasFooter ? 1 : 0) + (hasHeader ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {
@@ -66,7 +67,7 @@ class ListviewCustom<T> extends ConsumerWidget {
 
         final BorderRadius borderRadius;
         if (isFirst && isLast) {
-          borderRadius = BorderRadius.circular(24.0);
+          borderRadius = AppRadius.xlCircular;
         } else if (isFirst) {
           borderRadius = const BorderRadius.vertical(
             top: Radius.circular(24.0),

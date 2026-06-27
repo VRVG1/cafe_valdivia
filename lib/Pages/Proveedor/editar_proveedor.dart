@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -171,7 +172,7 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
                       )
                     : Text(
                         "Guardar",
-                        style: TextStyle(
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onPrimary,
                         ),
@@ -316,7 +317,7 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.primary,
         ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24.0)),
+        border: OutlineInputBorder(borderRadius: AppRadius.xlCircular),
         enabledBorder: OutlineInputBorder(),
         errorBorder: OutlineInputBorder(
           // Borde en caso de error

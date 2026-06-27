@@ -50,6 +50,7 @@ class DetalleCompraPage extends ConsumerWidget {
     );
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
+    final tt = theme.textTheme;
 
     return Scaffold(
       appBar: AppBarDetalles<DetalleCompra>(
@@ -87,6 +88,7 @@ class DetalleCompraPage extends ConsumerWidget {
                   const SizedBox(height: 8),
                   seccionEtiqueta("ORDEN", cs),
                   _headerCard(
+                    tt,
                     cs,
                     compra['id_compra'],
                     compra["fecha"],
@@ -96,7 +98,7 @@ class DetalleCompraPage extends ConsumerWidget {
                   const SizedBox(height: 20),
                   seccionEtiqueta("Productos", cs),
                   const SizedBox(height: 8),
-                  tableResume(cs, itemsFormateados, [
+                  tableResume(cs, tt, itemsFormateados, [
                     'Producto',
                     'Cantidad',
                     'Precio',
@@ -163,6 +165,7 @@ class DetalleCompraPage extends ConsumerWidget {
   }
 
   Widget _headerCard(
+    TextTheme tt,
     ColorScheme cs,
     int idCompra,
     String fechaRaw,
@@ -185,8 +188,7 @@ class DetalleCompraPage extends ConsumerWidget {
               children: [
                 Text(
                   '#CPR-$idCompra-$fechaID', //TODO: ESTARIA BIEN PONER AL FINAL EL NUMERO DE COMPRAS DE ESE DIA 001
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: tt.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: cs.primary,
                   ),
@@ -194,13 +196,13 @@ class DetalleCompraPage extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   nombreProveedor,
-                  style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   //'24 abr 2026 · 10:32 AM',
                   fechaChida,
-                  style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
               ],
             ),
@@ -210,12 +212,11 @@ class DetalleCompraPage extends ConsumerWidget {
             backgroundColor: (pagado == 1)
                 ? cs.tertiaryContainer
                 : cs.errorContainer,
-            labelStyle: TextStyle(
+            labelStyle: tt.bodySmall?.copyWith(
               color: (pagado == 1)
                   ? cs.onTertiaryContainer
                   : cs.onErrorContainer,
               fontWeight: FontWeight.w500,
-              fontSize: 12,
             ),
             side: BorderSide.none,
             padding: const EdgeInsets.symmetric(horizontal: 4),

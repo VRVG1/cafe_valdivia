@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,7 +85,7 @@ class EditarOrdenProduccionPageState
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: AppPadding.hMd,
             child: FilledButton(
               onPressed: _isLoading
                   ? null
@@ -117,15 +118,15 @@ class EditarOrdenProduccionPageState
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: AppPadding.formPage,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: AppPadding.allMd,
                 decoration: BoxDecoration(
                   color: cs.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppRadius.mdCircular,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,16 +143,19 @@ class EditarOrdenProduccionPageState
                       "ID",
                       "#${widget.orden.idOrdenProduccion}",
                       cs,
+                      tt,
                     ),
                     _buildInfoRow(
                       "Cantidad producida",
                       "${widget.orden.cantidadProducida} unidades",
                       cs,
+                      tt,
                     ),
                     _buildInfoRow(
                       "Costo total",
                       "\$${widget.orden.costoTotalProduccion.toStringAsFixed(2)}",
                       cs,
+                      tt,
                     ),
                   ],
                 ),
@@ -175,7 +179,7 @@ class EditarOrdenProduccionPageState
     );
   }
 
-  Widget _buildInfoRow(String label, String value, ColorScheme cs) {
+  Widget _buildInfoRow(String label, String value, ColorScheme cs, TextTheme tt) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -183,7 +187,7 @@ class EditarOrdenProduccionPageState
         children: [
           Text(
             label,
-            style: TextStyle(color: cs.onSurfaceVariant, fontSize: 14),
+            style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
           ),
           Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
         ],

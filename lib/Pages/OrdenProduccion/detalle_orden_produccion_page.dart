@@ -59,7 +59,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeaderCard(cs, orden),
+                _buildHeaderCard(cs, tt, orden),
                 const SizedBox(height: 16),
                 DetailsContainer(
                   title: "Información general",
@@ -107,13 +107,13 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                     DetailElement(
                       icon: const Icon(Icons.attach_money_rounded),
                       title: const Text("Costo total producción"),
-                      description: Text(
-                        "\$${double.tryParse(orden['costo_total_produccion']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00'}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: cs.primary,
+                        description: Text(
+                          "\$${double.tryParse(orden['costo_total_produccion']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00'}",
+                          style: tt.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: cs.primary,
+                          ),
                         ),
-                      ),
                     ),
                     if (orden['costo_real_calculado'] != null)
                       DetailElement(
@@ -164,7 +164,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeaderCard(ColorScheme cs, Map<String, dynamic> orden) {
+  Widget _buildHeaderCard(ColorScheme cs, TextTheme tt, Map<String, dynamic> orden) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -185,8 +185,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
               children: [
                 Text(
                   'ÓRDEN DE PRODUCCIÓN',
-                  style: TextStyle(
-                    fontSize: 11,
+                  style: tt.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
                     color: cs.onSurfaceVariant,
@@ -195,8 +194,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   '#OP-${orden['id_orden_produccion']}-${fechaORD(orden['fecha']?.toString() ?? '')}',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: tt.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: cs.primary,
                   ),
@@ -204,7 +202,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   orden['producto_producido']?.toString() ?? '',
-                  style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
               ],
             ),

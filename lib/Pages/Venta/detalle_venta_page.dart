@@ -48,6 +48,7 @@ class DetalleVentaPage extends ConsumerWidget {
     );
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
+    final tt = theme.textTheme;
 
     return Scaffold(
       appBar: AppBarDetalles<DetalleCompra>(
@@ -68,11 +69,11 @@ class DetalleVentaPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _headerCard(cs, infoVenta),
+                  _headerCard(cs, tt, infoVenta),
                   const SizedBox(height: 20),
                   seccionEtiqueta("Productos", cs),
                   const SizedBox(height: 8),
-                  tableResume(cs, itemsFormateados, [
+                  tableResume(cs, tt, itemsFormateados, [
                     'Producto',
                     'Cantidad',
                     'Precio',
@@ -128,7 +129,7 @@ class DetalleVentaPage extends ConsumerWidget {
     );
   }
 
-  Widget _headerCard(ColorScheme cs, Map<String, dynamic> infoVenta) {
+  Widget _headerCard(ColorScheme cs, TextTheme tt, Map<String, dynamic> infoVenta) {
     final pagado = infoVenta['pagado'];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -144,8 +145,7 @@ class DetalleVentaPage extends ConsumerWidget {
               children: [
                 Text(
                   'VENTA',
-                  style: TextStyle(
-                    fontSize: 11,
+                  style: tt.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
                     color: cs.onSurfaceVariant,
@@ -154,8 +154,7 @@ class DetalleVentaPage extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   '#VEN-${infoVenta['id_venta']}-${fechaORD(infoVenta['fecha'] ?? '')}',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: tt.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: cs.primary,
                   ),
@@ -163,12 +162,12 @@ class DetalleVentaPage extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${infoVenta['nombre_cliente'] ?? ''} ${infoVenta['apellido_cliente'] ?? ''}',
-                  style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   fecha(infoVenta['fecha'] ?? ''),
-                  style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
               ],
             ),
@@ -178,10 +177,9 @@ class DetalleVentaPage extends ConsumerWidget {
             backgroundColor: pagado == 1
                 ? cs.tertiaryContainer
                 : cs.errorContainer,
-            labelStyle: TextStyle(
+            labelStyle: tt.bodySmall?.copyWith(
               color: pagado == 1 ? cs.onTertiaryContainer : cs.onErrorContainer,
               fontWeight: FontWeight.w500,
-              fontSize: 12,
             ),
             side: BorderSide.none,
             padding: const EdgeInsets.symmetric(horizontal: 4),

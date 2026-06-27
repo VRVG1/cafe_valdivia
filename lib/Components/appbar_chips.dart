@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -111,11 +112,11 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   border: InputBorder.none,
 
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: AppRadius.xlCircular,
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: AppRadius.xlCircular,
                     borderSide: BorderSide(
                       color: colorScheme.primary,
                       width: 2,
@@ -126,9 +127,8 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   fillColor: colorScheme.secondaryContainer.withOpacity(0.4),
 
                   labelText: widget.labelText,
-                  labelStyle: TextStyle(
+                  labelStyle: tt.bodyLarge?.copyWith(
                     color: colorScheme.onSurfaceVariant,
-                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -139,9 +139,8 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   ),
                 ),
 
-                style: TextStyle(
+                style: tt.bodyLarge?.copyWith(
                   color: colorScheme.onSurface,
-                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
 

@@ -249,9 +249,8 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                         padding: const EdgeInsets.only(left: 12, top: 8),
                         child: Text(
                           FormFieldState.errorText!,
-                          style: TextStyle(
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.error,
-                            fontSize: 12,
                           ),
                         ),
                       ),

@@ -6,6 +6,7 @@ import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -167,10 +168,10 @@ class ProveedorDetallado extends ConsumerWidget {
         Container(
           decoration: BoxDecoration(
             color: theme.colorScheme.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: AppRadius.lgCircular,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: AppPadding.allMd,
             child: Column(children: children),
           ),
         ),

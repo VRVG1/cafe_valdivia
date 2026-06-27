@@ -4,6 +4,7 @@ import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,7 +102,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
             ),
           ],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28.0),
+            borderRadius: AppRadius.modalCircular,
           ),
         );
       },
@@ -155,7 +156,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                 ),
               ],
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28.0),
+                borderRadius: AppRadius.modalCircular,
               ),
             );
           },

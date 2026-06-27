@@ -7,6 +7,7 @@ import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
+import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -156,7 +157,7 @@ class AgregarOrdenProduccionPageState
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: AppPadding.hMd,
             child: _buildSaveButton(cs),
           ),
         ],
@@ -164,7 +165,7 @@ class AgregarOrdenProduccionPageState
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: AppPadding.formPage,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -237,10 +238,10 @@ class AgregarOrdenProduccionPageState
 
   Widget _buildRecetaInfoCard(ColorScheme cs, TextTheme tt) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppPadding.allMd,
       decoration: BoxDecoration(
         color: cs.primaryContainer.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.mdCircular,
       ),
       child: Row(
         children: [
@@ -297,10 +298,10 @@ class AgregarOrdenProduccionPageState
             }
 
             return Container(
-              padding: const EdgeInsets.all(16),
+              padding: AppPadding.allMd,
               decoration: BoxDecoration(
                 color: cs.tertiaryContainer.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: AppRadius.mdCircular,
               ),
               child: Row(
                 children: [
