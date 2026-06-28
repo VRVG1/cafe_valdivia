@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -130,7 +131,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
               leading: IconButton(
                 tooltip: "Cerrar",
                 onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(Icons.close),
+                icon: Icon(Icons.close_rounded),
               ),
               actions: [
                 Padding(
@@ -152,7 +153,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                     _buildTextField(
                       label: "Nombre",
                       controller: _nombreController,
-                      icon: Icons.label_outline,
+                      icon: Icons.label_rounded,
                     ),
                     const SizedBox(height: 16),
                     _buildDropDownMenu(unidadInicial),
@@ -160,13 +161,13 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                     _buildTextField(
                       label: "Descripcion",
                       controller: _descripcionController,
-                      icon: Icons.description_outlined,
+                      icon: Icons.description_rounded,
                     ),
                     const SizedBox(height: 16),
                     _buildTextField(
                       label: "Costo Unitario",
                       controller: _costoUnitarioController,
-                      icon: Icons.attach_money,
+                      icon: Icons.attach_money_rounded,
                     ),
                   ],
                 ),
@@ -183,23 +184,18 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     required TextEditingController controller,
     required IconData icon,
   }) {
-    return TextFormField(
-      enabled: !_isLoading,
+    return AppBuildTextField(
+      text: label,
       controller: controller,
-      onChanged: (value) {
-        setState(() {});
-      },
-      validator: (value) {
+      icon: icon,
+      isLoading: _isLoading,
+      onChanged: (value) => setState(() {}),
+      customValidator: (value) {
         if (value == null || value.isEmpty) {
           return 'Por favor, ingrese el $label';
         }
         return null;
       },
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
     );
   }
 
@@ -249,9 +245,10 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                         padding: const EdgeInsets.only(left: 12, top: 8),
                         child: Text(
                           FormFieldState.errorText!,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
                         ),
                       ),
                   ],

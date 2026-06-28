@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -110,7 +111,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
             leading: IconButton(
               tooltip: "Cerrar",
               onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.close),
+              icon: Icon(Icons.close_rounded),
             ),
             actions: [
               Padding(
@@ -129,29 +130,28 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  TextFormField(
+                  AppBuildTextField(
+                    text: "Nombre",
                     controller: _nombreController,
-                    enabled: !_isLoading,
-                    validator: (value) {
+                    icon: Icons.category_rounded,
+                    isLoading: _isLoading,
+                    customValidator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "Por favor, ingrese el Nombre";
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: "Nombre",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.category_rounded),
-                    ),
                   ),
                   const SizedBox(height: 16),
                   _buildDropDownMenu(unidadInicial),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    enabled: !_isLoading,
+                  AppBuildTextField(
+                    text: "Precio de venta",
                     controller: _precioController,
-                    validator: (value) {
+                    icon: Icons.attach_money_rounded,
+                    textInputType: TextInputType.number,
+                    isLoading: _isLoading,
+                    customValidator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, ingrese el Precio';
                       }
@@ -163,18 +163,15 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: "Precio de venta",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.attach_money_rounded),
-                    ),
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    enabled: !_isLoading,
+                  AppBuildTextField(
+                    text: "Stock",
                     controller: _stockController,
-                    validator: (value) {
+                    icon: Icons.inventory_rounded,
+                    textInputType: TextInputType.number,
+                    isLoading: _isLoading,
+                    customValidator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, ingrese el Stock';
                       }
@@ -186,23 +183,15 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      labelText: "Stock",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.inventory_rounded),
-                    ),
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    enabled: !_isLoading,
+                  AppBuildTextField(
+                    text: "Descripcion",
                     controller: _descriptionController,
-                    decoration: InputDecoration(
-                      hintText: "Descripcion",
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.description_rounded),
-                    ),
+                    icon: Icons.description_rounded,
+                    textInputType: TextInputType.multiline,
+                    maxLines: null,
+                    isLoading: _isLoading,
                   ),
                 ],
               ),
@@ -258,9 +247,10 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                         padding: const EdgeInsets.only(left: 12, top: 8),
                         child: Text(
                           FormFieldState.errorText!,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
                         ),
                       ),
                   ],

@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
@@ -140,13 +141,10 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
         leading: IconButton(
           tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
         ),
         actions: [
-          Padding(
-            padding: AppPadding.hMd,
-            child: _buildSaveButton(cs),
-          ),
+          Padding(padding: AppPadding.hMd, child: _buildSaveButton(cs)),
         ],
       ),
       body: Form(
@@ -156,20 +154,17 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                enabled: !_isLoading,
+              AppBuildTextField(
+                text: "Nombre de la receta",
                 controller: _nombreController,
-                validator: (value) {
+                icon: Icons.menu_book_rounded,
+                isLoading: _isLoading,
+                customValidator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese el nombre de la receta';
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  labelText: "Nombre de la receta",
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.menu_book_rounded),
-                ),
               ),
               const SizedBox(height: 16),
               asyncProductos.when(
@@ -196,11 +191,14 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                 loading: () => SkeletonDropMenu(),
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                enabled: !_isLoading,
+              AppBuildTextField(
+                text: "Cantidad base",
                 controller: _cantidadBaseController,
-                keyboardType: TextInputType.number,
-                validator: (value) {
+                icon: Icons.production_quantity_limits_rounded,
+                textInputType: TextInputType.number,
+                isLoading: _isLoading,
+                suffixText: "unidades",
+                customValidator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese la cantidad base';
                   }
@@ -209,14 +207,6 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  labelText: "Cantidad base",
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(
-                    Icons.production_quantity_limits_rounded,
-                  ),
-                  suffixText: "unidades",
-                ),
               ),
               const SizedBox(height: 32),
               Row(

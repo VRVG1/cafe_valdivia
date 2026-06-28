@@ -131,9 +131,7 @@ class ErrorRetryField extends StatelessWidget {
           onPressed: onRetry,
           style: OutlinedButton.styleFrom(
             side: BorderSide(color: cs.error.withAlpha(80)),
-            shape: RoundedRectangleBorder(
-              borderRadius: AppRadius.xsCircular,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.xsCircular),
             padding: const EdgeInsets.symmetric(horizontal: 12),
           ),
           child: Row(
@@ -219,7 +217,7 @@ class ErrorView extends StatelessWidget {
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: onRetry,
-                icon: const Icon(Icons.refresh),
+                icon: const Icon(Icons.refresh_rounded),
                 label: const Text("Reintentar"),
               ),
             ],

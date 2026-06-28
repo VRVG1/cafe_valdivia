@@ -116,7 +116,7 @@ class ListviewCustom<T> extends ConsumerWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Icon(
-                      primaryBackgroundIcon ?? Icons.edit,
+                      primaryBackgroundIcon ?? Icons.edit_rounded,
                       color: colorScheme.onTertiaryContainer,
                     ),
                   ),

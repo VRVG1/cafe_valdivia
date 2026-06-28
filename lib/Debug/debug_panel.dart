@@ -18,14 +18,14 @@ class _GrupoPagina {
 const List<_GrupoPagina> _grupos = [
   _GrupoPagina(
     nombre: 'Unidad Medida',
-    icono: Icons.straighten,
+    icono: Icons.straighten_rounded,
     paginas: [
       {'key': 'unidad_medida', 'label': 'Lista'},
     ],
   ),
   _GrupoPagina(
     nombre: 'Productos',
-    icono: Icons.inventory_2,
+    icono: Icons.inventory_2_rounded,
     paginas: [
       {'key': 'productos', 'label': 'Lista'},
       {'key': 'agregar_producto', 'label': 'Agregar'},
@@ -35,7 +35,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Clientes',
-    icono: Icons.people,
+    icono: Icons.people_rounded,
     paginas: [
       {'key': 'clientes', 'label': 'Lista'},
       {'key': 'cliente_detalle', 'label': 'Detalle'},
@@ -43,7 +43,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Proveedores',
-    icono: Icons.store,
+    icono: Icons.store_rounded,
     paginas: [
       {'key': 'proveedores', 'label': 'Lista'},
       {'key': 'proveedor_detalle', 'label': 'Detalle'},
@@ -51,7 +51,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Artículos',
-    icono: Icons.science,
+    icono: Icons.science_rounded,
     paginas: [
       {'key': 'articulos', 'label': 'Lista'},
       {'key': 'agregar_articulo', 'label': 'Agregar'},
@@ -61,7 +61,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Compras',
-    icono: Icons.shopping_cart,
+    icono: Icons.shopping_cart_rounded,
     paginas: [
       {'key': 'compras', 'label': 'Lista'},
       {'key': 'detalle_compra', 'label': 'Detalle'},
@@ -70,7 +70,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Ventas',
-    icono: Icons.point_of_sale,
+    icono: Icons.point_of_sale_rounded,
     paginas: [
       {'key': 'ventas', 'label': 'Lista'},
       {'key': 'detalle_venta', 'label': 'Detalle'},
@@ -79,7 +79,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Recetas',
-    icono: Icons.menu_book,
+    icono: Icons.menu_book_rounded,
     paginas: [
       {'key': 'recetas', 'label': 'Lista'},
       {'key': 'receta_detalle', 'label': 'Detalle'},
@@ -95,7 +95,7 @@ const List<_GrupoPagina> _grupos = [
   ),
   _GrupoPagina(
     nombre: 'Órdenes Producción',
-    icono: Icons.factory,
+    icono: Icons.factory_rounded,
     paginas: [
       {'key': 'orden_produccion', 'label': 'Lista'},
       {'key': 'detalle_op', 'label': 'Detalle'},
@@ -121,7 +121,7 @@ class DebugPanel extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               children: [
-                const Icon(Icons.bug_report, size: 20),
+                const Icon(Icons.bug_report_rounded, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   'Panel de Depuración',
@@ -143,7 +143,7 @@ class DebugPanel extends ConsumerWidget {
                   ),
                 IconButton(
                   tooltip: "Cerrar panel de Depuración",
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(Icons.close_rounded),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -168,7 +168,7 @@ class DebugPanel extends ConsumerWidget {
                     Navigator.pop(context);
                   }
                 },
-                icon: const Icon(Icons.dataset_linked),
+                icon: const Icon(Icons.dataset_linked_rounded),
                 label: const Text('Cargar datos de prueba'),
               ),
             ),

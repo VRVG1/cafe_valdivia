@@ -83,7 +83,7 @@ class _VentaSeleccionPageState<T> extends ConsumerState<VentaSeleccionPage<T>>
                 Navigator.pop(context, result);
               }
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           ),
         );
       },
@@ -128,7 +128,7 @@ class _VentaSeleccionPageState<T> extends ConsumerState<VentaSeleccionPage<T>>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inbox_outlined, size: 80, color: cs.outline),
+          Icon(Icons.inbox_rounded, size: 80, color: cs.outline),
           const SizedBox(height: 16),
           Text(
             widget.mensajeVacio,

@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
@@ -73,7 +74,7 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.close_rounded),
         ),
         actions: [
           Padding(
@@ -93,25 +94,25 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
               _buildTextField(
                 text: "Nombre",
                 controller: _nombreController,
-                icon: Icons.person_outline,
+                icon: Icons.person_rounded,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Apellido",
                 controller: _apellidoController,
-                icon: Icons.person_outline,
+                icon: Icons.person_rounded,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Telefono",
                 controller: _telefonoController,
-                icon: Icons.phone_outlined,
+                icon: Icons.phone_rounded,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Correo",
                 controller: _correoController,
-                icon: Icons.mail_outlined,
+                icon: Icons.mail_rounded,
               ),
             ],
           ),
@@ -125,10 +126,12 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
     TextEditingController? controller,
     IconData? icon,
   }) {
-    return TextFormField(
-      enabled: !_isLoading,
-      controller: controller,
-      validator: (value) {
+    return AppBuildTextField(
+      text: text ?? '',
+      controller: controller!,
+      icon: icon ?? Icons.person_rounded,
+      isLoading: _isLoading,
+      customValidator: (value) {
         if (value == null || value.isEmpty) {
           return 'Por favor, ingrese el $text';
         }
@@ -147,11 +150,6 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         }
         return null;
       },
-      decoration: InputDecoration(
-        labelText: text,
-        border: OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
     );
   }
 

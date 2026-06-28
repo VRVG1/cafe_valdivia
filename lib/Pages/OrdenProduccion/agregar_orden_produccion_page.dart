@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
@@ -153,13 +154,10 @@ class AgregarOrdenProduccionPageState
         leading: IconButton(
           tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
         ),
         actions: [
-          Padding(
-            padding: AppPadding.hMd,
-            child: _buildSaveButton(cs),
-          ),
+          Padding(padding: AppPadding.hMd, child: _buildSaveButton(cs)),
         ],
       ),
       body: Form(
@@ -169,22 +167,19 @@ class AgregarOrdenProduccionPageState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                validator: (value) {
+              AppBuildTextField(
+                text: "Receta",
+                controller: _recetaController,
+                icon: Icons.menu_book_rounded,
+                readOnly: true,
+                onTap: _seleccionarReceta,
+                suffixIcon: const Icon(Icons.chevron_right_rounded),
+                customValidator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Seleccione una receta";
                   }
                   return null;
                 },
-                readOnly: true,
-                controller: _recetaController,
-                onTap: _seleccionarReceta,
-                decoration: InputDecoration(
-                  labelText: "Receta",
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.menu_book_rounded),
-                  suffixIcon: const Icon(Icons.chevron_right_rounded),
-                ),
               ),
               const SizedBox(height: 16),
               if (_recetaSeleccionada != null) ...[
@@ -192,11 +187,14 @@ class AgregarOrdenProduccionPageState
                 const SizedBox(height: 16),
               ],
               if (_cargandoDetalles) const LinearProgressIndicator(),
-              TextFormField(
-                enabled: !_isLoading,
+              AppBuildTextField(
+                text: "Cantidad a producir",
                 controller: _cantidadController,
-                keyboardType: TextInputType.number,
-                validator: (value) {
+                icon: Icons.production_quantity_limits_rounded,
+                textInputType: TextInputType.number,
+                isLoading: _isLoading,
+                suffixText: "unidades",
+                customValidator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese la cantidad a producir';
                   }
@@ -205,29 +203,18 @@ class AgregarOrdenProduccionPageState
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  labelText: "Cantidad a producir",
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(
-                    Icons.production_quantity_limits_rounded,
-                  ),
-                  suffixText: "unidades",
-                ),
               ),
               const SizedBox(height: 16),
               if (_recetaDetalles != null && !_cargandoDetalles)
                 _buildCostoEstimado(cs, tt),
               const SizedBox(height: 16),
-              TextFormField(
-                enabled: !_isLoading,
+              AppBuildTextField(
+                text: "Notas (opcional)",
                 controller: _notasController,
-                keyboardType: TextInputType.multiline,
+                icon: Icons.notes_rounded,
+                textInputType: TextInputType.multiline,
                 maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: "Notas (opcional)",
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.notes_rounded),
-                ),
+                isLoading: _isLoading,
               ),
             ],
           ),

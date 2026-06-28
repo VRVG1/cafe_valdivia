@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
@@ -69,7 +70,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
               Navigator.of(context).pop();
             }
           },
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
         ),
         actions: [
           Padding(
@@ -89,21 +90,21 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
               _buildTextField(
                 text: "Nombre",
                 controller: _nombreController,
-                icon: Icons.person_outline,
+                icon: Icons.person_rounded,
                 esObligatorio: true,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Telefono",
                 controller: _telefonoController,
-                icon: Icons.phone_outlined,
+                icon: Icons.phone_rounded,
                 esObligatorio: true,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 text: "Correo",
                 controller: _correoController,
-                icon: Icons.mail_outlined,
+                icon: Icons.mail_rounded,
                 esObligatorio: true,
               ),
               const SizedBox(height: 16),
@@ -126,10 +127,12 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     IconData? icon,
     required bool esObligatorio,
   }) {
-    return TextFormField(
-      enabled: !_isLoading,
-      controller: controller,
-      validator: esObligatorio
+    return AppBuildTextField(
+      text: text ?? '',
+      controller: controller!,
+      icon: icon ?? Icons.person_rounded,
+      isLoading: _isLoading,
+      customValidator: esObligatorio
           ? (value) {
               if (value == null || value.isEmpty) {
                 return 'Por favor, ingrese el $text';
@@ -150,11 +153,6 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
               return null;
             }
           : null,
-      decoration: InputDecoration(
-        labelText: text,
-        border: const OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
     );
   }
 

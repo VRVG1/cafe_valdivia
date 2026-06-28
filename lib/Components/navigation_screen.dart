@@ -34,8 +34,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     Widget? addButton() {
       switch (currentPageIndex) {
         case 1:
@@ -49,7 +47,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 2:
           return FloatingActionButton(
@@ -62,7 +60,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 3:
           return FloatingActionButton(
@@ -75,7 +73,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 4:
           return FloatingActionButton(
@@ -88,7 +86,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 5:
           return FloatingActionButton(
@@ -101,7 +99,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 6:
           return FloatingActionButton(
@@ -114,7 +112,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 7:
           return FloatingActionButton(
@@ -127,7 +125,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         case 8:
           return FloatingActionButton(
@@ -140,7 +138,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               );
             },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.add_rounded),
           );
         default:
           return null;
@@ -162,47 +160,39 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
     final List<Widget> destinos = [
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.home),
-        icon: Icon(Icons.home_outlined),
+        icon: Icon(Icons.home_rounded),
         label: Text("Home"),
       ),
       NavigationDrawerDestination(
-        icon: Icon(Icons.add_shopping_cart),
+        icon: Icon(Icons.add_shopping_cart_rounded),
         label: Text("Compras"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.account_circle),
-        icon: Icon(Icons.account_circle_outlined),
+        icon: Icon(Icons.account_circle_rounded),
         label: Text("Clientes"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.local_shipping_rounded),
-        icon: Icon(Icons.local_shipping_outlined),
+        icon: Icon(Icons.local_shipping_rounded),
         label: Text("Proveedor"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.trolley),
         icon: Icon(Icons.trolley),
         label: Text("Articulo"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.coffee_rounded),
-        icon: Icon(Icons.coffee_outlined),
+        icon: Icon(Icons.coffee_rounded),
         label: Text("Producto"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.receipt_rounded),
-        icon: Icon(Icons.receipt_outlined),
+        icon: Icon(Icons.receipt_rounded),
         label: Text("Recetas"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.point_of_sale),
-        icon: Icon(Icons.point_of_sale_outlined),
+        icon: Icon(Icons.point_of_sale_rounded),
         label: Text("Ventas"),
       ),
       NavigationDrawerDestination(
-        selectedIcon: Icon(Icons.precision_manufacturing_rounded),
-        icon: Icon(Icons.precision_manufacturing_outlined),
+        icon: Icon(Icons.precision_manufacturing_rounded),
         label: Text("Prod. Órdenes"),
       ),
     ];
@@ -234,7 +224,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ).read(debugStateProvider).enabled)
             IconButton(
               tooltip: "Abrir panel de depuración",
-              icon: const Icon(Icons.bug_report),
+              icon: const Icon(Icons.bug_report_rounded),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -245,7 +235,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
           IconButton(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert_rounded),
             tooltip: "Opciones",
             onPressed: () {
               openOptions();

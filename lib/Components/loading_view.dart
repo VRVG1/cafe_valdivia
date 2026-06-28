@@ -231,30 +231,30 @@ class ShimmerTableResume extends StatelessWidget {
             4,
             (_) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
-                child: Container(
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: cs.surface,
-                    borderRadius: AppRadius.xsCircular,
-                  ),
+              child: Container(
+                height: 14,
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  borderRadius: AppRadius.xsCircular,
                 ),
               ),
             ),
           ),
-          ...List.generate(rowCount, (i) {
-            return TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  child: Container(
-                    height: 14,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: cs.surface,
-                      borderRadius: AppRadius.xsCircular,
+        ),
+        ...List.generate(rowCount, (i) {
+          return TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                child: Container(
+                  height: 14,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: cs.surface,
+                    borderRadius: AppRadius.xsCircular,
                   ),
                 ),
               ),
@@ -265,12 +265,12 @@ class ShimmerTableResume extends StatelessWidget {
                     height: 24,
                     width: 50,
                     child: Center(
-                    child: Container(
-                      height: 10,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: cs.surface,
-                        borderRadius: AppRadius.xsCircular,
+                      child: Container(
+                        height: 10,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: cs.surface,
+                          borderRadius: AppRadius.xsCircular,
                         ),
                       ),
                     ),
@@ -573,7 +573,7 @@ class SkeletonEditar extends StatelessWidget {
           ).read(debugStateProvider).enabled)
             IconButton(
               tooltip: "Abrir panel de depuración",
-              icon: const Icon(Icons.bug_report),
+              icon: const Icon(Icons.bug_report_rounded),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -585,7 +585,7 @@ class SkeletonEditar extends StatelessWidget {
             ),
           IconButton(
             tooltip: "Opciones",
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert_rounded),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

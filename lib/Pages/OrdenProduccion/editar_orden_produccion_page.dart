@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
@@ -81,7 +82,7 @@ class EditarOrdenProduccionPageState
         leading: IconButton(
           tooltip: "Cerrar",
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close_rounded),
         ),
         actions: [
           Padding(
@@ -161,16 +162,13 @@ class EditarOrdenProduccionPageState
                 ),
               ),
               const SizedBox(height: 24),
-              TextFormField(
-                enabled: !_isLoading,
+              AppBuildTextField(
+                text: "Notas",
                 controller: _notasController,
-                keyboardType: TextInputType.multiline,
+                icon: Icons.notes_rounded,
+                textInputType: TextInputType.multiline,
                 maxLines: 5,
-                decoration: InputDecoration(
-                  labelText: "Notas",
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.notes_rounded),
-                ),
+                isLoading: _isLoading,
               ),
             ],
           ),
@@ -179,7 +177,12 @@ class EditarOrdenProduccionPageState
     );
   }
 
-  Widget _buildInfoRow(String label, String value, ColorScheme cs, TextTheme tt) {
+  Widget _buildInfoRow(
+    String label,
+    String value,
+    ColorScheme cs,
+    TextTheme tt,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

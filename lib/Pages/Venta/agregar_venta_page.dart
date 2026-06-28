@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
@@ -167,7 +168,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.edit),
+              leading: Icon(Icons.edit_rounded),
               title: Text("Modificar cantidad"),
               onTap: () {
                 Navigator.pop(ctx);
@@ -252,7 +253,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.close_rounded),
         ),
       ),
       body: Stack(
@@ -293,15 +294,11 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
   }
 
   Widget _buildAgregarCliente() {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Selecciona un cliente";
-        }
-        return null;
-      },
-      readOnly: true,
+    return AppBuildTextField(
+      text: "Cliente",
       controller: _clienteController,
+      icon: Icons.person_rounded,
+      readOnly: true,
       onTap: () => {
         _recibirDatos(
           context,
@@ -310,24 +307,21 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
           "cliente",
         ),
       },
-      decoration: InputDecoration(
-        labelText: "Cliente",
-        border: OutlineInputBorder(),
-        prefixIcon: Icon(Icons.person_rounded),
-      ),
+      customValidator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Selecciona un cliente";
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildAgregarProducto() {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Selecciona un producto";
-        }
-        return null;
-      },
-      readOnly: true,
+    return AppBuildTextField(
+      text: "Producto",
       controller: _productoController,
+      icon: Icons.coffee_rounded,
+      readOnly: true,
       onTap: () => {
         _recibirDatos(
           context,
@@ -336,11 +330,12 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
           "producto",
         ),
       },
-      decoration: InputDecoration(
-        labelText: "Producto",
-        border: OutlineInputBorder(),
-        prefixIcon: Icon(Icons.coffee_rounded),
-      ),
+      customValidator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Selecciona un producto";
+        }
+        return null;
+      },
     );
   }
 
@@ -363,10 +358,12 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     return Row(
       children: <Widget>[
         Expanded(
-          child: TextFormField(
-            enabled: !_isLoading,
+          child: AppBuildTextField(
+            text: "Precio",
             controller: _precioController,
-            validator: (value) {
+            icon: Icons.attach_money_rounded,
+            isLoading: _isLoading,
+            customValidator: (value) {
               if (value == null || value == "0") {
                 return "El precio no puede ser 0";
               }
@@ -375,11 +372,6 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
               }
               return null;
             },
-            decoration: InputDecoration(
-              labelText: "Precio",
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.attach_money_rounded),
-            ),
           ),
         ),
         const SizedBox(width: 16),
@@ -392,22 +384,19 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                 _isButtonsExpresive = false;
               });
             },
-            child: TextFormField(
-              validator: (value) {
+            child: AppBuildTextField(
+              text: "Cantidad",
+              controller: _cantidadController,
+              icon: Icons.production_quantity_limits_rounded,
+              textInputType: TextInputType.number,
+              isLoading: _isLoading,
+              focusNode: _focusNodeTextField,
+              customValidator: (value) {
                 if (value == null || value == "0") {
                   return "La cantidad debe ser mayor a 0";
                 }
                 return null;
               },
-              enabled: !_isLoading,
-              focusNode: _focusNodeTextField,
-              controller: _cantidadController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Cantidad",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.production_quantity_limits_rounded),
-              ),
             ),
           ),
         ),
@@ -544,7 +533,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                       );
                     }
                   },
-                  icon: const Icon(Icons.shopping_cart_checkout),
+                  icon: const Icon(Icons.shopping_cart_checkout_rounded),
                   label: const Text("Proceder con la venta"),
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(56),

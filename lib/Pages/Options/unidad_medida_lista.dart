@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -40,16 +41,13 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
           ),
           content: Form(
             key: _formKey,
-            child: TextFormField(
+            child: AppBuildTextField(
+              text: "Nombre de la Unidad",
               controller: _umController,
+              icon: Icons.scale_rounded,
               autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Nombre de la Unidad',
-                hintText: 'Ej. Kilogramo (Kg)',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.scale_rounded),
-              ),
-              validator: (value) {
+              hintText: "Ej. Kilogramo (Kg)",
+              customValidator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return "Este campo no puede estar vacio";
                 }
@@ -101,9 +99,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
               child: Text(isEditing ? "Actualizar" : "Guardar"),
             ),
           ],
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.modalCircular,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.modalCircular),
         );
       },
     );
@@ -188,7 +184,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar unidad de medida",
         onPressed: _showAddOrEditDialog,
-        child: Icon(Icons.add),
+        child: Icon(Icons.add_rounded),
       ),
       appBar: AppBar(title: const Text("Unidad de Medida")),
       body: asyncUM.when(

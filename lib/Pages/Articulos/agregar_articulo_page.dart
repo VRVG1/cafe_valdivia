@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -86,7 +87,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.close_rounded),
         ),
         actions: [
           Padding(
@@ -102,10 +103,10 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildTextField(
+              AppBuildTextField(
                 text: "Nombre",
                 controller: _nombreController,
-                icon: Icons.person_outline,
+                icon: Icons.person_rounded,
                 customValidator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Por favor, ingrese el Nombre";
@@ -130,7 +131,7 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                     children: [
                       DropdownMenu<String>(
                         initialSelection: tipoSeleccionado,
-                        leadingIcon: const Icon(Icons.category),
+                        leadingIcon: const Icon(Icons.category_rounded),
                         label: const Text("Tipo"),
                         expandedInsets: EdgeInsets.zero,
                         requestFocusOnTap: true,
@@ -154,9 +155,10 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                           padding: const EdgeInsets.only(top: 4.0, left: 12),
                           child: Text(
                             state.errorText!,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).colorScheme.error,
-                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
                           ),
                         ),
                     ],
@@ -164,17 +166,17 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                 },
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              AppBuildTextField(
                 text: "Descripcion",
                 controller: _descripcionController,
-                icon: Icons.person_outline,
+                icon: Icons.person_rounded,
               ),
               const SizedBox(height: 16),
-              _buildTextField(
+              AppBuildTextField(
                 text: "Costo Unitario",
                 textInputType: TextInputType.number,
                 controller: _costoUnitarioController,
-                icon: Icons.attach_money,
+                icon: Icons.attach_money_rounded,
                 customValidator: (value) {
                   final numero = double.tryParse(value ?? "Necesito ayuda");
                   if (numero == null) {
@@ -189,26 +191,6 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String text,
-    required TextEditingController controller,
-    required IconData icon,
-    TextInputType? textInputType,
-    String? Function(String?)? customValidator,
-  }) {
-    return TextFormField(
-      enabled: !_isLoading,
-      keyboardType: textInputType,
-      controller: controller,
-      validator: customValidator,
-      decoration: InputDecoration(
-        labelText: text,
-        border: OutlineInputBorder(),
-        prefixIcon: Icon(icon),
       ),
     );
   }
@@ -247,23 +229,23 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                   }).toList(),
                 ),
                 // ← Muestra el error de validación
-                  if (state.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 12),
-                      child: Text(
-                        state.errorText!,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
+                if (state.hasError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0, left: 12),
+                    child: Text(
+                      state.errorText!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
-                ],
-              );
-            },
-          );
-        },
-        error: (err, stack) => ErrorRetryField(
-          label: "Unidad de Medida",
+                  ),
+              ],
+            );
+          },
+        );
+      },
+      error: (err, stack) => ErrorRetryField(
+        label: "Unidad de Medida",
         leadingIcon: Icons.balance_rounded,
         showCarita: true,
         onRetry: () => ref.invalidate(unidadMedidaProvider),
