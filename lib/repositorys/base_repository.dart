@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 
 abstract class BaseRepository<T> {
@@ -22,7 +23,7 @@ abstract class BaseRepository<T> {
       whereArgs: [id],
       limit: 1,
     );
-    if (result.isEmpty) throw Exception('$entityName no encontrado');
+    if (result.isEmpty) throw RegistroNoEncontradoException(entityName);
     return fromJson(result.first);
   }
 
@@ -37,7 +38,7 @@ abstract class BaseRepository<T> {
 
   Future<int> update(T entity) async {
     final entityId = getId(entity);
-    if (entityId == null) throw Exception('ID no puede ser nulo');
+    if (entityId == null) throw OperacionInvalidaException('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
       toJson(entity),

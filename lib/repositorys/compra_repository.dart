@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
@@ -96,7 +97,7 @@ class CompraRepository extends BaseRepository<Compra> {
     );
 
     if (result.isEmpty) {
-      throw Exception("No se encontro la compra con el ID: $compraId");
+      throw RegistroNoEncontradoException("Compra con ID: $compraId");
     }
 
     double total = result.fold(

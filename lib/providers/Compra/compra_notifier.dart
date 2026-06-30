@@ -13,11 +13,19 @@ class CompraNotifier extends _$CompraNotifier {
     return repo.getAllNombreProveedor();
   }
 
-  Future<void> create(Compra compra, List<DetalleCompra> detallesCompra) async {
-    await ref
-        .read(compraRepositoryProvider)
-        .registrarNuevaCompra(compra: compra, detallesCompra: detallesCompra);
-    ref.invalidateSelf();
+  Future<bool> create(Compra compra, List<DetalleCompra> detallesCompra) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref
+          .read(compraRepositoryProvider)
+          .registrarNuevaCompra(compra: compra, detallesCompra: detallesCompra);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
   Future<Map<String, dynamic>> getFullCompra(int idCompra) async {
@@ -25,20 +33,44 @@ class CompraNotifier extends _$CompraNotifier {
     //ref.invalidateSelf();
   }
 
-  Future<void> markAsPaid(int idCompra) async {
-    await ref.read(compraRepositoryProvider).markAsPaid(idCompra);
-    ref.invalidateSelf();
+  Future<bool> markAsPaid(int idCompra) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(compraRepositoryProvider).markAsPaid(idCompra);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
-  Future<void> markAsUnPaid(int idCompra) async {
-    await ref.read(compraRepositoryProvider).markAsUnpaid(idCompra);
-    ref.invalidateSelf();
+  Future<bool> markAsUnPaid(int idCompra) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(compraRepositoryProvider).markAsUnpaid(idCompra);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
-  Future<void> delete(int idCompra) async {
-    // await ref.read(compraRepositoryProvider).delete(idCompra);
-    // ref.invalidateSelf();
-    print("Implementar el soft delete");
+  Future<bool> delete(int idCompra) async {
+    state = const AsyncValue.loading();
+    try {
+      // await ref.read(compraRepositoryProvider).delete(idCompra);
+      // ref.invalidateSelf();
+      print("Implementar el soft delete");
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 }
 

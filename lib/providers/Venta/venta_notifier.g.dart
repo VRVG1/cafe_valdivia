@@ -33,7 +33,7 @@ final class VentaNotifierProvider
   VentaNotifier create() => VentaNotifier();
 }
 
-String _$ventaNotifierHash() => r'7e9d680fc79fa1fe32a7b7f677620a016792e525';
+String _$ventaNotifierHash() => r'18cc9325ea9cbd480e74dab3616d2566d166cb56';
 
 abstract class _$VentaNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {

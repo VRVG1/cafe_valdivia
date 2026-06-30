@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 
@@ -30,7 +31,7 @@ class ProveedorRepository extends BaseRepository<Proveedor> {
     } on DatabaseException catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
         appLogger.e(e);
-        throw Exception('El email del proveedor ya existe.');
+        throw OperacionInvalidaException('El email del proveedor ya existe.');
       }
       rethrow;
     }

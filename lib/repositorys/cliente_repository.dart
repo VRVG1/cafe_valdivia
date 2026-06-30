@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
@@ -26,25 +27,25 @@ class ClienteRepository extends BaseRepository<Cliente> {
   @override
   Future<int> create(Cliente entity) async {
     if (entity.nombre.trim().isEmpty)
-      throw Exception('El nombre no puede estar vacío.');
+      throw OperacionInvalidaException('El nombre no puede estar vacío.');
     if (entity.apellido.trim().isEmpty)
-      throw Exception('El apellido no puede estar vacío.');
+      throw OperacionInvalidaException('El apellido no puede estar vacío.');
     try {
       return await super.create(entity);
     } catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
-        throw Exception('El correo ya existe.');
+        throw OperacionInvalidaException('El correo ya existe.');
       }
-      throw Exception('Error desconocido al guardar.');
+      rethrow;
     }
   }
 
   @override
   Future<int> update(Cliente entity) async {
     if (entity.nombre.trim().isEmpty)
-      throw Exception('El nombre no puede estar vacío.');
+      throw OperacionInvalidaException('El nombre no puede estar vacío.');
     if (entity.apellido.trim().isEmpty)
-      throw Exception('El apellido no puede estar vacío.');
+      throw OperacionInvalidaException('El apellido no puede estar vacío.');
     return await super.update(entity);
   }
 

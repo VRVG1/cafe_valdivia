@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
@@ -43,7 +44,7 @@ class VentaRepository extends BaseRepository<Venta> {
 
   @override
   Future<int> update(Venta entity) async {
-    if (entity.idVenta == null) throw Exception('ID no puede ser nulo');
+    if (entity.idVenta == null) throw OperacionInvalidaException('ID de venta no puede ser nulo');
     return await dbHelper.update(
       tableName,
       _ventaToJson(entity),
@@ -88,7 +89,7 @@ class VentaRepository extends BaseRepository<Venta> {
     );
 
     if (result.isEmpty) {
-      throw Exception("No se encontro la venta con el ID: $ventaId");
+      throw RegistroNoEncontradoException("Venta con ID: $ventaId");
     }
 
     double total = result.fold(

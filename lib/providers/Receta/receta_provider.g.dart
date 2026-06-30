@@ -33,7 +33,7 @@ final class RecetaProviderProvider
   RecetaProvider create() => RecetaProvider();
 }
 
-String _$recetaProviderHash() => r'f3a9892482cd54e6d188c00bca2042d26597feba';
+String _$recetaProviderHash() => r'79f9718676deb7e1e7e58ee4cff830331e12d705';
 
 abstract class _$RecetaProvider extends $AsyncNotifier<List<Receta>> {
   FutureOr<List<Receta>> build();

@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
@@ -59,8 +60,8 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
     );
 
     if (result.isEmpty) {
-      throw Exception(
-        'No se encontró la orden de producción con ID: $ordenProduccionId',
+      throw RegistroNoEncontradoException(
+        'Orden de producción con ID: $ordenProduccionId',
       );
     }
 
@@ -107,7 +108,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
 
   Future<int> updateConsumo(OrdenProduccionConsumo consumo) async {
     if (consumo.idConsumo == null) {
-      throw Exception('ID de consumo no puede ser nulo');
+      throw OperacionInvalidaException('ID de consumo no puede ser nulo');
     }
     return await dbHelper.update(
       'Orden_Produccion_Consumo',

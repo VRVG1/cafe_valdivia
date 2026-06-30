@@ -14,21 +14,45 @@ class ProveedorList extends _$ProveedorList {
     return repo.getAll();
   }
 
-  Future<void> create(Proveedor proveedor) async {
-    await ref.read(proveedorRepositoryProvider).create(proveedor);
-    if (!ref.mounted) return;
-    ref.invalidateSelf();
-    ref.invalidate(proveedoresFiltradosProvider);
+  Future<bool> create(Proveedor proveedor) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(proveedorRepositoryProvider).create(proveedor);
+      if (!ref.mounted) return false;
+      ref.invalidateSelf();
+      ref.invalidate(proveedoresFiltradosProvider);
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
-  Future<void> updateElement(Proveedor proveedor) async {
-    await ref.read(proveedorRepositoryProvider).update(proveedor);
-    ref.invalidateSelf();
+  Future<bool> updateElement(Proveedor proveedor) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(proveedorRepositoryProvider).update(proveedor);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
-  Future<void> delete(int id) async {
-    await ref.read(proveedorRepositoryProvider).delete(id);
-    ref.invalidateSelf();
+  Future<bool> delete(int id) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(proveedorRepositoryProvider).delete(id);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 }
 

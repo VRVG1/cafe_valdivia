@@ -38,7 +38,7 @@ final class OrdenProduccionNotifierProvider
 }
 
 String _$ordenProduccionNotifierHash() =>
-    r'e24bcff8b88f4fcf6629c571a9c9bb52a9d18ab9';
+    r'06fbbaa122d10ad2abfe8c67c834a312f908bbd6';
 
 abstract class _$OrdenProduccionNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {

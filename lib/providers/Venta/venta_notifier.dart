@@ -21,22 +21,48 @@ class VentaNotifier extends _$VentaNotifier {
   }
 
   Future<Map<String, dynamic>> getFullVenta(int idVenta) async {
-    return await ref.read(ventaRepositoryProvider).getFullVenta(ventaId: idVenta);
+    return await ref
+        .read(ventaRepositoryProvider)
+        .getFullVenta(ventaId: idVenta);
   }
 
-  Future<void> markAsPaid(int idVenta) async {
-    await ref.read(ventaRepositoryProvider).markAsPaid(idVenta);
-    ref.invalidateSelf();
+  Future<bool> markAsPaid(int idVenta) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(ventaRepositoryProvider).markAsPaid(idVenta);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
-  Future<void> markAsUnpaid(int idVenta) async {
-    await ref.read(ventaRepositoryProvider).markAsUnpaid(idVenta);
-    ref.invalidateSelf();
+  Future<bool> markAsUnpaid(int idVenta) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(ventaRepositoryProvider).markAsUnpaid(idVenta);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 
-  Future<void> markAsNulled(int idVenta) async {
-    await ref.read(ventaRepositoryProvider).markAsNulled(idVenta);
-    ref.invalidateSelf();
+  Future<bool> markAsNulled(int idVenta) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(ventaRepositoryProvider).markAsNulled(idVenta);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
   }
 }
 

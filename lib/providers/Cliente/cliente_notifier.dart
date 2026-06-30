@@ -12,18 +12,47 @@ class ClienteNotifier extends _$ClienteNotifier {
     return repo.getAll();
   }
 
-  Future<void> create(Cliente cliente) async {
-    await ref.read(clienteRepositoryProvider).create(cliente);
-    ref.invalidateSelf();
+  Future<bool> create(Cliente cliente) async {
+    //state = const AsyncValue.loading();
+    try {
+      await ref.read(clienteRepositoryProvider).create(cliente);
+      ref.invalidateSelf();
+      return true;
+    } catch (e, st) {
+      if (ref.mounted) {
+        state = AsyncValue.error(e, st);
+      }
+      return false;
+    }
   }
 
-  Future<void> updateElement(Cliente cliente) async {
-    await ref.read(clienteRepositoryProvider).update(cliente);
-    ref.invalidateSelf();
+  Future<bool> updateElement(Cliente cliente) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(clienteRepositoryProvider).update(cliente);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      if (ref.mounted) {
+        state = AsyncValue.error(e, st);
+      }
+      return false;
+    }
   }
 
-  Future<void> delete(int id) async {
-    await ref.read(clienteRepositoryProvider).delete(id);
-    ref.invalidateSelf();
+  Future<bool> delete(int id) async {
+    //state = const AsyncValue.loading();
+    try {
+      await ref.read(clienteRepositoryProvider).delete(id);
+      ref.invalidateSelf();
+      await future;
+      return true;
+    } catch (e, st) {
+      if (ref.mounted) {
+        state = AsyncValue.error(e, st);
+      }
+      return false;
+    }
   }
 }

@@ -33,7 +33,7 @@ final class CompraNotifierProvider
   CompraNotifier create() => CompraNotifier();
 }
 
-String _$compraNotifierHash() => r'761562aea1c9b900c83166f9b42289d92ae8259e';
+String _$compraNotifierHash() => r'b17d0936779a1782e3040327d47a243886efa3e1';
 
 abstract class _$CompraNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {
