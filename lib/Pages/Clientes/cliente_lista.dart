@@ -6,7 +6,6 @@ import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_detallado.dart';
 import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
-import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
@@ -18,21 +17,19 @@ class Clientelista extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final asyncClientesKilos = debugOverride(
+    final asyncClientes = debugOverride(
       ref,
-      'clientes_kilos',
-      ref.watch(clientesKilosListProvider),
+      'clientes',
+      ref.watch(clienteProvider),
     );
 
-    return asyncClientesKilos.when(
+    return asyncClientes.when(
       data: (clientes) {
         if (clientes.isEmpty) {
           return ErrorView(
             message: 'No hay clientes para mostrar',
-            onRetry: () => ref.invalidate(clientesKilosListProvider),
+            onRetry: () => ref.invalidate(clienteProvider),
           );
-        } else {
-          appLogger.i(clientes);
         }
 
         return ListviewCustom<Map<String, dynamic>>(
@@ -94,7 +91,7 @@ class Clientelista extends ConsumerWidget {
                 ),
               ).then((_) => ref.invalidate(clienteDetailProvider(id)));
             }
-            return null;
+            return false;
           },
           onDeleteDismissed: (cliente) async {
             final id = cliente['id_cliente'] as int?;
@@ -119,7 +116,7 @@ class Clientelista extends ConsumerWidget {
                   },
                 ) ??
                 false;
-            if (confirmacion == true) {
+            if (confirmacion) {
               return true;
             }
             return false;
@@ -128,7 +125,7 @@ class Clientelista extends ConsumerWidget {
       },
       error: (err, stack) => ErrorView(
         message: 'Error al cargar los clientes',
-        onRetry: () => ref.invalidate(clientesKilosListProvider),
+        onRetry: () => ref.invalidate(clienteProvider),
       ),
       loading: () => SkeletonListTiles(n: 10),
     );

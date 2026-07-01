@@ -1,9 +1,67 @@
 import 'package:cafe_valdivia/core/models/cliente.dart';
+import 'package:cafe_valdivia/core/utils/busqueda_helper.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'cliente_provider.g.dart';
+
+@riverpod
+class ClienteNotifier extends _$ClienteNotifier {
+  @override
+  Future<List<Map<String, dynamic>>> build() async {
+    final repo = ref.read(clienteRepositoryProvider);
+    return repo.getAllWithKilosAndTotal();
+  }
+
+  Future<bool> create(Cliente cliente) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(clienteRepositoryProvider).create(cliente);
+      if (!ref.mounted) return false;
+      ref.invalidateSelf();
+      await future;
+      if (!ref.mounted) return false;
+      ref.invalidate(clientesFiltradosProvider);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<bool> updateElement(Cliente cliente) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(clienteRepositoryProvider).update(cliente);
+      if (!ref.mounted) return false;
+      ref.invalidateSelf();
+      await future;
+      if (!ref.mounted) return false;
+      ref.invalidate(clientesFiltradosProvider);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+
+  Future<bool> delete(int id) async {
+    state = const AsyncValue.loading();
+    try {
+      await ref.read(clienteRepositoryProvider).delete(id);
+      if (!ref.mounted) return false;
+      ref.invalidateSelf();
+      await future;
+      if (!ref.mounted) return false;
+      ref.invalidate(clientesFiltradosProvider);
+      return true;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return false;
+    }
+  }
+}
 
 @riverpod
 class ClienteDetail extends _$ClienteDetail {
@@ -14,21 +72,24 @@ class ClienteDetail extends _$ClienteDetail {
   }
 }
 
-final clienteKilosProvider = FutureProvider.family<Map<String, dynamic>?, int>((
-  ref,
-  id,
-) async {
+@riverpod
+Future<Map<String, dynamic>?> clienteKilos(Ref ref, int id) async {
   final repo = ref.watch(clienteRepositoryProvider);
   final results = await repo.getAllWithKilosAndTotal(
     where: 'id_cliente = ?',
     whereArgs: [id],
   );
   return results.isNotEmpty ? results.first : null;
-});
+}
 
-final clientesKilosListProvider = FutureProvider<List<Map<String, dynamic>>>((
-  ref,
-) async {
+@riverpod
+Future<List<Cliente>> clientesFiltrados(Ref ref) async {
+  final filtro = ref.watch(filtroBusquedaProvider);
   final repo = ref.watch(clienteRepositoryProvider);
-  return repo.getAllWithKilosAndTotal();
-});
+
+  return informacionFiltrada<Cliente>(
+    query: filtro.getQuery(),
+    getAll: () async => repo.getAll(),
+    search: repo.search,
+  );
+}

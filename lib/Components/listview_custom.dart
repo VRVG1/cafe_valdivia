@@ -94,10 +94,15 @@ class ListviewCustom<T> extends ConsumerWidget {
                 DismissDirection.startToEnd: 0.25,
                 DismissDirection.endToStart: 0.25,
               },
+              onDismissed: (direction) {
+                if (direction == DismissDirection.endToStart) {
+                  data.removeAt(index);
+                }
+              },
               confirmDismiss: (direction) async {
                 if (direction == DismissDirection.endToStart) {
                   // Deslizar de Derecha a Izquierda (Borrar)
-                  return onDeleteDismissed?.call(element) ?? false;
+                  return onDeleteDismissed?.call(element) ?? true;
                 } else if (direction == DismissDirection.startToEnd) {
                   // Deslizar de Izquierda a Derecha (Modificar)
                   return onEditDismissed?.call(element) ?? false;

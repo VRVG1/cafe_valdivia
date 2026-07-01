@@ -7,7 +7,6 @@ import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
-import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

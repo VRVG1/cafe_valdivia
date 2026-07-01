@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
-import 'package:cafe_valdivia/providers/Cliente/cliente_notifier.dart';
+import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

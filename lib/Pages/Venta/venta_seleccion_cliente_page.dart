@@ -3,7 +3,7 @@ import 'package:cafe_valdivia/Pages/Venta/venta_seleccion_page.dart';
 import 'package:cafe_valdivia/Pages/Clientes/agregar_cliente.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
-import 'package:cafe_valdivia/providers/Cliente/cliente_providers.dart';
+import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
