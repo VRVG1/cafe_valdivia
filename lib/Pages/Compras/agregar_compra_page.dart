@@ -63,7 +63,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
     setState(() {
       if (eleccion == 'articulo') {
-        print(result.costoUnitario);
+        // print(result.costoUnitario);
         _precioController.text = result.costoUnitario.toString();
       }
       controller.text = result.nombre;

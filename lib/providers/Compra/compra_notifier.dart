@@ -64,7 +64,7 @@ class CompraNotifier extends _$CompraNotifier {
     try {
       // await ref.read(compraRepositoryProvider).delete(idCompra);
       // ref.invalidateSelf();
-      print("Implementar el soft delete");
+      // print("Implementar el soft delete");
       await future;
       return true;
     } catch (e, st) {

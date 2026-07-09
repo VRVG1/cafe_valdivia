@@ -1,6 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
-import 'package:cafe_valdivia/core/utils/busqueda_helper.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 
@@ -64,12 +63,16 @@ Future<Proveedor> proveedorDetail(Ref ref, int id) async {
 
 @riverpod
 Future<List<Proveedor>> proveedoresFiltrados(Ref ref) async {
-  final filtro = ref.watch(filtroBusquedaProvider);
+  ref.watch(proveedorListProvider);
   final repo = ref.watch(proveedorRepositoryProvider);
-
-  return informacionFiltrada<Proveedor>(
-    query: filtro.getQuery(),
-    getAll: () async => repo.getAll(),
-    search: repo.search,
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final String query = filtro.getQuery();
+  if (query.trim().isEmpty) {
+    return repo.getAll();
+  }
+  final String pattern = "%$query%";
+  final result = await repo.search(
+    whereArgs: [pattern, pattern, pattern, pattern],
   );
+  return result;
 }

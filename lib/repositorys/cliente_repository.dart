@@ -1,5 +1,4 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
@@ -68,7 +67,6 @@ class ClienteRepository extends BaseRepository<Cliente> {
       where: where,
       whereArgs: whereArgs,
     );
-    appLogger.i(result);
     return List<Map<String, dynamic>>.from(result);
   }
 }

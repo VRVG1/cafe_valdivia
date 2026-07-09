@@ -10,6 +10,7 @@ class AppbarChips extends ConsumerStatefulWidget
     super.key,
     this.extraFilters = const [],
     this.labelText = 'Buscar proveedor...',
+    this.backOption = true,
   });
 
   @override
@@ -20,6 +21,7 @@ class AppbarChips extends ConsumerStatefulWidget
 
   final List<TipoBusqueda> extraFilters;
   final String labelText;
+  final bool backOption;
 }
 
 class _AppbarChipsState extends ConsumerState<AppbarChips> {
@@ -83,23 +85,24 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       scrolledUnderElevation: 0,
       backgroundColor: colorScheme.surface,
       toolbarHeight: 120, // Más alto para acomodar chips
-      leading: IconButton(
-        tooltip: "Volver",
-        onPressed: () {
-          ref.invalidate(filtroBusquedaProvider);
-          Navigator.of(context).pop();
-        },
-        icon: Icon(Icons.arrow_back_rounded),
-      ),
+      leading: widget.backOption
+          ? IconButton(
+              tooltip: "Volver",
+              onPressed: () {
+                ref.invalidate(filtroBusquedaProvider);
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back_rounded),
+            )
+          : null,
 
       flexibleSpace: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 8),
-
             Container(
-              width: 320,
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 48),
               height: 48,
               child: TextField(
                 onChanged: (value) {

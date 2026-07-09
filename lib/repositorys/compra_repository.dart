@@ -169,7 +169,7 @@ class CompraRepository extends BaseRepository<Compra> {
     final db = await dbHelper.database;
 
     final List<Map<String, dynamic>> result = await db.query("v_compras_list");
-    appLogger.i(result);
+    // appLogger.i(result);
     return List<Map<String, dynamic>>.from(result);
   }
 }

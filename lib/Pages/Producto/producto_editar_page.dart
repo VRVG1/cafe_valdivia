@@ -286,11 +286,11 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                       _update();
                     }
                   } catch (e, st) {
-                    appLogger.e(
-                      "Error al actualizar el producto",
-                      error: e,
-                      stackTrace: st,
-                    );
+                    // appLogger.e(
+                    //   "Error al actualizar el producto",
+                    //   error: e,
+                    //   stackTrace: st,
+                    // );
                   } finally {
                     if (mounted) setState(() => _isLoading = false);
                   }

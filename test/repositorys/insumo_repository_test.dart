@@ -319,15 +319,15 @@ void main() {
           }
           final createResults = await batch.commit();
           expect(createResults.length, recordCount);
-          print(
-            'Creación de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
-          );
+          // print(
+          //   'Creación de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
+          // );
 
           final allArticulos = await articuloRepository.getAll();
           expect(allArticulos.length, recordCount);
-          print(
-            'Lectura de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
-          );
+          // print(
+          //   'Lectura de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
+          // );
 
           stopwatch.stop();
           expect(
@@ -367,9 +367,9 @@ void main() {
             );
           }
           await updateBatch.commit(noResult: true);
-          print(
-            'Actualización de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
-          );
+          // print(
+          //   'Actualización de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
+          // );
 
           final deleteBatch = database.batch();
           for (final articulo in allArticulos) {
@@ -382,9 +382,9 @@ void main() {
           await deleteBatch.commit(noResult: true);
           final finalList = await articuloRepository.getAll();
           expect(finalList, isEmpty);
-          print(
-            'Borrado de $recordCount y tiempo total: ${stopwatch.elapsedMilliseconds} ms',
-          );
+          // print(
+          //   'Borrado de $recordCount y tiempo total: ${stopwatch.elapsedMilliseconds} ms',
+          // );
 
           stopwatch.stop();
           expect(

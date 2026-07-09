@@ -1,4 +1,3 @@
-import 'package:cafe_valdivia/core/utils/busqueda_helper.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -65,20 +64,39 @@ Future<Articulo> articuloDetail(Ref ref, int id) async {
 
 @riverpod
 Future<List<Articulo>> articulosFiltrados(Ref ref) async {
-  final filtro = ref.watch(filtroBusquedaProvider);
+  ref.watch(articuloProviderProvider);
   final repo = ref.watch(articulosRepositoryProvider);
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final String query = filtro.getQuery();
 
-  return informacionFiltrada(
-    query: filtro.getQuery(),
-    getAll: () async => repo.getAll(),
-    search: repo.search,
+  if (query.trim().isEmpty) {
+    return repo.getAllInsumos();
+  }
+  final String pattern = "%$query%";
+  final result = repo.searchInsumo(whereArgs: [pattern, pattern, pattern]);
+  return result;
+}
+
+@riverpod
+Future<List<Articulo>> productosFiltrados(Ref ref) async {
+  ref.watch(articuloProviderProvider);
+  final repo = ref.watch(articulosRepositoryProvider);
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final String query = filtro.getQuery();
+
+  if (query.trim().isEmpty) {
+    return repo.getAllProductos();
+  }
+  final String pattern = "%$query%";
+  final result = repo.searchProducto(
+    whereArgs: [pattern, pattern, pattern, pattern],
   );
+  return result;
 }
 
 @riverpod
 Future<List<Articulo>> productosProvider(Ref ref) async {
   final repo = ref.watch(articulosRepositoryProvider);
   final List<Articulo> articulos = await repo.getAllProductos();
-  appLogger.i(articulos);
   return articulos;
 }

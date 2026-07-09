@@ -30,23 +30,22 @@ class ProveedorRepository extends BaseRepository<Proveedor> {
       return await super.create(entity);
     } on DatabaseException catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
-        appLogger.e(e);
+        // appLogger.e(e);
         throw OperacionInvalidaException('El email del proveedor ya existe.');
       }
       rethrow;
     }
   }
 
-  Future<List<Proveedor>> search(String query) async {
-    return getAll(
+  Future<List<Proveedor>> search({
+    String? query,
+    List<Object?>? whereArgs,
+  }) async {
+    return await getAll(
       where:
+          query ??
           'LOWER(nombre) LIKE ? OR LOWER(direccion) LIKE ? OR LOWER(telefono) LIKE ? OR LOWER(email) LIKE ?',
-      whereArgs: [
-        '%${query.toLowerCase()}%',
-        '%${query.toLowerCase()}%',
-        '%${query.toLowerCase()}%',
-        '%${query.toLowerCase()}%',
-      ],
+      whereArgs: whereArgs,
     );
   }
 }

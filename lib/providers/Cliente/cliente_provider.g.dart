@@ -229,6 +229,49 @@ final class ClienteKilosFamily extends $Family
   String toString() => r'clienteKilosProvider';
 }
 
+@ProviderFor(clientesWithKilosFiltrados)
+final clientesWithKilosFiltradosProvider =
+    ClientesWithKilosFiltradosProvider._();
+
+final class ClientesWithKilosFiltradosProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Map<String, dynamic>>>,
+          List<Map<String, dynamic>>,
+          FutureOr<List<Map<String, dynamic>>>
+        >
+    with
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
+  ClientesWithKilosFiltradosProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'clientesWithKilosFiltradosProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$clientesWithKilosFiltradosHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    return clientesWithKilosFiltrados(ref);
+  }
+}
+
+String _$clientesWithKilosFiltradosHash() =>
+    r'0169c1979243ccf2079c344ce6632ce71375776f';
+
 @ProviderFor(clientesFiltrados)
 final clientesFiltradosProvider = ClientesFiltradosProvider._();
 

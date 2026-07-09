@@ -1,12 +1,16 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
+import 'package:cafe_valdivia/Pages/Articulos/agregar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/editar_articulo_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,89 +23,110 @@ class InsumoListaPage extends ConsumerWidget {
     final asyncArticulo = debugOverride(
       ref,
       'articulos',
-      ref.watch(articuloProviderProvider),
+      ref.watch(articulosFiltradosProvider),
     );
 
-    return asyncArticulo.when(
-      data: (articulos) {
-        if (articulos.isEmpty) {
-          return const Center(child: Text('No hay articulos para mostrar.'));
-        }
-        return ListviewCustom<Articulo>(
-          data: articulos,
-          keyBuilder: (articulo) {
-            return ValueKey(
-              articulo.idArticulo != null
-                  ? 'articulo-${articulo.idArticulo}'
-                  : articulo.hashCode,
-            );
-          },
-          leadingBuilder: (articulo) => const Icon(Icons.inventory_2_rounded),
-          titleBuilder: (articulo) => Text(articulo.nombre),
-          trailingBuilder: (articulo) => Text(
-            "\$${articulo.costoUnitario}",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitleBuilder: (articulo) =>
-              UnidadMedidaNombre(unidadMedidaId: articulo.idUnidad),
-          onTapCallback: (articulo) {
-            if (articulo.idArticulo != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ArticuloDetalladoPage(articuloId: articulo.idArticulo!),
-                ),
+    return Scaffold(
+      appBar: AppbarChips(
+        extraFilters: [TipoBusqueda.costo],
+        backOption: false,
+        labelText: "Buscar articulo...",
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Agregar Articulo",
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AgregarArticuloPage(),
+              fullscreenDialog: true,
+            ),
+          );
+        },
+        child: const Icon(Icons.add_rounded),
+      ),
+      body: asyncArticulo.when(
+        data: (articulos) {
+          // appLogger.w(articulos);
+          if (articulos.isEmpty) {
+            return const Center(child: Text('No hay articulos para mostrar.'));
+          }
+          return ListviewCustom<Articulo>(
+            data: articulos,
+            keyBuilder: (articulo) {
+              return ValueKey(
+                articulo.idArticulo != null
+                    ? 'articulo-${articulo.idArticulo}'
+                    : articulo.hashCode,
               );
-            }
-          },
-          onEditDismissed: (articulo) async {
-            if (articulo.idArticulo != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditarArticuloPage(articulo: articulo),
-                ),
-              );
-            }
-            return false;
-          },
-          onDeleteDismissed: (articulo) async {
-            final bool confirmar =
-                await mostrarDialogoConfirmacion(
-                  context: context,
-                  titulo: "Seguro que quiere eliminar este cliente?",
-                  contenido: "Esta accion no se puede deshacer",
-                  textoBotonConfirmacion: "Eliminar",
-                  onConfirm: () => {
-                    delete(
-                      context: context,
-                      ref: ref,
-                      provider: articuloProviderProvider,
-                      id: articulo.idArticulo!,
-                      mensajeExito: "El articulo se ha borrado con exito",
-                      detalle: false,
-                      mensajeError:
-                          "Error al eliminar el Articulo, Por favor, intente de nuevo.",
-                    ),
-                  },
-                ) ??
-                false;
+            },
+            leadingBuilder: (articulo) => const Icon(Icons.inventory_2_rounded),
+            titleBuilder: (articulo) => Text(articulo.nombre),
+            trailingBuilder: (articulo) => Text(
+              "\$${articulo.costoUnitario}",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitleBuilder: (articulo) =>
+                UnidadMedidaNombre(unidadMedidaId: articulo.idUnidad),
+            onTapCallback: (articulo) {
+              if (articulo.idArticulo != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ArticuloDetalladoPage(articuloId: articulo.idArticulo!),
+                  ),
+                );
+              }
+            },
+            onEditDismissed: (articulo) async {
+              if (articulo.idArticulo != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        EditarArticuloPage(articulo: articulo),
+                  ),
+                );
+              }
+              return false;
+            },
+            onDeleteDismissed: (articulo) async {
+              final bool confirmar =
+                  await mostrarDialogoConfirmacion(
+                    context: context,
+                    titulo: "Seguro que quiere eliminar este cliente?",
+                    contenido: "Esta accion no se puede deshacer",
+                    textoBotonConfirmacion: "Eliminar",
+                    onConfirm: () => {
+                      delete(
+                        context: context,
+                        ref: ref,
+                        provider: articuloProviderProvider,
+                        id: articulo.idArticulo!,
+                        mensajeExito: "El articulo se ha borrado con exito",
+                        detalle: false,
+                        mensajeError:
+                            "Error al eliminar el Articulo, Por favor, intente de nuevo.",
+                      ),
+                    },
+                  ) ??
+                  false;
 
-            if (confirmar) {
-              return true;
-            }
-            return false;
-          },
-        );
-      },
-      error: (err, stack) => ErrorView(
-            message: 'Error al cargar los artículos',
-            onRetry: () => ref.invalidate(articuloProviderProvider),
-          ),
-      loading: () => const SkeletonListTiles(
-        n: 10,
-      ), //TODO: Ver si existe una forma de poner el numero de items dependiendo del dispositivo o poner un numero fijo
+              if (confirmar) {
+                return true;
+              }
+              return false;
+            },
+          );
+        },
+        error: (err, stack) => ErrorView(
+          message: 'Error al cargar los artículos',
+          onRetry: () => ref.invalidate(articuloProviderProvider),
+        ),
+        loading: () => const SkeletonListTiles(
+          n: 10,
+        ), //TODO: Ver si existe una forma de poner el numero de items dependiendo del dispositivo o poner un numero fijo
+      ),
     );
   }
 }

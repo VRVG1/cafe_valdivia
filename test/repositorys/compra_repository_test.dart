@@ -282,9 +282,9 @@ void main() {
         }
         await detallesBatch.commit(noResult: true);
 
-        print(
-          'Creación de $recordCount compras: ${stopwatch.elapsedMilliseconds}ms',
-        );
+        // print(
+        //   'Creación de $recordCount compras: ${stopwatch.elapsedMilliseconds}ms',
+        // );
 
         // Verificación
         final compras = await database.query('Compra');
@@ -319,7 +319,7 @@ void main() {
         }
         final articuloResults = await articuloBatch.commit(noResult: false);
         final articuloIds = articuloResults.cast<int>();
-        print('Creación 100 articulos: ${stopwatch.elapsedMilliseconds}ms');
+        // print('Creación 100 articulos: ${stopwatch.elapsedMilliseconds}ms');
 
         // 3. Crear compra principal
         final compraId = await database.insert('Compra', {
@@ -339,7 +339,7 @@ void main() {
           });
         }
         await detallesBatch.commit(noResult: true);
-        print('Creación 100 detalles: ${stopwatch.elapsedMilliseconds}ms');
+        // print('Creación 100 detalles: ${stopwatch.elapsedMilliseconds}ms');
 
         final detallesMaps = await database.query(
           'Detalle_Compra',
@@ -347,7 +347,7 @@ void main() {
           whereArgs: [compraId],
         );
 
-        print('Obtención compra completa: ${stopwatch.elapsedMilliseconds}ms');
+        // print('Obtención compra completa: ${stopwatch.elapsedMilliseconds}ms');
         expect(detallesMaps.length, 100);
 
         stopwatch.stop();

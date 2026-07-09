@@ -62,8 +62,14 @@ class ArticuloRepository extends BaseRepository<Articulo> {
     );
   }
 
-  Future<List<Articulo>> getAllProductos() async {
-    return getAll(where: 'tipo = ?', whereArgs: [ArticuloTipo.producto.value]);
+  Future<List<Articulo>> getAllProductos({
+    String? where,
+    List<Object>? whereArgs,
+  }) async {
+    return getAll(
+      where: where ?? 'tipo = ?',
+      whereArgs: whereArgs ?? [ArticuloTipo.producto.value],
+    );
   }
 
   Future<List<Articulo>> getAllInsumos() async {
@@ -73,6 +79,32 @@ class ArticuloRepository extends BaseRepository<Articulo> {
         ArticuloTipo.insumo.value,
         ArticuloTipo.productoIntermedio.value,
       ],
+    );
+  }
+
+  Future<List<Articulo>> searchInsumo({
+    String? where,
+    List<Object>? whereArgs,
+  }) async {
+    return getAll(
+      where:
+          '(tipo = ? OR tipo = ?) AND (nombre LIKE ? OR costo_unitario LIKE ? OR id_unidad LIKE ?)',
+      whereArgs: [
+        ArticuloTipo.insumo.value,
+        ArticuloTipo.productoIntermedio.value,
+        ...?whereArgs,
+      ],
+    );
+  }
+
+  Future<List<Articulo>> searchProducto({
+    String? where,
+    List<Object>? whereArgs,
+  }) async {
+    return getAllProductos(
+      where:
+          '(tipo = ?) AND (nombre LIKE ? OR stock LIKE ? OR precio_venta LIKE ? OR id_unidad LIKE ?)',
+      whereArgs: [ArticuloTipo.producto.value, ...?whereArgs],
     );
   }
 }

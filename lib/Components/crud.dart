@@ -112,7 +112,7 @@ Future<bool> delete({
     }
     return true;
   } catch (e) {
-    appLogger.e(e);
+    // appLogger.e(e);
     if (context.mounted) {
       showCustomSnackBar(
         context: context,
@@ -148,7 +148,7 @@ Future<bool> create<T>({
     }
     return true;
   } catch (e, st) {
-    appLogger.e(
+    // appLogger.e(
       "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
     );
     if (e.toString().contains("existe")) {
@@ -184,9 +184,9 @@ Future<bool> update<T>({
     }
     return true;
   } catch (e, st) {
-    appLogger.e(
-      "Error al actualizar ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
-    );
+    // appLogger.e(
+    //   "Error al actualizar ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
+    // );
     if (context.mounted) {
       mensajeExito != null
           ? showCustomSnackBar(

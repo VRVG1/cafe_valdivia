@@ -83,10 +83,29 @@ Future<Map<String, dynamic>?> clienteKilos(Ref ref, int id) async {
 }
 
 @riverpod
+Future<List<Map<String, dynamic>>> clientesWithKilosFiltrados(Ref ref) async {
+  ref.watch(clienteProvider);
+  final repo = ref.watch(clienteRepositoryProvider);
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final query = filtro.getQuery();
+
+  if (query.trim().isEmpty) {
+    return repo.getAllWithKilosAndTotal();
+  }
+  final pattern = "%$query%";
+
+  final result = await repo.getAllWithKilosAndTotal(
+    where:
+        'nombre LIKE ? OR apellido LIKE ? OR telefono LIKE ? OR email LIKE ?',
+    whereArgs: [pattern, pattern, pattern, pattern],
+  );
+  return result;
+}
+
+@riverpod
 Future<List<Cliente>> clientesFiltrados(Ref ref) async {
   final filtro = ref.watch(filtroBusquedaProvider);
   final repo = ref.watch(clienteRepositoryProvider);
-
   return informacionFiltrada<Cliente>(
     query: filtro.getQuery(),
     getAll: () async => repo.getAll(),
