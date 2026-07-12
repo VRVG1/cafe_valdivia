@@ -340,12 +340,157 @@ Future<void> seedDatabase() async {
     // ============================================================
     // 8. ORDEN DE PRODUCCIÓN
     // ============================================================
-    await txn.insert('Orden_Produccion', {
-      'id_receta': idRecCafeMolido,
-      'cantidad_producida': 15.0,
-      'fecha': '2026-06-08T08:00:00.000',
-      'costo_total_produccion': 420.0,
-      'notas': 'Producción semanal',
-    });
+    final ordenesProduccion = [
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 15.0,
+        'fecha': '2025-01-05T08:00:00.000',
+        'costo_total_produccion': 420.0,
+        'notas': 'Producción inicio de año',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 50.0,
+        'fecha': '2025-02-12T10:30:00.000',
+        'costo_total_produccion': 750.0,
+        'notas': 'Pedido grande febrero',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 20.0,
+        'fecha': '2025-03-01T07:00:00.000',
+        'costo_total_produccion': 560.0,
+        'notas': 'Primera producción marzo',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 30.0,
+        'fecha': '2025-04-18T14:00:00.000',
+        'costo_total_produccion': 840.0,
+        'notas': 'Producción tarde abril',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 25.0,
+        'fecha': '2025-05-22T09:15:00.000',
+        'costo_total_produccion': 375.0,
+        'notas': 'Capuchinos para evento',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 40.0,
+        'fecha': '2025-06-10T11:00:00.000',
+        'costo_total_produccion': 1120.0,
+        'notas': 'Producción semanal junio',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 10.0,
+        'fecha': '2025-07-03T16:45:00.000',
+        'costo_total_produccion': 280.0,
+        'notas': 'Producción pequeña julio',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 60.0,
+        'fecha': '2025-08-15T08:30:00.000',
+        'costo_total_produccion': 900.0,
+        'notas': 'Pedido grande agosto',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 18.0,
+        'fecha': '2025-09-20T12:00:00.000',
+        'costo_total_produccion': 504.0,
+        'notas': 'Producción mediodía septiembre',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 25.0,
+        'fecha': '2025-10-08T07:30:00.000',
+        'costo_total_produccion': 700.0,
+        'notas': 'Producción octubre',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 35.0,
+        'fecha': '2025-11-14T13:00:00.000',
+        'costo_total_produccion': 525.0,
+        'notas': 'Capuchinos noviembre',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 50.0,
+        'fecha': '2025-12-20T09:00:00.000',
+        'costo_total_produccion': 1400.0,
+        'notas': 'Producción fin de año',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 12.0,
+        'fecha': '2026-01-07T08:15:00.000',
+        'costo_total_produccion': 336.0,
+        'notas': 'Primera semana enero',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 45.0,
+        'fecha': '2026-02-14T10:00:00.000',
+        'costo_total_produccion': 675.0,
+        'notas': 'Día San Valentín',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 22.0,
+        'fecha': '2026-03-25T15:30:00.000',
+        'costo_total_produccion': 616.0,
+        'notas': 'Producción tarde marzo',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 35.0,
+        'fecha': '2026-04-10T07:00:00.000',
+        'costo_total_produccion': 980.0,
+        'notas': 'Producción abril',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 20.0,
+        'fecha': '2026-05-05T11:45:00.000',
+        'costo_total_produccion': 300.0,
+        'notas': 'Capuchinos mayo',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 15.0,
+        'fecha': '2026-06-08T08:00:00.000',
+        'costo_total_produccion': 420.0,
+        'notas': 'Producción semanal',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 28.0,
+        'fecha': '2026-06-20T14:15:00.000',
+        'costo_total_produccion': 784.0,
+        'notas': 'Producción junio extra',
+      },
+      {
+        'id_receta': idRecCapuchino,
+        'cantidad_producida': 40.0,
+        'fecha': '2026-07-02T09:30:00.000',
+        'costo_total_produccion': 600.0,
+        'notas': 'Capuchinos julio',
+      },
+      {
+        'id_receta': idRecCafeMolido,
+        'cantidad_producida': 16.0,
+        'fecha': '2026-07-09T16:00:00.000',
+        'costo_total_produccion': 448.0,
+        'notas': 'Producción tarde julio',
+      },
+    ];
+    for (final op in ordenesProduccion) {
+      await txn.insert('Orden_Produccion', op);
+    }
   });
 }

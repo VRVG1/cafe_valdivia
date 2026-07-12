@@ -145,3 +145,45 @@ final class OrdenProduccionDetalladaFamily extends $Family
   @override
   String toString() => r'ordenProduccionDetalladaProvider';
 }
+
+@ProviderFor(ordenProduccionFiltrado)
+final ordenProduccionFiltradoProvider = OrdenProduccionFiltradoProvider._();
+
+final class OrdenProduccionFiltradoProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Map<String, dynamic>>>,
+          List<Map<String, dynamic>>,
+          FutureOr<List<Map<String, dynamic>>>
+        >
+    with
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
+  OrdenProduccionFiltradoProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ordenProduccionFiltradoProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$ordenProduccionFiltradoHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    return ordenProduccionFiltrado(ref);
+  }
+}
+
+String _$ordenProduccionFiltradoHash() =>
+    r'ce2cd182eef9c7a811018c53fdba912040bb00ea';

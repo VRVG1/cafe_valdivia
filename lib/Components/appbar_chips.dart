@@ -25,6 +25,7 @@ class AppbarChips extends ConsumerStatefulWidget
 }
 
 class _AppbarChipsState extends ConsumerState<AppbarChips> {
+  DateTimeRange? _selectedDateRange;
   late final TextEditingController _controller;
 
   @override
@@ -44,6 +45,23 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
     super.dispose();
   }
 
+  void datePicker(FiltroBusqueda filtro) async {
+    _selectedDateRange = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+      initialDateRange: DateTimeRange(
+        start: DateTime.now(),
+        end: DateTime.now().add(const Duration(days: 7)),
+      ),
+    );
+    if (_selectedDateRange != null) {
+      ref
+          .read(filtroBusquedaProvider.notifier)
+          .actualizarQuery(_selectedDateRange.toString());
+    }
+  }
+
   Widget _buildFilterChip(
     WidgetRef ref,
     TipoBusqueda tipo,
@@ -51,7 +69,6 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
   ) {
     final filtro = ref.watch(filtroBusquedaProvider);
     final isSelected = filtro.tieneFiltro(tipo);
-    //"${this[0].toUpperCase()}${this.substring(1)}";
     String label = "${tipo.name[0].toUpperCase()}${tipo.name.substring(1)}";
 
     return Padding(
@@ -59,8 +76,13 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       child: FilterChip(
         label: Text(label),
         selected: isSelected,
-        onSelected: (_) =>
-            ref.read(filtroBusquedaProvider.notifier).toggleFiltro(tipo),
+        onSelected: (_) {
+          if (label == "Fecha" && !isSelected) {
+            datePicker(filtro);
+          }
+          ref.read(filtroBusquedaProvider.notifier).toggleFiltro(tipo);
+          ref.read(filtroBusquedaProvider.notifier).actualizarQuery("");
+        },
         selectedColor: colorScheme.primaryContainer,
         showCheckmark: false,
         labelStyle: TextStyle(
@@ -78,7 +100,6 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final tt = theme.textTheme;
-    final filtro = ref.watch(filtroBusquedaProvider);
 
     return AppBar(
       elevation: 0,
@@ -159,18 +180,6 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(width: 16),
-                  FilterChip(
-                    label: const Text('Nombre'),
-                    selected: true,
-                    onSelected: null, // Siempre activo
-                    selectedColor: colorScheme.primaryContainer,
-                    labelStyle: TextStyle(
-                      color: colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    showCheckmark: false,
-                  ),
-                  const SizedBox(width: 8.0),
                   ...widget.extraFilters.map(
                     (tipo) => _buildFilterChip(ref, tipo, colorScheme),
                   ),

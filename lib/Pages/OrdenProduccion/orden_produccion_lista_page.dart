@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -6,6 +7,7 @@ import 'package:cafe_valdivia/Pages/OrdenProduccion/agregar_orden_produccion_pag
 import 'package:cafe_valdivia/Pages/OrdenProduccion/detalle_orden_produccion_page.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/editar_orden_produccion_page.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -20,11 +22,16 @@ class OrdenProduccionListaPage extends ConsumerWidget {
     final asyncOrdenes = debugOverride(
       ref,
       'orden_produccion',
-      ref.watch(ordenProduccionProvider),
+      ref.watch(ordenProduccionFiltradoProvider),
     );
     final ColorScheme cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: AppbarChips(
+        labelText: "Buscar producción...",
+        backOption: false,
+        extraFilters: [TipoBusqueda.costo, TipoBusqueda.fecha],
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Producción",
         onPressed: () {

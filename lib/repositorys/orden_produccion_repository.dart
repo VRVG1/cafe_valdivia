@@ -51,7 +51,8 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   }
 
   Future<Map<String, dynamic>> getFullOrdenProduccion(
-      int ordenProduccionId) async {
+    int ordenProduccionId,
+  ) async {
     final db = await dbHelper.database;
     final result = await db.query(
       'v_produccion_resumen',
@@ -92,8 +93,20 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
     return await db.query('v_produccion_resumen', orderBy: 'fecha DESC');
   }
 
-  Future<List<OrdenProduccionConsumo>> getConsumosByOrdenId(
-      int ordenId) async {
+  Future<List<Map<String, dynamic>>> getAllFullOrdenesSearch({
+    String? where,
+    List<Object>? whereArgs,
+  }) async {
+    final db = await dbHelper.database;
+    return await db.query(
+      'v_produccion_resumen',
+      orderBy: 'fecha DESC',
+      where: where,
+      whereArgs: whereArgs,
+    );
+  }
+
+  Future<List<OrdenProduccionConsumo>> getConsumosByOrdenId(int ordenId) async {
     final result = await dbHelper.query(
       'Orden_Produccion_Consumo',
       where: 'id_orden_produccion = ?',
@@ -133,13 +146,20 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
     );
   }
 
-  Future<List<OrdenProduccion>> getByDateRange(
-    DateTime start,
-    DateTime end,
-  ) async {
-    return getAll(
-      where: 'fecha >= ? AND fecha <= ?',
-      whereArgs: [start.toIso8601String(), end.toIso8601String()],
+  Future<List<Map<String, dynamic>>> getByDateRange({
+    String? start,
+    String? end,
+    String? costo = "",
+  }) async {
+    start ??= DateTime.now().toString();
+    end ??= DateTime.now().toString();
+    final db = await dbHelper.database;
+    return await db.query(
+      'v_produccion_resumen',
+      orderBy: 'fecha DESC',
+      where:
+          '(fecha >= ? AND fecha <= ?) OR (costo_total_produccion LIKE ? OR producto_producido LIKE ?)',
+      whereArgs: [start, end, costo, costo],
     );
   }
 }

@@ -1,5 +1,7 @@
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -70,4 +72,25 @@ class VentaNotifier extends _$VentaNotifier {
 Future<Map<String, dynamic>> ventaDetallada(Ref ref, int id) async {
   final repository = ref.watch(ventaRepositoryProvider);
   return repository.getFullVenta(ventaId: id);
+}
+
+@riverpod
+Future<List<Map<String, dynamic>>> ventasfiltrados(Ref ref) async {
+  ref.watch(ventaProvider);
+  final repo = ref.watch(ventaRepositoryProvider);
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final String query = filtro.getQuery();
+  String? start;
+  String? end;
+
+  if (query.trim().isEmpty) {
+    return repo.getAllFullVentas();
+  }
+  if (filtro.tieneFiltro(TipoBusqueda.fecha)) {
+    start = query.split(" ")[0];
+    end = query.split(" ")[3];
+  }
+  final String pattern = "%$query%";
+  final result = repo.getFilteredFullVentas(start: start, end: end);
+  return result;
 }

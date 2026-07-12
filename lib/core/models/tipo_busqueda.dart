@@ -7,6 +7,7 @@ enum TipoBusqueda {
   stock,
   unidadMedida,
   venta,
+  fecha,
 }
 
 class FiltroBusqueda {

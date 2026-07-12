@@ -1,5 +1,7 @@
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -62,4 +64,25 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
 Future<Map<String, dynamic>> ordenProduccionDetallada(Ref ref, int id) async {
   final repository = ref.watch(ordenProduccionRepositoryProvider);
   return repository.getFullOrdenProduccion(id);
+}
+
+@riverpod
+Future<List<Map<String, dynamic>>> ordenProduccionFiltrado(Ref ref) async {
+  ref.watch(ordenProduccionProvider);
+  final repository = ref.watch(ordenProduccionRepositoryProvider);
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final String query = filtro.getQuery();
+
+  if (query.trim().isEmpty) {
+    return repository.getAllFullOrdenes();
+  }
+  if (filtro.tieneFiltro(TipoBusqueda.fecha)) {
+    return repository.getByDateRange(
+      start: query.split(" ")[0],
+      end: query.split(" ")[3],
+    );
+  }
+  final String pattern = "%$query%";
+  final result = repository.getByDateRange(costo: pattern);
+  return result;
 }

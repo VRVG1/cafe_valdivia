@@ -44,7 +44,8 @@ class VentaRepository extends BaseRepository<Venta> {
 
   @override
   Future<int> update(Venta entity) async {
-    if (entity.idVenta == null) throw OperacionInvalidaException('ID de venta no puede ser nulo');
+    if (entity.idVenta == null)
+      throw OperacionInvalidaException('ID de venta no puede ser nulo');
     return await dbHelper.update(
       tableName,
       _ventaToJson(entity),
@@ -112,6 +113,66 @@ class VentaRepository extends BaseRepository<Venta> {
       'detalles': result,
       'total': total.toStringAsFixed(2),
     };
+  }
+
+  Future<List<Map<String, dynamic>>> getFilteredFullVentas({
+    String? where,
+    String? start,
+    String? end,
+    String? pattern,
+    String? orderBy,
+    int? limit,
+    int? offset,
+  }) async {
+    start ??= DateTime.now().toString();
+    end ??= DateTime.now().toString();
+    final db = await dbHelper.database;
+
+    final List<Map<String, dynamic>> result = await db.query(
+      'V_Venta_Detallada',
+      where:
+          where ??
+          '(fecha >= ? AND fecha <= ?) OR (nombre_cliente LIKE ? OR  subtotal LIKE ?)',
+      whereArgs: [start, end, pattern, pattern],
+      orderBy: orderBy ?? 'fecha DESC',
+      limit: limit,
+      offset: offset,
+    );
+
+    if (result.isEmpty) return [];
+
+    final Map<int, List<Map<String, dynamic>>> agrupadas = {};
+    for (final row in result) {
+      final idVenta = row['id_venta'] as int;
+      agrupadas.putIfAbsent(idVenta, () => []).add(row);
+    }
+
+    final List<Map<String, dynamic>> ventas = [];
+    for (final entry in agrupadas.entries) {
+      final rows = entry.value;
+      double total = rows.fold(
+        0.0,
+        (sum, subtotal) => sum + (subtotal['subtotal'] as num),
+      );
+
+      final infoVenta = {
+        'id_venta': rows.first['id_venta'],
+        'fecha': rows.first['fecha'],
+        'detalles': rows.first['detalles_venta'],
+        'pagado': rows.first['pagado'],
+        'id_cliente': rows.first['id_cliente'],
+        'nombre_cliente': rows.first['nombre_cliente'],
+        'apellido_cliente': rows.first['apellido_cliente'],
+      };
+
+      ventas.add({
+        'venta': infoVenta,
+        'detalles': rows,
+        'total': total.toStringAsFixed(2),
+      });
+    }
+
+    return ventas;
   }
 
   Future<List<Map<String, dynamic>>> getAllFullVentas() async {

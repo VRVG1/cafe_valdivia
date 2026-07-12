@@ -138,3 +138,44 @@ final class VentaDetalladaFamily extends $Family
   @override
   String toString() => r'ventaDetalladaProvider';
 }
+
+@ProviderFor(ventasfiltrados)
+final ventasfiltradosProvider = VentasfiltradosProvider._();
+
+final class VentasfiltradosProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Map<String, dynamic>>>,
+          List<Map<String, dynamic>>,
+          FutureOr<List<Map<String, dynamic>>>
+        >
+    with
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
+  VentasfiltradosProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ventasfiltradosProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$ventasfiltradosHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    return ventasfiltrados(ref);
+  }
+}
+
+String _$ventasfiltradosHash() => r'a08994a3dfe68d6b07a38fb2c459f737b623d017';

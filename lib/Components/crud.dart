@@ -149,8 +149,8 @@ Future<bool> create<T>({
     return true;
   } catch (e, st) {
     // appLogger.e(
-      "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
-    );
+    //  "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
+    //);
     if (e.toString().contains("existe")) {
       List<String> cortado = e.toString().split(" ");
       String duplicado = cortado.sublist(1, cortado.length).join(" ");

@@ -51,9 +51,7 @@ class DetalleVentaPage extends ConsumerWidget {
     final tt = theme.textTheme;
 
     return Scaffold(
-      appBar: AppBarDetalles<DetalleCompra>(
-        title: "Detalle de Venta",
-      ),
+      appBar: AppBarDetalles<DetalleCompra>(title: "Detalle de Venta"),
       body: ventaAsync.when(
         data: (venta) {
           final infoVenta = venta['venta'] as Map<String, dynamic>;
@@ -129,7 +127,11 @@ class DetalleVentaPage extends ConsumerWidget {
     );
   }
 
-  Widget _headerCard(ColorScheme cs, TextTheme tt, Map<String, dynamic> infoVenta) {
+  Widget _headerCard(
+    ColorScheme cs,
+    TextTheme tt,
+    Map<String, dynamic> infoVenta,
+  ) {
     final pagado = infoVenta['pagado'];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

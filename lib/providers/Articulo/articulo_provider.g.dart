@@ -201,7 +201,7 @@ final class ProductosFiltradosProvider
 }
 
 String _$productosFiltradosHash() =>
-    r'0ecc1a3589bb196e58b86aca70b895e9a9001e94';
+    r'be3f32cc586ed59a7c7d43134b37e39cfcae85cd';
 
 @ProviderFor(productosProvider)
 final productosProviderProvider = ProductosProviderProvider._();
@@ -240,4 +240,4 @@ final class ProductosProviderProvider
   }
 }
 
-String _$productosProviderHash() => r'b6c7baf32959f5eaa59b9254ca3922bc1c788c3a';
+String _$productosProviderHash() => r'09f6cce7f82cec3375a9e88b39bd9bf927e506da';

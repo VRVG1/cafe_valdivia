@@ -1,9 +1,11 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Venta/agregar_venta_page.dart';
 import 'package:cafe_valdivia/Pages/Venta/detalle_venta_page.dart';
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +16,19 @@ class VentaListaPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncVentas = debugOverride(ref, 'ventas', ref.watch(ventaProvider));
+    final asyncVentas = debugOverride(
+      ref,
+      'ventas',
+      ref.watch(ventasfiltradosProvider),
+    );
     final ColorScheme cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: AppbarChips(
+        labelText: "Buscar Venta...",
+        extraFilters: [TipoBusqueda.fecha],
+        backOption: false,
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Venta",
         onPressed: () {
