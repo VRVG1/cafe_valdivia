@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -83,10 +84,11 @@ Future<List<Map<String, dynamic>>> ordenProduccionFiltrado(Ref ref) async {
     end = filtro.fechaFinalIso;
   }
   final String pattern = "%$query%";
-  final result = repository.getByDateRange(
-    costo: pattern,
-    start: start,
-    end: end,
-  );
+  final result = repository
+      .getByDateRange(pattern: pattern, start: start, end: end)
+      .catchError((error) {
+        appLogger.e(error);
+        return <Map<String, dynamic>>[];
+      });
   return result;
 }
