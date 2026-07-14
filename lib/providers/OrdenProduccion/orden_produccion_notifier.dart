@@ -72,17 +72,21 @@ Future<List<Map<String, dynamic>>> ordenProduccionFiltrado(Ref ref) async {
   final repository = ref.watch(ordenProduccionRepositoryProvider);
   final filtro = ref.watch(filtroBusquedaProvider);
   final String query = filtro.getQuery();
-
-  if (query.trim().isEmpty) {
+  final bool tieneFecha = filtro.tieneFiltro(TipoBusqueda.fecha);
+  if (query.trim().isEmpty && !tieneFecha) {
     return repository.getAllFullOrdenes();
   }
-  if (filtro.tieneFiltro(TipoBusqueda.fecha)) {
-    return repository.getByDateRange(
-      start: query.split(" ")[0],
-      end: query.split(" ")[3],
-    );
+  String? start;
+  String? end;
+  if (tieneFecha) {
+    start = filtro.fechaInicialIso;
+    end = filtro.fechaFinalIso;
   }
   final String pattern = "%$query%";
-  final result = repository.getByDateRange(costo: pattern);
+  final result = repository.getByDateRange(
+    costo: pattern,
+    start: start,
+    end: end,
+  );
   return result;
 }

@@ -178,4 +178,4 @@ final class VentasfiltradosProvider
   }
 }
 
-String _$ventasfiltradosHash() => r'a08994a3dfe68d6b07a38fb2c459f737b623d017';
+String _$ventasfiltradosHash() => r'db3510945c75ecd79cb58f4a224839dd0ce9da95';

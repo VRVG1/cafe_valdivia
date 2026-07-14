@@ -45,7 +45,7 @@ class VentaListaPage extends ConsumerWidget {
       body: asyncVentas.when(
         data: (ventas) {
           if (ventas.isEmpty) {
-            return const Center(child: Text('No hay ventas para mostrar.'));
+            return ErrorView(message: "No hay ventas para mostrar");
           }
           return ListviewCustom<Map<String, dynamic>>(
             data: ventas,
@@ -98,8 +98,10 @@ class VentaListaPage extends ConsumerWidget {
           );
         },
         error: (err, stack) => ErrorView(
-          message: 'Error al cargar las ventas',
-          onRetry: () => ref.invalidate(ventaProvider),
+          message: 'Error al cargar las ventas \n $err \n $stack',
+          onRetry: () {
+            ref.invalidate(ventaProvider);
+          },
         ),
         loading: () => SkeletonListTiles(n: 10),
       ),

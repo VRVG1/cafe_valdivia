@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -80,17 +81,23 @@ Future<List<Map<String, dynamic>>> ventasfiltrados(Ref ref) async {
   final repo = ref.watch(ventaRepositoryProvider);
   final filtro = ref.watch(filtroBusquedaProvider);
   final String query = filtro.getQuery();
-  String? start;
-  String? end;
+  final bool tieneFecha = filtro.tieneFiltro(TipoBusqueda.fecha);
+  final String pattern = "%$query%";
 
-  if (query.trim().isEmpty) {
+  if (query.trim().isEmpty && !tieneFecha) {
     return repo.getAllFullVentas();
   }
-  if (filtro.tieneFiltro(TipoBusqueda.fecha)) {
-    start = query.split(" ")[0];
-    end = query.split(" ")[3];
+  String? start;
+  String? end;
+  if (tieneFecha) {
+    start = filtro.fechaInicialIso;
+    end = filtro.fechaFinalIso;
   }
-  final String pattern = "%$query%";
-  final result = repo.getFilteredFullVentas(start: start, end: end);
+  final result = repo
+      .getFilteredFullVentas(start: start, end: end, pattern: pattern)
+      .catchError((error) {
+        appLogger.e(error);
+        return <Map<String, dynamic>>[];
+      });
   return result;
 }

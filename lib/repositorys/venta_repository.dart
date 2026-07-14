@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
@@ -116,30 +117,49 @@ class VentaRepository extends BaseRepository<Venta> {
   }
 
   Future<List<Map<String, dynamic>>> getFilteredFullVentas({
-    String? where,
     String? start,
     String? end,
     String? pattern,
     String? orderBy,
-    int? limit,
-    int? offset,
+    String? where,
+    List<dynamic>? whereArgs,
   }) async {
-    start ??= DateTime.now().toString();
-    end ??= DateTime.now().toString();
+    // start ??= DateTime.now().toString();
+    // end ??= DateTime.now().toString();
     final db = await dbHelper.database;
+    List<Map<String, dynamic>> result;
+    if (start != null && end != null && pattern == null) {
+      result = await db.query(
+        'V_Venta_Detallada',
+        where: where ?? '(fecha >= ? AND fecha <= ?)',
+        whereArgs: whereArgs ?? [start, end],
+        orderBy: orderBy ?? 'fecha DESC',
+      );
+    } else if (pattern != null && start == null && end == null) {
+      result = await db.query(
+        'V_Venta_Detallada',
+        where:
+            where ??
+            '(nombre_cliente LIKE ? OR apellido_cliente LIKE ? OR subtotal LIKE ?)',
+        whereArgs: whereArgs ?? [pattern, pattern, pattern],
+        orderBy: orderBy ?? 'fecha DESC',
+      );
+    } else {
+      result = await db.query(
+        'V_Venta_Detallada',
+        where:
+            where ??
+            '(fecha >= ? AND fecha <= ?) AND (nombre_cliente LIKE ? OR apellido_cliente LIKE ? OR subtotal LIKE ?)',
+        whereArgs: whereArgs ?? [start, end, pattern, pattern, pattern],
+        orderBy: orderBy ?? 'fecha DESC',
+      );
+    }
 
-    final List<Map<String, dynamic>> result = await db.query(
-      'V_Venta_Detallada',
-      where:
-          where ??
-          '(fecha >= ? AND fecha <= ?) OR (nombre_cliente LIKE ? OR  subtotal LIKE ?)',
-      whereArgs: [start, end, pattern, pattern],
-      orderBy: orderBy ?? 'fecha DESC',
-      limit: limit,
-      offset: offset,
-    );
+    appLogger.d(result);
 
-    if (result.isEmpty) return [];
+    if (result.isEmpty) {
+      throw RegistroNoEncontradoException("No se encuentran registros");
+    }
 
     final Map<int, List<Map<String, dynamic>>> agrupadas = {};
     for (final row in result) {

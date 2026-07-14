@@ -50,15 +50,20 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime(2030),
-      initialDateRange: DateTimeRange(
-        start: DateTime.now(),
-        end: DateTime.now().add(const Duration(days: 7)),
-      ),
+      initialDateRange: filtro.fechaInicial != null && filtro.fechaFinal != null
+          ? DateTimeRange(start: filtro.fechaInicial!, end: filtro.fechaFinal!)
+          : DateTimeRange(
+              start: DateTime.now(),
+              end: DateTime.now().add(const Duration(days: 7)),
+            ),
     );
     if (_selectedDateRange != null) {
       ref
           .read(filtroBusquedaProvider.notifier)
-          .actualizarQuery(_selectedDateRange.toString());
+          .actualizarRangoFecha(
+            _selectedDateRange!.start,
+            _selectedDateRange!.end,
+          );
     }
   }
 
@@ -77,11 +82,17 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
         label: Text(label),
         selected: isSelected,
         onSelected: (_) {
-          if (label == "Fecha" && !isSelected) {
-            datePicker(filtro);
+          if (label == "Fecha") {
+            if (isSelected) {
+              ref.read(filtroBusquedaProvider.notifier).limpiarFecha();
+            } else {
+              datePicker(filtro);
+            }
           }
           ref.read(filtroBusquedaProvider.notifier).toggleFiltro(tipo);
-          ref.read(filtroBusquedaProvider.notifier).actualizarQuery("");
+          if (label == "Fecha") {
+            ref.read(filtroBusquedaProvider.notifier).actualizarQuery("");
+          }
         },
         selectedColor: colorScheme.primaryContainer,
         showCheckmark: false,

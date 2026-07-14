@@ -1,5 +1,4 @@
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filtro_busqueda_notifier.g.dart';
@@ -13,6 +12,22 @@ class FiltroBusquedaNotifier extends _$FiltroBusquedaNotifier {
 
   void actualizarQuery(String query) {
     state = state.copyWith(query: query);
+  }
+
+  void actualizarFechaInicial(DateTime fechaInicial) {
+    state = state.copyWith(fechaInicial: fechaInicial);
+  }
+
+  void actualizarFechaFinal(DateTime fechaFinal) {
+    state = state.copyWith(fechaFinal: fechaFinal);
+  }
+
+  void actualizarRangoFecha(DateTime fechaInicial, DateTime fechaFinal) {
+    state = state.copyWith(fechaInicial: fechaInicial, fechaFinal: fechaFinal);
+  }
+
+  void limpiarFecha() {
+    state = state.copyWith(fechaInicial: null, fechaFinal: null);
   }
 
   void toggleFiltro(TipoBusqueda filtro) {

@@ -1,23 +1,23 @@
 class StockInsuficienteException implements Exception {
-  final String mensaje;
+  final String? mensaje;
   StockInsuficienteException(this.mensaje);
 
   @override
-  String toString() => 'Stock insuficiente: $mensaje';
+  String toString() => mensaje ?? "PANIC";
 }
 
 class RegistroNoEncontradoException implements Exception {
-  final String mensaje;
+  final String? mensaje;
   RegistroNoEncontradoException(this.mensaje);
 
   @override
-  String toString() => 'No se encontró: $mensaje';
+  String toString() => mensaje ?? "PANIC";
 }
 
 class OperacionInvalidaException implements Exception {
-  final String motivo;
+  final String? motivo;
   OperacionInvalidaException(this.motivo);
 
   @override
-  String toString() => 'Operación inválida: $motivo';
+  String toString() => motivo ?? "PANIC";
 }
