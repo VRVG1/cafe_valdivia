@@ -149,17 +149,42 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   Future<List<Map<String, dynamic>>> getByDateRange({
     String? start,
     String? end,
-    String? costo = "",
+    String? pattern,
+    String? orderBy,
+    String? where,
+    List<dynamic>? whereArgs,
   }) async {
-    start ??= DateTime.now().toString();
-    end ??= DateTime.now().toString();
     final db = await dbHelper.database;
-    return await db.query(
-      'v_produccion_resumen',
-      orderBy: 'fecha DESC',
-      where:
-          '(fecha >= ? AND fecha <= ?) OR (costo_total_produccion LIKE ? OR producto_producido LIKE ?)',
-      whereArgs: [start, end, costo, costo],
-    );
+    List<Map<String, dynamic>> result;
+    if (start != null && end != null && pattern == "%%") {
+      result = await db.query(
+        'v_produccion_resumen',
+        where: where ?? '(fecha >= ? AND fecha <= ?)',
+        whereArgs: whereArgs ?? [start, end],
+        orderBy: orderBy ?? 'fecha DESC',
+      );
+    } else if (pattern != null && start == null && end == null) {
+      result = await db.query(
+        'v_produccion_resumen',
+        where:
+            where ??
+            '(costo_total_produccion LIKE ? OR producto_producido LIKE ?)',
+        whereArgs: whereArgs ?? [pattern, pattern],
+        orderBy: orderBy ?? 'fecha DESC',
+      );
+    } else {
+      result = await db.query(
+        'v_produccion_resumen',
+        where:
+            where ??
+            '(fecha >= ? AND fecha <= ?) AND (costo_total_produccion LIKE ? OR producto_producido LIKE ?)',
+        whereArgs: whereArgs ?? [start, end, pattern, pattern],
+        orderBy: 'fecha DESC',
+      );
+    }
+    if (result.isEmpty) {
+      throw RegistroNoEncontradoException("No se encuentran registros");
+    }
+    return result;
   }
 }
