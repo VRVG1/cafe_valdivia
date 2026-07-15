@@ -56,7 +56,7 @@ class ProveedorListaState extends ConsumerState {
       body: asyncProveedor.when(
         data: (proveedores) {
           if (proveedores.isEmpty) {
-            return const Center(child: Text('No hay proveedors para mostrar.'));
+            return ErrorView(message: 'No hay proveedors para mostrar.');
           }
 
           return ListviewCustom<Proveedor>(

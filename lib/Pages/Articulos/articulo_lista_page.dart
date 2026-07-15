@@ -10,7 +10,6 @@ import 'package:cafe_valdivia/Pages/Articulos/articulo_detallado_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/Pages/Articulos/unidad_medida_nombre.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,7 +47,7 @@ class InsumoListaPage extends ConsumerWidget {
         data: (articulos) {
           // appLogger.w(articulos);
           if (articulos.isEmpty) {
-            return const Center(child: Text('No hay articulos para mostrar.'));
+            return ErrorView(message: 'No hay articulos para mostrar.');
           }
           return ListviewCustom<Articulo>(
             data: articulos,
