@@ -38,7 +38,7 @@ class RecetaListaPage extends ConsumerWidget {
       body: asyncRecetas.when(
         data: (recetas) {
           if (recetas.isEmpty) {
-            return const Center(child: Text('No hay recetas para mostrar.'));
+            return ErrorView(message: 'No hay recetas para mostrar.');
           }
           return ListviewCustom<Receta>(
             data: recetas,

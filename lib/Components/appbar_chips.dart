@@ -122,7 +122,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: colorScheme.surface,
-      toolbarHeight: 120, // Más alto para acomodar chips
+      toolbarHeight: 120,
       leading: widget.backOption
           ? IconButton(
               tooltip: "Volver",
@@ -140,7 +140,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
           children: [
             const SizedBox(height: 8),
             Container(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 48),
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
               height: 48,
               child: TextField(
                 onChanged: (value) {

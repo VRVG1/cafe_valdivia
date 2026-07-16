@@ -48,10 +48,16 @@ class OrdenProduccionListaPage extends ConsumerWidget {
       body: asyncOrdenes.when(
         data: (ordenes) {
           if (ordenes.isEmpty) {
+<<<<<<< HEAD
+            return ErrorView(
+              message: 'No hay órdenes de producción para mostrar.',
+            );
+=======
           return ErrorView(
            message: "No hay órdenes de producción para mostrar."
 
           );
+>>>>>>> df2e07b836e2c943213555ecaa4ed07f4bd3abba
           }
           return ListviewCustom<Map<String, dynamic>>(
             data: ordenes,

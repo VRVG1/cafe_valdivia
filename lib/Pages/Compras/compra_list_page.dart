@@ -45,7 +45,7 @@ class CompraListPage extends ConsumerWidget {
       body: asyncCompra.when(
         data: (compras) {
           if (compras.isEmpty) {
-            return const Center(child: Text('No hay compras para mostrar.'));
+            return ErrorView(message: 'No hay compras para mostrar.');
           }
           return ListviewCustom<Map<String, dynamic>>(
             data: compras,

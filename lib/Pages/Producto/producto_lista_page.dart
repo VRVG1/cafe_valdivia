@@ -49,7 +49,7 @@ class ProductoListaPage extends ConsumerWidget {
       body: asyncProductos.when(
         data: (productos) {
           if (productos.isEmpty) {
-            return const Center(child: Text('No hay Productos para mostrar.'));
+            return ErrorView(message: 'No hay Productos para mostrar.');
           }
           return ListviewCustom<Articulo>(
             data: productos,

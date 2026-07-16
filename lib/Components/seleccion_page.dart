@@ -112,19 +112,7 @@ class _SeleccionPageState<T> extends ConsumerState<SeleccionPage<T>>
   }
 
   Widget _buildEmptyState(ColorScheme cs) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.inbox_rounded, size: 80, color: cs.outline),
-          const SizedBox(height: 16),
-          Text(
-            widget.mensajeVacio,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ],
-      ),
-    );
+    return ErrorView(message: widget.mensajeVacio);
   }
 
   Widget _buildDataState(List<T> data) {
