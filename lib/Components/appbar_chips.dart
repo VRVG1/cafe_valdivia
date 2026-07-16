@@ -37,6 +37,12 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       final filtro = ref.read(filtroBusquedaProvider);
       _controller.text = filtro.query;
     });
+
+    ref.listenManual(filtroBusquedaProvider, (prev, next) {
+      if (_controller.text != next.query) {
+        _controller.text = next.query;
+      }
+    });
   }
 
   @override

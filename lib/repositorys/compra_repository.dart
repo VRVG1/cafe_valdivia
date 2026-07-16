@@ -162,7 +162,7 @@ class CompraRepository extends BaseRepository<Compra> {
     });
   }
 
-  Future<List<Map<String, dynamic>>> getAllNombreProveedor({
+  Future<List<Map<String, dynamic>>> getAllNombreProveedorFiltrado({
     String? where,
     List<Object?>? whereArgs,
     String? start,
@@ -177,11 +177,11 @@ class CompraRepository extends BaseRepository<Compra> {
         where: '(fecha >= ? AND fecha <= ?)',
         whereArgs: [start, end],
       );
-    } else if (pattern != null && start == null && end == null) {
+    } else if (pattern == null && start == null && end == null) {
       result = await db.query(
         "v_compras_list",
         where: '(nombre_proveedor LIKE ? OR total_compra LIKE ?)',
-        whereArgs: [pattern, pattern],
+        whereArgs: ["%$pattern%", "%$pattern%"],
       );
     } else {
       result = await db.query(
@@ -189,9 +189,21 @@ class CompraRepository extends BaseRepository<Compra> {
         where:
             where ??
             '(fecha >= ? AND fecha <= ?) AND (nombre_proveedor LIKE ? OR total_compra LIKE ?)',
-        whereArgs: whereArgs ?? [start, end, pattern, pattern],
+        whereArgs: whereArgs ?? [start, end, "%$pattern%", "%$pattern%"],
       );
     }
+
+    if (result.isEmpty) {
+      throw RegistroNoEncontradoException("No se encuentran registros");
+    }
+
+    return List<Map<String, dynamic>>.from(result);
+  }
+
+  Future<List<Map<String, dynamic>>> getAllNombreProveedor() async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> result;
+    result = await db.query("v_compras_list");
 
     if (result.isEmpty) {
       throw RegistroNoEncontradoException("No se encuentran registros");

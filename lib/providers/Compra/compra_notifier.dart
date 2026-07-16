@@ -90,10 +90,10 @@ Future<List<Map<String, dynamic>>> compraFiltrados(Ref ref) {
   final filtro = ref.watch(filtroBusquedaProvider);
   final query = filtro.getQuery();
   final bool tieneFecha = filtro.tieneFiltro(TipoBusqueda.fecha);
-  final pattern = "%$query%";
+  final pattern = query;
 
   if (query.trim().isEmpty && !tieneFecha) {
-    return repo.getAllNombreProveedor(pattern: pattern);
+    return repo.getAllNombreProveedor();
   }
 
   String? start;
@@ -104,7 +104,7 @@ Future<List<Map<String, dynamic>>> compraFiltrados(Ref ref) {
   }
 
   final result = repo
-      .getAllNombreProveedor(start: start, end: end, pattern: pattern)
+      .getAllNombreProveedorFiltrado(start: start, end: end, pattern: pattern)
       .catchError((error) {
         appLogger.e(error);
         return <Map<String, dynamic>>[];

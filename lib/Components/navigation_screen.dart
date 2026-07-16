@@ -10,18 +10,19 @@ import 'package:cafe_valdivia/Pages/Proveedor/proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_lista_page.dart';
 import 'package:cafe_valdivia/Debug/debug_panel.dart';
 import 'package:cafe_valdivia/Debug/debug_state.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NavigationScreen extends StatefulWidget {
+class NavigationScreen extends ConsumerStatefulWidget {
   const NavigationScreen({super.key, required this.colorScheme});
 
   final ColorScheme colorScheme;
   @override
-  State<NavigationScreen> createState() => _NavigationScreenState();
+  ConsumerState<NavigationScreen> createState() => _NavigationScreenState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> {
+class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   int currentPageIndex = 0;
 
   final List<Widget> pages = [
@@ -136,6 +137,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 child: NavigationDrawer(
                   selectedIndex: currentPageIndex,
                   onDestinationSelected: (int index) {
+                    ref.invalidate(filtroBusquedaProvider);
                     setState(() {
                       currentPageIndex = index;
                     });
