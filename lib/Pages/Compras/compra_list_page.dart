@@ -1,9 +1,11 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page.dart';
 import 'package:cafe_valdivia/Pages/Compras/detalle_compra_page.dart';
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +19,16 @@ class CompraListPage extends ConsumerWidget {
     final asyncCompra = debugOverride(
       ref,
       'compras',
-      ref.watch(compraProvider),
+      ref.watch(compraFiltradosProvider),
     );
     final ColorScheme cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: AppbarChips(
+        backOption: false,
+        labelText: "Buscar Compra...",
+        extraFilters: [TipoBusqueda.costo, TipoBusqueda.fecha],
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Compra",
         onPressed: () {

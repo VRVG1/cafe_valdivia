@@ -4,19 +4,22 @@ String traducirErrorBD(dynamic error) {
   final msg = error.toString();
 
   if (error is StockInsuficienteException) {
-    return error.mensaje;
+    return error.mensaje ?? "ERROR Desconocido";
   }
   if (error is RegistroNoEncontradoException) {
-    return error.mensaje;
+    return error.mensaje ?? "error desconocido";
   }
   if (error is OperacionInvalidaException) {
-    return error.motivo;
+    return error.motivo ?? "error desconocido";
   }
 
   if (msg.contains('UNIQUE constraint failed')) {
-    if (msg.contains('Cliente.email')) return 'Ya existe un cliente con ese email';
-    if (msg.contains('Proveedor.email')) return 'Ya existe un proveedor con ese email';
-    if (msg.contains('Articulo.nombre')) return 'Ya existe un artículo con ese nombre';
+    if (msg.contains('Cliente.email'))
+      return 'Ya existe un cliente con ese email';
+    if (msg.contains('Proveedor.email'))
+      return 'Ya existe un proveedor con ese email';
+    if (msg.contains('Articulo.nombre'))
+      return 'Ya existe un artículo con ese nombre';
     return 'Ya existe un registro con ese valor';
   }
 

@@ -165,11 +165,38 @@ class CompraRepository extends BaseRepository<Compra> {
   Future<List<Map<String, dynamic>>> getAllNombreProveedor({
     String? where,
     List<Object?>? whereArgs,
+    String? start,
+    String? end,
+    String? pattern,
   }) async {
     final db = await dbHelper.database;
+    final List<Map<String, dynamic>> result;
+    if (start != null && end != null && pattern == "%%") {
+      result = await db.query(
+        "v_compras_list",
+        where: '(fecha >= ? AND fecha <= ?)',
+        whereArgs: [start, end],
+      );
+    } else if (pattern != null && start == null && end == null) {
+      result = await db.query(
+        "v_compras_list",
+        where: '(nombre_proveedor LIKE ? OR total_compra LIKE ?)',
+        whereArgs: [pattern, pattern],
+      );
+    } else {
+      result = await db.query(
+        "v_compras_list",
+        where:
+            where ??
+            '(fecha >= ? AND fecha <= ?) AND (nombre_proveedor LIKE ? OR total_compra LIKE ?)',
+        whereArgs: whereArgs ?? [start, end, pattern, pattern],
+      );
+    }
 
-    final List<Map<String, dynamic>> result = await db.query("v_compras_list");
-    // appLogger.i(result);
+    if (result.isEmpty) {
+      throw RegistroNoEncontradoException("No se encuentran registros");
+    }
+
     return List<Map<String, dynamic>>.from(result);
   }
 }

@@ -138,3 +138,44 @@ final class CompraDetalladaFamily extends $Family
   @override
   String toString() => r'compraDetalladaProvider';
 }
+
+@ProviderFor(compraFiltrados)
+final compraFiltradosProvider = CompraFiltradosProvider._();
+
+final class CompraFiltradosProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Map<String, dynamic>>>,
+          List<Map<String, dynamic>>,
+          FutureOr<List<Map<String, dynamic>>>
+        >
+    with
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
+  CompraFiltradosProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'compraFiltradosProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$compraFiltradosHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    return compraFiltrados(ref);
+  }
+}
+
+String _$compraFiltradosHash() => r'f48cfbb7b05ef61be126157433e2510e2990a9c0';
