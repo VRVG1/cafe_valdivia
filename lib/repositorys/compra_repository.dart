@@ -171,13 +171,13 @@ class CompraRepository extends BaseRepository<Compra> {
   }) async {
     final db = await dbHelper.database;
     final List<Map<String, dynamic>> result;
-    if (start != null && end != null && pattern == "%%") {
+    if (start != null && end != null && pattern == null) {
       result = await db.query(
         "v_compras_list",
         where: '(fecha >= ? AND fecha <= ?)',
         whereArgs: [start, end],
       );
-    } else if (pattern == null && start == null && end == null) {
+    } else if (pattern != null && start == null && end == null) {
       result = await db.query(
         "v_compras_list",
         where: '(nombre_proveedor LIKE ? OR total_compra LIKE ?)',
