@@ -96,18 +96,16 @@ class InsumoListaPage extends ConsumerWidget {
                     titulo: "Seguro que quiere eliminar este cliente?",
                     contenido: "Esta accion no se puede deshacer",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: articuloProviderProvider,
-                        id: articulo.idArticulo!,
-                        mensajeExito: "El articulo se ha borrado con exito",
-                        detalle: false,
-                        mensajeError:
-                            "Error al eliminar el Articulo, Por favor, intente de nuevo.",
-                      ),
-                    },
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: articuloProviderProvider,
+                      id: articulo.idArticulo!,
+                      mensajeExito: "El articulo se ha borrado con exito",
+                      detalle: false,
+                      mensajeError:
+                          "Error al eliminar el Articulo, Por favor, intente de nuevo.",
+                    ),
                   ) ??
                   false;
 

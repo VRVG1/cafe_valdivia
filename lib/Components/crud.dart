@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,7 @@ Future<bool?> mostrarDialogoConfirmacion({
   required String titulo,
   required String contenido,
   required String textoBotonConfirmacion,
-  required VoidCallback onConfirm,
+  required Future<bool> Function() onConfirm,
 }) {
   return showDialog<bool>(
     context: context,
@@ -49,9 +50,9 @@ Future<bool?> mostrarDialogoConfirmacion({
                     : null,
                 elevation: 0,
               ),
-              onPressed: () {
-                onConfirm();
-                Navigator.of(dialogContext).pop(true); // Cierra el diálogo
+              onPressed: () async {
+                final resultado = await onConfirm();
+                Navigator.of(dialogContext).pop(resultado);
               },
               child: Text(textoBotonConfirmacion),
             ),
@@ -110,16 +111,17 @@ Future<bool> delete({
         Navigator.of(context).pop(); // Regresar a la pantalla anterior
       }
     }
+    appLogger.i("Se borro un elemento: $provider");
     return true;
-  } catch (e) {
-    // appLogger.e(e);
+  } catch (e, st) {
     if (context.mounted) {
       showCustomSnackBar(
         context: context,
-        mensaje: mensajeError,
+        mensaje: traducirErrorBD(e),
         isError: true,
       );
     }
+    appLogger.e("Error al borro un elemento: $provider");
     return false;
   }
 }
@@ -148,9 +150,6 @@ Future<bool> create<T>({
     }
     return true;
   } catch (e, st) {
-    // appLogger.e(
-    //  "Error al crear ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
-    //);
     if (e.toString().contains("existe")) {
       List<String> cortado = e.toString().split(" ");
       String duplicado = cortado.sublist(1, cortado.length).join(" ");
@@ -184,9 +183,6 @@ Future<bool> update<T>({
     }
     return true;
   } catch (e, st) {
-    // appLogger.e(
-    //   "Error al actualizar ${element.runtimeType}: ${e.toString()}  ${st.toString()}",
-    // );
     if (context.mounted) {
       mensajeExito != null
           ? showCustomSnackBar(
@@ -200,27 +196,3 @@ Future<bool> update<T>({
     return false;
   }
 }
-
-// Provider<AsyncValue<List<T>>> buscarConFiltros<T>({
-//   required WidgetRef ref,
-//   required Provider provider,
-//   required T element,
-// }) {
-//   final elementAsync = ref.watch(provider);
-//   final query = ref.watch(provider).getQuery();
-//   final filtros = ref.watch(filtroBusquedaProvider);
-//
-//   return elementAsync.when(
-//     data: (elements) {
-//       if (query.isEmpty) return AsyncValue.data(elements);
-//
-//       final filtrados = elements.where((p) {
-//         bool coincidencia = p.nombre.toLowerCase().contains(query);
-//
-//         if (filtros.contains(TipoBusqueda.email) && !coincidencia) {
-//         coincidencia = p.email?.toLowerCase().contains(query) ?? false;
-//         }
-//       });
-//     }
-//   );
-// }

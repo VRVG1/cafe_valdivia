@@ -72,9 +72,7 @@ class ClienteDetallado extends ConsumerWidget {
                   mensajeError:
                       "Error al eliminar el cliente,Por favor, intente de nuevo",
                 );
-                if (exito && context.mounted) {
-                  Navigator.of(context).pop();
-                }
+                return exito;
               },
             );
           }

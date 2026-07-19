@@ -50,7 +50,7 @@ class ProveedorList extends _$ProveedorList {
       return true;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      rethrow;
     }
   }
 }

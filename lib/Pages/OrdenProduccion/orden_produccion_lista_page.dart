@@ -105,18 +105,16 @@ class OrdenProduccionListaPage extends ConsumerWidget {
                     titulo: "Eliminar orden de producción",
                     contenido: "Esta acción no se puede deshacer",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: ordenProduccionProvider,
-                        id: id,
-                        mensajeExito: "Orden de producción eliminada con exito",
-                        mensajeError:
-                            "Error al eliminar la orden de producción",
-                        detalle: false,
-                      ),
-                    },
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: ordenProduccionProvider,
+                      id: id,
+                      mensajeExito: "Orden de producción eliminada con exito",
+                      mensajeError:
+                          "Error al eliminar la orden de producción",
+                      detalle: false,
+                    ),
                   ) ??
                   false;
               if (confirmacion) {

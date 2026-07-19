@@ -34,7 +34,7 @@ final class ClienteNotifierProvider
   ClienteNotifier create() => ClienteNotifier();
 }
 
-String _$clienteNotifierHash() => r'bf3bc874be4b8fe0f2250a15dd340c0d9f8b7ff2';
+String _$clienteNotifierHash() => r'10002a13324eb187e9bf9b875a55bc7a7c5f6bb8';
 
 abstract class _$ClienteNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {

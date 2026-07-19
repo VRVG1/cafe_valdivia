@@ -58,6 +58,7 @@ class ClienteNotifier extends _$ClienteNotifier {
       return true;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+      rethrow;
       return false;
     }
   }

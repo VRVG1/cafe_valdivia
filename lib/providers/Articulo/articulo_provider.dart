@@ -51,7 +51,7 @@ class ArticuloProvider extends _$ArticuloProvider {
       return true;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      rethrow;
     }
   }
 }

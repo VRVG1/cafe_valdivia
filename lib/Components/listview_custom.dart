@@ -82,7 +82,7 @@ class ListviewCustom<T> extends ConsumerWidget {
           borderRadius = BorderRadius.circular(8);
         }
 
-        return Padding(
+        return _hasDismissible ? Padding(
           padding: EdgeInsets.only(bottom: isLast ? 0 : 4),
           child: Material(
             borderRadius: borderRadius,
@@ -163,7 +163,7 @@ class ListviewCustom<T> extends ConsumerWidget {
               ),
             ),
           ),
-        );
+        ) : null;
       },
     );
   }

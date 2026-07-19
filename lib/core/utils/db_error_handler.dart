@@ -12,6 +12,9 @@ String traducirErrorBD(dynamic error) {
   if (error is OperacionInvalidaException) {
     return error.motivo ?? "error desconocido";
   }
+  if (error is RelacionExistenteException) {
+    return error.mensaje ?? "No se puede eliminar";
+  }
 
   if (msg.contains('UNIQUE constraint failed')) {
     if (msg.contains('Cliente.email'))

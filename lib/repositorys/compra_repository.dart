@@ -1,5 +1,4 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';

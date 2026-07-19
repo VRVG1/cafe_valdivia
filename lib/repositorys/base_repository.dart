@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 
 abstract class BaseRepository<T> {
@@ -38,7 +39,8 @@ abstract class BaseRepository<T> {
 
   Future<int> update(T entity) async {
     final entityId = getId(entity);
-    if (entityId == null) throw OperacionInvalidaException('ID no puede ser nulo');
+    if (entityId == null)
+      throw OperacionInvalidaException('ID no puede ser nulo');
     return await dbHelper.update(
       tableName,
       toJson(entity),
@@ -48,10 +50,20 @@ abstract class BaseRepository<T> {
   }
 
   Future<int> delete(int id) async {
-    return await dbHelper.delete(
-      tableName,
-      where: '$idColumn = ?',
-      whereArgs: [id],
-    );
+    try {
+      return await dbHelper.delete(
+        tableName,
+        where: '$idColumn = ?',
+        whereArgs: [id],
+      );
+    } catch (error) {
+      appLogger.e(error);
+      if (error.toString().contains('FOREIGN KEY constraint failed')) {
+        throw RelacionExistenteException(
+          'No se puede eliminar porque tiene registros asociados',
+        );
+      }
+      throw UnknowErrorException;
+    }
   }
 }

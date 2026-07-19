@@ -82,17 +82,15 @@ class RecetaListaPage extends ConsumerWidget {
                     titulo: "Eliminar receta",
                     contenido: "Esta accion no se puede deshacer",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: recetaProviderProvider,
-                        id: receta.idReceta!,
-                        mensajeExito: "Receta eliminada con exito",
-                        detalle: false,
-                        mensajeError: "Error al eliminar la receta",
-                      ),
-                    },
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: recetaProviderProvider,
+                      id: receta.idReceta!,
+                      mensajeExito: "Receta eliminada con exito",
+                      detalle: false,
+                      mensajeError: "Error al eliminar la receta",
+                    ),
                   ) ??
                   false;
 

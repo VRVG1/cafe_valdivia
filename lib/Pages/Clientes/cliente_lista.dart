@@ -10,7 +10,6 @@ import 'package:cafe_valdivia/Pages/Clientes/editarClienteDetallada.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -123,18 +122,16 @@ class Clientelista extends ConsumerWidget {
                     titulo: "Seguro que quiere eliminar este cliente?",
                     contenido: "Esta accion no se puede deshacer",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: clienteProvider,
-                        id: id,
-                        mensajeExito: "El cliente se ha borrado con exito",
-                        detalle: false,
-                        mensajeError:
-                            "Error al eliminar el cliente,Por favor, intente de nuevo",
-                      ),
-                    },
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: clienteProvider,
+                      id: id,
+                      mensajeExito: "El cliente se ha borrado con exito",
+                      detalle: false,
+                      mensajeError:
+                          "Error al eliminar el cliente, Por favor, intente de nuevo",
+                    ),
                   ) ??
                   false;
               if (confirmacion) {
