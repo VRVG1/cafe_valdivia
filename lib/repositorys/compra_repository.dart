@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
+import 'package:cafe_valdivia/core/models/converters.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
@@ -27,34 +28,7 @@ class CompraRepository extends BaseRepository<Compra> {
   Map<String, dynamic> toJson(Compra entity) => entity.toJson();
 
   @override
-  Future<int> create(Compra entity) async {
-    return 0;
-  }
-
-  @override
-  Future<int> delete(int id) async {
-    return 0;
-  }
-
-  @override
-  Future<List<Compra>> getAll({String? where, List<Object?>? whereArgs}) async {
-    final result = await dbHelper.query(
-      tableName,
-      where: where,
-      whereArgs: whereArgs,
-    );
-    return result.map(fromJson).toList();
-  }
-
-  @override
-  Future<Compra> getById(int id) async {
-    return Compra(idProveedor: 0, fecha: DateTime.now());
-  }
-
-  @override
-  Future<int> update(Compra entity) async {
-    return 0;
-  }
+  int? getId(Compra entity) => entity.idCompra;
 
   Future<int> registrarNuevaCompra({
     required Compra compra,
@@ -62,10 +36,9 @@ class CompraRepository extends BaseRepository<Compra> {
   }) async {
     return await dbHelper.transaction<int>((txn) async {
       // Insertar compra principal
-      final Map<String, dynamic> compraMap = compra.toJson();
-      if (compraMap.containsKey('pagado') && compraMap['pagado'] is bool) {
-        compraMap['pagado'] = (compraMap['pagado'] as bool) ? 1 : 0;
-      }
+      final Map<String, dynamic> compraMap = sanitizeMapForDb(compra.toJson());
+      compraMap['activo'] = 1;
+      compraMap['updated_at'] = DateTime.now().toIso8601String();
       final int compraId = await txn.insert(
         tableName,
         compraMap,
@@ -74,7 +47,7 @@ class CompraRepository extends BaseRepository<Compra> {
 
       // Insertar detalles
       for (final detalle in detallesCompra) {
-        final copyDetalleCompra = detalle.toJson();
+        final copyDetalleCompra = sanitizeMapForDb(detalle.toJson());
         copyDetalleCompra['id_compra'] = compraId;
 
         await txn.insert(
@@ -143,7 +116,11 @@ class CompraRepository extends BaseRepository<Compra> {
     return await dbHelper.transaction((txn) async {
       return await txn.update(
         tableName,
-        {'pagado': 1, 'fecha': DateTime.now().toIso8601String()},
+        {
+          'pagado': 1,
+          'fecha': DateTime.now().toIso8601String(),
+          'updated_at': DateTime.now().toIso8601String(),
+        },
         where: '$idColumn = ?',
         whereArgs: [compraId],
       );
@@ -154,8 +131,11 @@ class CompraRepository extends BaseRepository<Compra> {
     return await dbHelper.transaction((txn) async {
       return await txn.update(
         tableName,
-        {'pagado': 0, 'fecha': DateTime.now().toIso8601String()},
-
+        {
+          'pagado': 0,
+          'fecha': DateTime.now().toIso8601String(),
+          'updated_at': DateTime.now().toIso8601String(),
+        },
         where: '$idColumn = ?',
         whereArgs: [compraId],
       );

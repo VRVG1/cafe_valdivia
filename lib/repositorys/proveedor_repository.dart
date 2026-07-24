@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 
 class ProveedorRepository extends BaseRepository<Proveedor> {
   @override
@@ -39,13 +38,13 @@ class ProveedorRepository extends BaseRepository<Proveedor> {
 
   Future<List<Proveedor>> search({
     String? query,
-    List<Object?>? whereArgs,
+    List<Object>? whereArgs,
   }) async {
     return await getAll(
       where:
           query ??
           'LOWER(nombre) LIKE ? OR LOWER(direccion) LIKE ? OR LOWER(telefono) LIKE ? OR LOWER(email) LIKE ?',
-      whereArgs: whereArgs,
+      whereArgs: whereArgs ?? ["", "", "", ""],
     );
   }
 }

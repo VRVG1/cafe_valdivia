@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UnidadMedida {
 
-@JsonKey(name: 'id_unidad') int? get idUnidadMedida; String get nombre;
+@JsonKey(name: 'id_unidad') int? get idUnidadMedida; String get nombre;@IntToBoolConverter() bool get activo;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UnidadMedidaCopyWith<UnidadMedida> get copyWith => _$UnidadMedidaCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnidadMedida&&(identical(other.idUnidadMedida, idUnidadMedida) || other.idUnidadMedida == idUnidadMedida)&&(identical(other.nombre, nombre) || other.nombre == nombre));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnidadMedida&&(identical(other.idUnidadMedida, idUnidadMedida) || other.idUnidadMedida == idUnidadMedida)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idUnidadMedida,nombre);
+int get hashCode => Object.hash(runtimeType,idUnidadMedida,nombre,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'UnidadMedida(idUnidadMedida: $idUnidadMedida, nombre: $nombre)';
+  return 'UnidadMedida(idUnidadMedida: $idUnidadMedida, nombre: $nombre, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UnidadMedidaCopyWith<$Res>  {
   factory $UnidadMedidaCopyWith(UnidadMedida value, $Res Function(UnidadMedida) _then) = _$UnidadMedidaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_unidad') int? idUnidadMedida, String nombre
+@JsonKey(name: 'id_unidad') int? idUnidadMedida, String nombre,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -65,11 +65,14 @@ class _$UnidadMedidaCopyWithImpl<$Res>
 
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idUnidadMedida = freezed,Object? nombre = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idUnidadMedida = freezed,Object? nombre = null,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 idUnidadMedida: freezed == idUnidadMedida ? _self.idUnidadMedida : idUnidadMedida // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,
+as String,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -154,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad')  int? idUnidadMedida,  String nombre)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad')  int? idUnidadMedida,  String nombre, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UnidadMedida() when $default != null:
-return $default(_that.idUnidadMedida,_that.nombre);case _:
+return $default(_that.idUnidadMedida,_that.nombre,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -175,10 +178,10 @@ return $default(_that.idUnidadMedida,_that.nombre);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad')  int? idUnidadMedida,  String nombre)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_unidad')  int? idUnidadMedida,  String nombre, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _UnidadMedida():
-return $default(_that.idUnidadMedida,_that.nombre);case _:
+return $default(_that.idUnidadMedida,_that.nombre,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +198,10 @@ return $default(_that.idUnidadMedida,_that.nombre);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_unidad')  int? idUnidadMedida,  String nombre)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_unidad')  int? idUnidadMedida,  String nombre, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _UnidadMedida() when $default != null:
-return $default(_that.idUnidadMedida,_that.nombre);case _:
+return $default(_that.idUnidadMedida,_that.nombre,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -210,11 +213,14 @@ return $default(_that.idUnidadMedida,_that.nombre);case _:
 @JsonSerializable()
 
 class _UnidadMedida implements UnidadMedida {
-  const _UnidadMedida({@JsonKey(name: 'id_unidad') this.idUnidadMedida, required this.nombre});
+  const _UnidadMedida({@JsonKey(name: 'id_unidad') this.idUnidadMedida, required this.nombre, @IntToBoolConverter() this.activo = true, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'updated_at') this.updatedAt});
   factory _UnidadMedida.fromJson(Map<String, dynamic> json) => _$UnidadMedidaFromJson(json);
 
 @override@JsonKey(name: 'id_unidad') final  int? idUnidadMedida;
 @override final  String nombre;
+@override@JsonKey()@IntToBoolConverter() final  bool activo;
+@override@JsonKey(name: 'deleted_at') final  DateTime? deletedAt;
+@override@JsonKey(name: 'updated_at') final  DateTime? updatedAt;
 
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UnidadMedida&&(identical(other.idUnidadMedida, idUnidadMedida) || other.idUnidadMedida == idUnidadMedida)&&(identical(other.nombre, nombre) || other.nombre == nombre));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UnidadMedida&&(identical(other.idUnidadMedida, idUnidadMedida) || other.idUnidadMedida == idUnidadMedida)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idUnidadMedida,nombre);
+int get hashCode => Object.hash(runtimeType,idUnidadMedida,nombre,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'UnidadMedida(idUnidadMedida: $idUnidadMedida, nombre: $nombre)';
+  return 'UnidadMedida(idUnidadMedida: $idUnidadMedida, nombre: $nombre, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -249,7 +255,7 @@ abstract mixin class _$UnidadMedidaCopyWith<$Res> implements $UnidadMedidaCopyWi
   factory _$UnidadMedidaCopyWith(_UnidadMedida value, $Res Function(_UnidadMedida) _then) = __$UnidadMedidaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_unidad') int? idUnidadMedida, String nombre
+@JsonKey(name: 'id_unidad') int? idUnidadMedida, String nombre,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -266,11 +272,14 @@ class __$UnidadMedidaCopyWithImpl<$Res>
 
 /// Create a copy of UnidadMedida
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idUnidadMedida = freezed,Object? nombre = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idUnidadMedida = freezed,Object? nombre = null,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_UnidadMedida(
 idUnidadMedida: freezed == idUnidadMedida ? _self.idUnidadMedida : idUnidadMedida // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
-as String,
+as String,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

@@ -96,6 +96,21 @@ void main() {
       expect(obtenida.cantidad_base, receta.cantidad_base);
     });
 
+    test('registrarNuevaReceta inserts with activo = 1', () async {
+      final id = await recetaRepository.registrarNuevaReceta(
+        receta: receta2,
+        detalles: [],
+      );
+
+      final recetaDb = await database.query(
+        'Receta',
+        where: 'id_receta = ?',
+        whereArgs: [id],
+      );
+
+      expect(recetaDb.first['activo'], 1);
+    });
+
     test('Delete receta and getById throws exception', () async {
       final id = await recetaRepository.create(receta);
 

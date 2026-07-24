@@ -178,4 +178,4 @@ final class CompraFiltradosProvider
   }
 }
 
-String _$compraFiltradosHash() => r'f48cfbb7b05ef61be126157433e2510e2990a9c0';
+String _$compraFiltradosHash() => r'd1d49e38e8f36dc1f5942b911e35ab985bd7c78e';

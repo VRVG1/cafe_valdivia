@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
+import 'package:cafe_valdivia/core/models/converters.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
@@ -30,7 +31,9 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
     required List<OrdenProduccionConsumo> consumos,
   }) async {
     return await dbHelper.transaction<int>((txn) async {
-      final ordenMap = orden.toJson();
+      final ordenMap = sanitizeMapForDb(orden.toJson());
+      ordenMap['activo'] = 1;
+      ordenMap['updated_at'] = DateTime.now().toIso8601String();
       final ordenId = await txn.insert(
         tableName,
         ordenMap,
@@ -38,7 +41,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
       );
 
       for (final consumo in consumos) {
-        final consumoMap = consumo.toJson();
+        final consumoMap = sanitizeMapForDb(consumo.toJson());
         consumoMap['id_orden_produccion'] = ordenId;
         await txn.insert(
           'Orden_Produccion_Consumo',
@@ -68,7 +71,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
 
     final consumos = await db.query(
       'Orden_Produccion_Consumo',
-      where: 'id_orden_produccion = ?',
+      where: 'id_orden_produccion = ? AND activo = 1',
       whereArgs: [ordenProduccionId],
     );
 
@@ -109,14 +112,16 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   Future<List<OrdenProduccionConsumo>> getConsumosByOrdenId(int ordenId) async {
     final result = await dbHelper.query(
       'Orden_Produccion_Consumo',
-      where: 'id_orden_produccion = ?',
+      where: 'id_orden_produccion = ? AND activo = 1',
       whereArgs: [ordenId],
     );
     return result.map((map) => OrdenProduccionConsumo.fromJson(map)).toList();
   }
 
   Future<int> addConsumo(OrdenProduccionConsumo consumo) async {
-    return await dbHelper.insert('Orden_Produccion_Consumo', consumo.toJson());
+    final data = sanitizeMapForDb(consumo.toJson());
+    data['activo'] = 1;
+    return await dbHelper.insert('Orden_Produccion_Consumo', data);
   }
 
   Future<int> updateConsumo(OrdenProduccionConsumo consumo) async {
@@ -132,8 +137,12 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   }
 
   Future<int> deleteConsumo(int idConsumo) async {
-    return await dbHelper.delete(
+    return await dbHelper.update(
       'Orden_Produccion_Consumo',
+      {
+        'activo': 0,
+        'deleted_at': DateTime.now().toIso8601String(),
+      },
       where: 'id_consumo = ?',
       whereArgs: [idConsumo],
     );
@@ -156,7 +165,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   }) async {
     final db = await dbHelper.database;
     List<Map<String, dynamic>> result;
-    if (start != null && end != null && pattern == "%%") {
+    if (start != null && end != null && (pattern == null || pattern == "%%")) {
       result = await db.query(
         'v_produccion_resumen',
         where: where ?? '(fecha >= ? AND fecha <= ?)',

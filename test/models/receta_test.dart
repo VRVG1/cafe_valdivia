@@ -15,6 +15,9 @@ void main() {
       'id_articulo_producto': 10,
       'nombre': 'Receta de Pan',
       'cantidad_base': 2.5,
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('debe crearse correctamente con todos los campos', () {
@@ -91,6 +94,9 @@ void main() {
         'id_articulo_producto': 10,
         'nombre': 'Receta sin ID',
         'cantidad_base': 1.0,
+        'activo': 1,
+        'deleted_at': null,
+        'updated_at': null,
       };
 
       expect(recetaNula.idReceta, isNull);

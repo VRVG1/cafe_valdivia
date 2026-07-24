@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
+import 'package:cafe_valdivia/core/models/converters.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
@@ -40,7 +41,10 @@ class VentaRepository extends BaseRepository<Venta> {
 
   @override
   Future<int> create(Venta entity) async {
-    return await dbHelper.insert(tableName, _ventaToJson(entity));
+    return await dbHelper.insert(
+      tableName,
+      sanitizeMapForDb(_ventaToJson(entity)),
+    );
   }
 
   @override
@@ -49,7 +53,7 @@ class VentaRepository extends BaseRepository<Venta> {
       throw OperacionInvalidaException('ID de venta no puede ser nulo');
     return await dbHelper.update(
       tableName,
-      _ventaToJson(entity),
+      sanitizeMapForDb(_ventaToJson(entity)),
       where: '$idColumn = ?',
       whereArgs: [entity.idVenta],
     );
@@ -60,7 +64,9 @@ class VentaRepository extends BaseRepository<Venta> {
     required List<DetalleVenta> detallesVenta,
   }) async {
     return await dbHelper.transaction<int>((txn) async {
-      final ventaMap = venta.toJson();
+      final ventaMap = sanitizeMapForDb(venta.toJson());
+      ventaMap['activo'] = 1;
+      ventaMap['updated_at'] = DateTime.now().toIso8601String();
       final ventaId = await txn.insert(
         tableName,
         ventaMap,
@@ -68,7 +74,8 @@ class VentaRepository extends BaseRepository<Venta> {
       );
 
       for (final DetalleVenta detalle in detallesVenta) {
-        final Map<String, dynamic> copyDetalleVenta = detalle.toJson();
+        final Map<String, dynamic> copyDetalleVenta =
+            sanitizeMapForDb(detalle.toJson());
         copyDetalleVenta['id_venta'] = ventaId;
 
         await txn.insert(
@@ -207,7 +214,7 @@ class VentaRepository extends BaseRepository<Venta> {
   Future<int> markAsPaid(int ventaId) async {
     return await dbHelper.update(
       tableName,
-      {'pagado': 1},
+      {'pagado': 1, 'updated_at': DateTime.now().toIso8601String()},
       where: '$idColumn = ?',
       whereArgs: [ventaId],
     );
@@ -216,7 +223,7 @@ class VentaRepository extends BaseRepository<Venta> {
   Future<int> markAsUnpaid(int ventaId) async {
     return await dbHelper.update(
       tableName,
-      {'pagado': 0},
+      {'pagado': 0, 'updated_at': DateTime.now().toIso8601String()},
       where: '$idColumn = ?',
       whereArgs: [ventaId],
     );
@@ -225,7 +232,10 @@ class VentaRepository extends BaseRepository<Venta> {
   Future<int> markAsNulled(int ventaId) async {
     return await dbHelper.update(
       tableName,
-      {'estado': VentaEstado.cancelado.value},
+      {
+        'estado': VentaEstado.cancelado.value,
+        'updated_at': DateTime.now().toIso8601String(),
+      },
       where: '$idColumn = ?',
       whereArgs: [ventaId],
     );

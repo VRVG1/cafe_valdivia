@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Venta {
 
-@JsonKey(name: 'id_venta') int? get idVenta;@JsonKey(name: 'id_cliente') int get idCliente; DateTime get fecha; String? get detalles;@BoolToIntConverter() bool? get pagado;@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? get estado;
+@JsonKey(name: 'id_venta') int? get idVenta;@JsonKey(name: 'id_cliente') int get idCliente; DateTime get fecha; String? get detalles;@BoolToIntConverter() bool? get pagado;@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? get estado;@IntToBoolConverter() bool get activo;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $VentaCopyWith<Venta> get copyWith => _$VentaCopyWithImpl<Venta>(this as Venta, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Venta&&(identical(other.idVenta, idVenta) || other.idVenta == idVenta)&&(identical(other.idCliente, idCliente) || other.idCliente == idCliente)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado)&&(identical(other.estado, estado) || other.estado == estado));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Venta&&(identical(other.idVenta, idVenta) || other.idVenta == idVenta)&&(identical(other.idCliente, idCliente) || other.idCliente == idCliente)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado)&&(identical(other.estado, estado) || other.estado == estado)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idVenta,idCliente,fecha,detalles,pagado,estado);
+int get hashCode => Object.hash(runtimeType,idVenta,idCliente,fecha,detalles,pagado,estado,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'Venta(idVenta: $idVenta, idCliente: $idCliente, fecha: $fecha, detalles: $detalles, pagado: $pagado, estado: $estado)';
+  return 'Venta(idVenta: $idVenta, idCliente: $idCliente, fecha: $fecha, detalles: $detalles, pagado: $pagado, estado: $estado, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $VentaCopyWith<$Res>  {
   factory $VentaCopyWith(Venta value, $Res Function(Venta) _then) = _$VentaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles,@BoolToIntConverter() bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
+@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles,@BoolToIntConverter() bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$VentaCopyWithImpl<$Res>
 
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idVenta = freezed,Object? idCliente = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,Object? estado = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idVenta = freezed,Object? idCliente = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,Object? estado = freezed,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 idVenta: freezed == idVenta ? _self.idVenta : idVenta // ignore: cast_nullable_to_non_nullable
 as int?,idCliente: null == idCliente ? _self.idCliente : idCliente // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,10 @@ as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_no
 as DateTime,detalles: freezed == detalles ? _self.detalles : detalles // ignore: cast_nullable_to_non_nullable
 as String?,pagado: freezed == pagado ? _self.pagado : pagado // ignore: cast_nullable_to_non_nullable
 as bool?,estado: freezed == estado ? _self.estado : estado // ignore: cast_nullable_to_non_nullable
-as VentaEstado?,
+as VentaEstado?,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Venta() when $default != null:
-return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
+return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Venta():
-return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
+return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_venta')  int? idVenta, @JsonKey(name: 'id_cliente')  int idCliente,  DateTime fecha,  String? detalles, @BoolToIntConverter()  bool? pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)  VentaEstado? estado, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Venta() when $default != null:
-return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado);case _:
+return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.pagado,_that.estado,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -214,7 +217,7 @@ return $default(_that.idVenta,_that.idCliente,_that.fecha,_that.detalles,_that.p
 @JsonSerializable()
 
 class _Venta implements Venta {
-  const _Venta({@JsonKey(name: 'id_venta') this.idVenta, @JsonKey(name: 'id_cliente') required this.idCliente, required this.fecha, this.detalles, @BoolToIntConverter() this.pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) this.estado = VentaEstado.pendiente});
+  const _Venta({@JsonKey(name: 'id_venta') this.idVenta, @JsonKey(name: 'id_cliente') required this.idCliente, required this.fecha, this.detalles, @BoolToIntConverter() this.pagado, @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) this.estado = VentaEstado.pendiente, @IntToBoolConverter() this.activo = true, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'updated_at') this.updatedAt});
   factory _Venta.fromJson(Map<String, dynamic> json) => _$VentaFromJson(json);
 
 @override@JsonKey(name: 'id_venta') final  int? idVenta;
@@ -223,6 +226,9 @@ class _Venta implements Venta {
 @override final  String? detalles;
 @override@BoolToIntConverter() final  bool? pagado;
 @override@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) final  VentaEstado? estado;
+@override@JsonKey()@IntToBoolConverter() final  bool activo;
+@override@JsonKey(name: 'deleted_at') final  DateTime? deletedAt;
+@override@JsonKey(name: 'updated_at') final  DateTime? updatedAt;
 
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Venta&&(identical(other.idVenta, idVenta) || other.idVenta == idVenta)&&(identical(other.idCliente, idCliente) || other.idCliente == idCliente)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado)&&(identical(other.estado, estado) || other.estado == estado));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Venta&&(identical(other.idVenta, idVenta) || other.idVenta == idVenta)&&(identical(other.idCliente, idCliente) || other.idCliente == idCliente)&&(identical(other.fecha, fecha) || other.fecha == fecha)&&(identical(other.detalles, detalles) || other.detalles == detalles)&&(identical(other.pagado, pagado) || other.pagado == pagado)&&(identical(other.estado, estado) || other.estado == estado)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idVenta,idCliente,fecha,detalles,pagado,estado);
+int get hashCode => Object.hash(runtimeType,idVenta,idCliente,fecha,detalles,pagado,estado,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'Venta(idVenta: $idVenta, idCliente: $idCliente, fecha: $fecha, detalles: $detalles, pagado: $pagado, estado: $estado)';
+  return 'Venta(idVenta: $idVenta, idCliente: $idCliente, fecha: $fecha, detalles: $detalles, pagado: $pagado, estado: $estado, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -257,7 +263,7 @@ abstract mixin class _$VentaCopyWith<$Res> implements $VentaCopyWith<$Res> {
   factory _$VentaCopyWith(_Venta value, $Res Function(_Venta) _then) = __$VentaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles,@BoolToIntConverter() bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado
+@JsonKey(name: 'id_venta') int? idVenta,@JsonKey(name: 'id_cliente') int idCliente, DateTime fecha, String? detalles,@BoolToIntConverter() bool? pagado,@JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson) VentaEstado? estado,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -274,7 +280,7 @@ class __$VentaCopyWithImpl<$Res>
 
 /// Create a copy of Venta
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idVenta = freezed,Object? idCliente = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,Object? estado = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idVenta = freezed,Object? idCliente = null,Object? fecha = null,Object? detalles = freezed,Object? pagado = freezed,Object? estado = freezed,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Venta(
 idVenta: freezed == idVenta ? _self.idVenta : idVenta // ignore: cast_nullable_to_non_nullable
 as int?,idCliente: null == idCliente ? _self.idCliente : idCliente // ignore: cast_nullable_to_non_nullable
@@ -282,7 +288,10 @@ as int,fecha: null == fecha ? _self.fecha : fecha // ignore: cast_nullable_to_no
 as DateTime,detalles: freezed == detalles ? _self.detalles : detalles // ignore: cast_nullable_to_non_nullable
 as String?,pagado: freezed == pagado ? _self.pagado : pagado // ignore: cast_nullable_to_non_nullable
 as bool?,estado: freezed == estado ? _self.estado : estado // ignore: cast_nullable_to_non_nullable
-as VentaEstado?,
+as VentaEstado?,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

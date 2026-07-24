@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -167,6 +168,23 @@ void main() {
     test('Delete non-existent returns 0', () async {
       final filas = await repository.delete(999);
       expect(filas, 0);
+    });
+
+    test(
+        'forceDelete on unidad with articulos throws RelacionExistenteException',
+        () async {
+      final unidadId = await repository.create(unidad);
+
+      await database.insert('Articulo', {
+        'nombre': 'Articulo Test',
+        'id_unidad': unidadId,
+        'costo_unitario': '10.0',
+      });
+
+      expect(
+        () => repository.forceDelete(unidadId),
+        throwsA(isA<RelacionExistenteException>()),
+      );
     });
   });
 

@@ -332,6 +332,27 @@ void main() {
       },
     );
 
+    test(
+      'getArticuloByIdUnidad excludes soft-deleted articulos',
+      () async {
+        final art1 = await articuloRepository.create(
+          articulo.copyWith(idUnidad: 1),
+        );
+        final art2 = await articuloRepository.create(
+          articulo2.copyWith(idUnidad: 1),
+        );
+
+        await articuloRepository.delete(art1);
+
+        final (unidadObtenida, listaArticulos) = await articuloRepository
+            .getArticuloByIdUnidad(idUnidad: 1);
+
+        expect(unidadObtenida.nombre, 'Kilogramos');
+        expect(listaArticulos.length, 1);
+        expect(listaArticulos.first.nombre, 'Leche Entera');
+      },
+    );
+
     test('getArticuloByIdUnidad throws for non-existent unidad', () async {
       expect(
         () => articuloRepository.getArticuloByIdUnidad(idUnidad: 999),

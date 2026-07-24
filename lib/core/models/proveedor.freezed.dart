@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Proveedor {
 
-@JsonKey(name: 'id_proveedor') int? get idProveedor; String get nombre; String? get telefono; String? get email; String? get direccion;
+@JsonKey(name: 'id_proveedor') int? get idProveedor; String get nombre; String? get telefono; String? get email; String? get direccion;@IntToBoolConverter() bool get activo;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProveedorCopyWith<Proveedor> get copyWith => _$ProveedorCopyWithImpl<Proveedor>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Proveedor&&(identical(other.idProveedor, idProveedor) || other.idProveedor == idProveedor)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email)&&(identical(other.direccion, direccion) || other.direccion == direccion));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Proveedor&&(identical(other.idProveedor, idProveedor) || other.idProveedor == idProveedor)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email)&&(identical(other.direccion, direccion) || other.direccion == direccion)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idProveedor,nombre,telefono,email,direccion);
+int get hashCode => Object.hash(runtimeType,idProveedor,nombre,telefono,email,direccion,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'Proveedor(idProveedor: $idProveedor, nombre: $nombre, telefono: $telefono, email: $email, direccion: $direccion)';
+  return 'Proveedor(idProveedor: $idProveedor, nombre: $nombre, telefono: $telefono, email: $email, direccion: $direccion, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProveedorCopyWith<$Res>  {
   factory $ProveedorCopyWith(Proveedor value, $Res Function(Proveedor) _then) = _$ProveedorCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String? telefono, String? email, String? direccion
+@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String? telefono, String? email, String? direccion,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -65,14 +65,17 @@ class _$ProveedorCopyWithImpl<$Res>
 
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = freezed,Object? email = freezed,Object? direccion = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = freezed,Object? email = freezed,Object? direccion = freezed,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 idProveedor: freezed == idProveedor ? _self.idProveedor : idProveedor // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,direccion: freezed == direccion ? _self.direccion : direccion // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -157,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Proveedor() when $default != null:
-return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
+return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -178,10 +181,10 @@ return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Proveedor():
-return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
+return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +201,10 @@ return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_proveedor')  int? idProveedor,  String nombre,  String? telefono,  String? email,  String? direccion, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Proveedor() when $default != null:
-return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion);case _:
+return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.direccion,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -213,7 +216,7 @@ return $default(_that.idProveedor,_that.nombre,_that.telefono,_that.email,_that.
 @JsonSerializable()
 
 class _Proveedor implements Proveedor {
-  const _Proveedor({@JsonKey(name: 'id_proveedor') this.idProveedor, required this.nombre, this.telefono, this.email, this.direccion});
+  const _Proveedor({@JsonKey(name: 'id_proveedor') this.idProveedor, required this.nombre, this.telefono, this.email, this.direccion, @IntToBoolConverter() this.activo = true, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'updated_at') this.updatedAt});
   factory _Proveedor.fromJson(Map<String, dynamic> json) => _$ProveedorFromJson(json);
 
 @override@JsonKey(name: 'id_proveedor') final  int? idProveedor;
@@ -221,6 +224,9 @@ class _Proveedor implements Proveedor {
 @override final  String? telefono;
 @override final  String? email;
 @override final  String? direccion;
+@override@JsonKey()@IntToBoolConverter() final  bool activo;
+@override@JsonKey(name: 'deleted_at') final  DateTime? deletedAt;
+@override@JsonKey(name: 'updated_at') final  DateTime? updatedAt;
 
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Proveedor&&(identical(other.idProveedor, idProveedor) || other.idProveedor == idProveedor)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email)&&(identical(other.direccion, direccion) || other.direccion == direccion));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Proveedor&&(identical(other.idProveedor, idProveedor) || other.idProveedor == idProveedor)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.telefono, telefono) || other.telefono == telefono)&&(identical(other.email, email) || other.email == email)&&(identical(other.direccion, direccion) || other.direccion == direccion)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idProveedor,nombre,telefono,email,direccion);
+int get hashCode => Object.hash(runtimeType,idProveedor,nombre,telefono,email,direccion,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'Proveedor(idProveedor: $idProveedor, nombre: $nombre, telefono: $telefono, email: $email, direccion: $direccion)';
+  return 'Proveedor(idProveedor: $idProveedor, nombre: $nombre, telefono: $telefono, email: $email, direccion: $direccion, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -255,7 +261,7 @@ abstract mixin class _$ProveedorCopyWith<$Res> implements $ProveedorCopyWith<$Re
   factory _$ProveedorCopyWith(_Proveedor value, $Res Function(_Proveedor) _then) = __$ProveedorCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String? telefono, String? email, String? direccion
+@JsonKey(name: 'id_proveedor') int? idProveedor, String nombre, String? telefono, String? email, String? direccion,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -272,14 +278,17 @@ class __$ProveedorCopyWithImpl<$Res>
 
 /// Create a copy of Proveedor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = freezed,Object? email = freezed,Object? direccion = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idProveedor = freezed,Object? nombre = null,Object? telefono = freezed,Object? email = freezed,Object? direccion = freezed,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Proveedor(
 idProveedor: freezed == idProveedor ? _self.idProveedor : idProveedor // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
 as String,telefono: freezed == telefono ? _self.telefono : telefono // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,direccion: freezed == direccion ? _self.direccion : direccion // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

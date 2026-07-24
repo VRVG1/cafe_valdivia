@@ -17,6 +17,9 @@ void main() {
       'telefono': '123456789',
       'email': 'contacto@proveedor.com',
       'direccion': 'Calle Falsa 123',
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -88,6 +91,9 @@ void main() {
         'telefono': '987654321',
         'email': null,
         'direccion': null,
+        'activo': 1,
+        'deleted_at': null,
+        'updated_at': null,
       };
 
       expect(proveedorNulo.idProveedor, isNull);

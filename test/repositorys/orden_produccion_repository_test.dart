@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/repositorys/orden_produccion_repository.dart';
 import 'package:cafe_valdivia/repositorys/receta_repository.dart';
@@ -126,10 +127,13 @@ void main() {
 
       final ordenes = await database.query('Orden_Produccion');
       expect(ordenes.length, 1);
+      expect(ordenes.first['activo'], 1);
+      expect(ordenes.first['updated_at'], isNotNull);
 
       final consumosDb = await database.query('Orden_Produccion_Consumo');
       expect(consumosDb.length, 1);
       expect(consumosDb.first['cantidad_usada'], 5.0);
+      expect(consumosDb.first['activo'], 1);
     });
 
     test('getFullOrdenProduccion loads view data with consumos', () async {
@@ -212,24 +216,26 @@ void main() {
       expect(consumosObtenidos.first.idArticulo, 1);
     });
 
-    test('registrarOrdenProduccion with empty consumos does not fail',
-        () async {
-      final orden = OrdenProduccion(
-        idReceta: 1,
-        cantidadProducida: 10.0,
-        fecha: DateTime.now(),
-        costoTotalProduccion: 300.0,
-      );
+    test(
+      'registrarOrdenProduccion with empty consumos does not fail',
+      () async {
+        final orden = OrdenProduccion(
+          idReceta: 1,
+          cantidadProducida: 10.0,
+          fecha: DateTime.now(),
+          costoTotalProduccion: 300.0,
+        );
 
-      final ordenId = await repo.registrarOrdenProduccion(
-        orden: orden,
-        consumos: [],
-      );
-      expect(ordenId, greaterThan(0));
+        final ordenId = await repo.registrarOrdenProduccion(
+          orden: orden,
+          consumos: [],
+        );
+        expect(ordenId, greaterThan(0));
 
-      final consumos = await database.query('Orden_Produccion_Consumo');
-      expect(consumos, isEmpty);
-    });
+        final consumos = await database.query('Orden_Produccion_Consumo');
+        expect(consumos, isEmpty);
+      },
+    );
 
     test('addConsumo inserts a consumo', () async {
       final orden = OrdenProduccion(
@@ -286,7 +292,7 @@ void main() {
       expect(actualizados.first.cantidadUsada, 5.0);
     });
 
-    test('deleteConsumo removes a consumo', () async {
+    test('deleteConsumo soft deletes a consumo', () async {
       final orden = OrdenProduccion(
         idReceta: 1,
         cantidadProducida: 10.0,
@@ -311,7 +317,73 @@ void main() {
 
       final restantes = await repo.getConsumosByOrdenId(ordenId);
       expect(restantes, isEmpty);
+
+      final rawConsumos = await database.query(
+        'Orden_Produccion_Consumo',
+        where: 'id_consumo = ?',
+        whereArgs: [consumos.first.idConsumo],
+      );
+      expect(rawConsumos.length, 1);
+      expect(rawConsumos.first['activo'], 0);
     });
+
+    test('addConsumo inserts with activo = 1', () async {
+      final orden = OrdenProduccion(
+        idReceta: 1,
+        cantidadProducida: 10.0,
+        fecha: DateTime.now(),
+        costoTotalProduccion: 300.0,
+      );
+      final ordenId = await repo.registrarOrdenProduccion(
+        orden: orden,
+        consumos: [],
+      );
+
+      await repo.addConsumo(
+        OrdenProduccionConsumo(
+          idOrdenProduccion: ordenId,
+          idArticulo: 1,
+          cantidadUsada: 2.0,
+          costoArticuloMomento: 30.0,
+        ),
+      );
+
+      final consumosDb = await database.query(
+        'Orden_Produccion_Consumo',
+        where: 'id_orden_produccion = ?',
+        whereArgs: [ordenId],
+      );
+      expect(consumosDb.length, 1);
+      expect(consumosDb.first['activo'], 1);
+    });
+
+    test(
+      'forceDelete on orden with consumos throws RelacionExistenteException',
+      () async {
+        final orden = OrdenProduccion(
+          idReceta: 1,
+          cantidadProducida: 10.0,
+          fecha: DateTime.now(),
+          costoTotalProduccion: 300.0,
+        );
+        final ordenId = await repo.registrarOrdenProduccion(
+          orden: orden,
+          consumos: [
+            OrdenProduccionConsumo(
+              idOrdenProduccion: 0,
+              idArticulo: 1,
+              cantidadUsada: 5.0,
+              costoArticuloMomento: 30.0,
+            ),
+          ],
+        );
+
+        expect(
+          () => repo.forceDelete(ordenId),
+          throwsA(isA<RelacionExistenteException>()),
+        );
+      },
+    );
 
     test('getFullOrdenProduccion throws for non-existent id', () async {
       expect(
@@ -384,14 +456,27 @@ void main() {
         consumos: [],
       );
 
-      final rango = await repo.getByDateRange(ayer, manana);
+      final rango = await repo.getByDateRange(
+        start: ayer.toIso8601String(),
+        end: manana.toIso8601String(),
+      );
       expect(rango.length, 1);
 
-      final fueraRango = await repo.getByDateRange(
-        ayer.subtract(const Duration(days: 10)),
-        ayer.subtract(const Duration(days: 5)),
+      expect(
+        () {
+          repo.getByDateRange(
+            start: ayer.subtract(const Duration(days: 10)).toIso8601String(),
+            end: ayer.subtract(const Duration(days: 5)).toString(),
+          );
+        },
+        throwsA(
+          predicate(
+            (e) =>
+                e is RegistroNoEncontradoException &&
+                e.toString().contains("No se encuentran registros"),
+          ),
+        ),
       );
-      expect(fueraRango, isEmpty);
     });
   });
 
@@ -445,42 +530,41 @@ void main() {
       if (database.isOpen) await database.close();
     });
 
-    test('produccion reduce stock de insumos y aumenta stock del producto',
-        () async {
-      final orden = OrdenProduccion(
-        idReceta: 1,
-        cantidadProducida: 5.0,
-        fecha: DateTime.now(),
-        costoTotalProduccion: 50.0,
-      );
-      final consumos = [
-        OrdenProduccionConsumo(
-          idOrdenProduccion: 0,
-          idArticulo: 1,
-          cantidadUsada: 3.0,
-          costoArticuloMomento: 10.0,
-        ),
-      ];
+    test(
+      'produccion reduce stock de insumos y aumenta stock del producto',
+      () async {
+        final orden = OrdenProduccion(
+          idReceta: 1,
+          cantidadProducida: 5.0,
+          fecha: DateTime.now(),
+          costoTotalProduccion: 50.0,
+        );
+        final consumos = [
+          OrdenProduccionConsumo(
+            idOrdenProduccion: 0,
+            idArticulo: 1,
+            cantidadUsada: 3.0,
+            costoArticuloMomento: 10.0,
+          ),
+        ];
 
-      await repo.registrarOrdenProduccion(
-        orden: orden,
-        consumos: consumos,
-      );
+        await repo.registrarOrdenProduccion(orden: orden, consumos: consumos);
 
-      final insumo = await database.query(
-        'Articulo',
-        where: 'id_articulo = ?',
-        whereArgs: [1],
-      );
-      expect(double.parse(insumo.first['stock'].toString()), 47.0);
+        final insumo = await database.query(
+          'Articulo',
+          where: 'id_articulo = ?',
+          whereArgs: [1],
+        );
+        expect(double.parse(insumo.first['stock'].toString()), 47.0);
 
-      final producto = await database.query(
-        'Articulo',
-        where: 'id_articulo = ?',
-        whereArgs: [2],
-      );
-      expect(double.parse(producto.first['stock'].toString()), 5.0);
-    });
+        final producto = await database.query(
+          'Articulo',
+          where: 'id_articulo = ?',
+          whereArgs: [2],
+        );
+        expect(double.parse(producto.first['stock'].toString()), 5.0);
+      },
+    );
   });
 
   group('OrdenProduccionRepository Performance', () {

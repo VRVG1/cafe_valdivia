@@ -1,6 +1,8 @@
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:test/test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path/path.dart' as p;
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
@@ -115,7 +117,11 @@ void main() {
       unidadRepo = UnidadMedidaRepository(databaseHelper);
       articuloRepo = ArticuloRepository(databaseHelper, unidadRepo);
       proveedorRepo = ProveedorRepository(databaseHelper);
-      compraRepo = CompraRepository(databaseHelper, proveedorRepo, articuloRepo);
+      compraRepo = CompraRepository(
+        databaseHelper,
+        proveedorRepo,
+        articuloRepo,
+      );
     });
 
     tearDown(() async {
@@ -152,12 +158,30 @@ void main() {
 
       final compraCompleta = await compraRepo.getFullCompra(compraId);
 
-      expect(compraCompleta['compra'], isNotNull);
-      expect(compraCompleta['compra']['nombre_proveedor'], 'Proveedor Test');
+      expect(compraCompleta, isNotNull);
+      expect(compraCompleta['nombre_proveedor'], 'Proveedor Test');
       expect(compraCompleta['detalles'], hasLength(3));
     });
 
-    test('markAsPaid updates payment status', () async {
+    test('registrarNuevaCompra sets activo and updated_at', () async {
+      final compra = await crearCompra(false);
+      final detalles = await crearDetallesCompra();
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra,
+        detallesCompra: detalles,
+      );
+
+      final compraDb = await database.query(
+        'Compra',
+        where: 'id_compra = ?',
+        whereArgs: [compraId],
+      );
+
+      expect(compraDb.first['activo'], 1);
+      expect(compraDb.first['updated_at'], isNotNull);
+    });
+
+    test('markAsPaid updates payment status and updated_at', () async {
       final compra = await crearCompra(false);
       final detalles = await crearDetallesCompra();
       final compraId = await compraRepo.registrarNuevaCompra(
@@ -174,9 +198,10 @@ void main() {
       );
 
       expect(compraDb.first['pagado'], 1);
+      expect(compraDb.first['updated_at'], isNotNull);
     });
 
-    test('markAsUnpaid updates payment status', () async {
+    test('markAsUnpaid updates payment status and updated_at', () async {
       final compra = await crearCompra(true);
       final detalles = await crearDetallesCompra();
       final compraId = await compraRepo.registrarNuevaCompra(
@@ -193,7 +218,55 @@ void main() {
       );
 
       expect(compraDb.first['pagado'], 0);
+      expect(compraDb.first['updated_at'], isNotNull);
     });
+
+    test('soft deleted compra is excluded from getAll', () async {
+      final compra1 = await crearCompra(true);
+      final detalles1 = await crearDetallesCompra(
+        nombreUnidad: "Unidad 1",
+        nombreArticulo: "Articulo 1",
+      );
+      final compraId = await compraRepo.registrarNuevaCompra(
+        compra: compra1,
+        detallesCompra: detalles1,
+      );
+
+      final compra2 = await crearCompra(false);
+      final detalles2 = await crearDetallesCompra(
+        nombreUnidad: "Unidad 2",
+        nombreArticulo: "Articulo 2",
+      );
+      await compraRepo.registrarNuevaCompra(
+        compra: compra2,
+        detallesCompra: detalles2,
+      );
+
+      var todasLasCompras = await compraRepo.getAll();
+      expect(todasLasCompras.length, 2);
+
+      await compraRepo.delete(compraId);
+
+      todasLasCompras = await compraRepo.getAll();
+      expect(todasLasCompras.length, 1);
+    });
+
+    test(
+      'forceDelete on compra with detalles throws RelacionExistenteException',
+      () async {
+        final compra = await crearCompra(false);
+        final detalles = await crearDetallesCompra();
+        final compraId = await compraRepo.registrarNuevaCompra(
+          compra: compra,
+          detallesCompra: detalles,
+        );
+
+        expect(
+          () => compraRepo.forceDelete(compraId),
+          throwsA(isA<RelacionExistenteException>()),
+        );
+      },
+    );
 
     test('getall returns all compras', () async {
       final compra1 = await crearCompra(true);

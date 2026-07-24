@@ -15,6 +15,15 @@ _Articulo _$ArticuloFromJson(Map<String, dynamic> json) => _Articulo(
   costoUnitario: (json['costo_unitario'] as num).toDouble(),
   precioVenta: (json['precio_venta'] as num).toDouble(),
   stock: (json['stock'] as num).toDouble(),
+  activo: json['activo'] == null
+      ? true
+      : const IntToBoolConverter().fromJson((json['activo'] as num).toInt()),
+  deletedAt: json['deleted_at'] == null
+      ? null
+      : DateTime.parse(json['deleted_at'] as String),
+  updatedAt: json['updated_at'] == null
+      ? null
+      : DateTime.parse(json['updated_at'] as String),
 );
 
 Map<String, dynamic> _$ArticuloToJson(_Articulo instance) => <String, dynamic>{
@@ -26,6 +35,9 @@ Map<String, dynamic> _$ArticuloToJson(_Articulo instance) => <String, dynamic>{
   'costo_unitario': instance.costoUnitario,
   'precio_venta': instance.precioVenta,
   'stock': instance.stock,
+  'activo': const IntToBoolConverter().toJson(instance.activo),
+  'deleted_at': instance.deletedAt?.toIso8601String(),
+  'updated_at': instance.updatedAt?.toIso8601String(),
 };
 
 const _$ArticuloTipoEnumMap = {

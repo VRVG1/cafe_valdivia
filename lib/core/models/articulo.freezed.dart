@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Articulo {
 
-@JsonKey(name: 'id_articulo') int? get idArticulo; String get nombre; String? get descripcion; ArticuloTipo get tipo;@JsonKey(name: 'id_unidad') int get idUnidad;@JsonKey(name: 'costo_unitario') double get costoUnitario;@JsonKey(name: 'precio_venta') double get precioVenta; double get stock;
+@JsonKey(name: 'id_articulo') int? get idArticulo; String get nombre; String? get descripcion; ArticuloTipo get tipo;@JsonKey(name: 'id_unidad') int get idUnidad;@JsonKey(name: 'costo_unitario') double get costoUnitario;@JsonKey(name: 'precio_venta') double get precioVenta; double get stock;@IntToBoolConverter() bool get activo;@JsonKey(name: 'deleted_at') DateTime? get deletedAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ArticuloCopyWith<Articulo> get copyWith => _$ArticuloCopyWithImpl<Articulo>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Articulo&&(identical(other.idArticulo, idArticulo) || other.idArticulo == idArticulo)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.descripcion, descripcion) || other.descripcion == descripcion)&&(identical(other.tipo, tipo) || other.tipo == tipo)&&(identical(other.idUnidad, idUnidad) || other.idUnidad == idUnidad)&&(identical(other.costoUnitario, costoUnitario) || other.costoUnitario == costoUnitario)&&(identical(other.precioVenta, precioVenta) || other.precioVenta == precioVenta)&&(identical(other.stock, stock) || other.stock == stock));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Articulo&&(identical(other.idArticulo, idArticulo) || other.idArticulo == idArticulo)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.descripcion, descripcion) || other.descripcion == descripcion)&&(identical(other.tipo, tipo) || other.tipo == tipo)&&(identical(other.idUnidad, idUnidad) || other.idUnidad == idUnidad)&&(identical(other.costoUnitario, costoUnitario) || other.costoUnitario == costoUnitario)&&(identical(other.precioVenta, precioVenta) || other.precioVenta == precioVenta)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idArticulo,nombre,descripcion,tipo,idUnidad,costoUnitario,precioVenta,stock);
+int get hashCode => Object.hash(runtimeType,idArticulo,nombre,descripcion,tipo,idUnidad,costoUnitario,precioVenta,stock,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'Articulo(idArticulo: $idArticulo, nombre: $nombre, descripcion: $descripcion, tipo: $tipo, idUnidad: $idUnidad, costoUnitario: $costoUnitario, precioVenta: $precioVenta, stock: $stock)';
+  return 'Articulo(idArticulo: $idArticulo, nombre: $nombre, descripcion: $descripcion, tipo: $tipo, idUnidad: $idUnidad, costoUnitario: $costoUnitario, precioVenta: $precioVenta, stock: $stock, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ArticuloCopyWith<$Res>  {
   factory $ArticuloCopyWith(Articulo value, $Res Function(Articulo) _then) = _$ArticuloCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, ArticuloTipo tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') double costoUnitario,@JsonKey(name: 'precio_venta') double precioVenta, double stock
+@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, ArticuloTipo tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') double costoUnitario,@JsonKey(name: 'precio_venta') double precioVenta, double stock,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$ArticuloCopyWithImpl<$Res>
 
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = null,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = null,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 idArticulo: freezed == idArticulo ? _self.idArticulo : idArticulo // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,10 @@ as ArticuloTipo,idUnidad: null == idUnidad ? _self.idUnidad : idUnidad // ignore
 as int,costoUnitario: null == costoUnitario ? _self.costoUnitario : costoUnitario // ignore: cast_nullable_to_non_nullable
 as double,precioVenta: null == precioVenta ? _self.precioVenta : precioVenta // ignore: cast_nullable_to_non_nullable
 as double,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
-as double,
+as double,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -160,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Articulo() when $default != null:
-return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock);case _:
+return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +184,10 @@ return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Articulo():
-return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock);case _:
+return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +204,10 @@ return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_articulo')  int? idArticulo,  String nombre,  String? descripcion,  ArticuloTipo tipo, @JsonKey(name: 'id_unidad')  int idUnidad, @JsonKey(name: 'costo_unitario')  double costoUnitario, @JsonKey(name: 'precio_venta')  double precioVenta,  double stock, @IntToBoolConverter()  bool activo, @JsonKey(name: 'deleted_at')  DateTime? deletedAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Articulo() when $default != null:
-return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock);case _:
+return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that.idUnidad,_that.costoUnitario,_that.precioVenta,_that.stock,_that.activo,_that.deletedAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -216,7 +219,7 @@ return $default(_that.idArticulo,_that.nombre,_that.descripcion,_that.tipo,_that
 @JsonSerializable()
 
 class _Articulo implements Articulo {
-  const _Articulo({@JsonKey(name: 'id_articulo') this.idArticulo, required this.nombre, this.descripcion, required this.tipo, @JsonKey(name: 'id_unidad') required this.idUnidad, @JsonKey(name: 'costo_unitario') required this.costoUnitario, @JsonKey(name: 'precio_venta') required this.precioVenta, required this.stock});
+  const _Articulo({@JsonKey(name: 'id_articulo') this.idArticulo, required this.nombre, this.descripcion, required this.tipo, @JsonKey(name: 'id_unidad') required this.idUnidad, @JsonKey(name: 'costo_unitario') required this.costoUnitario, @JsonKey(name: 'precio_venta') required this.precioVenta, required this.stock, @IntToBoolConverter() this.activo = true, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'updated_at') this.updatedAt});
   factory _Articulo.fromJson(Map<String, dynamic> json) => _$ArticuloFromJson(json);
 
 @override@JsonKey(name: 'id_articulo') final  int? idArticulo;
@@ -227,6 +230,9 @@ class _Articulo implements Articulo {
 @override@JsonKey(name: 'costo_unitario') final  double costoUnitario;
 @override@JsonKey(name: 'precio_venta') final  double precioVenta;
 @override final  double stock;
+@override@JsonKey()@IntToBoolConverter() final  bool activo;
+@override@JsonKey(name: 'deleted_at') final  DateTime? deletedAt;
+@override@JsonKey(name: 'updated_at') final  DateTime? updatedAt;
 
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Articulo&&(identical(other.idArticulo, idArticulo) || other.idArticulo == idArticulo)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.descripcion, descripcion) || other.descripcion == descripcion)&&(identical(other.tipo, tipo) || other.tipo == tipo)&&(identical(other.idUnidad, idUnidad) || other.idUnidad == idUnidad)&&(identical(other.costoUnitario, costoUnitario) || other.costoUnitario == costoUnitario)&&(identical(other.precioVenta, precioVenta) || other.precioVenta == precioVenta)&&(identical(other.stock, stock) || other.stock == stock));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Articulo&&(identical(other.idArticulo, idArticulo) || other.idArticulo == idArticulo)&&(identical(other.nombre, nombre) || other.nombre == nombre)&&(identical(other.descripcion, descripcion) || other.descripcion == descripcion)&&(identical(other.tipo, tipo) || other.tipo == tipo)&&(identical(other.idUnidad, idUnidad) || other.idUnidad == idUnidad)&&(identical(other.costoUnitario, costoUnitario) || other.costoUnitario == costoUnitario)&&(identical(other.precioVenta, precioVenta) || other.precioVenta == precioVenta)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.activo, activo) || other.activo == activo)&&(identical(other.deletedAt, deletedAt) || other.deletedAt == deletedAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,idArticulo,nombre,descripcion,tipo,idUnidad,costoUnitario,precioVenta,stock);
+int get hashCode => Object.hash(runtimeType,idArticulo,nombre,descripcion,tipo,idUnidad,costoUnitario,precioVenta,stock,activo,deletedAt,updatedAt);
 
 @override
 String toString() {
-  return 'Articulo(idArticulo: $idArticulo, nombre: $nombre, descripcion: $descripcion, tipo: $tipo, idUnidad: $idUnidad, costoUnitario: $costoUnitario, precioVenta: $precioVenta, stock: $stock)';
+  return 'Articulo(idArticulo: $idArticulo, nombre: $nombre, descripcion: $descripcion, tipo: $tipo, idUnidad: $idUnidad, costoUnitario: $costoUnitario, precioVenta: $precioVenta, stock: $stock, activo: $activo, deletedAt: $deletedAt, updatedAt: $updatedAt)';
 }
 
 
@@ -261,7 +267,7 @@ abstract mixin class _$ArticuloCopyWith<$Res> implements $ArticuloCopyWith<$Res>
   factory _$ArticuloCopyWith(_Articulo value, $Res Function(_Articulo) _then) = __$ArticuloCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, ArticuloTipo tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') double costoUnitario,@JsonKey(name: 'precio_venta') double precioVenta, double stock
+@JsonKey(name: 'id_articulo') int? idArticulo, String nombre, String? descripcion, ArticuloTipo tipo,@JsonKey(name: 'id_unidad') int idUnidad,@JsonKey(name: 'costo_unitario') double costoUnitario,@JsonKey(name: 'precio_venta') double precioVenta, double stock,@IntToBoolConverter() bool activo,@JsonKey(name: 'deleted_at') DateTime? deletedAt,@JsonKey(name: 'updated_at') DateTime? updatedAt
 });
 
 
@@ -278,7 +284,7 @@ class __$ArticuloCopyWithImpl<$Res>
 
 /// Create a copy of Articulo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = null,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? idArticulo = freezed,Object? nombre = null,Object? descripcion = freezed,Object? tipo = null,Object? idUnidad = null,Object? costoUnitario = null,Object? precioVenta = null,Object? stock = null,Object? activo = null,Object? deletedAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Articulo(
 idArticulo: freezed == idArticulo ? _self.idArticulo : idArticulo // ignore: cast_nullable_to_non_nullable
 as int?,nombre: null == nombre ? _self.nombre : nombre // ignore: cast_nullable_to_non_nullable
@@ -288,7 +294,10 @@ as ArticuloTipo,idUnidad: null == idUnidad ? _self.idUnidad : idUnidad // ignore
 as int,costoUnitario: null == costoUnitario ? _self.costoUnitario : costoUnitario // ignore: cast_nullable_to_non_nullable
 as double,precioVenta: null == precioVenta ? _self.precioVenta : precioVenta // ignore: cast_nullable_to_non_nullable
 as double,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
-as double,
+as double,activo: null == activo ? _self.activo : activo // ignore: cast_nullable_to_non_nullable
+as bool,deletedAt: freezed == deletedAt ? _self.deletedAt : deletedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

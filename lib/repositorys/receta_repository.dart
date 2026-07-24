@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/core/models/converters.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
@@ -35,14 +36,16 @@ class RecetaRepository extends BaseRepository<Receta> {
     required List<RecetaDetalle> detalles,
   }) async {
     return await dbHelper.transaction<int>((txn) async {
+      final recetaMap = sanitizeMapForDb(receta.toJson());
+      recetaMap['activo'] = 1;
       final int recetaId = await txn.insert(
         tableName,
-        receta.toJson(),
+        recetaMap,
         conflictAlgorithm: ConflictAlgorithm.rollback,
       );
 
       for (final detalle in detalles) {
-        final copy = detalle.toJson();
+        final copy = sanitizeMapForDb(detalle.toJson());
         copy['id_receta'] = recetaId;
         await txn.insert(
           'Receta_Detalle',
@@ -71,7 +74,7 @@ class RecetaRepository extends BaseRepository<Receta> {
     await dbHelper.transaction<void>((txn) async {
       await txn.update(
         tableName,
-        receta.toJson(),
+        sanitizeMapForDb(receta.toJson()),
         where: '$idColumn = ?',
         whereArgs: [receta.idReceta],
       );
@@ -83,7 +86,7 @@ class RecetaRepository extends BaseRepository<Receta> {
       );
 
       for (final detalle in detalles) {
-        final copy = detalle.toJson();
+        final copy = sanitizeMapForDb(detalle.toJson());
         copy['id_receta'] = receta.idReceta;
         await txn.insert(
           'Receta_Detalle',

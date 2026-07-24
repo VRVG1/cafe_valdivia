@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TipoBusqueda', () {
-    test('debe tener los 4 valores correctos', () {
-      expect(TipoBusqueda.values.length, 4);
+    test('debe tener los 9 valores correctos', () {
+      expect(TipoBusqueda.values.length, 9);
       expect(TipoBusqueda.nombre, TipoBusqueda.nombre);
       expect(TipoBusqueda.email, TipoBusqueda.email);
       expect(TipoBusqueda.telefono, TipoBusqueda.telefono);
@@ -40,8 +40,7 @@ void main() {
 
     test('agregarFiltro no debe duplicar filtros existentes', () {
       final filtro = FiltroBusqueda();
-      final nuevo = filtro
-          .agregarFiltro(TipoBusqueda.nombre);
+      final nuevo = filtro.agregarFiltro(TipoBusqueda.nombre);
 
       expect(nuevo.filtrosActivos, {TipoBusqueda.nombre});
     });
@@ -52,7 +51,10 @@ void main() {
       );
       final nuevo = filtro.removerFiltro(TipoBusqueda.nombre);
 
-      expect(filtro.filtrosActivos, {TipoBusqueda.nombre, TipoBusqueda.telefono});
+      expect(filtro.filtrosActivos, {
+        TipoBusqueda.nombre,
+        TipoBusqueda.telefono,
+      });
       expect(nuevo.filtrosActivos, {TipoBusqueda.telefono});
     });
 
@@ -60,7 +62,10 @@ void main() {
       final filtro = FiltroBusqueda(filtrosActivos: {TipoBusqueda.nombre});
 
       final conEmail = filtro.toggleFiltro(TipoBusqueda.email);
-      expect(conEmail.filtrosActivos, {TipoBusqueda.nombre, TipoBusqueda.email});
+      expect(conEmail.filtrosActivos, {
+        TipoBusqueda.nombre,
+        TipoBusqueda.email,
+      });
 
       final sinNombre = filtro.toggleFiltro(TipoBusqueda.nombre);
       expect(sinNombre.filtrosActivos, <TipoBusqueda>{});

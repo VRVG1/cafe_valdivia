@@ -17,6 +17,9 @@ void main() {
       'id_articulo_componente': 100,
       'cantidad': 2.0,
       'id_unidad': 3,
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('debe crearse correctamente con todos los campos', () {
@@ -98,6 +101,9 @@ void main() {
         'id_articulo_componente': 100,
         'cantidad': 2.0,
         'id_unidad': 3,
+        'activo': 1,
+        'deleted_at': null,
+        'updated_at': null,
       };
 
       expect(rdNulo.idRecetaDetalle, isNull);

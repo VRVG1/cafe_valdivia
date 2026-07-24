@@ -17,6 +17,9 @@ void main() {
       'id_articulo': 20,
       'cantidad_usada': 5.5,
       'costo_articulo_momento': 15.75,
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('debe crearse correctamente con todos los campos', () {
@@ -101,6 +104,9 @@ void main() {
         'id_articulo': 20,
         'cantidad_usada': 5.5,
         'costo_articulo_momento': 15.75,
+        'activo': 1,
+        'deleted_at': null,
+        'updated_at': null,
       };
 
       expect(opcNulo.idConsumo, isNull);

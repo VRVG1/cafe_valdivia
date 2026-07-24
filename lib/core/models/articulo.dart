@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:cafe_valdivia/core/models/converters.dart';
 part 'articulo.freezed.dart';
 part 'articulo.g.dart';
 
@@ -13,6 +14,9 @@ abstract class Articulo with _$Articulo {
     @JsonKey(name: 'costo_unitario') required double costoUnitario,
     @JsonKey(name: 'precio_venta') required double precioVenta,
     required double stock,
+    @IntToBoolConverter() @Default(true) bool activo,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _Articulo;
 
   factory Articulo.fromJson(Map<String, dynamic> json) =>

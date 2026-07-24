@@ -20,6 +20,9 @@ void main() {
       'detalles': 'Venta de prueba',
       'pagado': 0,
       'estado': 'pendiente',
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {

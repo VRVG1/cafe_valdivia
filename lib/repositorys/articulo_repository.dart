@@ -31,7 +31,7 @@ class ArticuloRepository extends BaseRepository<Articulo> {
   }) async {
     final List<Map<String, dynamic>> result = await dbHelper.query(
       tableName,
-      where: "id_unidad = ?",
+      where: "id_unidad = ? AND activo = 1",
       whereArgs: [idUnidad],
     );
     final UnidadMedida unidad = await unidadRepo.getById(idUnidad);

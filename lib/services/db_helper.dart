@@ -23,7 +23,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 5,
+      version: 7,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -31,7 +31,7 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 5]) =>
+  Future<void> testOnCreate(Database db, [int version = 7]) =>
       _onCreate(db, version);
 
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
@@ -44,7 +44,302 @@ class DatabaseHelper {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-  Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {}
+  Future<void> _onUpgrade(Database db, int oldversion, int newVersion) async {
+    if (oldversion < 6) {
+      final tablas = [
+        'Unidad_Medida',
+        'Cliente',
+        'Proveedor',
+        'Articulo',
+        'Compra',
+        'Detalle_Compra',
+        'Venta',
+        'Detalle_Venta',
+        'Receta',
+        'Receta_Detalle',
+        'Orden_Produccion',
+        'Orden_Produccion_Consumo',
+      ];
+      for (final tabla in tablas) {
+        await db.execute(
+          "ALTER TABLE $tabla ADD COLUMN activo INTEGER DEFAULT 1",
+        );
+        await db.execute(
+          "ALTER TABLE $tabla ADD COLUMN deleted_at TIMESTAMP DEFAULT NULL",
+        );
+        await db.execute(
+          "ALTER TABLE $tabla ADD COLUMN updated_at TIMESTAMP DEFAULT NULL",
+        );
+      }
+    }
+
+    if (oldversion < 7) {
+      await _recreateViews(db);
+    }
+  }
+
+  Future<void> _recreateViews(Database db) async {
+    await db.execute('DROP VIEW IF EXISTS v_articulos_completos');
+    await db.execute('DROP VIEW IF EXISTS v_compras_resumen');
+    await db.execute('DROP VIEW IF EXISTS v_ventas_resumen');
+    await db.execute('DROP VIEW IF EXISTS v_recetas_detalle');
+    await db.execute('DROP VIEW IF EXISTS v_produccion_resumen');
+    await db.execute('DROP VIEW IF EXISTS v_rentabilidad_ventas');
+    await db.execute('DROP VIEW IF EXISTS v_inventario_stock');
+    await db.execute('DROP VIEW IF EXISTS v_consumo_insumos_periodo');
+    await db.execute('DROP VIEW IF EXISTS v_compras_list');
+    await db.execute('DROP VIEW IF EXISTS V_Venta_Detallada');
+    await db.execute('DROP VIEW IF EXISTS V_Compra_Detallada');
+    await db.execute('DROP VIEW IF EXISTS v_clientes_kilos');
+
+    await _createViews(db);
+  }
+
+  Future<void> _createViews(Database db) async {
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_articulos_completos AS
+  SELECT 
+    a.id_articulo,
+    a.nombre AS articulo,
+    a.descripcion,
+    a.tipo,
+    a.costo_unitario,
+    a.precio_venta,
+    a.stock,
+    um.nombre AS unidad_medida
+  FROM Articulo a
+  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+  WHERE a.activo = 1 AND um.activo = 1;
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_compras_resumen AS
+  SELECT 
+    c.id_compra,
+    c.fecha,
+    c.detalles,
+    c.pagado,
+    p.nombre AS proveedor,
+    p.telefono AS telefono_proveedor,
+    COUNT(dc.id_detalle_compra) AS cantidad_items,
+    SUM(dc.cantidad * dc.precio_unitario_compra) AS total_compra
+  FROM Compra c
+  JOIN Proveedor p ON c.id_proveedor = p.id_proveedor
+  LEFT JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+  WHERE c.activo = 1 AND p.activo = 1
+  GROUP BY c.id_compra
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_ventas_resumen AS
+  SELECT 
+    v.id_venta,
+    v.fecha,
+    v.detalles,
+    v.pagado,
+    v.estado,
+    cl.nombre || ' ' || cl.apellido AS cliente,
+    cl.telefono AS telefono_cliente,
+    cl.email AS email_cliente,
+    COUNT(dv.id_detalle_venta) AS cantidad_items,
+    SUM(dv.cantidad * dv.precio_unitario_venta) AS total_venta
+  FROM Venta v
+  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
+  LEFT JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+  WHERE v.activo = 1 AND cl.activo = 1
+  GROUP BY v.id_venta
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_recetas_detalle AS
+  SELECT 
+    r.id_receta,
+    r.nombre AS nombre_receta,
+    r.cantidad_base,
+    ap.nombre AS producto_final,
+    ap.id_articulo AS id_producto_final,
+    ac.nombre AS componente,
+    ac.id_articulo AS id_componente,
+    rd.cantidad AS cantidad_necesaria,
+    um.nombre AS unidad_componente,
+    ac.costo_unitario AS costo_unitario_actual,
+    (rd.cantidad * ac.costo_unitario) AS costo_componente,
+    (SELECT SUM(rd2.cantidad * a2.costo_unitario)
+     FROM Receta_Detalle rd2
+     JOIN Articulo a2 ON rd2.id_articulo_componente = a2.id_articulo
+     WHERE rd2.id_receta = r.id_receta) AS costo_total_receta_estimado
+  FROM Receta r
+  JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
+  JOIN Receta_Detalle rd ON r.id_receta = rd.id_receta
+  JOIN Articulo ac ON rd.id_articulo_componente = ac.id_articulo
+  JOIN Unidad_Medida um ON rd.id_unidad = um.id_unidad
+  WHERE r.activo = 1 AND ap.activo = 1 AND ac.activo = 1 AND um.activo = 1
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_produccion_resumen AS
+  SELECT 
+    op.id_orden_produccion,
+    op.fecha,
+    op.cantidad_producida,
+    op.costo_total_produccion,
+    op.notas,
+    r.nombre AS receta,
+    ap.nombre AS producto_producido,
+    COUNT(opc.id_consumo) AS cantidad_insumos_diferentes,
+    SUM(opc.cantidad_usada) AS total_unidades_consumidas,
+    SUM(opc.cantidad_usada * opc.costo_articulo_momento) AS costo_real_calculado
+  FROM Orden_Produccion op
+  JOIN Receta r ON op.id_receta = r.id_receta
+  JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
+  LEFT JOIN Orden_Produccion_Consumo opc ON op.id_orden_produccion = opc.id_orden_produccion
+  WHERE op.activo = 1 AND r.activo = 1 AND ap.activo = 1
+  GROUP BY op.id_orden_produccion
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_rentabilidad_ventas AS
+  SELECT 
+    v.id_venta,
+    v.fecha,
+    cl.nombre || ' ' || cl.apellido AS cliente,
+    a.nombre AS articulo,
+    dv.cantidad,
+    dv.precio_unitario_venta,
+    a.costo_unitario,
+    (dv.cantidad * dv.precio_unitario_venta) AS ingreso,
+    (dv.cantidad * a.costo_unitario) AS costo_estimado,
+    (dv.cantidad * dv.precio_unitario_venta) - (dv.cantidad * a.costo_unitario) AS ganancia_neta,
+    CASE 
+      WHEN (dv.cantidad * dv.precio_unitario_venta) > 0 
+      THEN ROUND(((dv.cantidad * dv.precio_unitario_venta) - (dv.cantidad * a.costo_unitario)) * 100.0 / (dv.cantidad * dv.precio_unitario_venta), 2)
+      ELSE 0 
+    END AS margen_porcentaje
+  FROM Venta v
+  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
+  JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+  JOIN Articulo a ON dv.id_articulo = a.id_articulo
+  WHERE v.activo = 1 AND cl.activo = 1 AND dv.activo = 1 AND a.activo = 1
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_inventario_stock AS
+  SELECT 
+    a.id_articulo,
+    a.nombre,
+    a.descripcion,
+    a.tipo,
+    a.stock,
+    um.nombre AS unidad,
+    a.costo_unitario,
+    (a.stock * a.costo_unitario) AS valor_inventario,
+    CASE 
+      WHEN a.stock <= 0 THEN 'SIN STOCK'
+      WHEN a.stock < 10 THEN 'BAJO'   -- ajusta el umbral según tu negocio
+      ELSE 'OK'
+    END AS estado_stock
+  FROM Articulo a
+  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+  WHERE a.activo = 1 AND um.activo = 1
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_consumo_insumos_periodo AS
+  SELECT 
+    a.id_articulo,
+    a.nombre AS insumo,
+    um.nombre AS unidad,
+    SUM(opc.cantidad_usada) AS total_consumido,
+    SUM(opc.cantidad_usada * opc.costo_articulo_momento) AS costo_total_consumido,
+    MIN(op.fecha) AS primera_fecha,
+    MAX(op.fecha) AS ultima_fecha
+  FROM Orden_Produccion_Consumo opc
+  JOIN Orden_Produccion op ON opc.id_orden_produccion = op.id_orden_produccion
+  JOIN Articulo a ON opc.id_articulo = a.id_articulo
+  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+  WHERE opc.activo = 1 AND op.activo = 1 AND a.activo = 1 AND um.activo = 1
+  GROUP BY a.id_articulo
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS v_compras_list AS 
+    SELECT
+      c.id_compra,
+      c.fecha,
+      c.pagado,
+      p.id_proveedor,
+      p.nombre AS nombre_proveedor,
+      SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
+    FROM Compra AS c
+    JOIN Proveedor AS p ON c.id_proveedor = p.id_proveedor
+    JOIN Detalle_Compra as dc ON c.id_compra = dc.id_compra
+    WHERE c.activo = 1 AND p.activo = 1 AND dc.activo = 1
+    GROUP BY c.id_compra
+    ORDER BY c.fecha ASC
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS V_Venta_Detallada AS
+  SELECT 
+    v.id_venta,
+    v.fecha,
+    v.detalles AS detalles_venta,
+    v.pagado,
+    v.id_cliente,
+    cl.nombre AS nombre_cliente,
+    cl.apellido AS apellido_cliente,
+    dv.id_detalle_venta,
+    dv.id_articulo,
+    a.nombre AS nombre_articulo,
+    dv.cantidad,
+    dv.precio_unitario_venta,
+    (dv.cantidad * dv.precio_unitario_venta) AS subtotal
+  FROM Venta v
+  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
+  JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+  JOIN Articulo a ON dv.id_articulo = a.id_articulo
+  WHERE v.activo = 1 AND cl.activo = 1 AND dv.activo = 1 AND a.activo = 1
+''');
+
+    await db.execute('''
+  CREATE VIEW IF NOT EXISTS V_Compra_Detallada AS
+  SELECT 
+    c.id_compra,
+    c.fecha,
+    c.pagado,
+    p.nombre AS nombre_proveedor,
+    dc.id_detalle_compra,
+    dc.id_articulo,
+    a.nombre AS nombre_articulo,
+    dc.cantidad,
+    dc.precio_unitario_compra,
+    (dc.cantidad * dc.precio_unitario_compra) AS subtotal
+  FROM Compra c
+  JOIN Proveedor p ON c.id_proveedor = p.id_proveedor
+  JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+  JOIN Articulo a ON dc.id_articulo = a.id_articulo
+  WHERE c.activo = 1 AND p.activo = 1 AND dc.activo = 1 AND a.activo = 1
+''');
+
+    await db.execute('''
+CREATE VIEW IF NOT EXISTS v_clientes_kilos AS
+SELECT 
+  c.id_cliente,
+  c.nombre,
+  c.apellido,
+  c.telefono,
+  c.email,
+  COALESCE(SUM(CASE WHEN um.nombre LIKE '%Kg%' OR um.nombre LIKE '%kilo%' THEN dv.cantidad END), 0) AS kilos,
+  COALESCE(SUM(CASE WHEN um.nombre LIKE '%Kg%' OR um.nombre LIKE '%kilo%' THEN dv.cantidad * dv.precio_unitario_venta END), 0) AS total
+FROM Cliente c
+LEFT JOIN Venta v ON c.id_cliente = v.id_cliente
+LEFT JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
+LEFT JOIN Articulo a ON dv.id_articulo = a.id_articulo
+LEFT JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
+WHERE c.activo = 1
+GROUP BY c.id_cliente
+''');
+  }
 
   // ============== MÉTODOS DE UTILIDAD ==============
   Future<int> insert(String table, Map<String, dynamic> data) async {
@@ -120,7 +415,10 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE Unidad_Medida (
         id_unidad INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL UNIQUE CHECK(nombre != '')
+        nombre TEXT NOT NULL UNIQUE CHECK(nombre != ''),
+        activo INTEGER DEFAULT 1,
+        deleted_at TIMESTAMP DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT NULL
       )
     ''');
 
@@ -130,7 +428,10 @@ class DatabaseHelper {
         nombre TEXT NOT NULL CHECK(nombre != ''),
         apellido TEXT NOT NULL CHECK(apellido != ''),
         telefono TEXT,
-        email TEXT UNIQUE
+        email TEXT UNIQUE,
+        activo INTEGER DEFAULT 1,
+        deleted_at TIMESTAMP DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT NULL
       )
     ''');
 
@@ -140,7 +441,10 @@ class DatabaseHelper {
         nombre TEXT NOT NULL CHECK(nombre != ''),
         telefono TEXT,
         email TEXT UNIQUE,
-        direccion TEXT
+        direccion TEXT,
+        activo INTEGER DEFAULT 1,
+        deleted_at TIMESTAMP DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT NULL
       )
     ''');
 
@@ -154,6 +458,9 @@ class DatabaseHelper {
     costo_unitario REAL DEFAULT 0.0,
     precio_venta REAL DEFAULT 0.0,
     stock REAL DEFAULT 0.0,
+    activo INTEGER DEFAULT 1,
+    deleted_at TIMESTAMP DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (id_unidad) REFERENCES Unidad_Medida (id_unidad)
       ON DELETE RESTRICT ON UPDATE CASCADE
   )
@@ -167,6 +474,9 @@ class DatabaseHelper {
         fecha DATETIME NOT NULL,
         detalles TEXT,
         pagado BOOLEAN DEFAULT 0,
+        activo INTEGER DEFAULT 1,
+        deleted_at TIMESTAMP DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT NULL,
         FOREIGN KEY (id_proveedor) REFERENCES Proveedor (id_proveedor)
       )
     ''');
@@ -178,7 +488,10 @@ class DatabaseHelper {
     id_articulo INTEGER NOT NULL,
     cantidad REAL NOT NULL CHECK(cantidad > 0),
     precio_unitario_compra REAL NOT NULL,
-    FOREIGN KEY (id_compra) REFERENCES Compra (id_compra) ON DELETE CASCADE,
+    activo INTEGER DEFAULT 1,
+    deleted_at TIMESTAMP DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT NULL,
+    FOREIGN KEY (id_compra) REFERENCES Compra (id_compra) ON DELETE RESTRICT,
     FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo) ON DELETE RESTRICT
   )
 ''');
@@ -193,6 +506,9 @@ class DatabaseHelper {
         detalles TEXT,
         pagado BOOLEAN DEFAULT 0,
         estado TEXT NOT NULL DEFAULT 'pendiente' CHECK (estado IN ('pendiente', 'completado', 'cancelado')),
+        activo INTEGER DEFAULT 1,
+        deleted_at TIMESTAMP DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT NULL,
         FOREIGN KEY (id_cliente) REFERENCES Cliente (id_cliente) ON DELETE RESTRICT
       )
     ''');
@@ -204,7 +520,10 @@ class DatabaseHelper {
     id_articulo INTEGER NOT NULL,
     cantidad REAL NOT NULL CHECK(cantidad > 0),
     precio_unitario_venta REAL NOT NULL,
-    FOREIGN KEY (id_venta) REFERENCES Venta (id_venta) ON DELETE CASCADE,
+    activo INTEGER DEFAULT 1,
+    deleted_at TIMESTAMP DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT NULL,
+    FOREIGN KEY (id_venta) REFERENCES Venta (id_venta) ON DELETE RESTRICT,
     FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo) ON DELETE RESTRICT,
     UNIQUE(id_venta, id_articulo)
   )
@@ -218,6 +537,9 @@ class DatabaseHelper {
       id_articulo_producto INTEGER NOT NULL,
       nombre TEXT NOT NULL,
       cantidad_base REAL NOT NULL,
+      activo INTEGER DEFAULT 1,
+      deleted_at TIMESTAMP DEFAULT NULL,
+      updated_at TIMESTAMP DEFAULT NULL,
       FOREIGN KEY (id_articulo_producto) REFERENCES Articulo (id_articulo)
       )
     ''');
@@ -229,6 +551,9 @@ class DatabaseHelper {
         id_articulo_componente INTEGER NOT NULL,
         cantidad REAL NOT NULL,
         id_unidad INTEGER NOT NULL,
+        activo INTEGER DEFAULT 1,
+        deleted_at TIMESTAMP DEFAULT NULL,
+        updated_at TIMESTAMP DEFAULT NULL,
         FOREIGN KEY (id_receta) REFERENCES Receta (id_receta),
         FOREIGN KEY (id_articulo_componente) REFERENCES Articulo (id_articulo),
         FOREIGN KEY (id_unidad) REFERENCES Unidad_Medida (id_unidad)
@@ -244,6 +569,9 @@ class DatabaseHelper {
     fecha DATETIME NOT NULL,
     costo_total_produccion REAL DEFAULT 0.0,
     notas TEXT,
+    activo INTEGER DEFAULT 1,
+    deleted_at TIMESTAMP DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT NULL,
     FOREIGN KEY (id_receta) REFERENCES Receta (id_receta) ON DELETE RESTRICT
   )
 ''');
@@ -255,7 +583,10 @@ class DatabaseHelper {
     id_articulo INTEGER NOT NULL,
     cantidad_usada REAL DEFAULT 0.0 CHECK(cantidad_usada >= 0),
     costo_articulo_momento REAL DEFAULT 0.0,
-    FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion (id_orden_produccion) ON DELETE CASCADE,
+    activo INTEGER DEFAULT 1,
+    deleted_at TIMESTAMP DEFAULT NULL,
+    updated_at TIMESTAMP DEFAULT NULL,
+    FOREIGN KEY (id_orden_produccion) REFERENCES Orden_Produccion (id_orden_produccion) ON DELETE RESTRICT,
     FOREIGN KEY (id_articulo) REFERENCES Articulo (id_articulo) ON DELETE RESTRICT
   )
 ''');
@@ -318,220 +649,7 @@ class DatabaseHelper {
     await db.execute('CREATE INDEX idx_venta_pagado ON Venta(pagado)');
 
     // Views
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_articulos_completos AS
-  SELECT 
-    a.id_articulo,
-    a.nombre AS articulo,
-    a.descripcion,
-    a.tipo,
-    a.costo_unitario,
-    a.precio_venta,
-    a.stock,
-    um.nombre AS unidad_medida
-  FROM Articulo a
-  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_compras_resumen AS
-  SELECT 
-    c.id_compra,
-    c.fecha,
-    c.detalles,
-    c.pagado,
-    p.nombre AS proveedor,
-    p.telefono AS telefono_proveedor,
-    COUNT(dc.id_detalle_compra) AS cantidad_items,
-    SUM(dc.cantidad * dc.precio_unitario_compra) AS total_compra
-  FROM Compra c
-  JOIN Proveedor p ON c.id_proveedor = p.id_proveedor
-  LEFT JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
-  GROUP BY c.id_compra
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_ventas_resumen AS
-  SELECT 
-    v.id_venta,
-    v.fecha,
-    v.detalles,
-    v.pagado,
-    v.estado,
-    cl.nombre || ' ' || cl.apellido AS cliente,
-    cl.telefono AS telefono_cliente,
-    cl.email AS email_cliente,
-    COUNT(dv.id_detalle_venta) AS cantidad_items,
-    SUM(dv.cantidad * dv.precio_unitario_venta) AS total_venta
-  FROM Venta v
-  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
-  LEFT JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
-  GROUP BY v.id_venta
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_recetas_detalle AS
-  SELECT 
-    r.id_receta,
-    r.nombre AS nombre_receta,
-    r.cantidad_base,
-    ap.nombre AS producto_final,
-    ap.id_articulo AS id_producto_final,
-    ac.nombre AS componente,
-    ac.id_articulo AS id_componente,
-    rd.cantidad AS cantidad_necesaria,
-    um.nombre AS unidad_componente,
-    ac.costo_unitario AS costo_unitario_actual,
-    (rd.cantidad * ac.costo_unitario) AS costo_componente,
-    (SELECT SUM(rd2.cantidad * a2.costo_unitario)
-     FROM Receta_Detalle rd2
-     JOIN Articulo a2 ON rd2.id_articulo_componente = a2.id_articulo
-     WHERE rd2.id_receta = r.id_receta) AS costo_total_receta_estimado
-  FROM Receta r
-  JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
-  JOIN Receta_Detalle rd ON r.id_receta = rd.id_receta
-  JOIN Articulo ac ON rd.id_articulo_componente = ac.id_articulo
-  JOIN Unidad_Medida um ON rd.id_unidad = um.id_unidad
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_produccion_resumen AS
-  SELECT 
-    op.id_orden_produccion,
-    op.fecha,
-    op.cantidad_producida,
-    op.costo_total_produccion,
-    op.notas,
-    r.nombre AS receta,
-    ap.nombre AS producto_producido,
-    COUNT(opc.id_consumo) AS cantidad_insumos_diferentes,
-    SUM(opc.cantidad_usada) AS total_unidades_consumidas,
-    SUM(opc.cantidad_usada * opc.costo_articulo_momento) AS costo_real_calculado
-  FROM Orden_Produccion op
-  JOIN Receta r ON op.id_receta = r.id_receta
-  JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
-  LEFT JOIN Orden_Produccion_Consumo opc ON op.id_orden_produccion = opc.id_orden_produccion
-  GROUP BY op.id_orden_produccion
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_rentabilidad_ventas AS
-  SELECT 
-    v.id_venta,
-    v.fecha,
-    cl.nombre || ' ' || cl.apellido AS cliente,
-    a.nombre AS articulo,
-    dv.cantidad,
-    dv.precio_unitario_venta,
-    a.costo_unitario,
-    (dv.cantidad * dv.precio_unitario_venta) AS ingreso,
-    (dv.cantidad * a.costo_unitario) AS costo_estimado,
-    (dv.cantidad * dv.precio_unitario_venta) - (dv.cantidad * a.costo_unitario) AS ganancia_neta,
-    CASE 
-      WHEN (dv.cantidad * dv.precio_unitario_venta) > 0 
-      THEN ROUND(((dv.cantidad * dv.precio_unitario_venta) - (dv.cantidad * a.costo_unitario)) * 100.0 / (dv.cantidad * dv.precio_unitario_venta), 2)
-      ELSE 0 
-    END AS margen_porcentaje
-  FROM Venta v
-  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
-  JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
-  JOIN Articulo a ON dv.id_articulo = a.id_articulo
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_inventario_stock AS
-  SELECT 
-    a.id_articulo,
-    a.nombre,
-    a.descripcion,
-    a.tipo,
-    a.stock,
-    um.nombre AS unidad,
-    a.costo_unitario,
-    (a.stock * a.costo_unitario) AS valor_inventario,
-    CASE 
-      WHEN a.stock <= 0 THEN 'SIN STOCK'
-      WHEN a.stock < 10 THEN 'BAJO'   -- ajusta el umbral según tu negocio
-      ELSE 'OK'
-    END AS estado_stock
-  FROM Articulo a
-  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_consumo_insumos_periodo AS
-  SELECT 
-    a.id_articulo,
-    a.nombre AS insumo,
-    um.nombre AS unidad,
-    SUM(opc.cantidad_usada) AS total_consumido,
-    SUM(opc.cantidad_usada * opc.costo_articulo_momento) AS costo_total_consumido,
-    MIN(op.fecha) AS primera_fecha,
-    MAX(op.fecha) AS ultima_fecha
-  FROM Orden_Produccion_Consumo opc
-  JOIN Orden_Produccion op ON opc.id_orden_produccion = op.id_orden_produccion
-  JOIN Articulo a ON opc.id_articulo = a.id_articulo
-  JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
-  GROUP BY a.id_articulo
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS v_compras_list AS 
-    SELECT
-      c.id_compra,
-      c.fecha,
-      c.pagado,
-      p.id_proveedor,
-      p.nombre AS nombre_proveedor,
-      SUM(CAST(dc.cantidad AS REAL) * CAST(dc.precio_unitario_compra AS REAL)) AS total_compra
-    FROM Compra AS c
-    JOIN Proveedor AS p ON c.id_proveedor = p.id_proveedor
-    JOIN Detalle_Compra as dc ON c.id_compra = dc.id_compra
-    GROUP BY c.id_compra
-    ORDER BY c.fecha ASC
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS V_Venta_Detallada AS
-  SELECT 
-    v.id_venta,
-    v.fecha,
-    v.detalles AS detalles_venta,
-    v.pagado,
-    v.id_cliente,
-    cl.nombre AS nombre_cliente,
-    cl.apellido AS apellido_cliente,
-    dv.id_detalle_venta,
-    dv.id_articulo,
-    a.nombre AS nombre_articulo,
-    dv.cantidad,
-    dv.precio_unitario_venta,
-    (dv.cantidad * dv.precio_unitario_venta) AS subtotal
-  FROM Venta v
-  JOIN Cliente cl ON v.id_cliente = cl.id_cliente
-  JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
-  JOIN Articulo a ON dv.id_articulo = a.id_articulo
-''');
-
-    await db.execute('''
-  CREATE VIEW IF NOT EXISTS V_Compra_Detallada AS
-  SELECT 
-    c.id_compra,
-    c.fecha,
-    c.pagado,
-    p.nombre AS nombre_proveedor,
-    dc.id_detalle_compra,
-    dc.id_articulo,
-    a.nombre AS nombre_articulo,
-    dc.cantidad,
-    dc.precio_unitario_compra,
-    (dc.cantidad * dc.precio_unitario_compra) AS subtotal
-  FROM Compra c
-  JOIN Proveedor p ON c.id_proveedor = p.id_proveedor
-  JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
-  JOIN Articulo a ON dc.id_articulo = a.id_articulo
-''');
+    await _createViews(db);
 
     await db.execute('''
   CREATE TRIGGER IF NOT EXISTS trg_validar_stock_venta
@@ -691,24 +809,6 @@ class DatabaseHelper {
       WHERE id_receta = OLD.id_receta
     );
   END;
-''');
-
-    await db.execute('''
-CREATE VIEW IF NOT EXISTS v_clientes_kilos AS
-SELECT 
-  c.id_cliente,
-  c.nombre,
-  c.apellido,
-  c.telefono,
-  c.email,
-  COALESCE(SUM(CASE WHEN um.nombre LIKE '%Kg%' OR um.nombre LIKE '%kilo%' THEN dv.cantidad END), 0) AS kilos,
-  COALESCE(SUM(CASE WHEN um.nombre LIKE '%Kg%' OR um.nombre LIKE '%kilo%' THEN dv.cantidad * dv.precio_unitario_venta END), 0) AS total
-FROM Cliente c
-LEFT JOIN Venta v ON c.id_cliente = v.id_cliente
-LEFT JOIN Detalle_Venta dv ON v.id_venta = dv.id_venta
-LEFT JOIN Articulo a ON dv.id_articulo = a.id_articulo
-LEFT JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
-GROUP BY c.id_cliente
 ''');
   }
 }

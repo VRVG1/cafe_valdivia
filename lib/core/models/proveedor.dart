@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:cafe_valdivia/core/models/converters.dart';
 part 'proveedor.freezed.dart';
 part 'proveedor.g.dart';
 
@@ -10,6 +11,9 @@ abstract class Proveedor with _$Proveedor {
     String? telefono,
     String? email,
     String? direccion,
+    @IntToBoolConverter() @Default(true) bool activo,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _Proveedor;
 
   factory Proveedor.fromJson(Map<String, dynamic> json) =>

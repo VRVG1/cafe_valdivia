@@ -17,7 +17,10 @@ void main() {
       'id_proveedor': 100,
       'fecha': '2025-10-01T12:00:00.000Z',
       'detalles': 'Compra de prueba',
-      'pagado': true,
+      'pagado': 1,
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {
@@ -128,7 +131,7 @@ void main() {
         'id_compra': 1,
         'id_proveedor': 100,
         'fecha': '2025-10-01T12:00:00.000Z',
-        'pagado': true,
+        'pagado': 1,
       };
       final result = Compra.fromJson(jsonMinimo);
       expect(result.detalles, isNull);

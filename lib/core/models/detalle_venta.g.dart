@@ -13,6 +13,13 @@ _DetalleVenta _$DetalleVentaFromJson(Map<String, dynamic> json) =>
       idArticulo: (json['id_articulo'] as num).toInt(),
       cantidad: (json['cantidad'] as num).toDouble(),
       precioUnitarioVenta: (json['precio_unitario_venta'] as num).toDouble(),
+      activo: json['activo'] as bool? ?? true,
+      deletedAt: json['deleted_at'] == null
+          ? null
+          : DateTime.parse(json['deleted_at'] as String),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at'] as String),
     );
 
 Map<String, dynamic> _$DetalleVentaToJson(_DetalleVenta instance) =>
@@ -22,4 +29,7 @@ Map<String, dynamic> _$DetalleVentaToJson(_DetalleVenta instance) =>
       'id_articulo': instance.idArticulo,
       'cantidad': instance.cantidad,
       'precio_unitario_venta': instance.precioUnitarioVenta,
+      'activo': instance.activo,
+      'deleted_at': instance.deletedAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
     };

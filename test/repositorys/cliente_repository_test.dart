@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/models/cliente.dart';
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -210,6 +211,23 @@ void main() {
 
     test('GetById with non-existent ID throws', () async {
       expect(clienteRepository.getById(9999), throwsA(isA<Exception>()));
+    });
+
+    test('forceDelete on cliente with ventas throws RelacionExistenteException',
+        () async {
+      final clienteId = await clienteRepository.create(cliente);
+
+      await database.insert('Venta', {
+        'id_cliente': clienteId,
+        'fecha': DateTime.now().toIso8601String(),
+        'pagado': 0,
+        'estado': 'completado',
+      });
+
+      expect(
+        () => clienteRepository.forceDelete(clienteId),
+        throwsA(isA<RelacionExistenteException>()),
+      );
     });
 
     test('Search with partial match returns results', () async {

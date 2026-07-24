@@ -17,6 +17,9 @@ void main() {
       'apellido': 'Pérez',
       'telefono': '123456789',
       'email': 'juan.perez@example.com',
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {

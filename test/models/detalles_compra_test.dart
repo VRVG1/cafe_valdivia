@@ -18,6 +18,9 @@ void main() {
       'id_articulo': 20,
       'cantidad': 5.0,
       'precio_unitario_compra': 10.50,
+      'activo': true,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {

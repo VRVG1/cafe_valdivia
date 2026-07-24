@@ -11,6 +11,9 @@ abstract class DetalleCompra with _$DetalleCompra {
     required double cantidad,
     @JsonKey(name: 'precio_unitario_compra')
     required double precioUnitarioCompra,
+    @Default(true) bool activo,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _DetalleCompra;
 
   factory DetalleCompra.fromJson(Map<String, dynamic> json) =>

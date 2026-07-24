@@ -1,16 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:cafe_valdivia/core/models/converters.dart';
 part 'venta.freezed.dart';
 part 'venta.g.dart';
-
-class BoolToIntConverter implements JsonConverter<bool?, int?> {
-  const BoolToIntConverter();
-
-  @override
-  bool? fromJson(int? json) => json == null ? null : json == 1;
-
-  @override
-  int? toJson(bool? object) => object == null ? null : (object ? 1 : 0);
-}
 
 VentaEstado? ventaEstadoFromJson(String? estado) {
   if (estado == null) return null;
@@ -32,6 +23,9 @@ abstract class Venta with _$Venta {
     @JsonKey(fromJson: ventaEstadoFromJson, toJson: ventaEstadoToJson)
     @Default(VentaEstado.pendiente)
     VentaEstado? estado,
+    @IntToBoolConverter() @Default(true) bool activo,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _Venta;
 
   factory Venta.fromJson(Map<String, dynamic> json) => _$VentaFromJson(json);

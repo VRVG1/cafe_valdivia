@@ -20,6 +20,9 @@ void main() {
       'fecha': '2025-11-01T12:00:00.000Z',
       'costo_total_produccion': 1250.50,
       'notas': 'Producción para stock',
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {

@@ -10,6 +10,9 @@ abstract class DetalleVenta with _$DetalleVenta {
     @JsonKey(name: 'id_articulo') required int idArticulo,
     required double cantidad,
     @JsonKey(name: 'precio_unitario_venta') required double precioUnitarioVenta,
+    @Default(true) bool activo,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
   }) = _DetalleVenta;
 
   factory DetalleVenta.fromJson(Map<String, dynamic> json) =>

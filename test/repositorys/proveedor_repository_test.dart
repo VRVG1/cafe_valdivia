@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/core/models/proveedor.dart';
+import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -124,15 +125,17 @@ void main() {
       await proveedorRepository.create(proveedor);
       await proveedorRepository.create(proveedor2);
       await proveedorRepository.create(proveedor3);
-
-      var resultados = await proveedorRepository.search('Ventus');
+      var lista = ["%Ventus%", "%Ventus%", "%Ventus%", "%Ventus%"];
+      var resultados = await proveedorRepository.search(whereArgs: lista);
       expect(resultados.length, 1);
       expect(resultados.first.nombre, 'Ventus');
 
-      resultados = await proveedorRepository.search('000000000');
+      lista = ["%000000000%", "%000000000%", "%000000000%", "%000000000%"];
+      resultados = await proveedorRepository.search(whereArgs: lista);
       expect(resultados.length, 2);
 
-      resultados = await proveedorRepository.search('Nada');
+      lista = ["%Nada%", "%Nada%", "%Nada%", "%Nada%"];
+      resultados = await proveedorRepository.search(whereArgs: lista);
       expect(resultados, isEmpty);
     });
 
@@ -211,6 +214,24 @@ void main() {
       expect(filas, 0);
     });
 
+    test(
+      'forceDelete on proveedor with compras throws RelacionExistenteException',
+      () async {
+        final proveedorId = await proveedorRepository.create(proveedor);
+
+        await database.insert('Compra', {
+          'id_proveedor': proveedorId,
+          'fecha': DateTime.now().toIso8601String(),
+          'pagado': 0,
+        });
+
+        expect(
+          () => proveedorRepository.forceDelete(proveedorId),
+          throwsA(isA<RelacionExistenteException>()),
+        );
+      },
+    );
+
     test('Update with duplicate email throws', () async {
       await proveedorRepository.create(proveedor);
       final id = await proveedorRepository.create(proveedor2);
@@ -227,7 +248,8 @@ void main() {
       await proveedorRepository.create(proveedor);
       await proveedorRepository.create(proveedor2);
 
-      final resultados = await proveedorRepository.search('Vent');
+      final lista = ["%Vent%", "%Vent%", "%Vent%", "%Vent%"];
+      final resultados = await proveedorRepository.search(whereArgs: lista);
       expect(resultados.length, 1);
       expect(resultados.first.nombre, 'Ventus');
     });
@@ -235,7 +257,8 @@ void main() {
     test('Search with special characters does not crash', () async {
       await proveedorRepository.create(proveedor);
 
-      final resultados = await proveedorRepository.search('!@#');
+      final lista = ["%!@#%", "%!@#%", "%!@#%", "%!@#%"];
+      final resultados = await proveedorRepository.search(whereArgs: lista);
       expect(resultados, isEmpty);
     });
   });
@@ -378,38 +401,46 @@ void main() {
       await databaseFactory.deleteDatabase(path);
     });
 
-    test('Bulk insert 100 proveedores completes in reasonable time', () async {
-      final stopwatch = Stopwatch()..start();
+    test(
+      'Bulk insert 100 proveedores completes in reasonable time',
+      () async {
+        final stopwatch = Stopwatch()..start();
 
-      for (int i = 0; i < 100; i++) {
-        final p = Proveedor(
-          nombre: 'Proveedor $i',
-          telefono: '1234567890',
-          email: 'prov$i@test.com',
-        );
-        await proveedorRepository.create(p);
-      }
+        for (int i = 0; i < 100; i++) {
+          final p = Proveedor(
+            nombre: 'Proveedor $i',
+            telefono: '1234567890',
+            email: 'prov$i@test.com',
+          );
+          await proveedorRepository.create(p);
+        }
 
-      stopwatch.stop();
-      expect(stopwatch.elapsedMilliseconds, lessThan(60000));
-    }, timeout: const Timeout(Duration(minutes: 1)));
+        stopwatch.stop();
+        expect(stopwatch.elapsedMilliseconds, lessThan(60000));
+      },
+      timeout: const Timeout(Duration(minutes: 1)),
+    );
 
-    test('GetAll performance with 100 records', () async {
-      for (int i = 0; i < 100; i++) {
-        final p = Proveedor(
-          nombre: 'Proveedor $i',
-          telefono: '1234567890',
-          email: 'prov$i@test.com',
-        );
-        await proveedorRepository.create(p);
-      }
+    test(
+      'GetAll performance with 100 records',
+      () async {
+        for (int i = 0; i < 100; i++) {
+          final p = Proveedor(
+            nombre: 'Proveedor $i',
+            telefono: '1234567890',
+            email: 'prov$i@test.com',
+          );
+          await proveedorRepository.create(p);
+        }
 
-      final stopwatch = Stopwatch()..start();
-      final all = await proveedorRepository.getAll();
-      stopwatch.stop();
+        final stopwatch = Stopwatch()..start();
+        final all = await proveedorRepository.getAll();
+        stopwatch.stop();
 
-      expect(all.length, 100);
-      expect(stopwatch.elapsedMilliseconds, lessThan(5000));
-    }, timeout: const Timeout(Duration(minutes: 1)));
+        expect(all.length, 100);
+        expect(stopwatch.elapsedMilliseconds, lessThan(5000));
+      },
+      timeout: const Timeout(Duration(minutes: 1)),
+    );
   });
 }

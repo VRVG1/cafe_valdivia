@@ -5,7 +5,13 @@ void main() {
   group('UnidadMedida', () {
     final unidadMedida = UnidadMedida(idUnidadMedida: 1, nombre: 'Kilogramo');
 
-    final unidadMedidaJson = {'id_unidad': 1, 'nombre': 'Kilogramo'};
+    final unidadMedidaJson = {
+      'id_unidad': 1,
+      'nombre': 'Kilogramo',
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
+    };
 
     test('fromJson crea una instancia correcta', () {
       final fromJson = UnidadMedida.fromJson(unidadMedidaJson);
@@ -40,7 +46,13 @@ void main() {
 
     test('El modelo funciona con id nulo', () {
       final unidadNula = UnidadMedida(nombre: 'Litro');
-      final unidadNulaJson = {'id_unidad': null, 'nombre': 'Litro'};
+      final unidadNulaJson = {
+        'id_unidad': null,
+        'nombre': 'Litro',
+        'activo': 1,
+        'deleted_at': null,
+        'updated_at': null,
+      };
 
       expect(unidadNula.idUnidadMedida, isNull);
       expect(unidadNula.toJson(), unidadNulaJson);

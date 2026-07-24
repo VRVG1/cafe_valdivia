@@ -23,6 +23,9 @@ void main() {
       'costo_unitario': 25.50,
       'precio_venta': 0.0,
       'stock': 0.0,
+      'activo': 1,
+      'deleted_at': null,
+      'updated_at': null,
     };
 
     test('fromJson crea una instancia correcta', () {
