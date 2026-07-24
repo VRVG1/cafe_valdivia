@@ -99,18 +99,16 @@ class ProductoListaPage extends ConsumerWidget {
                     titulo: "Seguro que quiere eliminar este Producto?",
                     contenido: "Esta accion no se puede deshacer",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: articuloProviderProvider,
-                        id: producto.idArticulo!,
-                        mensajeExito: "El producto se ha borrado con exito",
-                        mensajeError:
-                            "Error al eliminar el producto, Por favor, intente de nuevo",
-                        detalle: false,
-                      ),
-                    },
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: articuloProviderProvider,
+                      id: producto.idArticulo!,
+                      mensajeExito: "El producto se ha borrado con exito",
+                      mensajeError:
+                          "Error al eliminar el producto, Por favor, intente de nuevo",
+                      detalle: false,
+                    ),
                   ) ??
                   false;
               if (confirmacion == true) {

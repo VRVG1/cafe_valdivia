@@ -54,7 +54,7 @@ class RecetaProvider extends _$RecetaProvider {
       return false;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      rethrow;
     }
   }
 }

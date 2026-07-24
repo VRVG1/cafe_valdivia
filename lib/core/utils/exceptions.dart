@@ -27,10 +27,12 @@ class RelacionExistenteException implements Exception {
   RelacionExistenteException([this.mensaje]);
 
   @override
-  String toString() => mensaje ?? "No se puede eliminar porque tiene registros asociados";
+  String toString() =>
+      mensaje ?? "No se puede eliminar porque tiene registros asociados";
 }
 
 class UnknowErrorException implements Exception {
+  UnknowErrorException();
   @override
-  String toString() => "Error desconocido";
+  String toString() => "PANIC!!!!!";
 }

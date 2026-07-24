@@ -118,18 +118,16 @@ class ProveedorListaState extends ConsumerState {
                     titulo: "Seguro que quiere elminar este proveedor?",
                     contenido: "Esta accion no se puede deshacer",
                     textoBotonConfirmacion: "Eliminar",
-                    onConfirm: () => {
-                      delete(
-                        context: context,
-                        ref: ref,
-                        provider: proveedorListProvider,
-                        id: proveedor.idProveedor!,
-                        mensajeExito: "Proveedor eliminado correctamente",
-                        mensajeError:
-                            "Error al eliminar el cliente, intente de nuevo",
-                        detalle: false,
-                      ),
-                    },
+                    onConfirm: () => delete(
+                      context: context,
+                      ref: ref,
+                      provider: proveedorListProvider,
+                      id: proveedor.idProveedor!,
+                      mensajeExito: "Proveedor eliminado correctamente",
+                      mensajeError:
+                          "Error al eliminar el cliente, intente de nuevo",
+                      detalle: false,
+                    ),
                   ) ??
                   false;
               if (confirmacion == true) {

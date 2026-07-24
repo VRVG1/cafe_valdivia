@@ -67,16 +67,14 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
       titulo: "Seguro que desea actualizar el Producto",
       contenido: "Se actualizaran los cambios el Producto",
       textoBotonConfirmacion: "Actualizar",
-      onConfirm: () => {
-        update<Articulo>(
-          context: context,
-          ref: ref,
-          provider: articuloProviderProvider,
-          element: productoUpdate,
-          mensajeExito: "El Producto se a actualizado correctamente",
-          mensajeError: "Erro al actualizar el Producto, intente de nuevo",
-        ),
-      },
+      onConfirm: () => update<Articulo>(
+        context: context,
+        ref: ref,
+        provider: articuloProviderProvider,
+        element: productoUpdate,
+        mensajeExito: "El Producto se a actualizado correctamente",
+        mensajeError: "Erro al actualizar el Producto, intente de nuevo",
+      ),
     );
   }
 
