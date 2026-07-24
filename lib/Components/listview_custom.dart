@@ -13,6 +13,7 @@ class ListviewCustom<T> extends ConsumerWidget {
   final ScrollController? controller;
   final Widget? footer;
   final Widget? header;
+  final bool hasDismissible;
 
   // Functions
   final void Function(T element)? onTapCallback;
@@ -41,6 +42,7 @@ class ListviewCustom<T> extends ConsumerWidget {
     this.header,
     this.secondaryBackgroundIcon,
     this.primaryBackgroundIcon,
+    this.hasDismissible = true,
   });
 
   @override
@@ -82,88 +84,92 @@ class ListviewCustom<T> extends ConsumerWidget {
           borderRadius = BorderRadius.circular(8);
         }
 
-        return _hasDismissible ? Padding(
-          padding: EdgeInsets.only(bottom: isLast ? 0 : 4),
-          child: Material(
-            borderRadius: borderRadius,
-            clipBehavior: Clip.antiAlias,
-            color: Colors.transparent,
-            child: Dismissible(
-              key: keyBuilder(element),
-              dismissThresholds: const {
-                DismissDirection.startToEnd: 0.25,
-                DismissDirection.endToStart: 0.25,
-              },
-              onDismissed: (direction) {
-                if (direction == DismissDirection.endToStart) {
-                  data.removeAt(index);
-                }
-              },
-              confirmDismiss: (direction) async {
-                if (direction == DismissDirection.endToStart) {
-                  // Deslizar de Derecha a Izquierda (Borrar)
-                  return onDeleteDismissed?.call(element) ?? true;
-                } else if (direction == DismissDirection.startToEnd) {
-                  // Deslizar de Izquierda a Derecha (Modificar)
-                  return onEditDismissed?.call(element) ?? false;
-                }
-                return false;
-              },
+        return hasDismissible
+            ? Padding(
+                padding: EdgeInsets.only(bottom: isLast ? 0 : 4),
+                child: Material(
+                  borderRadius: borderRadius,
+                  clipBehavior: Clip.antiAlias,
+                  color: Colors.transparent,
+                  child: Dismissible(
+                    key: keyBuilder(element),
+                    dismissThresholds: const {
+                      DismissDirection.startToEnd: 0.25,
+                      DismissDirection.endToStart: 0.25,
+                    },
+                    onDismissed: (direction) {
+                      if (direction == DismissDirection.endToStart) {
+                        data.removeAt(index);
+                      }
+                    },
+                    confirmDismiss: (direction) async {
+                      if (direction == DismissDirection.endToStart) {
+                        // Deslizar de Derecha a Izquierda (Borrar)
+                        return onDeleteDismissed?.call(element) ?? true;
+                      } else if (direction == DismissDirection.startToEnd) {
+                        // Deslizar de Izquierda a Derecha (Modificar)
+                        return onEditDismissed?.call(element) ?? false;
+                      }
+                      return false;
+                    },
 
-              background: Material(
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    color: colorScheme.tertiaryContainer,
-                    borderRadius: borderRadius,
-                  ),
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Icon(
-                      primaryBackgroundIcon ?? Icons.edit_rounded,
-                      color: colorScheme.onTertiaryContainer,
+                    background: Material(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          color: colorScheme.tertiaryContainer,
+                          borderRadius: borderRadius,
+                        ),
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Icon(
+                            primaryBackgroundIcon ?? Icons.edit_rounded,
+                            color: colorScheme.onTertiaryContainer,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    secondaryBackground: Container(
+                      alignment: Alignment.centerRight,
+                      decoration: BoxDecoration(
+                        color: colorScheme.errorContainer,
+                        borderRadius: borderRadius,
+                      ),
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: Icon(
+                        secondaryBackgroundIcon ?? Icons.delete_rounded,
+                        color: colorScheme.onErrorContainer,
+                      ),
+                    ),
+                    direction: DismissDirection.horizontal,
+                    child: Material(
+                      child: ListTile(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: borderRadius,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        tileColor: colorScheme.surfaceContainerLowest,
+                        leading: leadingBuilder?.call(element),
+                        title: titleBuilder(element),
+                        subtitle: subtitleBuilder?.call(element),
+                        trailing: trailingBuilder?.call(element),
+                        onTap: onTapCallback == null
+                            ? null
+                            : () => onTapCallback!(element),
+                        onLongPress: onLongPressCallback == null
+                            ? null
+                            : () => onLongPressCallback!(element),
+                      ),
                     ),
                   ),
                 ),
-              ),
-
-              secondaryBackground: Container(
-                alignment: Alignment.centerRight,
-                decoration: BoxDecoration(
-                  color: colorScheme.errorContainer,
-                  borderRadius: borderRadius,
-                ),
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Icon(
-                  secondaryBackgroundIcon ?? Icons.delete_rounded,
-                  color: colorScheme.onErrorContainer,
-                ),
-              ),
-              direction: DismissDirection.horizontal,
-              child: Material(
-                child: ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: borderRadius),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
-                  ),
-                  tileColor: colorScheme.surfaceContainerLowest,
-                  leading: leadingBuilder?.call(element),
-                  title: titleBuilder(element),
-                  subtitle: subtitleBuilder?.call(element),
-                  trailing: trailingBuilder?.call(element),
-                  onTap: onTapCallback == null
-                      ? null
-                      : () => onTapCallback!(element),
-                  onLongPress: onLongPressCallback == null
-                      ? null
-                      : () => onLongPressCallback!(element),
-                ),
-              ),
-            ),
-          ),
-        ) : null;
+              )
+            : null;
       },
     );
   }
