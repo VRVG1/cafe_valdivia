@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -61,45 +62,29 @@ class _SeleccionPageState<T> extends ConsumerState<SeleccionPage<T>>
       ref.watch(widget.provider),
     );
 
-    return asyncData.when(
-      data: (elements) {
-        if (elements.isEmpty) {
-          return Scaffold(
-            appBar: widget.buildAppBar(context, ref),
-            body: _buildEmptyState(cs),
+    return Scaffold(
+      appBar: widget.buildAppBar(context, ref),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Agregar",
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => widget.addElement,
+            ),
           );
-        }
-        return Scaffold(
-          appBar: widget.buildAppBar(context, ref),
-          body: _buildDataState(elements),
-          floatingActionButton: FloatingActionButton(
-            tooltip: "Agregar",
-            onPressed: () async {
-              final result = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => widget.addElement,
-                ),
-              );
-              if (result != null && context.mounted) {
-                Navigator.pop(context, result);
-              }
-            },
-            child: const Icon(Icons.add_rounded),
-          ),
-        );
-      },
-      error: (err, stack) {
-        return Scaffold(
-          appBar: widget.buildAppBar(context, ref),
-          body: _buildErrorState(cs, tt, err),
-        );
-      },
-      loading: () {
-        return Scaffold(
-          appBar: SkeletonAppBar(chipsCount: 3),
-          body: SkeletonListTiles(),
-        );
-      },
+          if (result != null && context.mounted) {
+            Navigator.pop(context, result);
+          }
+        },
+        child: const Icon(Icons.add_rounded),
+      ),
+      body: asyncData.when(
+        data: (elements) {
+          return _buildDataState(elements);
+        },
+        error: (err, stack) => _buildErrorState(cs, tt, err),
+        loading: () => SkeletonAppBar(chipsCount: 3),
+      ),
     );
   }
 
