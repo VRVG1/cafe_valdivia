@@ -57,7 +57,10 @@ abstract class BaseRepository<T> {
   }
 
   // ===== GET ALL INCLUIDO ELIMINADOS =====
-  Future<List<T>> getAllWithDeleted({String? where, List<Object?>? whereArgs}) async {
+  Future<List<T>> getAllWithDeleted({
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
     final result = await dbHelper.query(
       tableName,
       where: where,
@@ -67,7 +70,10 @@ abstract class BaseRepository<T> {
   }
 
   // ===== GET SOLO ELIMINADOS =====
-  Future<List<T>> getAllDeleted({String? where, List<Object?>? whereArgs}) async {
+  Future<List<T>> getAllDeleted({
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
     const String deletedFilter = 'activo = 0';
     String? finalWhere;
     List<Object?>? finalWhereArgs;
@@ -106,25 +112,37 @@ abstract class BaseRepository<T> {
 
   // ===== SOFT DELETE =====
   Future<int> delete(int id) async {
-    return await dbHelper.update(
-      tableName,
-      {
-        'activo': 0,
-        'deleted_at': DateTime.now().toIso8601String(),
-      },
-      where: '$idColumn = ?',
-      whereArgs: [id],
-    );
+    try {
+      return await dbHelper.update(
+        tableName,
+        {'activo': 0, 'deleted_at': DateTime.now().toIso8601String()},
+        where: '$idColumn = ?',
+        whereArgs: [id],
+      );
+    } catch (error) {
+      appLogger.e(error);
+      final msg = error.toString();
+      if (msg.contains('No se puede eliminar:')) {
+        final match = RegExp(r'No se puede eliminar:.[^,]+').firstMatch(msg);
+        throw RelacionExistenteException(
+          match?.group(0) ??
+              'No se puede eliminar porque tiene registros asociados',
+        );
+      }
+      if (msg.contains('FOREIGN KEY constraint failed')) {
+        throw RelacionExistenteException(
+          'No se puede eliminar porque tiene registros asociados',
+        );
+      }
+      throw UnknowErrorException();
+    }
   }
 
   // ===== RESTAURAR =====
   Future<int> restore(int id) async {
     return await dbHelper.update(
       tableName,
-      {
-        'activo': 1,
-        'deleted_at': null,
-      },
+      {'activo': 1, 'deleted_at': null},
       where: '$idColumn = ?',
       whereArgs: [id],
     );
@@ -140,7 +158,15 @@ abstract class BaseRepository<T> {
       );
     } catch (error) {
       appLogger.e(error);
-      if (error.toString().contains('FOREIGN KEY constraint failed')) {
+      final msg = error.toString();
+      if (msg.contains('No se puede eliminar:')) {
+        final match = RegExp(r'No se puede eliminar:.[^,]+').firstMatch(msg);
+        throw RelacionExistenteException(
+          match?.group(0) ??
+              'No se puede eliminar porque tiene registros asociados',
+        );
+      }
+      if (msg.contains('FOREIGN KEY constraint failed')) {
         throw RelacionExistenteException(
           'No se puede eliminar porque tiene registros asociados',
         );

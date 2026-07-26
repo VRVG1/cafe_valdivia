@@ -16,6 +16,11 @@ String traducirErrorBD(dynamic error) {
     return error.mensaje ?? "No se puede eliminar";
   }
 
+  if (msg.contains('No se puede eliminar:')) {
+    final match = RegExp(r'No se puede eliminar:.*').firstMatch(msg);
+    return match?.group(0) ?? 'No se puede eliminar porque tiene registros asociados';
+  }
+
   if (msg.contains('UNIQUE constraint failed')) {
     if (msg.contains('Cliente.email'))
       return 'Ya existe un cliente con ese email';

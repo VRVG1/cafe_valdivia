@@ -23,7 +23,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 7,
+      version: 8,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -31,7 +31,7 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 7]) =>
+  Future<void> testOnCreate(Database db, [int version = 8]) =>
       _onCreate(db, version);
 
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
@@ -75,6 +75,10 @@ class DatabaseHelper {
 
     if (oldversion < 7) {
       await _recreateViews(db);
+    }
+
+    if (oldversion < 8) {
+      await _createDeleteProtectionTriggers(db);
     }
   }
 
@@ -338,6 +342,202 @@ LEFT JOIN Articulo a ON dv.id_articulo = a.id_articulo
 LEFT JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
 WHERE c.activo = 1
 GROUP BY c.id_cliente
+''');
+  }
+
+  Future<void> _createDeleteProtectionTriggers(Database db) async {
+    // --- Cliente ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_cliente_before_update
+  BEFORE UPDATE ON Cliente
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene ventas activas asociadas')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Venta WHERE id_cliente = OLD.id_cliente AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_cliente_before_delete
+  BEFORE DELETE ON Cliente
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene ventas activas asociadas')
+    WHERE EXISTS (SELECT 1 FROM Venta WHERE id_cliente = OLD.id_cliente AND activo = 1);
+  END;
+''');
+
+    // --- Proveedor ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_proveedor_before_update
+  BEFORE UPDATE ON Proveedor
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene compras activas asociadas')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Compra WHERE id_proveedor = OLD.id_proveedor AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_proveedor_before_delete
+  BEFORE DELETE ON Proveedor
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene compras activas asociadas')
+    WHERE EXISTS (SELECT 1 FROM Compra WHERE id_proveedor = OLD.id_proveedor AND activo = 1);
+  END;
+''');
+
+    // --- Articulo ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_articulo_before_update
+  BEFORE UPDATE ON Articulo
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene registros asociados')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND (
+        EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_articulo = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_articulo = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Receta WHERE id_articulo_producto = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_articulo_componente = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_articulo = OLD.id_articulo AND activo = 1)
+      );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_articulo_before_delete
+  BEFORE DELETE ON Articulo
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene registros asociados')
+    WHERE EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_articulo = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_articulo = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Receta WHERE id_articulo_producto = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_articulo_componente = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_articulo = OLD.id_articulo AND activo = 1);
+  END;
+''');
+
+    // --- Unidad_Medida ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_unidad_medida_before_update
+  BEFORE UPDATE ON Unidad_Medida
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene artículos o recetas que la usan')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND (
+        EXISTS (SELECT 1 FROM Articulo WHERE id_unidad = OLD.id_unidad AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_unidad = OLD.id_unidad AND activo = 1)
+      );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_unidad_medida_before_delete
+  BEFORE DELETE ON Unidad_Medida
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene artículos o recetas que la usan')
+    WHERE EXISTS (SELECT 1 FROM Articulo WHERE id_unidad = OLD.id_unidad AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_unidad = OLD.id_unidad AND activo = 1);
+  END;
+''');
+
+    // --- Compra ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_before_update
+  BEFORE UPDATE ON Compra
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de compra activos')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_compra = OLD.id_compra AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_before_delete
+  BEFORE DELETE ON Compra
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de compra activos')
+    WHERE EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_compra = OLD.id_compra AND activo = 1);
+  END;
+''');
+
+    // --- Venta ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_before_update
+  BEFORE UPDATE ON Venta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de venta activos')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_venta = OLD.id_venta AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_before_delete
+  BEFORE DELETE ON Venta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de venta activos')
+    WHERE EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_venta = OLD.id_venta AND activo = 1);
+  END;
+''');
+
+    // --- Receta ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_receta_before_update
+  BEFORE UPDATE ON Receta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles o producciones activas')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND (
+        EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_receta = OLD.id_receta AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Orden_Produccion WHERE id_receta = OLD.id_receta AND activo = 1)
+      );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_receta_before_delete
+  BEFORE DELETE ON Receta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles o producciones activas')
+    WHERE EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_receta = OLD.id_receta AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Orden_Produccion WHERE id_receta = OLD.id_receta AND activo = 1);
+  END;
+''');
+
+    // --- Orden_Produccion ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_produccion_before_update
+  BEFORE UPDATE ON Orden_Produccion
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene consumos activos')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_orden_produccion = OLD.id_orden_produccion AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_produccion_before_delete
+  BEFORE DELETE ON Orden_Produccion
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene consumos activos')
+    WHERE EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_orden_produccion = OLD.id_orden_produccion AND activo = 1);
+  END;
 ''');
   }
 
@@ -808,6 +1008,205 @@ GROUP BY c.id_cliente
       FROM Receta 
       WHERE id_receta = OLD.id_receta
     );
+  END;
+''');
+
+    // ===================================================================
+    // TRIGGERS DE PROTECCIÓN: impedir soft delete / hard delete
+    // cuando existen registros hijos activos
+    // ===================================================================
+
+    // --- Cliente ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_cliente_before_update
+  BEFORE UPDATE ON Cliente
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene ventas activas asociadas')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Venta WHERE id_cliente = OLD.id_cliente AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_cliente_before_delete
+  BEFORE DELETE ON Cliente
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene ventas activas asociadas')
+    WHERE EXISTS (SELECT 1 FROM Venta WHERE id_cliente = OLD.id_cliente AND activo = 1);
+  END;
+''');
+
+    // --- Proveedor ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_proveedor_before_update
+  BEFORE UPDATE ON Proveedor
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene compras activas asociadas')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Compra WHERE id_proveedor = OLD.id_proveedor AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_proveedor_before_delete
+  BEFORE DELETE ON Proveedor
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene compras activas asociadas')
+    WHERE EXISTS (SELECT 1 FROM Compra WHERE id_proveedor = OLD.id_proveedor AND activo = 1);
+  END;
+''');
+
+    // --- Articulo ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_articulo_before_update
+  BEFORE UPDATE ON Articulo
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene registros asociados')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND (
+        EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_articulo = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_articulo = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Receta WHERE id_articulo_producto = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_articulo_componente = OLD.id_articulo AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_articulo = OLD.id_articulo AND activo = 1)
+      );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_articulo_before_delete
+  BEFORE DELETE ON Articulo
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene registros asociados')
+    WHERE EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_articulo = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_articulo = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Receta WHERE id_articulo_producto = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_articulo_componente = OLD.id_articulo AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_articulo = OLD.id_articulo AND activo = 1);
+  END;
+''');
+
+    // --- Unidad_Medida ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_unidad_medida_before_update
+  BEFORE UPDATE ON Unidad_Medida
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene artículos o recetas que la usan')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND (
+        EXISTS (SELECT 1 FROM Articulo WHERE id_unidad = OLD.id_unidad AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_unidad = OLD.id_unidad AND activo = 1)
+      );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_unidad_medida_before_delete
+  BEFORE DELETE ON Unidad_Medida
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene artículos o recetas que la usan')
+    WHERE EXISTS (SELECT 1 FROM Articulo WHERE id_unidad = OLD.id_unidad AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_unidad = OLD.id_unidad AND activo = 1);
+  END;
+''');
+
+    // --- Compra ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_before_update
+  BEFORE UPDATE ON Compra
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de compra activos')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_compra = OLD.id_compra AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_compra_before_delete
+  BEFORE DELETE ON Compra
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de compra activos')
+    WHERE EXISTS (SELECT 1 FROM Detalle_Compra WHERE id_compra = OLD.id_compra AND activo = 1);
+  END;
+''');
+
+    // --- Venta ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_before_update
+  BEFORE UPDATE ON Venta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de venta activos')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_venta = OLD.id_venta AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_venta_before_delete
+  BEFORE DELETE ON Venta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles de venta activos')
+    WHERE EXISTS (SELECT 1 FROM Detalle_Venta WHERE id_venta = OLD.id_venta AND activo = 1);
+  END;
+''');
+
+    // --- Receta ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_receta_before_update
+  BEFORE UPDATE ON Receta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles o producciones activas')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND (
+        EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_receta = OLD.id_receta AND activo = 1)
+        OR EXISTS (SELECT 1 FROM Orden_Produccion WHERE id_receta = OLD.id_receta AND activo = 1)
+      );
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_receta_before_delete
+  BEFORE DELETE ON Receta
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene detalles o producciones activas')
+    WHERE EXISTS (SELECT 1 FROM Receta_Detalle WHERE id_receta = OLD.id_receta AND activo = 1)
+      OR EXISTS (SELECT 1 FROM Orden_Produccion WHERE id_receta = OLD.id_receta AND activo = 1);
+  END;
+''');
+
+    // --- Orden_Produccion ---
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_produccion_before_update
+  BEFORE UPDATE ON Orden_Produccion
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene consumos activos')
+    WHERE NEW.activo = 0 AND OLD.activo = 1
+      AND EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_orden_produccion = OLD.id_orden_produccion AND activo = 1);
+  END;
+''');
+
+    await db.execute('''
+  CREATE TRIGGER IF NOT EXISTS trg_orden_produccion_before_delete
+  BEFORE DELETE ON Orden_Produccion
+  FOR EACH ROW
+  BEGIN
+    SELECT RAISE(ABORT, 'No se puede eliminar: tiene consumos activos')
+    WHERE EXISTS (SELECT 1 FROM Orden_Produccion_Consumo WHERE id_orden_produccion = OLD.id_orden_produccion AND activo = 1);
   END;
 ''');
   }

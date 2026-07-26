@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Pages/Venta/venta_seleccion_page.dart';
 import 'package:cafe_valdivia/Pages/Producto/producto_agregar_page.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
+import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,14 @@ class VentaSeleccionProductoPage extends VentaSeleccionPage<Articulo> {
 
   @override
   PreferredSizeWidget buildAppBar(BuildContext context, WidgetRef ref) {
-    return AppbarChips(labelText: 'Buscar producto...');
+    return AppbarChips(
+      labelText: 'Buscar producto...',
+      extraFilters: [
+        TipoBusqueda.stock,
+        TipoBusqueda.email,
+        TipoBusqueda.unidadMedida,
+      ],
+    );
   }
 
   @override

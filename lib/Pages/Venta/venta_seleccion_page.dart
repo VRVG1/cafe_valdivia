@@ -1,6 +1,4 @@
 import 'package:cafe_valdivia/Components/seleccion_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class VentaSeleccionPage<T> extends SeleccionPage<T> {
   const VentaSeleccionPage({
