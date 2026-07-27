@@ -104,7 +104,7 @@ class RecetaDetallePage extends ConsumerWidget {
                                 : "ID: ${receta.idArticuloProducto}",
                           );
                         },
-                        loading: () => const Text("pene"),
+                        loading: () => SkeletonLine(),
                         error: (_, __) =>
                             Text("ID: ${receta.idArticuloProducto}"),
                       ),

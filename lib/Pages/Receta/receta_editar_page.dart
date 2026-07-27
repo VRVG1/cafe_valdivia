@@ -71,6 +71,8 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     try {
       final detalles = await repo.getRecetaDetalles(widget.receta.idReceta!);
 
+      if (!mounted) return;
+
       setState(() {
         for (final d in detalles) {
           final row = _ComponenteRow();
@@ -84,7 +86,14 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
           _componentes.add(row);
         }
       });
-    } catch (_) {}
+    } catch (e) {
+      if (!mounted) return;
+      showCustomSnackBar(
+        context: context,
+        mensaje: "Error al cargar los componentes de la receta",
+        isError: true,
+      );
+    }
   }
 
   @override
@@ -132,12 +141,11 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
 
     try {
       await ref
-          .read(recetaRepositoryProvider)
-          .updateReceta(receta: receta, detalles: detalles);
+          .read(recetaProviderProvider.notifier)
+          .updateElement(receta, detalles);
 
       if (!context.mounted) return;
 
-      ref.invalidate(recetaProviderProvider);
       ref.invalidate(recetaDetailProvider(widget.receta.idReceta!));
       ref.invalidate(recetaDetallesProvider(widget.receta.idReceta!));
 
@@ -303,6 +311,9 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                 icon: const Icon(Icons.add_rounded),
                 label: const Text("Agregar componente"),
               ),
+              const SizedBox(height: 16),
+              if (_componentes.isNotEmpty)
+                _buildCostoEstimado(asyncInsumos, cs, tt),
             ],
           ),
         ),
@@ -431,6 +442,56 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCostoEstimado(
+    AsyncValue<List<Articulo>> asyncInsumos,
+    ColorScheme cs,
+    TextTheme tt,
+  ) {
+    if (asyncInsumos is! AsyncData<List<Articulo>>) {
+      return const SizedBox.shrink();
+    }
+    final insumos = asyncInsumos.value;
+    double total = 0;
+    for (final c in _componentes) {
+      if (!c.isValid) continue;
+      final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
+      final costo =
+          insumos
+              .where((i) => i.idArticulo == c.articulo!.idArticulo)
+              .firstOrNull
+              ?.costoUnitario ??
+          0;
+      total += cantidad * costo;
+    }
+
+    return Container(
+      padding: AppPadding.allMd,
+      decoration: BoxDecoration(
+        color: cs.tertiaryContainer.withValues(alpha: 0.3),
+        borderRadius: AppRadius.mdCircular,
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.calculate_rounded, color: cs.tertiary),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Costo estimado",
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              Text(
+                "\$${total.toStringAsFixed(2)}",
+                style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

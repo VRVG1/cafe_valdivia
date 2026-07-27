@@ -32,13 +32,18 @@ class RecetaProvider extends _$RecetaProvider {
     }
   }
 
-  Future<bool> updateElement(Receta receta) async {
+  Future<bool> updateElement(Receta receta, [List<RecetaDetalle>? detalles]) async {
     state = const AsyncValue.loading();
     try {
-      await ref.read(recetaRepositoryProvider).update(receta);
+      final repo = ref.read(recetaRepositoryProvider);
+      if (detalles != null) {
+        await repo.updateReceta(receta: receta, detalles: detalles);
+      } else {
+        await repo.update(receta);
+      }
       ref.invalidateSelf();
       await future;
-      return false;
+      return true;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return false;
