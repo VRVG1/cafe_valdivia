@@ -135,7 +135,12 @@ class VentaRepository extends BaseRepository<Venta> {
     // end ??= DateTime.now().toString();
     final db = await dbHelper.database;
     List<Map<String, dynamic>> result;
-    if (start != null && end != null && pattern == null) {
+    if (start == null && end == null && pattern == null) {
+      result = await db.query(
+        'V_Venta_Detallada',
+        orderBy: orderBy ?? 'fecha DESC',
+      );
+    } else if (start != null && end != null && pattern == null) {
       result = await db.query(
         'V_Venta_Detallada',
         where: where ?? '(fecha >= ? AND fecha <= ?)',
@@ -203,12 +208,11 @@ class VentaRepository extends BaseRepository<Venta> {
   }
 
   Future<List<Map<String, dynamic>>> getAllFullVentas() async {
-    final maps = await dbHelper.query(tableName, orderBy: 'fecha DESC');
-    return await Future.wait(
-      maps.map((map) async {
-        return await getFullVenta(ventaId: map['id_venta'] as int);
-      }),
-    );
+    try {
+      return await getFilteredFullVentas();
+    } on RegistroNoEncontradoException {
+      return [];
+    }
   }
 
   Future<int> markAsPaid(int ventaId) async {

@@ -85,6 +85,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     _clienteController.dispose();
     _productoController.dispose();
     _descripcionController.dispose();
+    _precioController.dispose();
     super.dispose();
   }
 
@@ -114,8 +115,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     }
   }
 
-  void _procesarVenta(Venta venta, List<DetalleVenta> detalleVenta) async {
-    await create(
+  Future<bool> _procesarVenta(Venta venta, List<DetalleVenta> detalleVenta) async {
+    return await create(
       context: context,
       ref: ref,
       provider: ventaProvider,
@@ -127,8 +128,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     );
   }
 
-  void _resumenVenta() {
-    // Todas las ventas van al mismo cliente en esta transaccion
+  Future<void> _resumenVenta() async {
     final cliente = carritoDeVentas.first['cliente'];
 
     Venta venta = Venta(
@@ -150,7 +150,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       detallesVentaList.add(detalleVenta);
     }
 
-    _procesarVenta(venta, detallesVentaList);
+    await _procesarVenta(venta, detallesVentaList);
   }
 
   void _mostrarOpcionesItem(Map<String, dynamic> item) {
@@ -514,12 +514,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                         titulo: "Realizar Venta",
                         cuerpo: "¿Confirmar venta por \$$totalDinero?",
                       )) {
-                        _resumenVenta();
+                        await _resumenVenta();
                         if (context.mounted) {
-                          showCustomSnackBar(
-                            context: context,
-                            mensaje: "Venta realizada con éxito",
-                          );
                           Navigator.pop(context);
                         }
                       }

@@ -82,9 +82,10 @@ Future<List<Map<String, dynamic>>> ventasfiltrados(Ref ref) async {
   final filtro = ref.watch(filtroBusquedaProvider);
   final String query = filtro.getQuery();
   final bool tieneFecha = filtro.tieneFiltro(TipoBusqueda.fecha);
-  final String pattern = "%$query%";
+  final bool tieneQuery = query.trim().isNotEmpty;
+  final String? pattern = tieneQuery ? "%$query%" : null;
 
-  if (query.trim().isEmpty && !tieneFecha) {
+  if (!tieneQuery && !tieneFecha) {
     return repo.getAllFullVentas();
   }
   String? start;
