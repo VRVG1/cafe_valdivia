@@ -49,6 +49,7 @@ class VentaListaPage extends ConsumerWidget {
           }
           return ListviewCustom<Map<String, dynamic>>(
             data: ventas,
+            hasDismissible: false,
             keyBuilder: (Map<String, dynamic> venta) {
               final id = venta['venta']?['id_venta'];
               return ValueKey<Object>(

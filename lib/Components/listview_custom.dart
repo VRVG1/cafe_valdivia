@@ -84,14 +84,35 @@ class ListviewCustom<T> extends ConsumerWidget {
           borderRadius = BorderRadius.circular(8);
         }
 
-        return hasDismissible
-            ? Padding(
-                padding: EdgeInsets.only(bottom: isLast ? 0 : 4),
-                child: Material(
-                  borderRadius: borderRadius,
-                  clipBehavior: Clip.antiAlias,
-                  color: Colors.transparent,
-                  child: Dismissible(
+        final tile = Material(
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: borderRadius,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
+            tileColor: colorScheme.surfaceContainerLowest,
+            leading: leadingBuilder?.call(element),
+            title: titleBuilder(element),
+            subtitle: subtitleBuilder?.call(element),
+            trailing: trailingBuilder?.call(element),
+            onTap: onTapCallback == null ? null : () => onTapCallback!(element),
+            onLongPress: onLongPressCallback == null
+                ? null
+                : () => onLongPressCallback!(element),
+          ),
+        );
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: isLast ? 0 : 4),
+          child: Material(
+            borderRadius: borderRadius,
+            clipBehavior: Clip.antiAlias,
+            color: Colors.transparent,
+            child: hasDismissible
+                ? Dismissible(
                     key: keyBuilder(element),
                     dismissThresholds: const {
                       DismissDirection.startToEnd: 0.25,
@@ -99,20 +120,17 @@ class ListviewCustom<T> extends ConsumerWidget {
                     },
                     onDismissed: (direction) {
                       if (direction == DismissDirection.endToStart) {
-                        data.removeAt(index);
+                        data.removeAt(dataIndex);
                       }
                     },
                     confirmDismiss: (direction) async {
                       if (direction == DismissDirection.endToStart) {
-                        // Deslizar de Derecha a Izquierda (Borrar)
                         return onDeleteDismissed?.call(element) ?? true;
                       } else if (direction == DismissDirection.startToEnd) {
-                        // Deslizar de Izquierda a Derecha (Modificar)
                         return onEditDismissed?.call(element) ?? false;
                       }
                       return false;
                     },
-
                     background: Material(
                       child: Container(
                         alignment: Alignment.centerLeft,
@@ -130,7 +148,6 @@ class ListviewCustom<T> extends ConsumerWidget {
                         ),
                       ),
                     ),
-
                     secondaryBackground: Container(
                       alignment: Alignment.centerRight,
                       decoration: BoxDecoration(
@@ -144,32 +161,11 @@ class ListviewCustom<T> extends ConsumerWidget {
                       ),
                     ),
                     direction: DismissDirection.horizontal,
-                    child: Material(
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: borderRadius,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                        tileColor: colorScheme.surfaceContainerLowest,
-                        leading: leadingBuilder?.call(element),
-                        title: titleBuilder(element),
-                        subtitle: subtitleBuilder?.call(element),
-                        trailing: trailingBuilder?.call(element),
-                        onTap: onTapCallback == null
-                            ? null
-                            : () => onTapCallback!(element),
-                        onLongPress: onLongPressCallback == null
-                            ? null
-                            : () => onLongPressCallback!(element),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            : null;
+                    child: tile,
+                  )
+                : tile,
+          ),
+        );
       },
     );
   }

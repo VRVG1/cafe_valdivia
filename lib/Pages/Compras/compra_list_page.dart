@@ -48,6 +48,7 @@ class CompraListPage extends ConsumerWidget {
             return ErrorView(message: 'No hay compras para mostrar.');
           }
           return ListviewCustom<Map<String, dynamic>>(
+            hasDismissible: false,
             data: compras,
             keyBuilder: (Map<String, dynamic> compra) {
               return ValueKey<Object>(
