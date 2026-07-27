@@ -33,7 +33,7 @@ final class RecetaProviderProvider
   RecetaProvider create() => RecetaProvider();
 }
 
-String _$recetaProviderHash() => r'79f9718676deb7e1e7e58ee4cff830331e12d705';
+String _$recetaProviderHash() => r'3f08e221ee8d74e645fdb3de46056330511e158b';
 
 abstract class _$RecetaProvider extends $AsyncNotifier<List<Receta>> {
   FutureOr<List<Receta>> build();
@@ -198,3 +198,42 @@ final class RecetaDetallesFamily extends $Family
   @override
   String toString() => r'recetaDetallesProvider';
 }
+
+@ProviderFor(recetasFiltrados)
+final recetasFiltradosProvider = RecetasFiltradosProvider._();
+
+final class RecetasFiltradosProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Receta>>,
+          List<Receta>,
+          FutureOr<List<Receta>>
+        >
+    with $FutureModifier<List<Receta>>, $FutureProvider<List<Receta>> {
+  RecetasFiltradosProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recetasFiltradosProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$recetasFiltradosHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Receta>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Receta>> create(Ref ref) {
+    return recetasFiltrados(ref);
+  }
+}
+
+String _$recetasFiltradosHash() => r'681ed4d5a61b8502ee56c0b1bb364dd74edc90dc';

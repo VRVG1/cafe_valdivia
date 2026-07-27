@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'receta_provider.g.dart';
@@ -74,4 +75,17 @@ Future<Receta> recetaDetail(Ref ref, int id) async {
 Future<List<RecetaDetalle>> recetaDetalles(Ref ref, int recetaId) async {
   final repo = ref.watch(recetaRepositoryProvider);
   return repo.getRecetaDetalles(recetaId);
+}
+
+@riverpod
+Future<List<Receta>> recetasFiltrados(Ref ref) async {
+  ref.watch(recetaProviderProvider);
+  final repo = ref.watch(recetaRepositoryProvider);
+  final filtro = ref.watch(filtroBusquedaProvider);
+  final String query = filtro.getQuery();
+
+  if (query.trim().isEmpty) {
+    return repo.getAll();
+  }
+  return repo.search(query);
 }
