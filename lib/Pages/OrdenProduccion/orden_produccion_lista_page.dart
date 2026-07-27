@@ -30,7 +30,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
       appBar: AppbarChips(
         labelText: "Buscar producción...",
         backOption: false,
-        extraFilters: [TipoBusqueda.costo, TipoBusqueda.fecha],
+        extraFilters: [TipoBusqueda.fecha],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Producción",

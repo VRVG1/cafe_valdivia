@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -15,13 +16,16 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
     final asyncRecetas = debugOverride(
       ref,
       'seleccion_receta',
-      ref.watch(recetaProviderProvider),
+      ref.watch(recetasFiltradosProvider),
     );
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Seleccionar Receta")),
+      appBar: AppbarChips(
+        backOption: true,
+        labelText: "Buscar receta...",
+      ),
       body: asyncRecetas.when(
         data: (recetas) {
           if (recetas.isEmpty) {

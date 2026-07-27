@@ -23,7 +23,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 8,
+      version: 9,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -31,7 +31,7 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 8]) =>
+  Future<void> testOnCreate(Database db, [int version = 9]) =>
       _onCreate(db, version);
 
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
@@ -79,6 +79,10 @@ class DatabaseHelper {
 
     if (oldversion < 8) {
       await _createDeleteProtectionTriggers(db);
+    }
+
+    if (oldversion < 9) {
+      await _recreateViews(db);
     }
   }
 
@@ -196,7 +200,7 @@ class DatabaseHelper {
   FROM Orden_Produccion op
   JOIN Receta r ON op.id_receta = r.id_receta
   JOIN Articulo ap ON r.id_articulo_producto = ap.id_articulo
-  LEFT JOIN Orden_Produccion_Consumo opc ON op.id_orden_produccion = opc.id_orden_produccion
+  LEFT JOIN Orden_Produccion_Consumo opc ON op.id_orden_produccion = opc.id_orden_produccion AND opc.activo = 1
   WHERE op.activo = 1 AND r.activo = 1 AND ap.activo = 1
   GROUP BY op.id_orden_produccion
 ''');
