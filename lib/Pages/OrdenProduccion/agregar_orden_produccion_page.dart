@@ -118,15 +118,23 @@ class AgregarOrdenProduccionPageState
     );
 
     try {
-      await ref.read(ordenProduccionProvider.notifier).create(orden, consumos);
+      final exito = await ref.read(ordenProduccionProvider.notifier).create(orden, consumos);
 
       if (!context.mounted) return;
 
-      showCustomSnackBar(
-        context: context,
-        mensaje: "Orden de producción creada con exito",
-      );
-      Navigator.of(context).pop(true);
+      if (exito) {
+        showCustomSnackBar(
+          context: context,
+          mensaje: "Orden de producción creada con exito",
+        );
+        Navigator.of(context).pop(true);
+      } else {
+        showCustomSnackBar(
+          context: context,
+          mensaje: "Error al crear la orden. Intente de nuevo.",
+          isError: true,
+        );
+      }
     } catch (e) {
       if (!context.mounted) return;
       showCustomSnackBar(

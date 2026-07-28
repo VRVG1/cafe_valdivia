@@ -139,10 +139,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   Future<int> deleteConsumo(int idConsumo) async {
     return await dbHelper.update(
       'Orden_Produccion_Consumo',
-      {
-        'activo': 0,
-        'deleted_at': DateTime.now().toIso8601String(),
-      },
+      {'activo': 0, 'deleted_at': DateTime.now().toIso8601String()},
       where: 'id_consumo = ?',
       whereArgs: [idConsumo],
     );
@@ -177,8 +174,8 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
         'v_produccion_resumen',
         where:
             where ??
-            '(costo_total_produccion LIKE ? OR producto_producido LIKE ?)',
-        whereArgs: whereArgs ?? [pattern, pattern],
+            '(costo_total_produccion LIKE ? OR producto_producido LIKE ? OR receta LIKE ? OR notas LIKE ?)',
+        whereArgs: whereArgs ?? [pattern, pattern, pattern, pattern],
         orderBy: orderBy ?? 'fecha DESC',
       );
     } else {
@@ -186,8 +183,9 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
         'v_produccion_resumen',
         where:
             where ??
-            '(fecha >= ? AND fecha <= ?) AND (costo_total_produccion LIKE ? OR producto_producido LIKE ?)',
-        whereArgs: whereArgs ?? [start, end, pattern, pattern],
+            '(fecha >= ? AND fecha <= ?) AND (costo_total_produccion LIKE ? OR producto_producido LIKE ? OR receta LIKE ? OR notas LIKE ?)',
+        whereArgs:
+            whereArgs ?? [start, end, pattern, pattern, pattern, pattern],
         orderBy: 'fecha DESC',
       );
     }
