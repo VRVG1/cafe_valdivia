@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -10,10 +11,17 @@ part 'orden_produccion_notifier.g.dart';
 
 @riverpod
 class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
+  String _ultimoError = 'Error al crear la orden. Intente de nuevo.';
+  String get ultimoError => _ultimoError;
+
   @override
   Future<List<Map<String, dynamic>>> build() async {
     final repo = ref.watch(ordenProduccionRepositoryProvider);
-    return repo.getAllFullOrdenes();
+    try {
+      return await repo.getAllFullOrdenes();
+    } catch (e) {
+      throw traducirErrorBD(e);
+    }
   }
 
   Future<bool> create(
@@ -29,7 +37,9 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
       await future;
       return true;
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      appLogger.e('Error al crear orden de producción: $e');
+      _ultimoError = traducirErrorBD(e);
+      state = AsyncValue.error(_ultimoError, st);
       return false;
     }
   }
@@ -42,7 +52,9 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
       await future;
       return true;
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      appLogger.e('Error al actualizar orden de producción: $e');
+      _ultimoError = traducirErrorBD(e);
+      state = AsyncValue.error(_ultimoError, st);
       return false;
     }
   }
@@ -55,7 +67,9 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
       await future;
       return true;
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      appLogger.e('Error al eliminar orden de producción: $e');
+      _ultimoError = traducirErrorBD(e);
+      state = AsyncValue.error(_ultimoError, st);
       return false;
     }
   }
@@ -64,7 +78,12 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
 @riverpod
 Future<Map<String, dynamic>> ordenProduccionDetallada(Ref ref, int id) async {
   final repository = ref.watch(ordenProduccionRepositoryProvider);
-  return repository.getFullOrdenProduccion(id);
+  try {
+    return await repository.getFullOrdenProduccion(id);
+  } catch (e) {
+    appLogger.e('Error al obtener detalle de orden: $e');
+    throw traducirErrorBD(e);
+  }
 }
 
 @riverpod
@@ -75,7 +94,12 @@ Future<List<Map<String, dynamic>>> ordenProduccionFiltrado(Ref ref) async {
   final String query = filtro.getQuery();
   final bool tieneFecha = filtro.tieneFiltro(TipoBusqueda.fecha);
   if (query.trim().isEmpty && !tieneFecha) {
-    return repository.getAllFullOrdenes();
+    try {
+      return await repository.getAllFullOrdenes();
+    } catch (e) {
+      appLogger.e('Error al obtener órdenes filtradas: $e');
+      throw traducirErrorBD(e);
+    }
   }
   String? start;
   String? end;
@@ -84,11 +108,14 @@ Future<List<Map<String, dynamic>>> ordenProduccionFiltrado(Ref ref) async {
     end = filtro.fechaFinalIso;
   }
   final String pattern = "%$query%";
-  final result = repository
-      .getByDateRange(pattern: pattern, start: start, end: end)
-      .catchError((error) {
-        appLogger.e(error);
-        return <Map<String, dynamic>>[];
-      });
-  return result;
+  try {
+    return await repository.getByDateRange(
+      pattern: pattern,
+      start: start,
+      end: end,
+    );
+  } catch (e) {
+    appLogger.e('Error al filtrar órdenes de producción: $e');
+    throw traducirErrorBD(e);
+  }
 }

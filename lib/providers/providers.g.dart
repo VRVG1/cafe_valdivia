@@ -375,7 +375,7 @@ final class OrdenProduccionRepositoryProvider
 }
 
 String _$ordenProduccionRepositoryHash() =>
-    r'9e8cff56c6df6786f388e897ace26596202d97b8';
+    r'642a21f1aac89381784a59d82cee5c68feb6e454';
 
 @ProviderFor(recetaRepository)
 final recetaRepositoryProvider = RecetaRepositoryProvider._();

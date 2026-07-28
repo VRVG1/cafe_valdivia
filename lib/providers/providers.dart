@@ -58,7 +58,10 @@ CompraRepository compraRepository(Ref ref) {
 
 @Riverpod(keepAlive: true)
 OrdenProduccionRepository ordenProduccionRepository(Ref ref) {
-  return OrdenProduccionRepository(ref.watch(databaseHelperProvider));
+  return OrdenProduccionRepository(
+    ref.watch(databaseHelperProvider),
+    ref.watch(articulosRepositoryProvider),
+  );
 }
 
 @Riverpod(keepAlive: true)

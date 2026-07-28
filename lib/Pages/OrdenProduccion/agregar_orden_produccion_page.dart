@@ -118,7 +118,9 @@ class AgregarOrdenProduccionPageState
     );
 
     try {
-      final exito = await ref.read(ordenProduccionProvider.notifier).create(orden, consumos);
+      final exito = await ref
+          .read(ordenProduccionProvider.notifier)
+          .create(orden, consumos);
 
       if (!context.mounted) return;
 
@@ -131,7 +133,7 @@ class AgregarOrdenProduccionPageState
       } else {
         showCustomSnackBar(
           context: context,
-          mensaje: "Error al crear la orden. Intente de nuevo.",
+          mensaje: ref.read(ordenProduccionProvider.notifier).ultimoError,
           isError: true,
         );
       }
@@ -139,7 +141,7 @@ class AgregarOrdenProduccionPageState
       if (!context.mounted) return;
       showCustomSnackBar(
         context: context,
-        mensaje: "Error al crear la orden. Intente de nuevo.",
+        mensaje: ref.read(ordenProduccionProvider.notifier).toString(),
         isError: true,
       );
     }

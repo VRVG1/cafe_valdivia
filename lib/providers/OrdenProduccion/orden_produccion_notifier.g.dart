@@ -38,7 +38,7 @@ final class OrdenProduccionNotifierProvider
 }
 
 String _$ordenProduccionNotifierHash() =>
-    r'06fbbaa122d10ad2abfe8c67c834a312f908bbd6';
+    r'a7175932311d01c0bb33457c8452445d8379d420';
 
 abstract class _$OrdenProduccionNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {
@@ -126,7 +126,7 @@ final class OrdenProduccionDetalladaProvider
 }
 
 String _$ordenProduccionDetalladaHash() =>
-    r'0e352407f0ee3e23cee9e36bb04a699f817890f5';
+    r'f15bef1403cf6dd3674633ac6c703e967113d08b';
 
 final class OrdenProduccionDetalladaFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Map<String, dynamic>>, int> {
@@ -186,4 +186,4 @@ final class OrdenProduccionFiltradoProvider
 }
 
 String _$ordenProduccionFiltradoHash() =>
-    r'8dd8e966b57ce51864b040e15f0938e70e8078bb';
+    r'e5cf20866f25104e4527b7b980d6333a1674d6b4';
