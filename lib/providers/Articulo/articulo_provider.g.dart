@@ -241,3 +241,44 @@ final class ProductosProviderProvider
 }
 
 String _$productosProviderHash() => r'09f6cce7f82cec3375a9e88b39bd9bf927e506da';
+
+@ProviderFor(productosEIntermedioProvider)
+final productosEIntermedioProviderProvider =
+    ProductosEIntermedioProviderProvider._();
+
+final class ProductosEIntermedioProviderProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Articulo>>,
+          List<Articulo>,
+          FutureOr<List<Articulo>>
+        >
+    with $FutureModifier<List<Articulo>>, $FutureProvider<List<Articulo>> {
+  ProductosEIntermedioProviderProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'productosEIntermedioProviderProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$productosEIntermedioProviderHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Articulo>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Articulo>> create(Ref ref) {
+    return productosEIntermedioProvider(ref);
+  }
+}
+
+String _$productosEIntermedioProviderHash() =>
+    r'159e595f62135b01a54da56c951714d3a565acd9';

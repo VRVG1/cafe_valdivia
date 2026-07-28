@@ -100,3 +100,11 @@ Future<List<Articulo>> productosProvider(Ref ref) async {
   final List<Articulo> articulos = await repo.getAllProductos();
   return articulos;
 }
+
+@riverpod
+Future<List<Articulo>> productosEIntermedioProvider(Ref ref) async {
+  final repo = ref.watch(articulosRepositoryProvider);
+  final List<Articulo> articulos = await repo
+      .getAllProductosIntermedisoProductos();
+  return articulos;
+}

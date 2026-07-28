@@ -42,6 +42,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     text: '1',
   );
   Articulo? _productoSeleccionado;
+  double _totalCostoEstimado = 0.0;
   final List<_ComponenteRow> _componentes = [];
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -66,6 +67,29 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     setState(() {
       _componentes[index].dispose();
       _componentes.removeAt(index);
+    });
+  }
+
+  void _calcularCostoEstimado(AsyncValue<List<Articulo>> asyncInsumos) {
+    if (asyncInsumos is! AsyncData<List<Articulo>>) {
+      return;
+    }
+    final insumos = asyncInsumos.value;
+    double total = 0;
+    for (final c in _componentes) {
+      if (!c.isValid) continue;
+      final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
+      final costo =
+          insumos
+              .where((i) => i.idArticulo == c.articulo!.idArticulo)
+              .firstOrNull
+              ?.costoUnitario ??
+          0;
+      total += cantidad * costo;
+    }
+
+    setState(() {
+      _totalCostoEstimado = total;
     });
   }
 
@@ -116,7 +140,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     final asyncProductos = debugOverride(
       ref,
       'receta_agregar_productos',
-      ref.watch(productosProviderProvider),
+      ref.watch(productosEIntermedioProviderProvider),
     );
     final asyncInsumos = debugOverride(
       ref,
@@ -173,6 +197,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   initialSelection: _productoSeleccionado,
                   label: const Text("Producto final"),
                   onSelected: (Articulo? p) {
+                    _calcularCostoEstimado(asyncInsumos);
                     setState(() => _productoSeleccionado = p);
                   },
                   dropdownMenuEntries: productos.map((p) {
@@ -324,6 +349,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   label: const Text("Artículo"),
                   leadingIcon: const Icon(Icons.inventory_2_rounded),
                   onSelected: (Articulo? a) {
+                    _calcularCostoEstimado(asyncInsumos);
                     setState(() => componente.articulo = a);
                     if (a != null &&
                         componente.unidad == null &&
@@ -365,6 +391,9 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                         labelText: "Cantidad",
                         border: OutlineInputBorder(),
                       ),
+                      onChanged: (string) {
+                        _calcularCostoEstimado(asyncInsumos);
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -376,6 +405,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                         initialSelection: componente.unidad,
                         label: const Text("Unidad"),
                         onSelected: (UnidadMedida? u) {
+                          _calcularCostoEstimado(asyncInsumos);
                           setState(() => componente.unidad = u);
                         },
                         dropdownMenuEntries: ums.map((u) {
@@ -408,22 +438,22 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     ColorScheme cs,
     TextTheme tt,
   ) {
-    if (asyncInsumos is! AsyncData<List<Articulo>>) {
-      return const SizedBox.shrink();
-    }
-    final insumos = asyncInsumos.value;
-    double total = 0;
-    for (final c in _componentes) {
-      if (!c.isValid) continue;
-      final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
-      final costo =
-          insumos
-              .where((i) => i.idArticulo == c.articulo!.idArticulo)
-              .firstOrNull
-              ?.costoUnitario ??
-          0;
-      total += cantidad * costo;
-    }
+    // if (asyncInsumos is! AsyncData<List<Articulo>>) {
+    //   return const SizedBox.shrink();
+    // }
+    // final insumos = asyncInsumos.value;
+    // double total = 0;
+    // for (final c in _componentes) {
+    //   if (!c.isValid) continue;
+    //   final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
+    //   final costo =
+    //       insumos
+    //           .where((i) => i.idArticulo == c.articulo!.idArticulo)
+    //           .firstOrNull
+    //           ?.costoUnitario ??
+    //       0;
+    //   total += cantidad * costo;
+    // }
 
     return Container(
       padding: AppPadding.allMd,
@@ -443,7 +473,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                 style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
               ),
               Text(
-                "\$${total.toStringAsFixed(2)}",
+                "\$${_totalCostoEstimado.toStringAsFixed(2)}",
                 style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],

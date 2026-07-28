@@ -64,8 +64,13 @@ class InsumoListaPage extends ConsumerWidget {
               "\$${articulo.costoUnitario}",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitleBuilder: (articulo) =>
+            subtitleBuilder: (articulo) => Row(
+              children: [
+                Text(articulo.stock.toString()),
+                const Text(" "),
                 UnidadMedidaNombre(unidadMedidaId: articulo.idUnidad),
+              ],
+            ),
             onTapCallback: (articulo) {
               if (articulo.idArticulo != null) {
                 Navigator.push(

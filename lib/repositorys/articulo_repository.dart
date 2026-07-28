@@ -82,6 +82,16 @@ class ArticuloRepository extends BaseRepository<Articulo> {
     );
   }
 
+  Future<List<Articulo>> getAllProductosIntermedisoProductos() async {
+    return getAll(
+      where: 'tipo = ? OR tipo = ?',
+      whereArgs: [
+        ArticuloTipo.producto.value,
+        ArticuloTipo.productoIntermedio.value,
+      ],
+    );
+  }
+
   Future<List<Articulo>> searchInsumo({
     String? where,
     List<Object>? whereArgs,
