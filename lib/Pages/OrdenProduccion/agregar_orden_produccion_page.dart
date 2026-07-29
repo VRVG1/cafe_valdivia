@@ -33,6 +33,7 @@ class AgregarOrdenProduccionPageState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Receta? _recetaSeleccionada;
+  double _costoEstimado = 0.0;
   List<RecetaDetalle>? _recetaDetalles;
   bool _isLoading = false;
   bool _cargandoDetalles = false;
@@ -66,6 +67,7 @@ class AgregarOrdenProduccionPageState
       final repo = ref.read(recetaRepositoryProvider);
       final detalles = await repo.getRecetaDetalles(receta.idReceta!);
       if (mounted) {
+        _calcularCostoEstimado();
         setState(() {
           _recetaDetalles = detalles;
           _cargandoDetalles = false;
@@ -75,6 +77,23 @@ class AgregarOrdenProduccionPageState
       if (mounted) {
         setState(() => _cargandoDetalles = false);
       }
+    }
+  }
+
+  void _calcularCostoEstimado() {
+    if (mounted) {
+      final cantidad = double.tryParse(_cantidadController.text) ?? 0;
+      if (cantidad <= 0) {
+        setState(() {
+          _costoEstimado = 0.0;
+        });
+      }
+
+      final factor = cantidad / _recetaSeleccionada!.cantidad_base;
+
+      setState(() {
+        _costoEstimado = factor;
+      });
     }
   }
 
@@ -199,6 +218,9 @@ class AgregarOrdenProduccionPageState
               if (_cargandoDetalles) const LinearProgressIndicator(),
               AppBuildTextField(
                 text: "Cantidad a producir",
+                onChanged: (value) {
+                  _calcularCostoEstimado();
+                },
                 controller: _cantidadController,
                 icon: Icons.production_quantity_limits_rounded,
                 textInputType: TextInputType.number,
@@ -271,10 +293,8 @@ class AgregarOrdenProduccionPageState
   }
 
   Widget _buildCostoEstimado(ColorScheme cs, TextTheme tt) {
-    final cantidad = double.tryParse(_cantidadController.text) ?? 0;
-    if (cantidad <= 0) return const SizedBox.shrink();
-
-    final factor = cantidad / _recetaSeleccionada!.cantidad_base;
+    //final cantidad = double.tryParse(_cantidadController.text) ?? 0;
+    //if (cantidad <= 0) return const SizedBox.shrink();
 
     return Consumer(
       builder: (context, ref, child) {
@@ -287,7 +307,7 @@ class AgregarOrdenProduccionPageState
           data: (insumos) {
             double total = 0;
             for (final detalle in _recetaDetalles!) {
-              final cantidadUsada = detalle.cantidad * factor;
+              final cantidadUsada = detalle.cantidad * _costoEstimado;
               final insumo = insumos
                   .where((a) => a.idArticulo == detalle.idArticulo)
                   .firstOrNull;
