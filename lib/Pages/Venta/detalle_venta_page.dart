@@ -20,8 +20,9 @@ class DetalleVentaPage extends ConsumerWidget {
       return {
         "producto": element['nombre_articulo']?.toString() ?? 'Sin nombre',
         "cantidad": element['cantidad']?.toString() ?? '0',
-        "precio": element['precio_unitario_venta']?.toString() ?? '0.00',
-        "total": element['subtotal']?.toString() ?? '0.00',
+        "precio":
+            element['precio_unitario_venta']?.toStringAsFixed(2) ?? '0.00',
+        "total": element['subtotal']?.toStringAsFixed(2) ?? '0.00',
       };
     }).toList();
   }

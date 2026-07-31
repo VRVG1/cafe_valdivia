@@ -20,9 +20,10 @@ class DetalleCompraPage extends ConsumerWidget {
     return detalles.map((element) {
       return {
         "producto": element['nombre_articulo']?.toString() ?? 'Sin nombre',
-        "cantidad": element['cantidad']?.toString() ?? '0',
-        "precio": element['precio_unitario_compra']?.toString() ?? '0.00',
-        "total": element['subtotal']?.toString() ?? '0.00',
+        "cantidad": element['cantidad']?.toStringAsFixed(1) ?? '0',
+        "precio":
+            element['precio_unitario_compra']?.toStringAsFixed(2) ?? '0.00',
+        "total": element['subtotal']?.toStringAsFixed(2) ?? '0.00',
       };
     }).toList();
   }

@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:cafe_valdivia/services/seed_data.dart';
+import 'package:cafe_valdivia/services/seed_data_masivo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -151,7 +152,7 @@ class DebugPanel extends ConsumerWidget {
           ),
           const Divider(height: 1),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
@@ -169,7 +170,30 @@ class DebugPanel extends ConsumerWidget {
                   }
                 },
                 icon: const Icon(Icons.dataset_linked_rounded),
-                label: const Text('Cargar datos de prueba'),
+                label: const Text('Cargar datos de prueba (básico)'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () async {
+                  await seedDatabaseMasivo();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Base poblada con ~500 registros por tabla',
+                        ),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+                icon: const Icon(Icons.dataset_rounded),
+                label: const Text('Cargar datos masivos (~500 c/u)'),
               ),
             ),
           ),

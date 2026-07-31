@@ -65,9 +65,13 @@ void main() {
       proveedorRepo = ProveedorRepository(databaseHelper);
       clienteRepo = ClienteRepository(databaseHelper);
       recetaRepo = RecetaRepository(databaseHelper);
-      compraRepo = CompraRepository(databaseHelper, proveedorRepo, articuloRepo);
+      compraRepo = CompraRepository(
+        databaseHelper,
+        proveedorRepo,
+        articuloRepo,
+      );
       ventaRepo = VentaRepository(databaseHelper, clienteRepo);
-      ordenProdRepo = OrdenProduccionRepository(databaseHelper);
+      ordenProdRepo = OrdenProduccionRepository(databaseHelper, articuloRepo);
     });
 
     tearDown(() async {
@@ -86,46 +90,56 @@ void main() {
         expect(kg, 1);
         expect(und, 2);
 
-        final idCafe = await articuloRepo.create(Articulo(
-          nombre: 'Café en Grano',
-          tipo: ArticuloTipo.insumo,
-          idUnidad: kg,
-          costoUnitario: 30.0,
-          precioVenta: 0.0,
-          stock: 0.0,
-        ));
-        final idAzucar = await articuloRepo.create(Articulo(
-          nombre: 'Azúcar',
-          tipo: ArticuloTipo.insumo,
-          idUnidad: kg,
-          costoUnitario: 15.0,
-          precioVenta: 0.0,
-          stock: 0.0,
-        ));
-        final idLeche = await articuloRepo.create(Articulo(
-          nombre: 'Leche',
-          tipo: ArticuloTipo.insumo,
-          idUnidad: und,
-          costoUnitario: 8.0,
-          precioVenta: 0.0,
-          stock: 0.0,
-        ));
-        final idCafeMolido = await articuloRepo.create(Articulo(
-          nombre: 'Café Molido',
-          tipo: ArticuloTipo.producto,
-          idUnidad: kg,
-          costoUnitario: 0.0,
-          precioVenta: 120.0,
-          stock: 0.0,
-        ));
-        final idCapuchino = await articuloRepo.create(Articulo(
-          nombre: 'Capuchino',
-          tipo: ArticuloTipo.producto,
-          idUnidad: und,
-          costoUnitario: 0.0,
-          precioVenta: 200.0,
-          stock: 0.0,
-        ));
+        final idCafe = await articuloRepo.create(
+          Articulo(
+            nombre: 'Café en Grano',
+            tipo: ArticuloTipo.insumo,
+            idUnidad: kg,
+            costoUnitario: 30.0,
+            precioVenta: 0.0,
+            stock: 0.0,
+          ),
+        );
+        final idAzucar = await articuloRepo.create(
+          Articulo(
+            nombre: 'Azúcar',
+            tipo: ArticuloTipo.insumo,
+            idUnidad: kg,
+            costoUnitario: 15.0,
+            precioVenta: 0.0,
+            stock: 0.0,
+          ),
+        );
+        final idLeche = await articuloRepo.create(
+          Articulo(
+            nombre: 'Leche',
+            tipo: ArticuloTipo.insumo,
+            idUnidad: und,
+            costoUnitario: 8.0,
+            precioVenta: 0.0,
+            stock: 0.0,
+          ),
+        );
+        final idCafeMolido = await articuloRepo.create(
+          Articulo(
+            nombre: 'Café Molido',
+            tipo: ArticuloTipo.producto,
+            idUnidad: kg,
+            costoUnitario: 0.0,
+            precioVenta: 120.0,
+            stock: 0.0,
+          ),
+        );
+        final idCapuchino = await articuloRepo.create(
+          Articulo(
+            nombre: 'Capuchino',
+            tipo: ArticuloTipo.producto,
+            idUnidad: und,
+            costoUnitario: 0.0,
+            precioVenta: 200.0,
+            stock: 0.0,
+          ),
+        );
         expect(idCafeMolido, 4);
         expect(idCapuchino, 5);
 
@@ -139,11 +153,13 @@ void main() {
         // ============================================================
         // 2. CREAR RECETA: Café Molido (1kg insumo -> 1kg producto)
         // ============================================================
-        final idReceta = await recetaRepo.create(Receta(
-          idArticuloProducto: idCafeMolido,
-          nombre: 'Tostado y Molido',
-          cantidad_base: 1.0,
-        ));
+        final idReceta = await recetaRepo.create(
+          Receta(
+            idArticuloProducto: idCafeMolido,
+            nombre: 'Tostado y Molido',
+            cantidad_base: 1.0,
+          ),
+        );
         await database.insert('Receta_Detalle', {
           'id_receta': idReceta,
           'id_articulo_componente': idCafe,

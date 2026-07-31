@@ -39,6 +39,13 @@ class DatabaseHelper {
     _database = database;
   }
 
+  Future<void> closeAndReset() async {
+    if (_database != null) {
+      await _database!.close();
+      _database = null;
+    }
+  }
+
   Future<void> _onConfigure(Database db) async {
     // Configura la base de datos para permitir el uso de transacciones
     await db.execute('PRAGMA foreign_keys = ON');
