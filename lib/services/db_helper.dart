@@ -15,11 +15,15 @@ class DatabaseHelper {
     return _database!;
   }
 
+  static Future<String> resolveDatabasePath() async {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return join(await getDatabasesPath(), "cafe_sales.db");
+    }
+    return join(Directory.current.path, "cafe_sales.db");
+  }
+
   Future<Database> _initDatabase() async {
-    // var databaseFactory = databaseFactoryFfi;
-    //Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String directory = Directory.current.path;
-    String path = join(directory, "cafe_sales.db");
+    final path = await resolveDatabasePath();
 
     return await openDatabase(
       path,

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as p;
 
 class EliminarBaseDatos extends StatefulWidget {
   const EliminarBaseDatos({super.key});
@@ -52,8 +51,7 @@ class _EliminarBaseDatosState extends State<EliminarBaseDatos> {
       try {
         await DatabaseHelper().closeAndReset();
 
-        final directory = Directory.current.path;
-        final dbPath = p.join(directory, "cafe_sales.db");
+        final dbPath = await DatabaseHelper.resolveDatabasePath();
         final file = File(dbPath);
         if (await file.exists()) {
           await file.delete();

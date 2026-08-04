@@ -16,13 +16,11 @@ class RespaldoBaseDatos extends StatefulWidget {
 }
 
 class _RespaldoBaseDatosState extends State<RespaldoBaseDatos> {
-  static const _nombreDb = 'cafe_sales.db';
-
   bool _procesando = false;
   String _rutaDb = '';
   String _tamanoDb = '';
 
-  String get _rutaDbActual => p.join(Directory.current.path, _nombreDb);
+  Future<String> get _rutaDbActual => DatabaseHelper.resolveDatabasePath();
 
   @override
   void initState() {
@@ -47,13 +45,14 @@ class _RespaldoBaseDatosState extends State<RespaldoBaseDatos> {
   }
 
   Future<void> _cargarInfoDb() async {
-    final file = File(_rutaDbActual);
+    final ruta = await _rutaDbActual;
+    final file = File(ruta);
     final tamano = await file.exists()
         ? await _tamanoLegible(await file.length())
         : 'No existe';
     if (!mounted) return;
     setState(() {
-      _rutaDb = _rutaDbActual;
+      _rutaDb = ruta;
       _tamanoDb = tamano;
     });
   }
@@ -124,7 +123,7 @@ class _RespaldoBaseDatosState extends State<RespaldoBaseDatos> {
 
     setState(() => _procesando = true);
     try {
-      final origen = File(_rutaDbActual);
+      final origen = File(await _rutaDbActual);
       if (!await origen.exists()) {
         throw Exception('No se encontro la base de datos');
       }
@@ -285,7 +284,7 @@ class _RespaldoBaseDatosState extends State<RespaldoBaseDatos> {
 
       await DatabaseHelper().closeAndReset();
 
-      final destino = File(_rutaDbActual);
+      final destino = File(await _rutaDbActual);
       await elegido.copy(destino.path);
 
       for (final sufijo in ['-wal', '-shm']) {
