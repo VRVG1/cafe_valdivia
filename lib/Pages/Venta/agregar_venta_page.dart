@@ -115,7 +115,10 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     }
   }
 
-  Future<bool> _procesarVenta(Venta venta, List<DetalleVenta> detalleVenta) async {
+  Future<int?> _procesarVenta(
+    Venta venta,
+    List<DetalleVenta> detalleVenta,
+  ) async {
     return await create(
       context: context,
       ref: ref,

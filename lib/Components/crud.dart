@@ -126,7 +126,7 @@ Future<bool> delete({
   }
 }
 
-Future<bool> create<T>({
+Future<int?> create<T>({
   required BuildContext context,
   required WidgetRef ref,
   required provider,
@@ -137,10 +137,14 @@ Future<bool> create<T>({
   List<T>? detallesElement,
 }) async {
   try {
+    int? reult = 0;
     if (detalles) {
-      await ref.read(provider.notifier).create(element, detallesElement);
+      reult = await ref
+          .read(provider.notifier)
+          .create(element, detallesElement);
     } else {
-      await ref.read(provider.notifier).create(element);
+      reult = await ref.read(provider.notifier).create(element);
+      print(reult);
     }
     if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
@@ -148,8 +152,9 @@ Future<bool> create<T>({
         Navigator.of(context).pop(element); // Regresar a la pantalla anterior
       }
     }
-    return true;
+    return reult;
   } catch (e, st) {
+    print(e);
     if (e.toString().contains("existe")) {
       List<String> cortado = e.toString().split(" ");
       String duplicado = cortado.sublist(1, cortado.length).join(" ");
@@ -161,7 +166,7 @@ Future<bool> create<T>({
         isError: true,
       );
     }
-    return false;
+    return null;
   }
 }
 

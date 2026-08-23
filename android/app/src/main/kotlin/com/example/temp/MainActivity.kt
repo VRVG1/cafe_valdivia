@@ -1,4 +1,4 @@
-package com.example.cafe_valdivia
+package com.example.temp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -194,8 +194,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       final List<Articulo> articulos = [];
       for (var elemento in item['articulos']) {
         DetalleCompra detalleCompra = DetalleCompra(
-          idCompra:
-              0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
+          idCompra: 0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
           idArticulo: elemento['articulo'].idArticulo,
           cantidad: ((elemento['cantidad'] as int?) ?? 0).toDouble(),
           precioUnitarioCompra: elemento['articulo'].costoUnitario,

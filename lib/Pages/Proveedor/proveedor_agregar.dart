@@ -31,7 +31,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
     super.dispose();
   }
 
-  Future<void> _guardar() async {
+  Future<int?> _guardar() async {
     if (_formKey.currentState?.validate() ?? false) {
       final Proveedor proveedor = Proveedor(
         nombre: _nombreController.text,
@@ -39,7 +39,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
         email: _correoController.text,
         direccion: _direccionController.text,
       );
-      create<Proveedor>(
+      final int? result = await create<Proveedor>(
         context: context,
         ref: ref,
         provider: proveedorListProvider,
@@ -48,7 +48,9 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
         mensajeError:
             "Error al guardar el proveedor. Por favor, intente de nuevo.",
       );
+      return result;
     }
+    return null;
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
+import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -73,6 +74,7 @@ class _SeleccionPageState<T> extends ConsumerState<SeleccionPage<T>>
             ),
           );
           if (result != null && context.mounted) {
+            appLogger.i(result);
             Navigator.pop(context, result);
           }
         },
