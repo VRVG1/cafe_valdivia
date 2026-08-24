@@ -107,13 +107,13 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
                     DetailElement(
                       icon: const Icon(Icons.attach_money_rounded),
                       title: const Text("Costo total producción"),
-                        description: Text(
-                          "\$${double.tryParse(orden['costo_total_produccion']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00'}",
-                          style: tt.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: cs.primary,
-                          ),
+                      description: Text(
+                        "\$${double.tryParse(orden['costo_total_produccion']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00'}",
+                        style: tt.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: cs.primary,
                         ),
+                      ),
                     ),
                     if (orden['costo_real_calculado'] != null)
                       DetailElement(
@@ -164,7 +164,11 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeaderCard(ColorScheme cs, TextTheme tt, Map<String, dynamic> orden) {
+  Widget _buildHeaderCard(
+    ColorScheme cs,
+    TextTheme tt,
+    Map<String, dynamic> orden,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(

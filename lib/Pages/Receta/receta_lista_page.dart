@@ -24,10 +24,7 @@ class RecetaListaPage extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppbarChips(
-        backOption: false,
-        labelText: "Buscar receta...",
-      ),
+      appBar: AppbarChips(backOption: false, labelText: "Buscar receta..."),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Receta",
         onPressed: () {

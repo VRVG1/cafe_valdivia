@@ -74,8 +74,9 @@ class VentaRepository extends BaseRepository<Venta> {
       );
 
       for (final DetalleVenta detalle in detallesVenta) {
-        final Map<String, dynamic> copyDetalleVenta =
-            sanitizeMapForDb(detalle.toJson());
+        final Map<String, dynamic> copyDetalleVenta = sanitizeMapForDb(
+          detalle.toJson(),
+        );
         copyDetalleVenta['id_venta'] = ventaId;
 
         await txn.insert(

@@ -16,18 +16,18 @@ class CompraNotifier extends _$CompraNotifier {
     return repo.getAllNombreProveedor();
   }
 
-  Future<bool> create(Compra compra, List<DetalleCompra> detallesCompra) async {
+  Future<int?> create(Compra compra, List<DetalleCompra> detallesCompra) async {
     state = const AsyncValue.loading();
     try {
-      await ref
+      final int result = await ref
           .read(compraRepositoryProvider)
           .registrarNuevaCompra(compra: compra, detallesCompra: detallesCompra);
       ref.invalidateSelf();
       await future;
-      return true;
+      return result;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      return null;
     }
   }
 

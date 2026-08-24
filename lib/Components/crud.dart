@@ -3,6 +3,7 @@ import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 Widget _botonConSemantics({
   required String label,
@@ -137,24 +138,25 @@ Future<int?> create<T>({
   List<T>? detallesElement,
 }) async {
   try {
-    int? reult = 0;
+    int? result;
     if (detalles) {
-      reult = await ref
+      result = await ref
           .read(provider.notifier)
           .create(element, detallesElement);
     } else {
-      reult = await ref.read(provider.notifier).create(element);
-      print(reult);
+      result = await ref.read(provider.notifier).create(element);
     }
-    if (context.mounted) {
+    print("Ante de entrar al if: $result");
+    if (result != null && context.mounted) {
+      appLogger.f("Ante de motrar el mensaje");
       showCustomSnackBar(context: context, mensaje: mensajeExito);
       if (!detalles) {
         Navigator.of(context).pop(element); // Regresar a la pantalla anterior
       }
     }
-    return reult;
+    return result;
   } catch (e, st) {
-    print(e);
+    appLogger.e("Error al crear elemento: $provider", error: e, stackTrace: st);
     if (e.toString().contains("existe")) {
       List<String> cortado = e.toString().split(" ");
       String duplicado = cortado.sublist(1, cortado.length).join(" ");

@@ -22,10 +22,7 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
     final ColorScheme cs = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppbarChips(
-        backOption: true,
-        labelText: "Buscar receta...",
-      ),
+      appBar: AppbarChips(backOption: true, labelText: "Buscar receta..."),
       body: asyncRecetas.when(
         data: (recetas) {
           if (recetas.isEmpty) {

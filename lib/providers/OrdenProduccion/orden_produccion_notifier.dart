@@ -24,23 +24,23 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
     }
   }
 
-  Future<bool> create(
+  Future<int?> create(
     OrdenProduccion orden,
     List<OrdenProduccionConsumo> consumos,
   ) async {
     state = const AsyncValue.loading();
     try {
-      await ref
+      final int result = await ref
           .read(ordenProduccionRepositoryProvider)
           .registrarOrdenProduccion(orden: orden, consumos: consumos);
       ref.invalidateSelf();
       await future;
-      return true;
+      return result;
     } catch (e, st) {
       appLogger.e('Error al crear orden de producción: $e');
       _ultimoError = traducirErrorBD(e);
       state = AsyncValue.error(_ultimoError, st);
-      return false;
+      return null;
     }
   }
 

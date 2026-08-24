@@ -12,17 +12,19 @@ class UnidadMedidaNotifier extends _$UnidadMedidaNotifier {
     return repo.getAll();
   }
 
-  Future<bool> create(String nombre) async {
+  Future<int?> create(String nombre) async {
     state = const AsyncValue.loading();
     try {
       final UnidadMedida unidadMedida = UnidadMedida(nombre: nombre);
-      await ref.read(unidadMedidaRepositoryProvider).create(unidadMedida);
+      final int result = await ref
+          .read(unidadMedidaRepositoryProvider)
+          .create(unidadMedida);
       ref.invalidateSelf();
       await future;
-      return true;
+      return result;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      return null;
     }
   }
 

@@ -41,9 +41,7 @@ class ProveedorDetallado extends ConsumerWidget {
               MaterialPageRoute(
                 builder: (context) => EditarProveedor(proveedor: proveedor),
               ),
-            ).then(
-              (_) => ref.invalidate(proveedorDetailProvider(proveedorId)),
-            );
+            ).then((_) => ref.invalidate(proveedorDetailProvider(proveedorId)));
           }
         },
         onDeletePressed: () {
@@ -67,8 +65,7 @@ class ProveedorDetallado extends ConsumerWidget {
         },
       ),
       body: asyncProveedor.when(
-        loading: () =>
-            const SkeletonProductoDetalle(rowDetails: 3),
+        loading: () => const SkeletonProductoDetalle(rowDetails: 3),
         error: (err, stack) => ErrorView(
           message: 'Error al cargar el proveedor',
           description: err.toString(),

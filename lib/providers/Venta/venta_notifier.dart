@@ -16,11 +16,13 @@ class VentaNotifier extends _$VentaNotifier {
     return repo.getAllFullVentas();
   }
 
-  Future<void> create(Venta venta, List<DetalleVenta> detallesVenta) async {
-    await ref
+  Future<int?> create(Venta venta, List<DetalleVenta> detallesVenta) async {
+    final int result = await ref
         .read(ventaRepositoryProvider)
         .registrarNuevaVenta(venta: venta, detallesVenta: detallesVenta);
     ref.invalidateSelf();
+    await future;
+    return result;
   }
 
   Future<Map<String, dynamic>> getFullVenta(int idVenta) async {

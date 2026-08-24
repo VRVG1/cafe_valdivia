@@ -86,9 +86,7 @@ class ListviewCustom<T> extends ConsumerWidget {
 
         final tile = Material(
           child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: borderRadius,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: borderRadius),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16.0,
               vertical: 8.0,

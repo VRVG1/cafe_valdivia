@@ -84,8 +84,8 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                     ref
                         .read(unidadMedidaProvider.notifier)
                         .create(_umController.text)
-                        .then((success) {
-                          if (success && mounted) {
+                        .then((id) {
+                          if (id != null && mounted) {
                             showCustomSnackBar(
                               context: context,
                               mensaje: "Guardado exitosamente",

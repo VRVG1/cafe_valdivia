@@ -129,9 +129,9 @@ class ProductoDetallePage extends ConsumerWidget {
             ],
           ),
         ),
-        error: (err, stack) => ErrorView(message: 'Error al cargar el producto'),
-        loading: () =>
-            const SkeletonProductoDetalle(rowDetails: 4),
+        error: (err, stack) =>
+            ErrorView(message: 'Error al cargar el producto'),
+        loading: () => const SkeletonProductoDetalle(rowDetails: 4),
       ),
     );
   }

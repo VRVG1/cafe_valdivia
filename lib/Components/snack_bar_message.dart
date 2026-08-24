@@ -7,11 +7,13 @@ void showCustomSnackBar({
 }) {
   final colorScheme = Theme.of(context).colorScheme;
 
-  final textColor =
-      isError ? colorScheme.onErrorContainer : colorScheme.onTertiaryContainer;
+  final textColor = isError
+      ? colorScheme.onErrorContainer
+      : colorScheme.onTertiaryContainer;
 
-  final backgroundColor =
-      isError ? colorScheme.errorContainer : colorScheme.tertiaryContainer;
+  final backgroundColor = isError
+      ? colorScheme.errorContainer
+      : colorScheme.tertiaryContainer;
   final tt = Theme.of(context).textTheme;
 
   ScaffoldMessenger.of(context).showSnackBar(

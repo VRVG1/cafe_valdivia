@@ -50,7 +50,9 @@ class AppRadius {
   static const double xl = 24;
   static const double modal = 28;
 
-  static const BorderRadius xxsCircular = BorderRadius.all(Radius.circular(xxs));
+  static const BorderRadius xxsCircular = BorderRadius.all(
+    Radius.circular(xxs),
+  );
   static const BorderRadius xsCircular = BorderRadius.all(Radius.circular(xs));
   static const BorderRadius smCircular = BorderRadius.all(Radius.circular(sm));
   static const BorderRadius mdCircular = BorderRadius.all(Radius.circular(md));

@@ -16,12 +16,13 @@ class ProveedorList extends _$ProveedorList {
   Future<int?> create(Proveedor proveedor) async {
     state = const AsyncValue.loading();
     try {
-      int reult = await ref.read(proveedorRepositoryProvider).create(proveedor);
+      final int result = await ref
+          .read(proveedorRepositoryProvider)
+          .create(proveedor);
       if (!ref.mounted) return null;
       ref.invalidateSelf();
-      ref.invalidate(proveedoresFiltradosProvider);
       await future;
-      return reult;
+      return result;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       return null;

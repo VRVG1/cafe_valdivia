@@ -19,7 +19,9 @@ abstract class BaseRepository<T> {
     final data = sanitizeMapForDb(toJson(entity));
     data['activo'] = 1;
     data['updated_at'] = DateTime.now().toIso8601String();
-    return await dbHelper.insert(tableName, data);
+    final int result = await dbHelper.insert(tableName, data);
+    appLogger.i('CREATE [$entityName] -> Registro creado con id: $result');
+    return result;
   }
 
   // ===== GET BY ID (solo activos) =====
@@ -102,25 +104,44 @@ abstract class BaseRepository<T> {
     }
     final data = sanitizeMapForDb(toJson(entity));
     data['updated_at'] = DateTime.now().toIso8601String();
-    return await dbHelper.update(
+    final int result = await dbHelper.update(
       tableName,
       data,
       where: '$idColumn = ?',
       whereArgs: [entityId],
     );
+
+    if (result > 0) {
+      appLogger.i(
+        'UPDATE [$entityName] -> id: $entityId actualizado, filas afectadas: $result',
+      );
+    } else {
+      appLogger.w(
+        'UPDATE [$entityName] -> No se encontró registro con id: $entityId, ninguna fila afectada',
+      );
+    }
+    return result;
   }
 
   // ===== SOFT DELETE =====
   Future<int> delete(int id) async {
     try {
-      return await dbHelper.update(
+      final int result = await dbHelper.update(
         tableName,
         {'activo': 0, 'deleted_at': DateTime.now().toIso8601String()},
         where: '$idColumn = ?',
         whereArgs: [id],
       );
-    } catch (error) {
-      appLogger.e(error);
+      appLogger.i(
+        'SOFT DELETE [$entityName] -> id: $id eliminado, filas afectadas: $result',
+      );
+      return result;
+    } catch (error, st) {
+      appLogger.e(
+        'ERROR SOFT DELETE [$entityName] -> Fallo al eliminar id: $id',
+        error: error,
+        stackTrace: st,
+      );
       final msg = error.toString();
       if (msg.contains('No se puede eliminar:')) {
         final match = RegExp(r'No se puede eliminar:.[^,]+').firstMatch(msg);
@@ -140,24 +161,42 @@ abstract class BaseRepository<T> {
 
   // ===== RESTAURAR =====
   Future<int> restore(int id) async {
-    return await dbHelper.update(
+    final int result = await dbHelper.update(
       tableName,
       {'activo': 1, 'deleted_at': null},
       where: '$idColumn = ?',
       whereArgs: [id],
     );
+    if (result > 0) {
+      appLogger.i(
+        'RESTORE [$entityName] -> id: $id restaurado, filas afectadas: $result',
+      );
+    } else {
+      appLogger.w(
+        'RESTORE [$entityName] -> No se encontró registro con id: $id, ninguna fila afectada',
+      );
+    }
+    return result;
   }
 
   // ===== ELIMINACIÓN PERMANENTE =====
   Future<int> forceDelete(int id) async {
     try {
-      return await dbHelper.delete(
+      final int result = await dbHelper.delete(
         tableName,
         where: '$idColumn = ?',
         whereArgs: [id],
       );
-    } catch (error) {
-      appLogger.e(error);
+      appLogger.i(
+        'FORCE DELETE [$entityName] -> id: $id eliminado permanentemente, filas afectadas: $result',
+      );
+      return result;
+    } catch (error, st) {
+      appLogger.e(
+        'ERROR FORCE DELETE [$entityName] -> Fallo al eliminar permanentemente id: $id',
+        error: error,
+        stackTrace: st,
+      );
       final msg = error.toString();
       if (msg.contains('No se puede eliminar:')) {
         final match = RegExp(r'No se puede eliminar:.[^,]+').firstMatch(msg);

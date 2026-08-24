@@ -137,13 +137,13 @@ class AgregarOrdenProduccionPageState
     );
 
     try {
-      final exito = await ref
+      final resultado = await ref
           .read(ordenProduccionProvider.notifier)
           .create(orden, consumos);
 
       if (!context.mounted) return;
 
-      if (exito) {
+      if (resultado != null) {
         showCustomSnackBar(
           context: context,
           mensaje: "Orden de producción creada con exito",

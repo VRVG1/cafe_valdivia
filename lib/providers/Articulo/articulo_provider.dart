@@ -1,4 +1,3 @@
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
@@ -14,18 +13,19 @@ class ArticuloProvider extends _$ArticuloProvider {
     return repo.getAllInsumos();
   }
 
-  Future<bool> create(Articulo articulo) async {
+  Future<int?> create(Articulo articulo) async {
     state = const AsyncValue.loading();
     try {
-      await ref.read(articulosRepositoryProvider).create(articulo);
-      if (!ref.mounted) return false;
+      final int result = await ref
+          .read(articulosRepositoryProvider)
+          .create(articulo);
+      if (!ref.mounted) return null;
       ref.invalidateSelf();
-      ref.invalidate(articulosFiltradosProvider);
       await future;
-      return true;
+      return result;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      return null;
     }
   }
 

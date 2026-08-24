@@ -14,19 +14,21 @@ class ClienteNotifier extends _$ClienteNotifier {
     return repo.getAllWithKilosAndTotal();
   }
 
-  Future<bool> create(Cliente cliente) async {
+  Future<int?> create(Cliente cliente) async {
     state = const AsyncValue.loading();
     try {
-      await ref.read(clienteRepositoryProvider).create(cliente);
-      if (!ref.mounted) return false;
+      final int result = await ref
+          .read(clienteRepositoryProvider)
+          .create(cliente);
+      if (!ref.mounted) return null;
       ref.invalidateSelf();
       await future;
-      if (!ref.mounted) return false;
+      if (!ref.mounted) return null;
       ref.invalidate(clientesFiltradosProvider);
-      return true;
+      return result;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
-      return false;
+      return null;
     }
   }
 

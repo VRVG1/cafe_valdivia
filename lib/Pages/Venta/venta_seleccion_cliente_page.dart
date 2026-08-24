@@ -9,10 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class VentaSeleccionClientePage extends VentaSeleccionPage<Cliente> {
   VentaSeleccionClientePage({super.key})
-    : super(
-        provider: clientesFiltradosProvider,
-        addElement: Agregarcliente(),
-      );
+    : super(provider: clientesFiltradosProvider, addElement: Agregarcliente());
 
   @override
   String get mensajeVacio => "No hay Clientes registrados";

@@ -1,4 +1,3 @@
-import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -68,14 +67,21 @@ class _SeleccionPageState<T> extends ConsumerState<SeleccionPage<T>>
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar",
         onPressed: () async {
+          print("hace algo");
           final result = await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (BuildContext context) => widget.addElement,
             ),
           );
+          appLogger.d("MAMADA: -> $result");
           if (result != null && context.mounted) {
-            appLogger.i(result);
+            appLogger.i("en seleccionPage: $result");
             Navigator.pop(context, result);
+          } else {
+            appLogger.e("Error al crear ${widget.addElement.key}");
+            if (context.mounted) {
+              Navigator.pop(context, null);
+            }
           }
         },
         child: const Icon(Icons.add_rounded),

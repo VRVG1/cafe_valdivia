@@ -227,9 +227,9 @@ class _RespaldoBaseDatosState extends State<RespaldoBaseDatos> {
                       final sub = <String>[];
                       if (stat != null) {
                         sub.add('${stat.size} bytes');
-                        final fecha = DateFormat('dd/MM/yyyy HH:mm').format(
-                          stat.modified,
-                        );
+                        final fecha = DateFormat(
+                          'dd/MM/yyyy HH:mm',
+                        ).format(stat.modified);
                         sub.add(fecha);
                       }
                       return ListTile(
@@ -279,7 +279,9 @@ class _RespaldoBaseDatosState extends State<RespaldoBaseDatos> {
     setState(() => _procesando = true);
     try {
       if (!await _esBaseValida(elegido.path)) {
-        throw Exception('El archivo seleccionado no es una base de datos valida');
+        throw Exception(
+          'El archivo seleccionado no es una base de datos valida',
+        );
       }
 
       await DatabaseHelper().closeAndReset();
