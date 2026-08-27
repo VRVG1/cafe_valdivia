@@ -1,4 +1,7 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
+import 'package:cafe_valdivia/Components/componente_card.dart';
+import 'package:cafe_valdivia/Components/componente_row.dart';
+import 'package:cafe_valdivia/Components/costo_estimado_display.dart';
 import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
@@ -16,21 +19,6 @@ import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class _ComponenteRow {
-  Articulo? articulo;
-  UnidadMedida? unidad;
-  TextEditingController cantidadController = TextEditingController();
-
-  void dispose() {
-    cantidadController.dispose();
-  }
-
-  bool get isValid =>
-      articulo != null &&
-      unidad != null &&
-      (double.tryParse(cantidadController.text) ?? 0) > 0;
-}
-
 class AgregarRecetaPage extends ConsumerStatefulWidget {
   const AgregarRecetaPage({super.key});
 
@@ -45,7 +33,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
   );
   Articulo? _productoSeleccionado;
   double _totalCostoEstimado = 0.0;
-  final List<_ComponenteRow> _componentes = [];
+  final List<ComponenteRow> _componentes = [];
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -60,16 +48,11 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
   }
 
   void _agregarComponente() {
-    setState(() {
-      _componentes.add(_ComponenteRow());
-    });
+    agregarComponente(componentes: _componentes, setState: setState);
   }
 
   void _removerComponente(int index) {
-    setState(() {
-      _componentes[index].dispose();
-      _componentes.removeAt(index);
-    });
+    removerComponente(index: index, componentes: _componentes, setState: setState);
   }
 
   void _calcularCostoEstimado(AsyncValue<List<Articulo>> asyncInsumos) {
@@ -298,77 +281,13 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
               ..._componentes.asMap().entries.map((entry) {
                 final index = entry.key;
                 final componente = entry.value;
-                return _buildComponenteCard(
+                return ComponenteCard(
                   index: index,
                   componente: componente,
                   asyncInsumos: asyncInsumos,
                   asyncUms: asyncUms,
-                  cs: cs,
-                  tt: tt,
-                );
-              }),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: _isLoading ? null : _agregarComponente,
-                icon: const Icon(Icons.add_rounded),
-                label: const Text("Agregar componente"),
-              ),
-              const SizedBox(height: 16),
-              if (_componentes.isNotEmpty)
-                _buildCostoEstimado(asyncInsumos, cs, tt),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildComponenteCard({
-    required int index,
-    required _ComponenteRow componente,
-    required AsyncValue<List<Articulo>> asyncInsumos,
-    required AsyncValue<List<UnidadMedida>> asyncUms,
-    required ColorScheme cs,
-    required TextTheme tt,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: AppRadius.mdCircular,
-          side: BorderSide(color: cs.outlineVariant),
-        ),
-        child: Padding(
-          padding: AppPadding.allMd,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Componente ${index + 1}",
-                    style: tt.labelLarge?.copyWith(
-                      color: cs.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: "Eliminar componente",
-                    onPressed: () => _removerComponente(index),
-                    icon: Icon(Icons.delete_outline_rounded, color: cs.error),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              asyncInsumos.when(
-                data: (insumos) => DropdownMenu<Articulo>(
-                  expandedInsets: EdgeInsets.zero,
-                  initialSelection: componente.articulo,
-                  label: const Text("Artículo"),
-                  leadingIcon: const Icon(Icons.inventory_2_rounded),
-                  onSelected: (Articulo? a) {
+                  onRemove: () => _removerComponente(index),
+                  onArticuloChanged: (a) {
                     _calcularCostoEstimado(asyncInsumos);
                     setState(() => componente.articulo = a);
                     if (a != null &&
@@ -383,125 +302,31 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                       }
                     }
                   },
-                  dropdownMenuEntries: insumos.map((a) {
-                    return DropdownMenuEntry<Articulo>(
-                      value: a,
-                      label: a.nombre,
-                    );
-                  }).toList(),
-                ),
-                error: (e, _) => ErrorRetryField(
-                  label: "Artículo",
-                  leadingIcon: Icons.inventory_2_rounded,
-                  showCarita: false,
-                  onRetry: () => ref.invalidate(articuloProviderProvider),
-                ),
-                loading: () => SkeletonDropMenu(),
-              ),
+                  onUnidadChanged: (u) {
+                    _calcularCostoEstimado(asyncInsumos);
+                    setState(() => componente.unidad = u);
+                  },
+                  onCantidadChanged: () => _calcularCostoEstimado(asyncInsumos),
+                  isLoading: _isLoading,
+                );
+              }),
               const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: TextFormField(
-                      enabled: !_isLoading,
-                      controller: componente.cantidadController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: "Cantidad",
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (string) {
-                        _calcularCostoEstimado(asyncInsumos);
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    flex: 3,
-                    child: asyncUms.when(
-                      data: (ums) => DropdownMenu<UnidadMedida>(
-                        expandedInsets: EdgeInsets.zero,
-                        initialSelection: componente.unidad,
-                        label: const Text("Unidad"),
-                        onSelected: (UnidadMedida? u) {
-                          _calcularCostoEstimado(asyncInsumos);
-                          setState(() => componente.unidad = u);
-                        },
-                        dropdownMenuEntries: ums.map((u) {
-                          return DropdownMenuEntry<UnidadMedida>(
-                            value: u,
-                            label: u.nombre,
-                          );
-                        }).toList(),
-                      ),
-                      error: (e, _) => ErrorRetryField(
-                        label: "Unidad",
-                        leadingIcon: Icons.balance_rounded,
-                        showCarita: true,
-                        onRetry: () => ref.invalidate(unidadMedidaProvider),
-                      ),
-                      loading: () => SkeletonDropMenu(),
-                    ),
-                  ),
-                ],
+              OutlinedButton.icon(
+                onPressed: _isLoading ? null : _agregarComponente,
+                icon: const Icon(Icons.add_rounded),
+                label: const Text("Agregar componente"),
               ),
+              const SizedBox(height: 16),
+              if (_componentes.isNotEmpty)
+                CostoEstimadoDisplay(
+                  totalCostoEstimado: _totalCostoEstimado,
+                  cs: cs,
+                  tt: tt,
+                ),
             ],
           ),
         ),
       ),
     );
   }
-
-  Widget _buildCostoEstimado(
-    AsyncValue<List<Articulo>> asyncInsumos,
-    ColorScheme cs,
-    TextTheme tt,
-  ) {
-    // if (asyncInsumos is! AsyncData<List<Articulo>>) {
-    //   return const SizedBox.shrink();
-    // }
-    // final insumos = asyncInsumos.value;
-    // double total = 0;
-    // for (final c in _componentes) {
-    //   if (!c.isValid) continue;
-    //   final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
-    //   final costo =
-    //       insumos
-    //           .where((i) => i.id == c.articulo!.id)
-    //           .firstOrNull
-    //           ?.costoUnitario ??
-    //       0;
-    //   total += cantidad * costo;
-    // }
-
-    return Container(
-      padding: AppPadding.allMd,
-      decoration: BoxDecoration(
-        color: cs.tertiaryContainer.withValues(alpha: 0.3),
-        borderRadius: AppRadius.mdCircular,
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.calculate_rounded, color: cs.tertiary),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Costo estimado",
-                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-              ),
-              Text(
-                "\$${_totalCostoEstimado.toStringAsFixed(2)}",
-                style: tt.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-
 }
