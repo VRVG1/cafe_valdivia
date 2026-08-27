@@ -9,6 +9,7 @@ import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_editar_page.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';

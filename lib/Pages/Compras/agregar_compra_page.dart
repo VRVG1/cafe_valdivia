@@ -1,6 +1,12 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
+import 'package:cafe_valdivia/Components/cart_modal_handle.dart';
+import 'package:cafe_valdivia/Components/cart_modal_resume.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
+import 'package:cafe_valdivia/Components/quantity_buttons_widget.dart';
+import 'package:cafe_valdivia/Components/show_cart_options_sheet.dart';
+import 'package:cafe_valdivia/Components/show_confirm_pay_modal.dart';
+import 'package:cafe_valdivia/Components/show_quantity_modify_dialog.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_page.dart';
@@ -208,87 +214,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     }
   }
 
-  void _mostrarOpcionesItem(Map<String, dynamic> item) {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                item['nombre'],
-                style: Theme.of(ctx).textTheme.titleMedium,
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.edit_rounded),
-              title: Text("Modificar cantidad"),
-              onTap: () {
-                Navigator.pop(ctx);
-                _mostrarDialogoModificarCantidad(item);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.delete_rounded,
-                color: Theme.of(ctx).colorScheme.error,
-              ),
-              title: Text(
-                "Eliminar del carrito",
-                style: TextStyle(color: Theme.of(ctx).colorScheme.error),
-              ),
-              onTap: () {
-                Navigator.pop(ctx);
-                setState(() {
-                  carritoDeCompras.remove(item);
-                });
-              },
-            ),
-            SizedBox(height: 8),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _mostrarDialogoModificarCantidad(Map<String, dynamic> item) {
-    final controller = TextEditingController(text: item['cantidad'].toString());
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text("Modificar cantidad"),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            labelText: "Nueva cantidad",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text("Cancelar"),
-          ),
-          FilledButton(
-            onPressed: () {
-              final nueva = int.tryParse(controller.text);
-              if (nueva != null && nueva > 0) {
-                setState(() {
-                  item['cantidad'] = nueva;
-                });
-                Navigator.pop(ctx);
-              }
-            },
-            child: Text("Aceptar"),
-          ),
-        ],
-      ),
-    );
-  }
-
   // fin funciones
 
   @override
@@ -338,7 +263,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                   if (_isButtonsExpresive)
                     TapRegion(
                       groupId: _grupoCantidad,
-                      child: _cantidadButtonsWidget(theme.colorScheme),
+                      child: QuantityButtonsWidget(
+                        isNegative: _isNegative,
+                        onIncrement: _incrementarCantidad,
+                        onToggleNegative: () =>
+                            setState(() => _isNegative = !_isNegative),
+                      ),
                     ),
 
                   const SizedBox(height: 32),
@@ -465,70 +395,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     );
   }
 
-  Future<bool> _mostrarModal({
-    required BuildContext context,
-    required String titulo,
-    required String cuerpo,
-    bool mostrarSegundoBoton = true,
-    bool mostrarCamposExtra = true,
-  }) async {
-    final result = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text(titulo),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(cuerpo),
-                    if (mostrarCamposExtra) ...[
-                      const SizedBox(height: 20),
-                      SwitchListTile(
-                        title: const Text("¿Pagado?"),
-                        value: _esPagado,
-                        onChanged: (bool value) {
-                          setState(() {
-                            _esPagado = value;
-                          });
-                        },
-                      ),
-                      TextField(
-                        controller: _descripcionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Información extra',
-                          hintText: 'Escribe aquí...',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              actions: [
-                if (mostrarSegundoBoton)
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text("Cancelar"),
-                  ),
-                FilledButton(
-                  onPressed: () {
-                    // Aquí manejas la lógica de los datos capturados
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text("Aceptar"),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-    return result ?? false;
-  }
-
   Widget _buildModal(ColorScheme cs, TextTheme tt) {
     return DraggableScrollableSheet(
       initialChildSize: 0.13, // Altura visible inicial (pestaña)
@@ -565,7 +431,16 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
               "\$ ${item['precio'].toString()}",
               style: tt.labelLarge?.copyWith(color: cs.primary),
             ),
-            onLongPressCallback: (item) => _mostrarOpcionesItem(item),
+            onLongPressCallback: (item) => showCartOptionsSheet(
+              context: context,
+              item: item,
+              onModify: () => showQuantityModifyDialog(
+                context: context,
+                item: item,
+                onUpdated: (nueva) => setState(() => item['cantidad'] = nueva),
+              ),
+              onRemove: () => setState(() => carritoDeCompras.remove(item)),
+            ),
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
               child: SizedBox(
@@ -574,10 +449,13 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 child: FilledButton.icon(
                   onPressed: () async {
                     if (carritoDeCompras.isNotEmpty) {
-                      if (await _mostrarModal(
+                      if (await showConfirmPayModal(
                         context: context,
                         titulo: "Realizar Compra",
                         cuerpo: "¿Confirmar compra por \$$totalDinero?",
+                        esPagado: _esPagado,
+                        onPagadoChanged: (v) => setState(() => _esPagado = v),
+                        descripcionController: _descripcionController,
                       )) {
                         _resumenCompra();
                         if (context.mounted) {
@@ -589,10 +467,13 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                         }
                       }
                     } else {
-                      _mostrarModal(
+                      showConfirmPayModal(
                         context: context,
                         titulo: "Carrito vacío",
                         cuerpo: "No hay artículos en el carrito",
+                        esPagado: _esPagado,
+                        onPagadoChanged: (v) => setState(() => _esPagado = v),
+                        descripcionController: _descripcionController,
                         mostrarSegundoBoton: false,
                         mostrarCamposExtra: false,
                       );
@@ -608,14 +489,19 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             ),
             header: Column(
               children: <Widget>[
-                _buildModalHandle(cs),
+                CartModalHandle(cs: cs),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 8,
                   ),
                 ),
-                _buildModalResume(cs, tt, totalProductos, totalDinero),
+                CartModalResume(
+                  cs: cs,
+                  tt: tt,
+                  totalProductos: totalProductos,
+                  totalDinero: totalDinero,
+                ),
 
                 SizedBox(height: 12),
                 const Divider(height: 1, indent: 12, endIndent: 12),
@@ -643,153 +529,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildModalResume(
-    ColorScheme cs,
-    TextTheme tt,
-    int totalProductos,
-    double totalDinero,
-  ) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Text(
-                "Total productos: $totalProductos ",
-                style: tt.titleMedium?.copyWith(color: cs.onSurfaceVariant),
-              ),
-            ],
-          ),
-
-          Text(
-            "\$${totalDinero.toStringAsFixed(2)}",
-            style: tt.headlineMedium?.copyWith(
-              color: cs.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildModalHandle(ColorScheme cs) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 12),
-        width: 32,
-        height: 4,
-        decoration: BoxDecoration(
-          color: cs.outlineVariant,
-          borderRadius: AppRadius.xxsCircular,
-        ),
-      ),
-    );
-  }
-
-  Widget _expressiveButton(
-    String label,
-    Color color,
-    double points,
-    Color bg,
-    VoidCallback onPressed,
-  ) {
-    return IconButton(
-      tooltip: "Accion especial",
-      onPressed: onPressed,
-      icon: Container(
-        width: 60,
-        height: 60,
-        alignment: Alignment.center,
-        decoration: ShapeDecoration(
-          color: color,
-          shape: StarBorder(
-            points: points,
-            innerRadiusRatio: 0.8,
-            pointRounding: 0.4,
-          ),
-          shadows: <BoxShadow>[
-            BoxShadow(
-              color: color.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Text(
-          label,
-          style: TextStyle(fontWeight: FontWeight.bold, color: bg),
-        ),
-      ),
-    );
-  }
-
-  Widget _cantidadButtonsWidget(ColorScheme cs) {
-    return Padding(
-      padding: const EdgeInsetsGeometry.only(top: 8.0),
-      child: Card(
-        color: cs.surfaceContainerLowest,
-        elevation: 0,
-        child: SizedBox(
-          width: 60.0,
-          height: 56.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _expressiveButton(
-                _isNegative ? "-1" : "+1",
-                cs.primaryContainer,
-                14,
-                cs.onPrimaryContainer,
-                _isNegative
-                    ? () => _incrementarCantidad(-1)
-                    : () => _incrementarCantidad(1),
-              ),
-              _expressiveButton(
-                _isNegative ? "-6" : "+6",
-                cs.primaryContainer,
-                14,
-                cs.onPrimaryContainer,
-                _isNegative
-                    ? () => _incrementarCantidad(-6)
-                    : () => _incrementarCantidad(6),
-              ),
-              _expressiveButton(
-                _isNegative ? "-12" : "+12",
-                cs.primaryContainer,
-                14,
-                cs.onPrimaryContainer,
-                _isNegative
-                    ? () => _incrementarCantidad(-12)
-                    : () => _incrementarCantidad(12),
-              ),
-              _expressiveButton(
-                _isNegative ? "-24" : "+24",
-                cs.primaryContainer,
-                14,
-                cs.onPrimaryContainer,
-                _isNegative
-                    ? () => _incrementarCantidad(-24)
-                    : () => _incrementarCantidad(24),
-              ),
-              _expressiveButton(
-                _isNegative ? "+" : "-",
-                _isNegative ? cs.tertiaryContainer : cs.errorContainer,
-                14,
-                _isNegative ? cs.onTertiaryContainer : cs.onErrorContainer,
-                () => setState(() {
-                  _isNegative = !_isNegative;
-                }),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
