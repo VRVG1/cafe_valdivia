@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('DetalleVenta', () {
     final detalleVenta = DetalleVenta(
-      idDetalleVenta: 1,
+      id: 1,
       idVenta: 10,
       idArticulo: 20,
       cantidad: 3.0,
@@ -46,14 +46,14 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final dv1 = DetalleVenta(
-        idDetalleVenta: 1,
+        id: 1,
         idVenta: 10,
         idArticulo: 20,
         cantidad: 3.0,
         precioUnitarioVenta: 15.50,
       );
       final dv2 = DetalleVenta(
-        idDetalleVenta: 1,
+        id: 1,
         idVenta: 10,
         idArticulo: 20,
         cantidad: 3.0,
@@ -65,14 +65,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final dv1 = DetalleVenta(
-        idDetalleVenta: 1,
+        id: 1,
         idVenta: 10,
         idArticulo: 20,
         cantidad: 3.0,
         precioUnitarioVenta: 15.50,
       );
       final dv2 = DetalleVenta(
-        idDetalleVenta: 1,
+        id: 1,
         idVenta: 10,
         idArticulo: 20,
         cantidad: 3.0,

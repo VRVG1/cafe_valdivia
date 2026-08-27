@@ -23,7 +23,7 @@ class ArticuloRepository extends BaseRepository<Articulo> {
   Map<String, dynamic> toJson(Articulo entity) => entity.toJson();
 
   @override
-  int? getId(Articulo entity) => entity.idArticulo;
+  int? getId(Articulo entity) => entity.id;
 
   // VIEWS
   Future<(UnidadMedida, List<Articulo>)> getArticuloByIdUnidad({

@@ -134,7 +134,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       final proveedor = item['proveedor'];
       final articulo = item['articulo'];
       if (proveedor == null) continue;
-      final int id = proveedor.idProveedor;
+      final int id = proveedor.id;
 
       final contenedor = grupos.putIfAbsent(
         id,
@@ -161,7 +161,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       detalles: true,
       detallesElement: detalleCompra,
       mensajeExito: "Compra realizada con éxito",
-      mensajeError: "Error al procesar la compra, intenta más tarde",
     );
     // TODO: Se supone que en los triggers se tiene que realizar dicha operacion de cambios
     // if (result) {
@@ -196,7 +195,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         DetalleCompra detalleCompra = DetalleCompra(
           idCompra:
               0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
-          idArticulo: elemento['articulo'].idArticulo,
+          idArticulo: elemento['articulo'].id,
           cantidad: ((elemento['cantidad'] as int?) ?? 0).toDouble(),
           precioUnitarioCompra: elemento['articulo'].costoUnitario,
         );

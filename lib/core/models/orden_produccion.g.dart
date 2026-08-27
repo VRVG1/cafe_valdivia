@@ -8,7 +8,7 @@ part of 'orden_produccion.dart';
 
 _OrdenProduccion _$OrdenProduccionFromJson(Map<String, dynamic> json) =>
     _OrdenProduccion(
-      idOrdenProduccion: (json['id_orden_produccion'] as num?)?.toInt(),
+      id: (json['id_orden_produccion'] as num?)?.toInt(),
       idReceta: (json['id_receta'] as num).toInt(),
       cantidadProducida: (json['cantidad_producida'] as num).toDouble(),
       fecha: DateTime.parse(json['fecha'] as String),
@@ -29,7 +29,7 @@ _OrdenProduccion _$OrdenProduccionFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$OrdenProduccionToJson(_OrdenProduccion instance) =>
     <String, dynamic>{
-      'id_orden_produccion': instance.idOrdenProduccion,
+      'id_orden_produccion': instance.id,
       'id_receta': instance.idReceta,
       'cantidad_producida': instance.cantidadProducida,
       'fecha': instance.fecha.toIso8601String(),

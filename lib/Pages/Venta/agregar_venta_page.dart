@@ -127,7 +127,6 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       detalles: true,
       detallesElement: detalleVenta,
       mensajeExito: "Venta realizada con éxito",
-      mensajeError: "Error al procesar la venta, intenta más tarde",
     );
   }
 
@@ -135,7 +134,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     final cliente = carritoDeVentas.first['cliente'];
 
     Venta venta = Venta(
-      idCliente: cliente.idCliente,
+      idCliente: cliente.id,
       fecha: DateTime.now(),
       pagado: _esPagado,
       estado: VentaEstado.pendiente,
@@ -146,7 +145,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     for (var elemento in carritoDeVentas) {
       DetalleVenta detalleVenta = DetalleVenta(
         idVenta: 0,
-        idArticulo: elemento['articulo'].idArticulo,
+        idArticulo: elemento['articulo'].id,
         cantidad: ((elemento['cantidad'] as int?) ?? 0).toDouble(),
         precioUnitarioVenta: elemento['precio'],
       );

@@ -363,7 +363,7 @@ void main() {
               'Articulo',
               {'costo_unitario': '2.0'},
               where: 'id_articulo = ?',
-              whereArgs: [articulo.idArticulo],
+              whereArgs: [articulo.id],
             );
           }
           await updateBatch.commit(noResult: true);
@@ -376,7 +376,7 @@ void main() {
             deleteBatch.delete(
               'Articulo',
               where: 'id_articulo = ?',
-              whereArgs: [articulo.idArticulo],
+              whereArgs: [articulo.id],
             );
           }
           await deleteBatch.commit(noResult: true);

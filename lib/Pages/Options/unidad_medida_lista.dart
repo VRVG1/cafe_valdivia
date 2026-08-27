@@ -6,6 +6,7 @@ import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,34 +66,12 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
                 if (_formKey.currentState?.validate() ?? false) {
                   if (isEditing) {
                     final UnidadMedida updateUM = um.copyWith(
-                      idUnidadMedida: um.idUnidadMedida,
+                      id: um.id,
                       nombre: _umController.text,
                     );
-                    ref
-                        .read(unidadMedidaProvider.notifier)
-                        .updateElement(updateUM)
-                        .then((success) {
-                          if (success && mounted) {
-                            showCustomSnackBar(
-                              context: context,
-                              mensaje: "Actualizado exitosamente",
-                            );
-                            Navigator.of(context).pop();
-                          }
-                        });
+                    _actualizarUM(context, updateUM);
                   } else {
-                    ref
-                        .read(unidadMedidaProvider.notifier)
-                        .create(_umController.text)
-                        .then((id) {
-                          if (id != null && mounted) {
-                            showCustomSnackBar(
-                              context: context,
-                              mensaje: "Guardado exitosamente",
-                            );
-                            Navigator.of(context).pop();
-                          }
-                        });
+                    _crearUM(context);
                   }
                 }
               },
@@ -105,9 +84,50 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
     );
   }
 
+  Future<void> _actualizarUM(
+    BuildContext dialogContext,
+    UnidadMedida unidadMedida,
+  ) async {
+    try {
+      await ref.read(unidadMedidaProvider.notifier).updateElement(unidadMedida);
+      if (!dialogContext.mounted) return;
+      showCustomSnackBar(
+        context: dialogContext,
+        mensaje: "Actualizado exitosamente",
+      );
+      Navigator.of(dialogContext).pop();
+    } catch (e) {
+      if (!dialogContext.mounted) return;
+      showCustomSnackBar(
+        context: dialogContext,
+        mensaje: traducirErrorBD(e),
+        isError: true,
+      );
+    }
+  }
+
+  Future<void> _crearUM(BuildContext dialogContext) async {
+    try {
+      await ref.read(unidadMedidaProvider.notifier).create(_umController.text);
+      if (!dialogContext.mounted) return;
+      showCustomSnackBar(
+        context: dialogContext,
+        mensaje: "Guardado exitosamente",
+      );
+      Navigator.of(dialogContext).pop();
+    } catch (e) {
+      if (!dialogContext.mounted) return;
+      showCustomSnackBar(
+        context: dialogContext,
+        mensaje: traducirErrorBD(e),
+        isError: true,
+      );
+    }
+  }
+
   void _deleteUM(UnidadMedida um) async {
     try {
-      await ref.read(unidadMedidaProvider.notifier).delete(um.idUnidadMedida!);
+      await ref.read(unidadMedidaProvider.notifier).delete(um.id!);
       if (mounted) {
         showCustomSnackBar(
           context: context,
@@ -119,8 +139,8 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
       if (mounted) {
         showCustomSnackBar(
           context: context,
-          mensaje:
-              "Error al eliminar la Unidad de Medida, Por favor, intenta de nuevo",
+          mensaje: traducirErrorBD(e),
+          isError: true,
         );
         Navigator.of(context).pop();
       }
@@ -197,7 +217,7 @@ class _UnidadMedidaListaState extends ConsumerState<UnidadMedidaLista> {
 
           return ListviewCustom<UnidadMedida>(
             data: uMs,
-            keyBuilder: (um) => ValueKey(um.idUnidadMedida),
+            keyBuilder: (um) => ValueKey(um.id),
             titleBuilder: (um) => Text(
               um.nombre,
               style: TextStyle(

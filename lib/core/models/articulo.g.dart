@@ -7,7 +7,7 @@ part of 'articulo.dart';
 // **************************************************************************
 
 _Articulo _$ArticuloFromJson(Map<String, dynamic> json) => _Articulo(
-  idArticulo: (json['id_articulo'] as num?)?.toInt(),
+  id: (json['id_articulo'] as num?)?.toInt(),
   nombre: json['nombre'] as String,
   descripcion: json['descripcion'] as String?,
   tipo: $enumDecode(_$ArticuloTipoEnumMap, json['tipo']),
@@ -27,7 +27,7 @@ _Articulo _$ArticuloFromJson(Map<String, dynamic> json) => _Articulo(
 );
 
 Map<String, dynamic> _$ArticuloToJson(_Articulo instance) => <String, dynamic>{
-  'id_articulo': instance.idArticulo,
+  'id_articulo': instance.id,
   'nombre': instance.nombre,
   'descripcion': instance.descripcion,
   'tipo': _$ArticuloTipoEnumMap[instance.tipo]!,

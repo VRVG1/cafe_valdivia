@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
@@ -8,6 +9,7 @@ import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
@@ -81,7 +83,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
       final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
       final costo =
           insumos
-              .where((i) => i.idArticulo == c.articulo!.idArticulo)
+              .where((i) => i.id == c.articulo!.id)
               .firstOrNull
               ?.costoUnitario ??
           0;
@@ -95,23 +97,23 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
 
   Future<void> _guardar() async {
     if (_productoSeleccionado == null) return;
-    if (_productoSeleccionado!.idArticulo == null) return;
+    if (_productoSeleccionado!.id == null) return;
 
     final componentesValidos = _componentes.where((c) => c.isValid).toList();
     if (componentesValidos.isEmpty) return;
 
     final Receta receta = Receta(
       nombre: _nombreController.text,
-      idArticuloProducto: _productoSeleccionado!.idArticulo!,
+      idArticuloProducto: _productoSeleccionado!.id!,
       cantidad_base: double.tryParse(_cantidadBaseController.text) ?? 1,
     );
 
     final List<RecetaDetalle> detalles = componentesValidos.map((c) {
       return RecetaDetalle(
         idReceta: 0,
-        idArticulo: c.articulo!.idArticulo!,
+        idArticulo: c.articulo!.id!,
         cantidad: double.tryParse(c.cantidadController.text) ?? 0,
-        idUnidad: c.unidad!.idUnidadMedida!,
+        idUnidad: c.unidad!.id!,
       );
     }).toList();
 
@@ -126,7 +128,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
       if (!context.mounted) return;
       showCustomSnackBar(
         context: context,
-        mensaje: "Error al crear la receta. Por favor, intente de nuevo.",
+        mensaje: traducirErrorBD(e),
         isError: true,
       );
     }
@@ -168,7 +170,25 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
           icon: const Icon(Icons.close_rounded),
         ),
         actions: [
-          Padding(padding: AppPadding.hMd, child: _buildSaveButton(cs)),
+          Padding(
+            padding: AppPadding.hMd,
+            child: SaveButton(
+              isLoading: _isLoading,
+              semanticsLabel: "Guardar Receta",
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() => _isLoading = true);
+                  try {
+                    await _guardar();
+                  } finally {
+                    if (context.mounted) {
+                      setState(() => _isLoading = false);
+                    }
+                  }
+                }
+              },
+            ),
+          ),
         ],
       ),
       body: Form(
@@ -356,7 +376,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                         asyncUms is AsyncData<List<UnidadMedida>>) {
                       final umList = asyncUms.value;
                       final match = umList.where(
-                        (um) => um.idUnidadMedida == a.idUnidad,
+                        (um) => um.id == a.idUnidad,
                       );
                       if (match.isNotEmpty) {
                         setState(() => componente.unidad = match.first);
@@ -448,7 +468,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     //   final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
     //   final costo =
     //       insumos
-    //           .where((i) => i.idArticulo == c.articulo!.idArticulo)
+    //           .where((i) => i.id == c.articulo!.id)
     //           .firstOrNull
     //           ?.costoUnitario ??
     //       0;
@@ -483,32 +503,5 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     );
   }
 
-  Widget _buildSaveButton(ColorScheme cs) {
-    return FilledButton(
-      onPressed: _isLoading
-          ? null
-          : () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                setState(() => _isLoading = true);
-                try {
-                  await _guardar();
-                } finally {
-                  if (context.mounted) {
-                    setState(() => _isLoading = false);
-                  }
-                }
-              }
-            },
-      child: _isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: cs.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-          : const Text("Guardar"),
-    );
-  }
+
 }

@@ -28,7 +28,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   Map<String, dynamic> toJson(OrdenProduccion entity) => entity.toJson();
 
   @override
-  int? getId(OrdenProduccion entity) => entity.idOrdenProduccion;
+  int? getId(OrdenProduccion entity) => entity.id;
 
   Future<bool> validarStockConsumos(
     List<OrdenProduccionConsumo> consumos,
@@ -189,7 +189,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
   }
 
   Future<int> updateConsumo(OrdenProduccionConsumo consumo) async {
-    if (consumo.idConsumo == null) {
+    if (consumo.id == null) {
       throw OperacionInvalidaException('ID de consumo no puede ser nulo');
     }
     try {
@@ -197,7 +197,7 @@ class OrdenProduccionRepository extends BaseRepository<OrdenProduccion> {
         'Orden_Produccion_Consumo',
         consumo.toJson(),
         where: 'id_consumo = ?',
-        whereArgs: [consumo.idConsumo],
+        whereArgs: [consumo.id],
       );
     } catch (e) {
       appLogger.e('Error al actualizar consumo: $e');

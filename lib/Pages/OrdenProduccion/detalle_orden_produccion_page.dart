@@ -1,12 +1,13 @@
 import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
+import 'package:cafe_valdivia/Components/articulo_nombre.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
+import 'package:cafe_valdivia/Components/transaction_header_card.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
-import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,7 +46,6 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
               provider: ordenProduccionProvider,
               id: id,
               mensajeExito: "Orden eliminada con exito",
-              mensajeError: "Error al eliminar la orden. Intente de nuevo.",
             ),
           );
         },
@@ -59,7 +59,41 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeaderCard(cs, tt, orden),
+                TransactionHeaderCard(
+                  leading: Icon(
+                    Icons.precision_manufacturing_rounded,
+                    color: cs.primary,
+                    size: 40,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ÓRDEN DE PRODUCCIÓN',
+                        style: tt.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.8,
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '#OP-${orden['id_orden_produccion']}-${fechaORD(orden['fecha']?.toString() ?? '')}',
+                        style: tt.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: cs.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        orden['producto_producido']?.toString() ?? '',
+                        style: tt.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 16),
                 DetailsContainer(
                   title: "Información general",
@@ -164,58 +198,6 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeaderCard(
-    ColorScheme cs,
-    TextTheme tt,
-    Map<String, dynamic> orden,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.precision_manufacturing_rounded,
-            color: cs.primary,
-            size: 40,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'ÓRDEN DE PRODUCCIÓN',
-                  style: tt.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.8,
-                    color: cs.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '#OP-${orden['id_orden_produccion']}-${fechaORD(orden['fecha']?.toString() ?? '')}',
-                  style: tt.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: cs.primary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  orden['producto_producido']?.toString() ?? '',
-                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildConsumosList(
     BuildContext context,
     WidgetRef ref,
@@ -269,7 +251,7 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: _ArticuloNombre(
+                  child: ArticuloNombre(
                     articuloId: consumo['id_articulo'] as int,
                   ),
                 ),
@@ -294,29 +276,6 @@ class DetalleOrdenProduccionPage extends ConsumerWidget {
           );
         }),
       ],
-    );
-  }
-}
-
-class _ArticuloNombre extends ConsumerWidget {
-  final int articuloId;
-
-  const _ArticuloNombre({required this.articuloId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulos = debugOverride(
-      ref,
-      'detalle_op_articulo',
-      ref.watch(articuloProviderProvider),
-    );
-    return asyncArticulos.when(
-      data: (articulos) {
-        final match = articulos.where((a) => a.idArticulo == articuloId);
-        return Text(match.isNotEmpty ? match.first.nombre : "ID: $articuloId");
-      },
-      loading: () => SkeletonLine(),
-      error: (_, __) => Text("ID: $articuloId"),
     );
   }
 }

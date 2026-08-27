@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
@@ -9,6 +10,7 @@ import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -65,7 +67,7 @@ class AgregarOrdenProduccionPageState
 
     try {
       final repo = ref.read(recetaRepositoryProvider);
-      final detalles = await repo.getRecetaDetalles(receta.idReceta!);
+      final detalles = await repo.getRecetaDetalles(receta.id!);
       if (mounted) {
         _calcularCostoEstimado();
         setState(() {
@@ -99,7 +101,7 @@ class AgregarOrdenProduccionPageState
 
   Future<void> _guardar() async {
     if (_recetaSeleccionada == null || _recetaDetalles == null) return;
-    if (_recetaSeleccionada!.idReceta == null) return;
+    if (_recetaSeleccionada!.id == null) return;
 
     final cantidad = double.tryParse(_cantidadController.text) ?? 0;
     if (cantidad <= 0) return;
@@ -113,7 +115,7 @@ class AgregarOrdenProduccionPageState
     for (final detalle in _recetaDetalles!) {
       final cantidadUsada = detalle.cantidad * factor;
       final insumo = insumos
-          .where((a) => a.idArticulo == detalle.idArticulo)
+                  .where((a) => a.id == detalle.idArticulo)
           .firstOrNull;
       final costoArticulo = insumo?.costoUnitario ?? 0;
       costoTotal += cantidadUsada * costoArticulo;
@@ -129,7 +131,7 @@ class AgregarOrdenProduccionPageState
     }
 
     final orden = OrdenProduccion(
-      idReceta: _recetaSeleccionada!.idReceta!,
+      idReceta: _recetaSeleccionada!.id!,
       cantidadProducida: cantidad,
       fecha: DateTime.now(),
       costoTotalProduccion: costoTotal,
@@ -137,30 +139,20 @@ class AgregarOrdenProduccionPageState
     );
 
     try {
-      final resultado = await ref
-          .read(ordenProduccionProvider.notifier)
-          .create(orden, consumos);
+      await ref.read(ordenProduccionProvider.notifier).create(orden, consumos);
 
       if (!context.mounted) return;
 
-      if (resultado != null) {
-        showCustomSnackBar(
-          context: context,
-          mensaje: "Orden de producción creada con exito",
-        );
-        Navigator.of(context).pop(true);
-      } else {
-        showCustomSnackBar(
-          context: context,
-          mensaje: ref.read(ordenProduccionProvider.notifier).ultimoError,
-          isError: true,
-        );
-      }
+      showCustomSnackBar(
+        context: context,
+        mensaje: "Orden de producción creada con exito",
+      );
+      Navigator.of(context).pop(true);
     } catch (e) {
       if (!context.mounted) return;
       showCustomSnackBar(
         context: context,
-        mensaje: ref.read(ordenProduccionProvider.notifier).toString(),
+        mensaje: traducirErrorBD(e),
         isError: true,
       );
     }
@@ -186,7 +178,33 @@ class AgregarOrdenProduccionPageState
           icon: const Icon(Icons.close_rounded),
         ),
         actions: [
-          Padding(padding: AppPadding.hMd, child: _buildSaveButton(cs)),
+          Padding(
+            padding: AppPadding.hMd,
+            child: SaveButton(
+              isLoading: _isLoading,
+              semanticsLabel: "Guardar Orden de Producción",
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  if (_recetaSeleccionada == null) {
+                    showCustomSnackBar(
+                      context: context,
+                      mensaje: "Seleccione una receta",
+                      isError: true,
+                    );
+                    return;
+                  }
+                  setState(() => _isLoading = true);
+                  try {
+                    await _guardar();
+                  } finally {
+                    if (context.mounted) {
+                      setState(() => _isLoading = false);
+                    }
+                  }
+                }
+              },
+            ),
+          ),
         ],
       ),
       body: Form(
@@ -309,7 +327,7 @@ class AgregarOrdenProduccionPageState
             for (final detalle in _recetaDetalles!) {
               final cantidadUsada = detalle.cantidad * _costoEstimado;
               final insumo = insumos
-                  .where((a) => a.idArticulo == detalle.idArticulo)
+          .where((a) => a.id == detalle.idArticulo)
                   .firstOrNull;
               total += cantidadUsada * (insumo?.costoUnitario ?? 0);
             }
@@ -357,40 +375,5 @@ class AgregarOrdenProduccionPageState
     );
   }
 
-  Widget _buildSaveButton(ColorScheme cs) {
-    return FilledButton(
-      onPressed: _isLoading
-          ? null
-          : () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                if (_recetaSeleccionada == null) {
-                  showCustomSnackBar(
-                    context: context,
-                    mensaje: "Seleccione una receta",
-                    isError: true,
-                  );
-                  return;
-                }
-                setState(() => _isLoading = true);
-                try {
-                  await _guardar();
-                } finally {
-                  if (context.mounted) {
-                    setState(() => _isLoading = false);
-                  }
-                }
-              }
-            },
-      child: _isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: cs.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-          : const Text("Guardar"),
-    );
-  }
+
 }

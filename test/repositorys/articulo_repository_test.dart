@@ -18,7 +18,7 @@ void main() {
   final unidad3 = UnidadMedida(nombre: 'Unidades');
 
   final articulo = Articulo(
-    idArticulo: 1,
+    id: 1,
     nombre: 'Café Molido',
     descripcion: 'Café molido de 500g',
     tipo: ArticuloTipo.producto,
@@ -419,7 +419,7 @@ void main() {
       var todos = await articuloRepository.getAll();
       expect(todos.length, 2);
 
-      await articuloRepository.delete(todos.first.idArticulo!);
+      await articuloRepository.delete(todos.first.id!);
 
       todos = await articuloRepository.getAll();
       expect(todos.length, 1);
@@ -428,7 +428,7 @@ void main() {
     test('Create -> Update -> GetById reflects changes', () async {
       final id = await articuloRepository.create(articulo);
       final modificado = articulo.copyWith(
-        idArticulo: id,
+        id: id,
         nombre: 'Actualizado',
         precioVenta: 200.0,
         stock: 0,

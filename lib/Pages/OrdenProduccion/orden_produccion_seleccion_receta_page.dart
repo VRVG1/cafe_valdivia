@@ -42,7 +42,7 @@ class OrdenProduccionSeleccionRecetaPage extends ConsumerWidget {
           }
           return ListviewCustom<Receta>(
             data: recetas,
-            keyBuilder: (receta) => ValueKey(receta.idReceta),
+            keyBuilder: (receta) => ValueKey(receta.id),
             titleBuilder: (receta) => Text(receta.nombre),
             subtitleBuilder: (receta) =>
                 Text('Cantidad base: ${receta.cantidad_base}'),

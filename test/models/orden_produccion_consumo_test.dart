@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('OrdenProduccionConsumo', () {
     final opc = OrdenProduccionConsumo(
-      idConsumo: 1,
+      id: 1,
       idOrdenProduccion: 10,
       idArticulo: 20,
       cantidadUsada: 5.5,
@@ -23,7 +23,7 @@ void main() {
     };
 
     test('debe crearse correctamente con todos los campos', () {
-      expect(opc.idConsumo, 1);
+      expect(opc.id, 1);
       expect(opc.idOrdenProduccion, 10);
       expect(opc.idArticulo, 20);
       expect(opc.cantidadUsada, 5.5);
@@ -48,21 +48,21 @@ void main() {
 
       expect(copia.cantidadUsada, 10.0);
       expect(copia.costoArticuloMomento, 20.00);
-      expect(copia.idConsumo, opc.idConsumo);
+      expect(copia.id, opc.id);
       expect(copia.idOrdenProduccion, opc.idOrdenProduccion);
       expect(copia.idArticulo, opc.idArticulo);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final opc1 = OrdenProduccionConsumo(
-        idConsumo: 1,
+        id: 1,
         idOrdenProduccion: 10,
         idArticulo: 20,
         cantidadUsada: 5.5,
         costoArticuloMomento: 15.75,
       );
       final opc2 = OrdenProduccionConsumo(
-        idConsumo: 1,
+        id: 1,
         idOrdenProduccion: 10,
         idArticulo: 20,
         cantidadUsada: 5.5,
@@ -74,14 +74,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final opc1 = OrdenProduccionConsumo(
-        idConsumo: 1,
+        id: 1,
         idOrdenProduccion: 10,
         idArticulo: 20,
         cantidadUsada: 5.5,
         costoArticuloMomento: 15.75,
       );
       final opc2 = OrdenProduccionConsumo(
-        idConsumo: 1,
+        id: 1,
         idOrdenProduccion: 10,
         idArticulo: 20,
         cantidadUsada: 5.5,
@@ -109,7 +109,7 @@ void main() {
         'updated_at': null,
       };
 
-      expect(opcNulo.idConsumo, isNull);
+      expect(opcNulo.id, isNull);
       expect(opcNulo.toJson(), opcNuloJson);
       expect(OrdenProduccionConsumo.fromJson(opcNuloJson), opcNulo);
     });

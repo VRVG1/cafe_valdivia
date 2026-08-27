@@ -1,7 +1,10 @@
+import 'package:cafe_valdivia/Components/entity_header.dart';
 import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
+import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +46,7 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
     );
     _emailController = TextEditingController(text: widget.proveedor.email);
     acronimo = widget.proveedor.iniciales;
-    _id = widget.proveedor.idProveedor;
+    _id = widget.proveedor.id;
 
     _initialNombre = widget.proveedor.nombre;
     _initialDireccion = widget.proveedor.direccion ?? '';
@@ -120,16 +123,29 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
     });
 
     final Proveedor proveedorModificado = Proveedor(
-      idProveedor: _id,
+      id: _id,
       nombre: _nombreController.text,
       direccion: _direccionController.text,
       telefono: _telefonoController.text,
       email: _emailController.text,
     );
 
-    await ref
-        .read(proveedorListProvider.notifier)
-        .updateElement(proveedorModificado);
+    try {
+      await ref
+          .read(proveedorListProvider.notifier)
+          .updateElement(proveedorModificado);
+    } catch (e) {
+      if (!context.mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      showCustomSnackBar(
+        context: context,
+        mensaje: traducirErrorBD(e),
+        isError: true,
+      );
+      return;
+    }
 
     if (mounted) {
       Navigator.of(dialogContext).pop();
@@ -189,7 +205,11 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(theme, acronimo),
+                EntityHeader(
+                  initials: acronimo,
+                  name: widget.proveedor.nombre,
+                  compact: true,
+                ),
                 const SizedBox(height: 32),
                 Text(
                   "Información Personal",
@@ -251,32 +271,6 @@ class _EditarProveedorState extends ConsumerState<EditarProveedor> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(ThemeData theme, String acronimo) {
-    return Column(
-      children: [
-        CircleAvatar(
-          backgroundColor: theme.colorScheme.primaryContainer,
-          radius: 80,
-          child: Text(
-            acronimo,
-            style: theme.textTheme.displayLarge?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          widget.proveedor.nombre,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-      ],
     );
   }
 

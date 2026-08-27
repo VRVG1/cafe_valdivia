@@ -28,7 +28,7 @@ class CompraRepository extends BaseRepository<Compra> {
   Map<String, dynamic> toJson(Compra entity) => entity.toJson();
 
   @override
-  int? getId(Compra entity) => entity.idCompra;
+  int? getId(Compra entity) => entity.id;
 
   Future<int> registrarNuevaCompra({
     required Compra compra,

@@ -21,7 +21,7 @@ class ClienteRepository extends BaseRepository<Cliente> {
   Map<String, dynamic> toJson(Cliente entity) => entity.toJson();
 
   @override
-  int? getId(Cliente entity) => entity.idCliente;
+  int? getId(Cliente entity) => entity.id;
 
   @override
   Future<int> create(Cliente entity) async {

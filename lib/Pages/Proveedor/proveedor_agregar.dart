@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:email_validator/email_validator.dart';
@@ -45,8 +46,6 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
         provider: proveedorListProvider,
         element: proveedor,
         mensajeExito: "El Proveedor se guardo con exito",
-        mensajeError:
-            "Error al guardar el proveedor. Por favor, intente de nuevo.",
       );
       return result;
     }
@@ -77,7 +76,11 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildActionButtons(context),
+            child: SaveButton(
+              semanticsLabel: "Guardar Proveedor",
+              isLoading: _isLoading,
+              onPressed: _guardar,
+            ),
           ),
         ],
       ),
@@ -155,26 +158,6 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
               return null;
             }
           : null,
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context) {
-    final theme = Theme.of(context);
-    return Semantics(
-      label: "Guardar proveedor",
-      child: FilledButton(
-        onPressed: _isLoading ? null : _guardar,
-        child: _isLoading
-            ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: theme.colorScheme.onSecondaryContainer,
-                  strokeWidth: 2,
-                ),
-              )
-            : const Text("Guardar"),
-      ),
     );
   }
 }

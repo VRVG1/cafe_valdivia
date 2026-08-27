@@ -27,7 +27,7 @@ void main() {
   );
 
   final receta = Receta(
-    idReceta: 1,
+    id: 1,
     idArticuloProducto: 1,
     nombre: 'Receta Café Molido',
     cantidad_base: 1.0,
@@ -127,7 +127,7 @@ void main() {
       expect(id, isNotNull);
 
       final modificada = receta.copyWith(
-        idReceta: id,
+        id: id,
         nombre: 'Receta Actualizada',
         cantidad_base: 2.0,
       );
@@ -317,7 +317,7 @@ void main() {
       var todas = await recetaRepository.getAll();
       expect(todas.length, 2);
 
-      await recetaRepository.delete(todas.first.idReceta!);
+      await recetaRepository.delete(todas.first.id!);
 
       todas = await recetaRepository.getAll();
       expect(todas.length, 1);
@@ -326,7 +326,7 @@ void main() {
     test('Create -> Update -> GetById reflects changes', () async {
       final id = await recetaRepository.create(receta);
       final modificada = receta.copyWith(
-        idReceta: id,
+        id: id,
         nombre: 'Actualizada',
         cantidad_base: 3.0,
       );

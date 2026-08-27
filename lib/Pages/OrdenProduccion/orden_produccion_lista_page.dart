@@ -111,7 +111,6 @@ class OrdenProduccionListaPage extends ConsumerWidget {
                       provider: ordenProduccionProvider,
                       id: id,
                       mensajeExito: "Orden de producción eliminada con exito",
-                      mensajeError: "Error al eliminar la orden de producción",
                       detalle: false,
                     ),
                   ) ??

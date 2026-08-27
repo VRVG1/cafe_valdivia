@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
+import 'package:cafe_valdivia/Components/articulo_nombre.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
@@ -8,7 +9,6 @@ import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Receta/receta_editar_page.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
-import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
@@ -69,8 +69,6 @@ class RecetaDetallePage extends ConsumerWidget {
               provider: recetaProviderProvider,
               id: recetaId,
               mensajeExito: "Receta eliminada con exito",
-              mensajeError:
-                  "Error al eliminar la receta. Por favor, intente de nuevo.",
             ),
           );
         },
@@ -96,7 +94,7 @@ class RecetaDetallePage extends ConsumerWidget {
                       description: asyncProductos.when(
                         data: (productos) {
                           final match = productos.where(
-                            (p) => p.idArticulo == receta.idArticuloProducto,
+                            (p) => p.id == receta.idArticuloProducto,
                           );
                           return Text(
                             match.isNotEmpty
@@ -204,7 +202,7 @@ class RecetaDetallePage extends ConsumerWidget {
               children: [
                 Expanded(
                   flex: 3,
-                  child: _ArticuloNombre(articuloId: d.idArticulo),
+                  child: ArticuloNombre(articuloId: d.idArticulo),
                 ),
                 Expanded(
                   flex: 1,
@@ -227,29 +225,6 @@ class RecetaDetallePage extends ConsumerWidget {
           );
         }),
       ],
-    );
-  }
-}
-
-class _ArticuloNombre extends ConsumerWidget {
-  final int articuloId;
-
-  const _ArticuloNombre({required this.articuloId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final asyncArticulos = debugOverride(
-      ref,
-      'detalle_receta_articulo',
-      ref.watch(articuloProviderProvider),
-    );
-    return asyncArticulos.when(
-      data: (articulos) {
-        final match = articulos.where((a) => a.idArticulo == articuloId);
-        return Text(match.isNotEmpty ? match.first.nombre : "ID: $articuloId");
-      },
-      loading: () => SkeletonLine(),
-      error: (_, __) => Text("ID: $articuloId"),
     );
   }
 }

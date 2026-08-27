@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:email_validator/email_validator.dart';
@@ -51,8 +52,6 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         provider: clienteProvider,
         element: cliente,
         mensajeExito: "El Cliente se guerdo con exito.",
-        mensajeError:
-            "Error al guardar el cliente. Por favor, intente de nuevo.",
       );
     }
   }
@@ -79,7 +78,26 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildActionButtons(context),
+            child: SaveButton(
+              isLoading: _isLoading,
+              semanticsLabel: "Guardar Cliente",
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  try {
+                    await _guardarCliente();
+                  } finally {
+                    if (context.mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  }
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -150,49 +168,6 @@ class AgregarClienteState extends ConsumerState<Agregarcliente> {
         }
         return null;
       },
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Semantics(
-          label: "Guardar cliente",
-          child: FilledButton(
-            // El botón se deshabilita si el formulario no es válido
-            onPressed: _isLoading
-                ? null
-                : () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      try {
-                        await _guardarCliente();
-                      } finally {
-                        if (context.mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      }
-                    }
-                  },
-            child: _isLoading
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.onSecondaryContainer,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : const Text("Guardar"),
-          ),
-        ),
-      ],
     );
   }
 }

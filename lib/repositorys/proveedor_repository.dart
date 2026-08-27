@@ -21,7 +21,7 @@ class ProveedorRepository extends BaseRepository<Proveedor> {
   Map<String, dynamic> toJson(Proveedor entity) => entity.toJson();
 
   @override
-  int? getId(Proveedor entity) => entity.idProveedor;
+  int? getId(Proveedor entity) => entity.id;
 
   @override
   Future<int> create(Proveedor entity) async {

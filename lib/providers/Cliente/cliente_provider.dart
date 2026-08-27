@@ -14,55 +14,34 @@ class ClienteNotifier extends _$ClienteNotifier {
     return repo.getAllWithKilosAndTotal();
   }
 
-  Future<int?> create(Cliente cliente) async {
-    state = const AsyncValue.loading();
-    try {
-      final int result = await ref
-          .read(clienteRepositoryProvider)
-          .create(cliente);
-      if (!ref.mounted) return null;
-      ref.invalidateSelf();
-      await future;
-      if (!ref.mounted) return null;
-      ref.invalidate(clientesFiltradosProvider);
-      return result;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
+  Future<int> create(Cliente cliente) async {
+    final int result = await ref
+        .read(clienteRepositoryProvider)
+        .create(cliente);
+    if (!ref.mounted) return result;
+    ref.invalidateSelf();
+    await future;
+    if (!ref.mounted) return result;
+    ref.invalidate(clientesFiltradosProvider);
+    return result;
   }
 
-  Future<bool> updateElement(Cliente cliente) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(clienteRepositoryProvider).update(cliente);
-      if (!ref.mounted) return false;
-      ref.invalidateSelf();
-      await future;
-      if (!ref.mounted) return false;
-      ref.invalidate(clientesFiltradosProvider);
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
+  Future<void> updateElement(Cliente cliente) async {
+    await ref.read(clienteRepositoryProvider).update(cliente);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
+    if (!ref.mounted) return;
+    ref.invalidate(clientesFiltradosProvider);
   }
 
-  Future<bool> delete(int id) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(clienteRepositoryProvider).delete(id);
-      if (!ref.mounted) return false;
-      ref.invalidateSelf();
-      await future;
-      if (!ref.mounted) return false;
-      ref.invalidate(clientesFiltradosProvider);
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-      return false;
-    }
+  Future<void> delete(int id) async {
+    await ref.read(clienteRepositoryProvider).delete(id);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
+    if (!ref.mounted) return;
+    ref.invalidate(clientesFiltradosProvider);
   }
 }
 

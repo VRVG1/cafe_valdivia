@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
+import 'package:cafe_valdivia/Components/entity_header.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
@@ -48,7 +49,6 @@ class ProductoDetallePage extends ConsumerWidget {
           provider: articuloProviderProvider,
           id: id,
           mensajeExito: "El Producto se elimino con exito",
-          mensajeError: "Error al eliminar el producto",
         ),
       );
     }
@@ -72,27 +72,9 @@ class ProductoDetallePage extends ConsumerWidget {
               vertical: 16.0,
             ),
             children: [
-              Center(
-                child: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primaryContainer,
-                  radius: 64,
-                  child: Text(
-                    producto.nombre[0].toUpperCase(),
-                    style: theme.textTheme.displayMedium?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                producto.nombre,
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
+              EntityHeader(
+                initials: producto.nombre[0].toUpperCase(),
+                name: producto.nombre,
               ),
               const SizedBox(height: 48),
               DetailsContainer(

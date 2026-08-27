@@ -272,7 +272,7 @@ void main() {
       );
       await repo.registrarOrdenProduccion(orden: orden, consumos: []);
       final ordenes = await repo.getAll();
-      final ordenId = ordenes.first.idOrdenProduccion!;
+      final ordenId = ordenes.first.id!;
 
       await repo.addConsumo(
         OrdenProduccionConsumo(
@@ -301,7 +301,7 @@ void main() {
       );
       await repo.registrarOrdenProduccion(orden: orden, consumos: []);
       final ordenes = await repo.getAll();
-      final ordenId = ordenes.first.idOrdenProduccion!;
+      final ordenId = ordenes.first.id!;
 
       await repo.addConsumo(
         OrdenProduccionConsumo(
@@ -313,7 +313,7 @@ void main() {
       );
 
       final consumos = await repo.getConsumosByOrdenId(ordenId);
-      await repo.deleteConsumo(consumos.first.idConsumo!);
+      await repo.deleteConsumo(consumos.first.id!);
 
       final restantes = await repo.getConsumosByOrdenId(ordenId);
       expect(restantes, isEmpty);
@@ -321,7 +321,7 @@ void main() {
       final rawConsumos = await database.query(
         'Orden_Produccion_Consumo',
         where: 'id_consumo = ?',
-        whereArgs: [consumos.first.idConsumo],
+        whereArgs: [consumos.first.id],
       );
       expect(rawConsumos.length, 1);
       expect(rawConsumos.first['activo'], 0);

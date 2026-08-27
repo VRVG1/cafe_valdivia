@@ -13,7 +13,7 @@ void main() {
   });
 
   final proveedor = Proveedor(
-    idProveedor: 1,
+    id: 1,
     nombre: 'Ventus',
     direccion: 'Tamazula',
     email: 'ventus@ventus.com',
@@ -94,7 +94,7 @@ void main() {
       expect(id, isNotNull);
 
       final modificado = proveedor2.copyWith(
-        idProveedor: id,
+        id: id,
         nombre: 'Ponchote',
         direccion: 'Kokoro',
       );
@@ -206,7 +206,7 @@ void main() {
 
     test('Update non-existent returns 0', () async {
       final inexistente = Proveedor(
-        idProveedor: 999,
+        id: 999,
         nombre: 'test',
         telefono: '123',
       );
@@ -237,7 +237,7 @@ void main() {
       final id = await proveedorRepository.create(proveedor2);
 
       final modificado = proveedor2.copyWith(
-        idProveedor: id,
+        id: id,
         email: proveedor.email,
       );
 
@@ -317,7 +317,7 @@ void main() {
       var todos = await proveedorRepository.getAll();
       expect(todos.length, 2);
 
-      await proveedorRepository.delete(todos.first.idProveedor!);
+      await proveedorRepository.delete(todos.first.id!);
 
       todos = await proveedorRepository.getAll();
       expect(todos.length, 1);
@@ -326,7 +326,7 @@ void main() {
     test('Create -> Update -> GetById reflects changes', () async {
       final id = await proveedorRepository.create(proveedor);
       final modificado = proveedor.copyWith(
-        idProveedor: id,
+        id: id,
         nombre: 'Actualizado',
         direccion: 'Nueva Dir',
       );

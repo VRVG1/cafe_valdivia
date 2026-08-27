@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Receta', () {
     final receta = Receta(
-      idReceta: 1,
+      id: 1,
       idArticuloProducto: 10,
       nombre: 'Receta de Pan',
       cantidad_base: 2.5,
@@ -21,7 +21,7 @@ void main() {
     };
 
     test('debe crearse correctamente con todos los campos', () {
-      expect(receta.idReceta, 1);
+      expect(receta.id, 1);
       expect(receta.idArticuloProducto, 10);
       expect(receta.nombre, 'Receta de Pan');
       expect(receta.cantidad_base, 2.5);
@@ -45,19 +45,19 @@ void main() {
 
       expect(copia.nombre, 'Receta de Pastel');
       expect(copia.cantidad_base, 3.0);
-      expect(copia.idReceta, receta.idReceta);
+      expect(copia.id, receta.id);
       expect(copia.idArticuloProducto, receta.idArticuloProducto);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final r1 = Receta(
-        idReceta: 1,
+        id: 1,
         idArticuloProducto: 10,
         nombre: 'Receta de Pan',
         cantidad_base: 2.5,
       );
       final r2 = Receta(
-        idReceta: 1,
+        id: 1,
         idArticuloProducto: 10,
         nombre: 'Receta de Pan',
         cantidad_base: 2.5,
@@ -68,13 +68,13 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final r1 = Receta(
-        idReceta: 1,
+        id: 1,
         idArticuloProducto: 10,
         nombre: 'Receta de Pan',
         cantidad_base: 2.5,
       );
       final r2 = Receta(
-        idReceta: 1,
+        id: 1,
         idArticuloProducto: 10,
         nombre: 'Receta de Pan',
         cantidad_base: 2.5,
@@ -99,7 +99,7 @@ void main() {
         'updated_at': null,
       };
 
-      expect(recetaNula.idReceta, isNull);
+      expect(recetaNula.id, isNull);
       expect(recetaNula.toJson(), recetaNulaJson);
       expect(Receta.fromJson(recetaNulaJson), recetaNula);
     });

@@ -22,7 +22,7 @@ class RecetaRepository extends BaseRepository<Receta> {
   Map<String, dynamic> toJson(Receta entity) => entity.toJson();
 
   @override
-  int? getId(Receta entity) => entity.idReceta;
+  int? getId(Receta entity) => entity.id;
 
   Future<List<Receta>> search(String query) async {
     return getAll(
@@ -76,18 +76,18 @@ class RecetaRepository extends BaseRepository<Receta> {
         tableName,
         sanitizeMapForDb(receta.toJson()),
         where: '$idColumn = ?',
-        whereArgs: [receta.idReceta],
+        whereArgs: [receta.id],
       );
 
       await txn.delete(
         'Receta_Detalle',
         where: 'id_receta = ?',
-        whereArgs: [receta.idReceta],
+        whereArgs: [receta.id],
       );
 
       for (final detalle in detalles) {
         final copy = sanitizeMapForDb(detalle.toJson());
-        copy['id_receta'] = receta.idReceta;
+        copy['id_receta'] = receta.id;
         await txn.insert(
           'Receta_Detalle',
           copy,

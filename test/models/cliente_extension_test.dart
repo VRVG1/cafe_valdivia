@@ -6,7 +6,7 @@ void main() {
   group('ClienteExtension', () {
     test('iniciales debe retornar la primera letra del nombre y apellido', () {
       final cliente = Cliente(
-        idCliente: 1,
+        id: 1,
         nombre: 'Juan',
         apellido: 'Perez',
       );
@@ -16,7 +16,7 @@ void main() {
 
     test('iniciales debe retornar solo la inicial del nombre si no hay apellido', () {
       final cliente = Cliente(
-        idCliente: 2,
+        id: 2,
         nombre: 'Maria',
         apellido: '',
       );
@@ -26,7 +26,7 @@ void main() {
 
     test('nombreYApellido debe retornar nombre y apellido separados', () {
       final cliente = Cliente(
-        idCliente: 1,
+        id: 1,
         nombre: 'Juan',
         apellido: 'Perez',
       );
@@ -36,7 +36,7 @@ void main() {
 
     test('nombreYApellido debe retornar solo el nombre si el apellido es vacio', () {
       final cliente = Cliente(
-        idCliente: 2,
+        id: 2,
         nombre: 'Maria',
         apellido: '',
       );

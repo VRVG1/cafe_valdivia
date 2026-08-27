@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Proveedor', () {
     final proveedor = Proveedor(
-      idProveedor: 1,
+      id: 1,
       nombre: 'Proveedor de Café',
       telefono: '123456789',
       email: 'contacto@proveedor.com',
@@ -36,7 +36,7 @@ void main() {
       final copia = proveedor.copyWith(nombre: 'Nuevo Proveedor');
 
       expect(copia.nombre, 'Nuevo Proveedor');
-      expect(copia.idProveedor, proveedor.idProveedor);
+      expect(copia.id, proveedor.id);
       expect(copia.telefono, proveedor.telefono);
       expect(copia.email, proveedor.email);
       expect(copia.direccion, proveedor.direccion);
@@ -44,14 +44,14 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final p1 = Proveedor(
-        idProveedor: 1,
+        id: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
         direccion: 'Calle Falsa 123',
       );
       final p2 = Proveedor(
-        idProveedor: 1,
+        id: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
@@ -63,14 +63,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final p1 = Proveedor(
-        idProveedor: 1,
+        id: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
         direccion: 'Calle Falsa 123',
       );
       final p2 = Proveedor(
-        idProveedor: 1,
+        id: 1,
         nombre: 'Proveedor de Café',
         telefono: '123456789',
         email: 'contacto@proveedor.com',
@@ -96,7 +96,7 @@ void main() {
         'updated_at': null,
       };
 
-      expect(proveedorNulo.idProveedor, isNull);
+      expect(proveedorNulo.id, isNull);
       expect(proveedorNulo.email, isNull);
       expect(proveedorNulo.toJson(), proveedorNuloJson);
       expect(Proveedor.fromJson(proveedorNuloJson), proveedorNulo);

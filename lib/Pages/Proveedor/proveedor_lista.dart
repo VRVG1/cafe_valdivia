@@ -63,8 +63,8 @@ class ProveedorListaState extends ConsumerState {
             data: proveedores,
             keyBuilder: (proveedor) {
               return ValueKey(
-                proveedor.idProveedor != null
-                    ? 'proveedor-${proveedor.idProveedor}'
+                proveedor.id != null
+                    ? 'proveedor-${proveedor.id}'
                     : proveedor.hashCode,
               );
             },
@@ -84,20 +84,20 @@ class ProveedorListaState extends ConsumerState {
                   : "xxxxxxxxxx",
             ),
             onTapCallback: (proveedor) => {
-              if (proveedor.idProveedor != null)
+              if (proveedor.id != null)
                 {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProveedorDetallado(
-                        proveedorId: proveedor.idProveedor!,
+                        proveedorId: proveedor.id!,
                       ),
                     ),
                   ),
                 },
             },
             onEditDismissed: (proveedor) async {
-              if (proveedor.idProveedor != null) {
+              if (proveedor.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -105,7 +105,7 @@ class ProveedorListaState extends ConsumerState {
                   ),
                 ).then(
                   (_) => ref.invalidate(
-                    proveedorDetailProvider(proveedor.idProveedor!),
+                    proveedorDetailProvider(proveedor.id!),
                   ),
                 );
               }
@@ -122,10 +122,8 @@ class ProveedorListaState extends ConsumerState {
                       context: context,
                       ref: ref,
                       provider: proveedorListProvider,
-                      id: proveedor.idProveedor!,
+                      id: proveedor.id!,
                       mensajeExito: "Proveedor eliminado correctamente",
-                      mensajeError:
-                          "Error al eliminar el cliente, intente de nuevo",
                       detalle: false,
                     ),
                   ) ??

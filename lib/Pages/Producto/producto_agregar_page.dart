@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
-import 'package:cafe_valdivia/Components/error_view.dart';
-import 'package:cafe_valdivia/Components/loading_view.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
+import 'package:cafe_valdivia/Components/unidad_medida_dropdown.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -42,7 +42,7 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       tipo: ArticuloTipo.producto,
-      idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
+      idUnidad: _selectedUnidadMedidad!.id!,
       costoUnitario: 0.0,
       precioVenta: double.tryParse(_precioController.text) ?? 0.0,
       stock: double.tryParse(_stockController.text) ?? 0.0,
@@ -53,7 +53,6 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
       provider: articuloProviderProvider,
       element: producto,
       mensajeExito: "Producto creado con exito",
-      mensajeError: "Error al crear el producto, Por favor, intente de nuevo",
     );
   }
 
@@ -80,7 +79,26 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildActionButtons(context),
+            child: SaveButton(
+              isLoading: _isLoading,
+              semanticsLabel: "Guardar Producto",
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  try {
+                    _crearProducto();
+                  } finally {
+                    if (context.mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  }
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -98,7 +116,22 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
                 icon: Icons.category_rounded,
               ),
               const SizedBox(height: 16),
-              _buildDropDownMenu(),
+              Consumer(
+                builder: (context, ref, _) {
+                  final asyncUM = debugOverride(
+                    ref,
+                    'agregar_producto',
+                    ref.watch(unidadMedidaProvider),
+                  );
+                  return UnidadMedidaDropdown(
+                    asyncData: asyncUM,
+                    selectedValue: _selectedUnidadMedidad,
+                    onChanged: (v) =>
+                        setState(() => _selectedUnidadMedidad = v),
+                    onRetry: () => ref.invalidate(unidadMedidaProvider),
+                  );
+                },
+              ),
               const SizedBox(height: 16),
               AppBuildTextField(
                 text: "Precio de venta",
@@ -174,113 +207,4 @@ class ProductoAgregarPageState extends ConsumerState<ProductoAgregarPage> {
     );
   }
 
-  Widget _buildDropDownMenu() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final asyncUM = debugOverride(
-          ref,
-          'agregar_producto',
-          ref.watch(unidadMedidaProvider),
-        );
-
-        return asyncUM.when(
-          data: (ums) {
-            return FormField<UnidadMedida>(
-              validator: (value) {
-                if (_selectedUnidadMedidad == null) {
-                  return 'Por favor, selecciona una unidad';
-                }
-                return null;
-              },
-              builder: (FormFieldState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DropdownMenu<UnidadMedida>(
-                      label: const Text("Unidad de Medida"),
-                      leadingIcon: const Icon(Icons.balance_rounded),
-                      expandedInsets: EdgeInsets.zero,
-                      initialSelection: _selectedUnidadMedidad,
-                      onSelected: (UnidadMedida? unidadMedida) {
-                        setState(() {
-                          _selectedUnidadMedidad = unidadMedida;
-                          FormFieldState.didChange(unidadMedida);
-                        });
-                      },
-                      dropdownMenuEntries: ums.map((unidadMedida) {
-                        return DropdownMenuEntry<UnidadMedida>(
-                          value: unidadMedida,
-                          label: unidadMedida.nombre,
-                        );
-                      }).toList(),
-                    ),
-                    if (FormFieldState.hasError)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, top: 8),
-                        child: Text(
-                          FormFieldState.errorText!,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            );
-          },
-          error: (err, stack) => ErrorRetryField(
-            label: "Unidad de Medida",
-            leadingIcon: Icons.balance_rounded,
-            showCarita: true,
-            onRetry: () => ref.invalidate(unidadMedidaProvider),
-          ),
-          loading: () => SkeletonDropMenu(),
-        );
-      },
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Semantics(
-          label: "Guardar producto",
-          child: FilledButton(
-            onPressed: _isLoading
-                ? null
-                : () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      try {
-                        _crearProducto();
-                      } finally {
-                        if (context.mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      }
-                    }
-                  },
-            child: _isLoading
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.onSecondaryContainer,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : const Text("Guardar"),
-          ),
-        ),
-      ],
-    );
-  }
 }

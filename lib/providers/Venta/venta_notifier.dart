@@ -16,10 +16,11 @@ class VentaNotifier extends _$VentaNotifier {
     return repo.getAllFullVentas();
   }
 
-  Future<int?> create(Venta venta, List<DetalleVenta> detallesVenta) async {
+  Future<int> create(Venta venta, List<DetalleVenta> detallesVenta) async {
     final int result = await ref
         .read(ventaRepositoryProvider)
         .registrarNuevaVenta(venta: venta, detallesVenta: detallesVenta);
+    if (!ref.mounted) return result;
     ref.invalidateSelf();
     await future;
     return result;
@@ -31,43 +32,25 @@ class VentaNotifier extends _$VentaNotifier {
         .getFullVenta(ventaId: idVenta);
   }
 
-  Future<bool> markAsPaid(int idVenta) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(ventaRepositoryProvider).markAsPaid(idVenta);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
+  Future<void> markAsPaid(int idVenta) async {
+    await ref.read(ventaRepositoryProvider).markAsPaid(idVenta);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 
-  Future<bool> markAsUnpaid(int idVenta) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(ventaRepositoryProvider).markAsUnpaid(idVenta);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
+  Future<void> markAsUnpaid(int idVenta) async {
+    await ref.read(ventaRepositoryProvider).markAsUnpaid(idVenta);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 
-  Future<bool> markAsNulled(int idVenta) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(ventaRepositoryProvider).markAsNulled(idVenta);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
+  Future<void> markAsNulled(int idVenta) async {
+    await ref.read(ventaRepositoryProvider).markAsNulled(idVenta);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 }
 

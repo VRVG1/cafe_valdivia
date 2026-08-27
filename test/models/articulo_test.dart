@@ -17,7 +17,7 @@ void main() {
     };
 
     final articulo = Articulo(
-      idArticulo: 1,
+      id: 1,
       nombre: 'Harina de trigo',
       descripcion: 'Harina refinada 1kg',
       tipo: ArticuloTipo.insumo,
@@ -29,7 +29,7 @@ void main() {
 
 
     test('debe crearse correctamente con todos los campos', () {
-      expect(articulo.idArticulo, 1);
+      expect(articulo.id, 1);
       expect(articulo.nombre, 'Harina de trigo');
       expect(articulo.descripcion, 'Harina refinada 1kg');
       expect(articulo.tipo, ArticuloTipo.insumo);
@@ -64,7 +64,7 @@ void main() {
 
       final result = Articulo.fromJson(jsonSinId);
 
-      expect(result.idArticulo, isNull);
+      expect(result.id, isNull);
       expect(result.nombre, 'Harina de trigo');
     });
 

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Articulo', () {
     final articulo = Articulo(
-      idArticulo: 1,
+      id: 1,
       nombre: 'Cafe verde arabica',
       descripcion: 'Cafe verde de alta calidad',
       idUnidad: 1,
@@ -42,7 +42,7 @@ void main() {
       final copia = articulo.copyWith(costoUnitario: 28.00);
 
       expect(copia.costoUnitario, 28.00);
-      expect(copia.idArticulo, articulo.idArticulo);
+      expect(copia.id, articulo.id);
       expect(copia.nombre, articulo.nombre);
       expect(copia.descripcion, articulo.descripcion);
       expect(copia.idUnidad, articulo.idUnidad);
@@ -50,7 +50,7 @@ void main() {
 
     test('Las instancias con los mismos valores son iguales', () {
       final i1 = Articulo(
-        idArticulo: 1,
+        id: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
@@ -60,7 +60,7 @@ void main() {
         stock: 0.0,
       );
       final i2 = Articulo(
-        idArticulo: 1,
+        id: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
@@ -75,7 +75,7 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final i1 = Articulo(
-        idArticulo: 1,
+        id: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,
@@ -85,7 +85,7 @@ void main() {
         stock: 0.0,
       );
       final i2 = Articulo(
-        idArticulo: 1,
+        id: 1,
         nombre: 'Café en grano',
         descripcion: 'Grano de café de altura',
         idUnidad: 1,

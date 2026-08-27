@@ -7,7 +7,7 @@ part of 'compra.dart';
 // **************************************************************************
 
 _Compra _$CompraFromJson(Map<String, dynamic> json) => _Compra(
-  idCompra: (json['id_compra'] as num?)?.toInt(),
+  id: (json['id_compra'] as num?)?.toInt(),
   idProveedor: (json['id_proveedor'] as num).toInt(),
   fecha: DateTime.parse(json['fecha'] as String),
   detalles: json['detalles'] as String?,
@@ -26,7 +26,7 @@ _Compra _$CompraFromJson(Map<String, dynamic> json) => _Compra(
 );
 
 Map<String, dynamic> _$CompraToJson(_Compra instance) => <String, dynamic>{
-  'id_compra': instance.idCompra,
+  'id_compra': instance.id,
   'id_proveedor': instance.idProveedor,
   'fecha': instance.fecha.toIso8601String(),
   'detalles': instance.detalles,

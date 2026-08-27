@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Cliente', () {
     final cliente = Cliente(
-      idCliente: 1,
+      id: 1,
       nombre: 'Juan',
       apellido: 'Pérez',
       telefono: '123456789',
@@ -40,21 +40,21 @@ void main() {
 
       expect(copia.nombre, 'Juanito');
       expect(copia.email, 'juanito@example.com');
-      expect(copia.idCliente, cliente.idCliente);
+      expect(copia.id, cliente.id);
       expect(copia.apellido, cliente.apellido);
       expect(copia.telefono, cliente.telefono);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final c1 = Cliente(
-        idCliente: 1,
+        id: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
         email: 'juan.perez@example.com',
       );
       final c2 = Cliente(
-        idCliente: 1,
+        id: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
@@ -66,14 +66,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final c1 = Cliente(
-        idCliente: 1,
+        id: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
         email: 'juan.perez@example.com',
       );
       final c2 = Cliente(
-        idCliente: 1,
+        id: 1,
         nombre: 'Juan',
         apellido: 'Pérez',
         telefono: '123456789',
@@ -86,7 +86,7 @@ void main() {
     test('El modelo funciona con campos nulos', () {
       final clienteNulo = Cliente(nombre: 'Solo Nombre', apellido: '');
 
-      expect(clienteNulo.idCliente, isNull);
+      expect(clienteNulo.id, isNull);
       expect(clienteNulo.telefono, isNull);
       expect(clienteNulo.email, isNull);
 
@@ -134,7 +134,7 @@ void main() {
     test('fromJson permite omitir claves de campos opcionales', () {
       final jsonMinimo = {'nombre': 'Juan', 'apellido': 'Pérez'};
       final result = Cliente.fromJson(jsonMinimo);
-      expect(result.idCliente, isNull);
+      expect(result.id, isNull);
       expect(result.telefono, isNull);
       expect(result.email, isNull);
     });

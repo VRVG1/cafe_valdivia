@@ -1,7 +1,8 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
-import 'package:cafe_valdivia/Components/loading_view.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
+import 'package:cafe_valdivia/Components/unidad_medida_dropdown.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -44,12 +45,12 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
 
   Future<void> _guardar() async {
     if (_selectedUnidadMedidad == null) return;
-    if (_selectedUnidadMedidad!.idUnidadMedida == null) return;
+    if (_selectedUnidadMedidad!.id == null) return;
 
     final Articulo articulo = Articulo(
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
-      idUnidad: _selectedUnidadMedidad!.idUnidadMedida!,
+      idUnidad: _selectedUnidadMedidad!.id!,
       costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
       precioVenta: 0.0,
       stock: 0.0,
@@ -61,7 +62,6 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
       provider: articuloProviderProvider,
       element: articulo,
       mensajeExito: "El Articulo se guardo con exito",
-      mensajeError: "Error al guardar el Articulo. Por favor, inente de nuevo.",
     );
   }
 
@@ -92,7 +92,26 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildActionButtons(context),
+            child: SaveButton(
+              isLoading: _isLoading,
+              semanticsLabel: "Guardar Articulo",
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  try {
+                    await _guardar();
+                  } finally {
+                    if (context.mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  }
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -115,7 +134,12 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
                 },
               ),
               const SizedBox(height: 16),
-              _buildDropDownMenu(asyncUM),
+              UnidadMedidaDropdown(
+                asyncData: asyncUM,
+                selectedValue: _selectedUnidadMedidad,
+                onChanged: (v) => setState(() => _selectedUnidadMedidad = v),
+                onRetry: () => ref.invalidate(unidadMedidaProvider),
+              ),
               const SizedBox(height: 16),
               FormField<String>(
                 initialValue: ArticuloTipo.insumo.value,
@@ -195,104 +219,4 @@ class AgregarArticuloPageState extends ConsumerState<AgregarArticuloPage> {
     );
   }
 
-  Widget _buildDropDownMenu(AsyncValue<List<UnidadMedida>> asyncUM) {
-    return asyncUM.when(
-      data: (ums) {
-        return FormField<UnidadMedida>(
-          initialValue: _selectedUnidadMedidad,
-          validator: (value) {
-            if (value == null) {
-              return "Ingresa una unidad de medida";
-            }
-            return null;
-          },
-          builder: (FormFieldState<UnidadMedida> state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DropdownMenu<UnidadMedida>(
-                  label: const Text("Unidad de Medida"),
-                  leadingIcon: const Icon(Icons.balance_rounded),
-                  expandedInsets: EdgeInsets.zero,
-                  initialSelection: state.value,
-                  onSelected: (UnidadMedida? unidadMedida) {
-                    state.didChange(unidadMedida);
-                    setState(() {
-                      _selectedUnidadMedidad = unidadMedida;
-                    });
-                  },
-                  dropdownMenuEntries: ums.map((unidadMedida) {
-                    return DropdownMenuEntry<UnidadMedida>(
-                      value: unidadMedida,
-                      label: unidadMedida.nombre,
-                    );
-                  }).toList(),
-                ),
-                // ← Muestra el error de validación
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0, left: 12),
-                    child: Text(
-                      state.errorText!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
-        );
-      },
-      error: (err, stack) => ErrorRetryField(
-        label: "Unidad de Medida",
-        leadingIcon: Icons.balance_rounded,
-        showCarita: true,
-        onRetry: () => ref.invalidate(unidadMedidaProvider),
-      ),
-      loading: () => SkeletonDropMenu(),
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Semantics(
-          label: "Guardar cambios",
-          child: FilledButton(
-            onPressed: _isLoading
-                ? null
-                : () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      try {
-                        await _guardar();
-                      } finally {
-                        if (context.mounted) {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      }
-                    }
-                  },
-            child: _isLoading
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.onSecondaryContainer,
-                      strokeWidth: 2,
-                    ),
-                  )
-                : const Text("Guardar"),
-          ),
-        ),
-      ],
-    );
-  }
 }

@@ -7,7 +7,7 @@ part of 'venta.dart';
 // **************************************************************************
 
 _Venta _$VentaFromJson(Map<String, dynamic> json) => _Venta(
-  idVenta: (json['id_venta'] as num?)?.toInt(),
+  id: (json['id_venta'] as num?)?.toInt(),
   idCliente: (json['id_cliente'] as num).toInt(),
   fecha: DateTime.parse(json['fecha'] as String),
   detalles: json['detalles'] as String?,
@@ -29,7 +29,7 @@ _Venta _$VentaFromJson(Map<String, dynamic> json) => _Venta(
 );
 
 Map<String, dynamic> _$VentaToJson(_Venta instance) => <String, dynamic>{
-  'id_venta': instance.idVenta,
+  'id_venta': instance.id,
   'id_cliente': instance.idCliente,
   'fecha': instance.fecha.toIso8601String(),
   'detalles': instance.detalles,

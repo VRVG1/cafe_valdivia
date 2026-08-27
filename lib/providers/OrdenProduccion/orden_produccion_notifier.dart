@@ -11,9 +11,6 @@ part 'orden_produccion_notifier.g.dart';
 
 @riverpod
 class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
-  String _ultimoError = 'Error al crear la orden. Intente de nuevo.';
-  String get ultimoError => _ultimoError;
-
   @override
   Future<List<Map<String, dynamic>>> build() async {
     final repo = ref.watch(ordenProduccionRepositoryProvider);
@@ -24,54 +21,31 @@ class OrdenProduccionNotifier extends _$OrdenProduccionNotifier {
     }
   }
 
-  Future<int?> create(
+  Future<int> create(
     OrdenProduccion orden,
     List<OrdenProduccionConsumo> consumos,
   ) async {
-    state = const AsyncValue.loading();
-    try {
-      final int result = await ref
-          .read(ordenProduccionRepositoryProvider)
-          .registrarOrdenProduccion(orden: orden, consumos: consumos);
-      ref.invalidateSelf();
-      await future;
-      return result;
-    } catch (e, st) {
-      appLogger.e('Error al crear orden de producción: $e');
-      _ultimoError = traducirErrorBD(e);
-      state = AsyncValue.error(_ultimoError, st);
-      return null;
-    }
+    final int result = await ref
+        .read(ordenProduccionRepositoryProvider)
+        .registrarOrdenProduccion(orden: orden, consumos: consumos);
+    if (!ref.mounted) return result;
+    ref.invalidateSelf();
+    await future;
+    return result;
   }
 
-  Future<bool> updateElement(OrdenProduccion orden) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(ordenProduccionRepositoryProvider).update(orden);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      appLogger.e('Error al actualizar orden de producción: $e');
-      _ultimoError = traducirErrorBD(e);
-      state = AsyncValue.error(_ultimoError, st);
-      return false;
-    }
+  Future<void> updateElement(OrdenProduccion orden) async {
+    await ref.read(ordenProduccionRepositoryProvider).update(orden);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 
-  Future<bool> delete(int id) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(ordenProduccionRepositoryProvider).delete(id);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      appLogger.e('Error al eliminar orden de producción: $e');
-      _ultimoError = traducirErrorBD(e);
-      state = AsyncValue.error(_ultimoError, st);
-      return false;
-    }
+  Future<void> delete(int id) async {
+    await ref.read(ordenProduccionRepositoryProvider).delete(id);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 }
 

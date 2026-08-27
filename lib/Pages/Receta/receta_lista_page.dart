@@ -46,8 +46,8 @@ class RecetaListaPage extends ConsumerWidget {
             data: recetas,
             keyBuilder: (receta) {
               return ValueKey(
-                receta.idReceta != null
-                    ? 'receta-${receta.idReceta}'
+                receta.id != null
+                    ? 'receta-${receta.id}'
                     : receta.hashCode,
               );
             },
@@ -56,18 +56,18 @@ class RecetaListaPage extends ConsumerWidget {
             subtitleBuilder: (receta) =>
                 Text('Cantidad base: ${receta.cantidad_base}'),
             onTapCallback: (receta) {
-              if (receta.idReceta != null) {
+              if (receta.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        RecetaDetallePage(recetaId: receta.idReceta!),
+                        RecetaDetallePage(recetaId: receta.id!),
                   ),
                 );
               }
             },
             onEditDismissed: (receta) async {
-              if (receta.idReceta != null) {
+              if (receta.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -88,10 +88,9 @@ class RecetaListaPage extends ConsumerWidget {
                       context: context,
                       ref: ref,
                       provider: recetaProviderProvider,
-                      id: receta.idReceta!,
+                      id: receta.id!,
                       mensajeExito: "Receta eliminada con exito",
                       detalle: false,
-                      mensajeError: "Error al eliminar la receta",
                     ),
                   ) ??
                   false;

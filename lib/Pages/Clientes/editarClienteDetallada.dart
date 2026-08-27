@@ -1,7 +1,10 @@
+import 'package:cafe_valdivia/Components/entity_header.dart';
 import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
+import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/cliente.dart';
 import 'package:cafe_valdivia/core/models/cliente_extension.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Cliente/cliente_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,13 +33,13 @@ class EditarClienteDetalladoState
   );
   late final TextEditingController _kilosController = TextEditingController(
     //text: "100",
-    text: widget.cliente.idCliente.toString(),
+    text: widget.cliente.id.toString(),
   );
   late final TextEditingController _ventasController = TextEditingController(
     text: "2800",
   );
   late final String acronimo = widget.cliente.iniciales;
-  late final int? _id = widget.cliente.idCliente;
+  late final int? _id = widget.cliente.id;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -124,14 +127,24 @@ class EditarClienteDetalladoState
     final email = _emailController.text;
 
     final Cliente clienteModificado = Cliente(
-      idCliente: _id,
+      id: _id,
       nombre: nombre,
       apellido: apellido,
       telefono: telefono,
       email: email,
     );
 
-    await ref.read(clienteProvider.notifier).updateElement(clienteModificado);
+    try {
+      await ref.read(clienteProvider.notifier).updateElement(clienteModificado);
+    } catch (e) {
+      if (!context.mounted) return;
+      showCustomSnackBar(
+        context: context,
+        mensaje: traducirErrorBD(e),
+        isError: true,
+      );
+      return;
+    }
 
     if (mounted) {
       Navigator.of(dialogContext).pop(); // Close dialog
@@ -179,7 +192,11 @@ class EditarClienteDetalladoState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(theme, acronimo),
+                EntityHeader(
+                  initials: acronimo,
+                  name: "${widget.cliente.nombre} ${widget.cliente.apellido}",
+                  compact: true,
+                ),
                 const SizedBox(height: 32),
                 Text(
                   "Información Personal",
@@ -211,32 +228,6 @@ class EditarClienteDetalladoState
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(ThemeData theme, String acronimo) {
-    return Column(
-      children: [
-        CircleAvatar(
-          backgroundColor: theme.colorScheme.primaryContainer,
-          radius: 80,
-          child: Text(
-            acronimo,
-            style: theme.textTheme.displayLarge?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          "${widget.cliente.nombre} ${widget.cliente.apellido}",
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-      ],
     );
   }
 

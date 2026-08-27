@@ -58,7 +58,7 @@ void main() {
       final obtenida = await repository.getById(id);
 
       expect(obtenida.nombre, unidad.nombre);
-      expect(obtenida.idUnidadMedida, id);
+      expect(obtenida.id, id);
     });
 
     test('Delete unidad and getById throws exception', () async {
@@ -77,7 +77,7 @@ void main() {
       expect(id, isNotNull);
 
       final modificada = unidad.copyWith(
-        idUnidadMedida: id,
+        id: id,
         nombre: 'Kilogramos Actualizado',
       );
 
@@ -242,7 +242,7 @@ void main() {
       var todas = await repository.getAll();
       expect(todas.length, 2);
 
-      await repository.delete(todas.first.idUnidadMedida!);
+      await repository.delete(todas.first.id!);
 
       todas = await repository.getAll();
       expect(todas.length, 1);
@@ -251,7 +251,7 @@ void main() {
     test('Create -> Update -> GetById reflects changes', () async {
       final id = await repository.create(unidad);
       final modificada = unidad.copyWith(
-        idUnidadMedida: id,
+        id: id,
         nombre: 'Actualizado',
       );
 

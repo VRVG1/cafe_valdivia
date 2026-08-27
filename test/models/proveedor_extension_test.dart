@@ -6,7 +6,7 @@ void main() {
   group('ProveedorExtension', () {
     test('iniciales debe retornar la primera letra del nombre', () {
       final proveedor = Proveedor(
-        idProveedor: 1,
+        id: 1,
         nombre: 'Proveedor de Cafe',
       );
 
@@ -15,7 +15,7 @@ void main() {
 
     test('iniciales debe funcionar con nombres cortos', () {
       final proveedor = Proveedor(
-        idProveedor: 2,
+        id: 2,
         nombre: 'A',
       );
 

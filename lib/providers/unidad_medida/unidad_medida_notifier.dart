@@ -12,45 +12,28 @@ class UnidadMedidaNotifier extends _$UnidadMedidaNotifier {
     return repo.getAll();
   }
 
-  Future<int?> create(String nombre) async {
-    state = const AsyncValue.loading();
-    try {
-      final UnidadMedida unidadMedida = UnidadMedida(nombre: nombre);
-      final int result = await ref
-          .read(unidadMedidaRepositoryProvider)
-          .create(unidadMedida);
-      ref.invalidateSelf();
-      await future;
-      return result;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
+  Future<int> create(String nombre) async {
+    final UnidadMedida unidadMedida = UnidadMedida(nombre: nombre);
+    final int result = await ref
+        .read(unidadMedidaRepositoryProvider)
+        .create(unidadMedida);
+    if (!ref.mounted) return result;
+    ref.invalidateSelf();
+    await future;
+    return result;
   }
 
-  Future<bool> updateElement(UnidadMedida unidadMedida) async {
-    state = const AsyncValue.loading();
-    try {
-      ref.read(unidadMedidaRepositoryProvider).update(unidadMedida);
-      ref.invalidateSelf();
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
-    // ref.read(unidadMedidaRepositoryProvider).update(unidadMedida);
-    // ref.invalidateSelf();
+  Future<void> updateElement(UnidadMedida unidadMedida) async {
+    await ref.read(unidadMedidaRepositoryProvider).update(unidadMedida);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 
-  Future<bool> delete(int id) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(unidadMedidaRepositoryProvider).delete(id);
-      ref.invalidateSelf();
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
+  Future<void> delete(int id) async {
+    await ref.read(unidadMedidaRepositoryProvider).delete(id);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 }

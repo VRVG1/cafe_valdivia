@@ -3,6 +3,8 @@ import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
+import 'package:cafe_valdivia/Components/unidad_medida_dropdown.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -56,7 +58,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     return _nombreController.text != _initialNombre ||
         _descripcionController.text != _initialDescripcion ||
         _costoUnitarioController.text != _initialCostoUnitario.toString() ||
-        (_selectedUnidadMedidad?.idUnidadMedida ?? _initialUnidadMedida) !=
+        (_selectedUnidadMedidad?.id ?? _initialUnidadMedida) !=
             _initialUnidadMedida;
   }
 
@@ -72,16 +74,12 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     final unidadFinal = _selectedUnidadMedidad ?? unidadInicial;
 
     final updatedArticulo = widget.articulo.copyWith(
-      idArticulo: widget.articulo.idArticulo,
+      id: widget.articulo.id,
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
-      idUnidad: unidadFinal.idUnidadMedida!,
+      idUnidad: unidadFinal.id!,
     );
-
-    await ref
-        .read(articuloProviderProvider.notifier)
-        .updateElement(updatedArticulo);
 
     update<Articulo>(
       context: context,
@@ -89,8 +87,6 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
       provider: articuloProviderProvider,
       element: updatedArticulo,
       mensajeExito: "Se actualizo la Unidad de Medida de forma correcta.",
-      mensajeError:
-          "Error al actualizar la Unidad de Medidad, Por favor intente de nuevo.",
     );
   }
 
@@ -136,7 +132,26 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
               actions: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: _buildActionButtons(context, unidadInicial),
+                  child: SaveButton(
+                    semanticsLabel: "Editar cliente",
+                    isLoading: _isLoading,
+                    onPressed: () async {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await _update(unidadInicial);
+                        } finally {
+                          if (context.mounted) {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        }
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
@@ -156,7 +171,24 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                       icon: Icons.label_rounded,
                     ),
                     const SizedBox(height: 16),
-                    _buildDropDownMenu(unidadInicial),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final asyncUM = debugOverride(
+                          ref,
+                          'editar_articulo',
+                          ref.watch(unidadMedidaProvider),
+                        );
+                        return UnidadMedidaDropdown(
+                          asyncData: asyncUM,
+                          selectedValue: _selectedUnidadMedidad,
+                          initialValue: unidadInicial,
+                          onChanged: (v) =>
+                              setState(() => _selectedUnidadMedidad = v),
+                          onRetry: () =>
+                              ref.invalidate(unidadMedidaProvider),
+                        );
+                      },
+                    ),
                     const SizedBox(height: 16),
                     _buildTextField(
                       label: "Descripcion",
@@ -196,113 +228,6 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
         }
         return null;
       },
-    );
-  }
-
-  //TODO: Hay que refactorizar esta funcion, ya que esta elaborada con las patas.
-  Widget _buildDropDownMenu(UnidadMedida unidadInicial) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final asyncUM = debugOverride(
-          ref,
-          'editar_articulo',
-          ref.watch(unidadMedidaProvider),
-        );
-        return asyncUM.when(
-          data: (ums) {
-            return FormField<UnidadMedida>(
-              initialValue: unidadInicial,
-              validator: (value) {
-                if (_selectedUnidadMedidad == null) {
-                  return 'Por favor, selecciona una unidad';
-                }
-                return null;
-              },
-              builder: (FormFieldState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DropdownMenu<UnidadMedida>(
-                      label: const Text("Unidad de Medida"),
-                      leadingIcon: const Icon(Icons.balance_rounded),
-                      expandedInsets: EdgeInsets.zero,
-                      initialSelection: _selectedUnidadMedidad,
-                      onSelected: (UnidadMedida? unidadMedida) {
-                        setState(() {
-                          _selectedUnidadMedidad = unidadMedida;
-                          FormFieldState.didChange(unidadMedida);
-                        });
-                      },
-                      dropdownMenuEntries: ums.map((unidadMedida) {
-                        return DropdownMenuEntry<UnidadMedida>(
-                          value: unidadMedida,
-                          label: unidadMedida.nombre,
-                        );
-                      }).toList(),
-                    ),
-                    if (FormFieldState.hasError)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12, top: 8),
-                        child: Text(
-                          FormFieldState.errorText!,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            );
-          },
-          error: (err, stack) => ErrorRetryField(
-            label: "Unidad de Medida",
-            leadingIcon: Icons.balance_rounded,
-            showCarita: true,
-            onRetry: () => ref.invalidate(unidadMedidaProvider),
-          ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-        );
-      },
-    );
-  }
-
-  Widget _buildActionButtons(BuildContext context, UnidadMedida unidadInicial) {
-    final theme = Theme.of(context);
-
-    return Semantics(
-      label: "Guardar Cambios",
-      child: FilledButton(
-        onPressed: _isLoading
-            ? null
-            : () async {
-                if (_formKey.currentState?.validate() ?? false) {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  try {
-                    await _update(unidadInicial);
-                  } finally {
-                    if (context.mounted) {
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
-                  }
-                }
-              },
-        child: _isLoading
-            ? SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: theme.colorScheme.onSecondaryContainer,
-                  strokeWidth: 2,
-                ),
-              )
-            : const Text("Guardar"),
-      ),
     );
   }
 }

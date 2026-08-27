@@ -14,61 +14,37 @@ class RecetaProvider extends _$RecetaProvider {
     return repo.getAll();
   }
 
-  Future<int?> create(Receta receta, [List<RecetaDetalle>? detalles]) async {
-    state = const AsyncValue.loading();
-    try {
-      final repo = ref.read(recetaRepositoryProvider);
-      int result;
-      if (detalles != null) {
-        result = await repo.registrarNuevaReceta(
-          receta: receta,
-          detalles: detalles,
-        );
-      } else {
-        result = await repo.create(receta);
-      }
-      if (!ref.mounted) return null;
-      ref.invalidateSelf();
-      await future;
-      return result;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
+  Future<int> create(Receta receta, [List<RecetaDetalle>? detalles]) async {
+    final repo = ref.read(recetaRepositoryProvider);
+    final int result = detalles != null
+        ? await repo.registrarNuevaReceta(receta: receta, detalles: detalles)
+        : await repo.create(receta);
+    if (!ref.mounted) return result;
+    ref.invalidateSelf();
+    await future;
+    return result;
   }
 
-  Future<bool> updateElement(
+  Future<void> updateElement(
     Receta receta, [
     List<RecetaDetalle>? detalles,
   ]) async {
-    state = const AsyncValue.loading();
-    try {
-      final repo = ref.read(recetaRepositoryProvider);
-      if (detalles != null) {
-        await repo.updateReceta(receta: receta, detalles: detalles);
-      } else {
-        await repo.update(receta);
-      }
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
+    final repo = ref.read(recetaRepositoryProvider);
+    if (detalles != null) {
+      await repo.updateReceta(receta: receta, detalles: detalles);
+    } else {
+      await repo.update(receta);
     }
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 
-  Future<bool> delete(int id) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(recetaRepositoryProvider).delete(id);
-      ref.invalidateSelf();
-      await future;
-      return false;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+  Future<void> delete(int id) async {
+    await ref.read(recetaRepositoryProvider).delete(id);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 }
 

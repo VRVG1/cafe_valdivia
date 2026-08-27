@@ -8,7 +8,7 @@ part of 'receta_detalle.dart';
 
 _RecetaDetalle _$RecetaDetalleFromJson(Map<String, dynamic> json) =>
     _RecetaDetalle(
-      idRecetaDetalle: (json['id_receta_detalle'] as num?)?.toInt(),
+      id: (json['id_receta_detalle'] as num?)?.toInt(),
       idReceta: (json['id_receta'] as num).toInt(),
       idArticulo: (json['id_articulo_componente'] as num).toInt(),
       cantidad: (json['cantidad'] as num).toDouble(),
@@ -28,7 +28,7 @@ _RecetaDetalle _$RecetaDetalleFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$RecetaDetalleToJson(_RecetaDetalle instance) =>
     <String, dynamic>{
-      'id_receta_detalle': instance.idRecetaDetalle,
+      'id_receta_detalle': instance.id,
       'id_receta': instance.idReceta,
       'id_articulo_componente': instance.idArticulo,
       'cantidad': instance.cantidad,

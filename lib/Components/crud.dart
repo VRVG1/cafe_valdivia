@@ -3,7 +3,6 @@ import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 Widget _botonConSemantics({
   required String label,
@@ -101,7 +100,6 @@ Future<bool> delete({
   required provider,
   required int id,
   required String mensajeExito,
-  required String mensajeError,
   bool detalle = true,
 }) async {
   try {
@@ -115,6 +113,11 @@ Future<bool> delete({
     appLogger.i("Se borro un elemento: $provider");
     return true;
   } catch (e, st) {
+    appLogger.e(
+      "Error al borrar un elemento: $provider",
+      error: e,
+      stackTrace: st,
+    );
     if (context.mounted) {
       showCustomSnackBar(
         context: context,
@@ -122,7 +125,6 @@ Future<bool> delete({
         isError: true,
       );
     }
-    appLogger.e("Error al borro un elemento: $provider");
     return false;
   }
 }
@@ -133,7 +135,6 @@ Future<int?> create<T>({
   required provider,
   required T element,
   required String mensajeExito,
-  required String mensajeError,
   bool detalles = false,
   List<T>? detallesElement,
 }) async {
@@ -146,25 +147,20 @@ Future<int?> create<T>({
     } else {
       result = await ref.read(provider.notifier).create(element);
     }
-    print("Ante de entrar al if: $result");
-    if (result != null && context.mounted) {
-      appLogger.f("Ante de motrar el mensaje");
+    if (context.mounted) {
       showCustomSnackBar(context: context, mensaje: mensajeExito);
       if (!detalles) {
-        Navigator.of(context).pop(element); // Regresar a la pantalla anterior
+        final elementWithId = (element as dynamic).copyWith(id: result) as T;
+        Navigator.of(context).pop(elementWithId);
       }
     }
     return result;
   } catch (e, st) {
     appLogger.e("Error al crear elemento: $provider", error: e, stackTrace: st);
-    if (e.toString().contains("existe")) {
-      List<String> cortado = e.toString().split(" ");
-      String duplicado = cortado.sublist(1, cortado.length).join(" ");
-      showCustomSnackBar(context: context, mensaje: duplicado, isError: true);
-    } else if (context.mounted) {
+    if (context.mounted) {
       showCustomSnackBar(
         context: context,
-        mensaje: mensajeError,
+        mensaje: traducirErrorBD(e),
         isError: true,
       );
     }
@@ -178,28 +174,29 @@ Future<bool> update<T>({
   required provider,
   required T element,
   String? mensajeExito,
-  String? mensajeError,
 }) async {
   try {
     await ref.read(provider.notifier).updateElement(element);
     if (context.mounted) {
-      mensajeExito != null
-          ? showCustomSnackBar(context: context, mensaje: mensajeExito ?? "")
-          : null;
+      if (mensajeExito != null) {
+        showCustomSnackBar(context: context, mensaje: mensajeExito);
+      }
       Navigator.of(context).pop(); // Regresar a la pantalla anterior
     }
     return true;
   } catch (e, st) {
+    appLogger.e(
+      "Error al actualizar un elemento: $provider",
+      error: e,
+      stackTrace: st,
+    );
     if (context.mounted) {
-      mensajeExito != null
-          ? showCustomSnackBar(
-              context: context,
-              mensaje: mensajeError ?? "",
-              isError: true,
-            )
-          : null;
+      showCustomSnackBar(
+        context: context,
+        mensaje: traducirErrorBD(e),
+        isError: true,
+      );
     }
-
     return false;
   }
 }

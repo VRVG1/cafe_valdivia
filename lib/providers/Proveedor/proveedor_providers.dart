@@ -13,46 +13,28 @@ class ProveedorList extends _$ProveedorList {
     return repo.getAll();
   }
 
-  Future<int?> create(Proveedor proveedor) async {
-    state = const AsyncValue.loading();
-    try {
-      final int result = await ref
-          .read(proveedorRepositoryProvider)
-          .create(proveedor);
-      if (!ref.mounted) return null;
-      ref.invalidateSelf();
-      await future;
-      return result;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return null;
-    }
+  Future<int> create(Proveedor proveedor) async {
+    final int result = await ref
+        .read(proveedorRepositoryProvider)
+        .create(proveedor);
+    if (!ref.mounted) return result;
+    ref.invalidateSelf();
+    await future;
+    return result;
   }
 
-  Future<bool> updateElement(Proveedor proveedor) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(proveedorRepositoryProvider).update(proveedor);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      return false;
-    }
+  Future<void> updateElement(Proveedor proveedor) async {
+    await ref.read(proveedorRepositoryProvider).update(proveedor);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 
-  Future<bool> delete(int id) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(proveedorRepositoryProvider).delete(id);
-      ref.invalidateSelf();
-      await future;
-      return true;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+  Future<void> delete(int id) async {
+    await ref.read(proveedorRepositoryProvider).delete(id);
+    if (!ref.mounted) return;
+    ref.invalidateSelf();
+    await future;
   }
 }
 

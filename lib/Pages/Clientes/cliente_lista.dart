@@ -129,8 +129,6 @@ class Clientelista extends ConsumerWidget {
                       id: id,
                       mensajeExito: "El cliente se ha borrado con exito",
                       detalle: false,
-                      mensajeError:
-                          "Error al eliminar el cliente, Por favor, intente de nuevo",
                     ),
                   ) ??
                   false;

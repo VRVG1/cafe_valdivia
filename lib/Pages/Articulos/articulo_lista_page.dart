@@ -53,8 +53,8 @@ class InsumoListaPage extends ConsumerWidget {
             data: articulos,
             keyBuilder: (articulo) {
               return ValueKey(
-                articulo.idArticulo != null
-                    ? 'articulo-${articulo.idArticulo}'
+                articulo.id != null
+                    ? 'articulo-${articulo.id}'
                     : articulo.hashCode,
               );
             },
@@ -72,18 +72,18 @@ class InsumoListaPage extends ConsumerWidget {
               ],
             ),
             onTapCallback: (articulo) {
-              if (articulo.idArticulo != null) {
+              if (articulo.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ArticuloDetalladoPage(articuloId: articulo.idArticulo!),
+                        ArticuloDetalladoPage(articuloId: articulo.id!),
                   ),
                 );
               }
             },
             onEditDismissed: (articulo) async {
-              if (articulo.idArticulo != null) {
+              if (articulo.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -105,11 +105,9 @@ class InsumoListaPage extends ConsumerWidget {
                       context: context,
                       ref: ref,
                       provider: articuloProviderProvider,
-                      id: articulo.idArticulo!,
+                      id: articulo.id!,
                       mensajeExito: "El articulo se ha borrado con exito",
                       detalle: false,
-                      mensajeError:
-                          "Error al eliminar el Articulo, Por favor, intente de nuevo.",
                     ),
                   ) ??
                   false;

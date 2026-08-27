@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/detail_element.dart';
 import 'package:cafe_valdivia/Components/details_container.dart';
+import 'package:cafe_valdivia/Components/entity_header.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
@@ -55,8 +56,6 @@ class ArticuloDetalladoPage extends ConsumerWidget {
               provider: articuloProviderProvider,
               id: articuloId,
               mensajeExito: 'Articulo eliminado con éxito',
-              mensajeError:
-                  'Error al eliminar el articulo. Por favor, intente de nuevo.',
             ),
           );
         },
@@ -71,27 +70,9 @@ class ArticuloDetalladoPage extends ConsumerWidget {
               vertical: 16.0,
             ),
             children: [
-              Center(
-                child: CircleAvatar(
-                  backgroundColor: theme.colorScheme.primaryContainer,
-                  radius: 64,
-                  child: Text(
-                    articulo.nombre[0].toUpperCase(),
-                    style: theme.textTheme.displayMedium?.copyWith(
-                      color: theme.colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                articulo.nombre,
-                style: theme.textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
+              EntityHeader(
+                initials: articulo.nombre[0].toUpperCase(),
+                name: articulo.nombre,
               ),
               const SizedBox(height: 48),
               DetailsContainer(

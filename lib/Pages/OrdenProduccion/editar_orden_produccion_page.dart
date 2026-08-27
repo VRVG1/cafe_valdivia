@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/Components/app_build_text_field.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +48,7 @@ class EditarOrdenProduccionPageState
       if (!context.mounted) return;
 
       ref.invalidate(
-        ordenProduccionDetalladaProvider(widget.orden.idOrdenProduccion!),
+        ordenProduccionDetalladaProvider(widget.orden.id!),
       );
 
       showCustomSnackBar(
@@ -59,7 +60,7 @@ class EditarOrdenProduccionPageState
       if (!context.mounted) return;
       showCustomSnackBar(
         context: context,
-        mensaje: "Error al actualizar la orden. Intente de nuevo.",
+        mensaje: traducirErrorBD(e),
         isError: true,
       );
     }
@@ -142,7 +143,7 @@ class EditarOrdenProduccionPageState
                     const SizedBox(height: 8),
                     _buildInfoRow(
                       "ID",
-                      "#${widget.orden.idOrdenProduccion}",
+                      "#${widget.orden.id}",
                       cs,
                       tt,
                     ),

@@ -1,4 +1,5 @@
 import 'package:cafe_valdivia/Components/app_build_text_field.dart';
+import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
@@ -7,6 +8,7 @@ import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -69,7 +71,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     if (!mounted) return;
 
     try {
-      final detalles = await repo.getRecetaDetalles(widget.receta.idReceta!);
+      final detalles = await repo.getRecetaDetalles(widget.receta.id!);
 
       if (!mounted) return;
 
@@ -77,10 +79,10 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
         for (final d in detalles) {
           final row = _ComponenteRow();
           row.articulo = insumos
-              .where((a) => a.idArticulo == d.idArticulo)
+              .where((a) => a.id == d.idArticulo)
               .firstOrNull;
           row.unidad = ums
-              .where((u) => u.idUnidadMedida == d.idUnidad)
+              .where((u) => u.id == d.idUnidad)
               .firstOrNull;
           row.cantidadController.text = d.cantidad.toString();
           _componentes.add(row);
@@ -119,23 +121,23 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
 
   Future<void> _guardar() async {
     if (_productoSeleccionado == null) return;
-    if (_productoSeleccionado!.idArticulo == null) return;
-    if (widget.receta.idReceta == null) return;
+    if (_productoSeleccionado!.id == null) return;
+    if (widget.receta.id == null) return;
 
     final componentesValidos = _componentes.where((c) => c.isValid).toList();
 
     final receta = widget.receta.copyWith(
       nombre: _nombreController.text,
-      idArticuloProducto: _productoSeleccionado!.idArticulo!,
+      idArticuloProducto: _productoSeleccionado!.id!,
       cantidad_base: double.tryParse(_cantidadBaseController.text) ?? 1,
     );
 
     final List<RecetaDetalle> detalles = componentesValidos.map((c) {
       return RecetaDetalle(
-        idReceta: widget.receta.idReceta!,
-        idArticulo: c.articulo!.idArticulo!,
+        idReceta: widget.receta.id!,
+        idArticulo: c.articulo!.id!,
         cantidad: double.tryParse(c.cantidadController.text) ?? 0,
-        idUnidad: c.unidad!.idUnidadMedida!,
+        idUnidad: c.unidad!.id!,
       );
     }).toList();
 
@@ -146,8 +148,8 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
 
       if (!context.mounted) return;
 
-      ref.invalidate(recetaDetailProvider(widget.receta.idReceta!));
-      ref.invalidate(recetaDetallesProvider(widget.receta.idReceta!));
+      ref.invalidate(recetaDetailProvider(widget.receta.id!));
+      ref.invalidate(recetaDetallesProvider(widget.receta.id!));
 
       showCustomSnackBar(
         context: context,
@@ -158,7 +160,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
       if (!context.mounted) return;
       showCustomSnackBar(
         context: context,
-        mensaje: "Error al actualizar la receta. Intente de nuevo.",
+        mensaje: traducirErrorBD(e),
         isError: true,
       );
     }
@@ -200,7 +202,25 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
           icon: const Icon(Icons.close_rounded),
         ),
         actions: [
-          Padding(padding: AppPadding.hMd, child: _buildSaveButton(cs)),
+          Padding(
+            padding: AppPadding.hMd,
+            child: SaveButton(
+              isLoading: _isLoading,
+              semanticsLabel: "Editar Receta",
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  setState(() => _isLoading = true);
+                  try {
+                    await _guardar();
+                  } finally {
+                    if (context.mounted) {
+                      setState(() => _isLoading = false);
+                    }
+                  }
+                }
+              },
+            ),
+          ),
         ],
       ),
       body: Form(
@@ -227,7 +247,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                 data: (productos) {
                   if (_productoSeleccionado == null && productos.isNotEmpty) {
                     final match = productos.where(
-                      (p) => p.idArticulo == widget.receta.idArticuloProducto,
+                      (p) => p.id == widget.receta.idArticuloProducto,
                     );
                     if (match.isNotEmpty) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -373,7 +393,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
                         asyncUms is AsyncData<List<UnidadMedida>>) {
                       final umList = asyncUms.value;
                       final match = umList.where(
-                        (um) => um.idUnidadMedida == a.idUnidad,
+                        (um) => um.id == a.idUnidad,
                       );
                       if (match.isNotEmpty) {
                         setState(() => componente.unidad = match.first);
@@ -461,7 +481,7 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
       final cantidad = double.tryParse(c.cantidadController.text) ?? 0;
       final costo =
           insumos
-              .where((i) => i.idArticulo == c.articulo!.idArticulo)
+              .where((i) => i.id == c.articulo!.id)
               .firstOrNull
               ?.costoUnitario ??
           0;
@@ -496,32 +516,5 @@ class EditarRecetaPageState extends ConsumerState<EditarRecetaPage> {
     );
   }
 
-  Widget _buildSaveButton(ColorScheme cs) {
-    return FilledButton(
-      onPressed: _isLoading
-          ? null
-          : () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                setState(() => _isLoading = true);
-                try {
-                  await _guardar();
-                } finally {
-                  if (context.mounted) {
-                    setState(() => _isLoading = false);
-                  }
-                }
-              }
-            },
-      child: _isLoading
-          ? SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                color: cs.onSecondaryContainer,
-                strokeWidth: 2,
-              ),
-            )
-          : const Text("Guardar"),
-    );
-  }
+
 }

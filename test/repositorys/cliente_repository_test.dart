@@ -13,7 +13,7 @@ void main() {
   });
 
   final cliente = Cliente(
-    idCliente: 1,
+    id: 1,
     nombre: 'Pedro',
     apellido: 'Orderp',
     telefono: '3333333333',
@@ -199,13 +199,13 @@ void main() {
 
     test('Update with empty nombre throws', () async {
       final id = await clienteRepository.create(cliente);
-      final invalido = cliente.copyWith(idCliente: id, nombre: '');
+      final invalido = cliente.copyWith(id: id, nombre: '');
       expect(clienteRepository.update(invalido), throwsA(isA<Exception>()));
     });
 
     test('Update with empty apellido throws', () async {
       final id = await clienteRepository.create(cliente);
-      final invalido = cliente.copyWith(idCliente: id, apellido: '');
+      final invalido = cliente.copyWith(id: id, apellido: '');
       expect(clienteRepository.update(invalido), throwsA(isA<Exception>()));
     });
 
@@ -303,7 +303,7 @@ void main() {
       var todos = await clienteRepository.getAll();
       expect(todos.length, 2);
 
-      await clienteRepository.delete(todos.first.idCliente!);
+      await clienteRepository.delete(todos.first.id!);
 
       todos = await clienteRepository.getAll();
       expect(todos.length, 1);
@@ -312,7 +312,7 @@ void main() {
     test('Create → Update → GetById reflects changes', () async {
       final id = await clienteRepository.create(cliente);
       final modificado = cliente.copyWith(
-        idCliente: id,
+        id: id,
         nombre: 'Actualizado',
         telefono: '5555555555',
       );

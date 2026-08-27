@@ -5,7 +5,7 @@ void main() {
   group('Compra', () {
     final fecha = DateTime.parse('2025-10-01T12:00:00.000Z');
     final compra = Compra(
-      idCompra: 1,
+      id: 1,
       idProveedor: 100,
       fecha: fecha,
       detalles: 'Compra de prueba',
@@ -39,21 +39,21 @@ void main() {
       expect(copia.pagado, false);
       expect(copia.detalles, 'Pagado después');
 
-      expect(copia.idCompra, compra.idCompra);
+      expect(copia.id, compra.id);
       expect(copia.idProveedor, compra.idProveedor);
       expect(copia.fecha, compra.fecha);
     });
 
     test('Las instancias con los mismos valores son iguales', () {
       final c1 = Compra(
-        idCompra: 1,
+        id: 1,
         idProveedor: 100,
         fecha: fecha,
         detalles: 'Compra de prueba',
         pagado: true,
       );
       final c2 = Compra(
-        idCompra: 1,
+        id: 1,
         idProveedor: 100,
         fecha: fecha,
         detalles: 'Compra de prueba',
@@ -65,14 +65,14 @@ void main() {
 
     test('El hashCode es el mismo para instancias iguales', () {
       final c1 = Compra(
-        idCompra: 1,
+        id: 1,
         idProveedor: 100,
         fecha: fecha,
         detalles: 'Compra de prueba',
         pagado: true,
       );
       final c2 = Compra(
-        idCompra: 1,
+        id: 1,
         idProveedor: 100,
         fecha: fecha,
         detalles: 'Compra de prueba',
@@ -139,7 +139,7 @@ void main() {
 
     test('toJson omite campos nulos por defecto', () {
       final minimal = Compra(
-        idCompra: 1,
+        id: 1,
         idProveedor: 100,
         fecha: fecha,
         pagado: true,

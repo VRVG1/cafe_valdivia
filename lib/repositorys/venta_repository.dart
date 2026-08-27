@@ -29,7 +29,7 @@ class VentaRepository extends BaseRepository<Venta> {
   Map<String, dynamic> toJson(Venta entity) => entity.toJson();
 
   @override
-  int? getId(Venta entity) => entity.idVenta;
+  int? getId(Venta entity) => entity.id;
 
   Map<String, dynamic> _ventaToJson(Venta entity) {
     final map = entity.toJson();
@@ -49,13 +49,13 @@ class VentaRepository extends BaseRepository<Venta> {
 
   @override
   Future<int> update(Venta entity) async {
-    if (entity.idVenta == null)
+    if (entity.id == null)
       throw OperacionInvalidaException('ID de venta no puede ser nulo');
     return await dbHelper.update(
       tableName,
       sanitizeMapForDb(_ventaToJson(entity)),
       where: '$idColumn = ?',
-      whereArgs: [entity.idVenta],
+      whereArgs: [entity.id],
     );
   }
 

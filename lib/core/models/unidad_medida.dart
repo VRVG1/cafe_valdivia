@@ -6,7 +6,7 @@ part 'unidad_medida.g.dart';
 @freezed
 abstract class UnidadMedida with _$UnidadMedida {
   const factory UnidadMedida({
-    @JsonKey(name: 'id_unidad') int? idUnidadMedida,
+    @JsonKey(name: 'id_unidad') int? id,
     required String nombre,
     @IntToBoolConverter() @Default(true) bool activo,
     @JsonKey(name: 'deleted_at') DateTime? deletedAt,

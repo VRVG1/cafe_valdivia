@@ -1,12 +1,14 @@
 import 'package:cafe_valdivia/Components/app_bar_detalles.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
+import 'package:cafe_valdivia/Components/detail_element.dart';
+import 'package:cafe_valdivia/Components/details_container.dart';
+import 'package:cafe_valdivia/Components/entity_header.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/Pages/Proveedor/editar_proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor.dart';
 import 'package:cafe_valdivia/core/models/proveedor_extension.dart';
-import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Proveedor/proveedor_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,8 +60,6 @@ class ProveedorDetallado extends ConsumerWidget {
               provider: proveedorListProvider,
               id: proveedorId,
               mensajeExito: 'Proveedor eliminado con éxito',
-              mensajeError:
-                  'Error al eliminar el proveedor. Por favor, intente de nuevo.',
             ),
           );
         },
@@ -81,56 +81,36 @@ class ProveedorDetallado extends ConsumerWidget {
                 vertical: 16.0,
               ),
               children: [
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    radius: 64,
-                    child: Text(
-                      proveedor.iniciales,
-                      style: theme.textTheme.displayMedium?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  proveedor.nombre,
-                  style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  textAlign: TextAlign.center,
+                EntityHeader(
+                  initials: proveedor.iniciales,
+                  name: proveedor.nombre,
                 ),
                 const SizedBox(height: 48),
-                _buildInfoSection(
-                  context: context,
+                DetailsContainer(
                   title: "Datos de Contacto",
-                  children: [
-                    _buildDataTile(
-                      context: context,
-                      icon: Icons.phone_android_rounded,
-                      label: "Teléfono",
-                      value: proveedor.telefono.toString(),
+                  elements: [
+                    DetailElement(
+                      icon: Icon(Icons.phone_android_rounded),
+                      title: Text("Teléfono"),
+                      description: Text(proveedor.telefono.toString()),
                     ),
-                    const SizedBox(height: 16),
-                    _buildDataTile(
-                      context: context,
-                      icon: Icons.email_rounded,
-                      label: "Email",
-                      value: _esVacioONulo(proveedor.email)
-                          ? "No especificado"
-                          : proveedor.email!,
+                    DetailElement(
+                      icon: Icon(Icons.email_rounded),
+                      title: Text("Email"),
+                      description: Text(
+                        _esVacioONulo(proveedor.email)
+                            ? "No especificado"
+                            : proveedor.email!,
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                    _buildDataTile(
-                      context: context,
-                      icon: Icons.map_rounded,
-                      label: "Direccion",
-                      value: _esVacioONulo(proveedor.direccion)
-                          ? "No especificado"
-                          : proveedor.direccion!,
+                    DetailElement(
+                      icon: Icon(Icons.map_rounded),
+                      title: Text("Direccion"),
+                      description: Text(
+                        _esVacioONulo(proveedor.direccion)
+                            ? "No especificado"
+                            : proveedor.direccion!,
+                      ),
                     ),
                   ],
                 ),
@@ -139,75 +119,6 @@ class ProveedorDetallado extends ConsumerWidget {
           );
         },
       ),
-    );
-  }
-
-  Widget _buildInfoSection({
-    required BuildContext context,
-    required String title,
-    required List<Widget> children,
-  }) {
-    final ThemeData theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsetsGeometry.only(left: 8.0, right: 12.0),
-          child: Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHigh,
-            borderRadius: AppRadius.lgCircular,
-          ),
-          child: Padding(
-            padding: AppPadding.allMd,
-            child: Column(children: children),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDataTile({
-    required BuildContext context,
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
-    final ThemeData theme = Theme.of(context);
-    return Row(
-      children: [
-        Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              Text(
-                value,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

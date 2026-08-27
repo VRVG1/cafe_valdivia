@@ -55,8 +55,8 @@ class ProductoListaPage extends ConsumerWidget {
             data: productos,
             keyBuilder: (producto) {
               return ValueKey(
-                producto.idArticulo != null
-                    ? 'producto-${producto.idArticulo}'
+                producto.id != null
+                    ? 'producto-${producto.id}'
                     : producto.hashCode,
               );
             },
@@ -70,18 +70,18 @@ class ProductoListaPage extends ConsumerWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onTapCallback: (producto) {
-              if (producto.idArticulo != null) {
+              if (producto.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ProductoDetallePage(id: producto.idArticulo!),
+                        ProductoDetallePage(id: producto.id!),
                   ),
                 );
               }
             },
             onEditDismissed: (producto) async {
-              if (producto.idArticulo != null) {
+              if (producto.id != null) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -103,10 +103,8 @@ class ProductoListaPage extends ConsumerWidget {
                       context: context,
                       ref: ref,
                       provider: articuloProviderProvider,
-                      id: producto.idArticulo!,
+                      id: producto.id!,
                       mensajeExito: "El producto se ha borrado con exito",
-                      mensajeError:
-                          "Error al eliminar el producto, Por favor, intente de nuevo",
                       detalle: false,
                     ),
                   ) ??

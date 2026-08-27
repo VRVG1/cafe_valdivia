@@ -21,5 +21,5 @@ class UnidadMedidaRepository extends BaseRepository<UnidadMedida> {
   Map<String, dynamic> toJson(UnidadMedida entity) => entity.toJson();
 
   @override
-  int? getId(UnidadMedida entity) => entity.idUnidadMedida;
+  int? getId(UnidadMedida entity) => entity.id;
 }
