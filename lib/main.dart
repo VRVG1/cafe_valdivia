@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
+  await initializeDateFormatting("es");
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     sqfliteFfiInit();
-    await initializeDateFormatting("es");
 
     databaseFactory = databaseFactoryFfi;
   }
