@@ -7,6 +7,7 @@ import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
 import 'package:cafe_valdivia/Components/transaction_header_card.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
+import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/utils/detalle_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
@@ -28,6 +29,15 @@ class DetalleCompraPage extends ConsumerWidget {
     final theme = Theme.of(context);
     final ColorScheme cs = theme.colorScheme;
     final tt = theme.textTheme;
+
+    ///funciones
+    void changePagado(int pagado) {
+      if (pagado == 1) {
+        ref.read(compraProvider.notifier).markAsUnPaid(id);
+      } else {
+        ref.read(compraProvider.notifier).markAsPaid(id);
+      }
+    }
 
     return Scaffold(
       appBar: AppBarDetalles<DetalleCompra>(
@@ -51,7 +61,10 @@ class DetalleCompraPage extends ConsumerWidget {
       ),
       body: compraAsync.when(
         data: (compra) {
-          final itemsFormateados = reagruparDetalles(compra['detalles'], precioKey: 'precio_unitario_compra');
+          final itemsFormateados = reagruparDetalles(
+            compra['detalles'],
+            precioKey: 'precio_unitario_compra',
+          );
           final int numArticulos = numeroDeArticulos(itemsFormateados);
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(compraDetalladaProvider(id)),
@@ -64,8 +77,13 @@ class DetalleCompraPage extends ConsumerWidget {
                   seccionEtiqueta("ORDEN", cs),
                   TransactionHeaderCard(
                     chip: Chip(
-                      label: Text(
-                        (compra['pagado'] == 1) ? "Pagado" : "No Pagado",
+                      label: TextButton(
+                        onPressed: () {
+                          changePagado(compra['pagado']);
+                        },
+                        child: Text(
+                          (compra['pagado'] == 1) ? "Pagado" : "No Pagado",
+                        ),
                       ),
                       backgroundColor: (compra['pagado'] == 1)
                           ? cs.tertiaryContainer

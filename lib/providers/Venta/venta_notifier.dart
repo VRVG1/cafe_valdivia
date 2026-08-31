@@ -35,6 +35,7 @@ class VentaNotifier extends _$VentaNotifier {
   Future<void> markAsPaid(int idVenta) async {
     await ref.read(ventaRepositoryProvider).markAsPaid(idVenta);
     if (!ref.mounted) return;
+    ref.invalidate(ventaDetalladaProvider);
     ref.invalidateSelf();
     await future;
   }
@@ -42,6 +43,7 @@ class VentaNotifier extends _$VentaNotifier {
   Future<void> markAsUnpaid(int idVenta) async {
     await ref.read(ventaRepositoryProvider).markAsUnpaid(idVenta);
     if (!ref.mounted) return;
+    ref.invalidate(ventaDetalladaProvider);
     ref.invalidateSelf();
     await future;
   }

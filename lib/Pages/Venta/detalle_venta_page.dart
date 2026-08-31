@@ -28,13 +28,25 @@ class DetalleVentaPage extends ConsumerWidget {
     final ColorScheme cs = theme.colorScheme;
     final tt = theme.textTheme;
 
+    ///funciones
+    void changePagado(int pagado) {
+      if (pagado == 1) {
+        ref.read(ventaProvider.notifier).markAsUnpaid(id);
+      } else {
+        ref.read(ventaProvider.notifier).markAsPaid(id);
+      }
+    }
+
     return Scaffold(
       appBar: AppBarDetalles<DetalleVenta>(title: "Detalle de Venta"),
       body: ventaAsync.when(
         data: (venta) {
           final infoVenta = venta['venta'] as Map<String, dynamic>;
           final detalles = venta['detalles'] as List<dynamic>;
-          final itemsFormateados = reagruparDetalles(detalles, precioKey: 'precio_unitario_venta');
+          final itemsFormateados = reagruparDetalles(
+            detalles,
+            precioKey: 'precio_unitario_venta',
+          );
           final int numArticulos = numeroDeArticulos(itemsFormateados);
 
           return RefreshIndicator(
@@ -46,6 +58,27 @@ class DetalleVentaPage extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 8),
                   TransactionHeaderCard(
+                    chip: Chip(
+                      label: TextButton(
+                        onPressed: () {
+                          changePagado(infoVenta['pagado']);
+                        },
+                        child: Text(
+                          (infoVenta['pagado'] == 1) ? "Pagado" : "No Pagado",
+                        ),
+                      ),
+                      backgroundColor: infoVenta['pagado'] == 1
+                          ? cs.tertiaryContainer
+                          : cs.errorContainer,
+                      labelStyle: tt.bodySmall?.copyWith(
+                        color: infoVenta['pagado'] == 1
+                            ? cs.onTertiaryContainer
+                            : cs.onErrorContainer,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      side: BorderSide.none,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -80,22 +113,6 @@ class DetalleVentaPage extends ConsumerWidget {
                           ),
                         ),
                       ],
-                    ),
-                    chip: Chip(
-                      label: Text(
-                        infoVenta['pagado'] == 1 ? "Pagado" : "No Pagado",
-                      ),
-                      backgroundColor: infoVenta['pagado'] == 1
-                          ? cs.tertiaryContainer
-                          : cs.errorContainer,
-                      labelStyle: tt.bodySmall?.copyWith(
-                        color: infoVenta['pagado'] == 1
-                            ? cs.onTertiaryContainer
-                            : cs.onErrorContainer,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      side: BorderSide.none,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
                     ),
                   ),
                   const SizedBox(height: 20),

@@ -34,6 +34,7 @@ class CompraNotifier extends _$CompraNotifier {
   Future<void> markAsPaid(int idCompra) async {
     await ref.read(compraRepositoryProvider).markAsPaid(idCompra);
     if (!ref.mounted) return;
+    ref.invalidate(compraDetalladaProvider);
     ref.invalidateSelf();
     await future;
   }
@@ -41,6 +42,7 @@ class CompraNotifier extends _$CompraNotifier {
   Future<void> markAsUnPaid(int idCompra) async {
     await ref.read(compraRepositoryProvider).markAsUnpaid(idCompra);
     if (!ref.mounted) return;
+    ref.invalidate(compraDetalladaProvider);
     ref.invalidateSelf();
     await future;
   }
