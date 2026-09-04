@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_navigation.dart';
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
@@ -24,7 +25,16 @@ class RecetaListaPage extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppbarChips(backOption: false, labelText: "Buscar receta..."),
+      appBar: AppbarChips(
+        backOption: false,
+        // Hamburguesa que abre el drawer lateral compartido.
+        showDrawer: true,
+        labelText: "Buscar receta...",
+        // Menú de opciones (tres puntos) compartido con el Home.
+        actions: const [OptionsMenuButton()],
+      ),
+      // Drawer compartido con todas las secciones.
+      drawer: const AppDrawer(),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Receta",
         onPressed: () {

@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_navigation.dart';
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
@@ -40,7 +41,13 @@ class ProveedorListaState extends ConsumerState {
         ],
         labelText: "Buscar proveedor...",
         backOption: false,
+        // Hamburguesa que abre el drawer lateral compartido.
+        showDrawer: true,
+        // Menú de opciones (tres puntos) compartido con el Home.
+        actions: const [OptionsMenuButton()],
       ),
+      // Drawer compartido con todas las secciones.
+      drawer: const AppDrawer(),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Proveedor",
         onPressed: () {

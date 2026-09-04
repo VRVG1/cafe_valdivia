@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_navigation.dart';
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
@@ -29,8 +30,14 @@ class Clientelista extends ConsumerWidget {
       appBar: AppbarChips(
         labelText: "Buscar cliente...",
         backOption: false,
+        // Hamburguesa que abre el drawer lateral compartido.
+        showDrawer: true,
         extraFilters: [TipoBusqueda.email, TipoBusqueda.telefono],
+        // Menú de opciones (tres puntos) compartido con el Home.
+        actions: const [OptionsMenuButton()],
       ),
+      // Drawer compartido con todas las secciones.
+      drawer: const AppDrawer(),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Cliente",
         onPressed: () {

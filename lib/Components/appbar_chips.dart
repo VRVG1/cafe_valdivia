@@ -11,6 +11,8 @@ class AppbarChips extends ConsumerStatefulWidget
     this.extraFilters = const [],
     this.labelText = 'Buscar proveedor...',
     this.backOption = true,
+    this.showDrawer = false,
+    this.actions = const [],
   });
 
   @override
@@ -22,6 +24,8 @@ class AppbarChips extends ConsumerStatefulWidget
   final List<TipoBusqueda> extraFilters;
   final String labelText;
   final bool backOption;
+  final bool showDrawer;
+  final List<Widget> actions;
 }
 
 class _AppbarChipsState extends ConsumerState<AppbarChips> {
@@ -118,11 +122,18 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
     final colorScheme = theme.colorScheme;
     final tt = theme.textTheme;
 
+    const double iconWidth = kToolbarHeight;
+    final double leadingWidth = (widget.backOption || widget.showDrawer)
+        ? iconWidth
+        : 0;
+    final double actionsWidth = widget.actions.length * iconWidth;
+
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: colorScheme.surface,
-      toolbarHeight: 120,
+      toolbarHeight: 84,
+      actions: widget.actions,
       leading: widget.backOption
           ? IconButton(
               tooltip: "Volver",
@@ -132,79 +143,86 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
               },
               icon: Icon(Icons.arrow_back_rounded),
             )
+          : widget.showDrawer
+          ? IconButton(
+              tooltip: "Abrir menú",
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: const Icon(Icons.menu_rounded),
+            )
           : null,
 
-      flexibleSpace: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 8),
-            Container(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 128),
-              height: 48,
-              child: TextField(
-                onChanged: (value) {
-                  ref
-                      .read(filtroBusquedaProvider.notifier)
-                      .actualizarQuery(value);
-                },
-
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: AppRadius.xlCircular,
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: AppRadius.xlCircular,
-                    borderSide: BorderSide(
-                      color: colorScheme.primary,
-                      width: 2,
+      flexibleSpace: LayoutBuilder(
+        builder: (context, _) {
+          return Column(
+            children: [
+              SizedBox(height: 18),
+              Row(
+                children: [
+                  SizedBox(width: leadingWidth),
+                  Expanded(
+                    child: FractionallySizedBox(
+                      widthFactor: 0.6,
+                      child: TextField(
+                        onChanged: (value) {
+                          ref
+                              .read(filtroBusquedaProvider.notifier)
+                              .actualizarQuery(value);
+                        },
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: AppRadius.xlCircular,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: AppRadius.xlCircular,
+                            borderSide: BorderSide(
+                              color: colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: colorScheme.secondaryContainer.withOpacity(
+                            0.4,
+                          ),
+                          labelText: widget.labelText,
+                          labelStyle: tt.bodyLarge?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                        ),
+                        style: tt.bodyLarge?.copyWith(
+                          color: colorScheme.onSurface,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlignVertical: TextAlignVertical.center,
+                        cursorColor: colorScheme.primary,
+                      ),
                     ),
                   ),
-
-                  filled: true,
-                  fillColor: colorScheme.secondaryContainer.withOpacity(0.4),
-
-                  labelText: widget.labelText,
-                  labelStyle: tt.bodyLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-
-                style: tt.bodyLarge?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w500,
-                ),
-
-                cursorColor: colorScheme.primary,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(width: 16),
-                  ...widget.extraFilters.map(
-                    (tipo) => _buildFilterChip(ref, tipo, colorScheme),
-                  ),
+                  SizedBox(width: actionsWidth),
                 ],
               ),
-            ),
-          ],
-        ),
+              SizedBox(height: 16),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 16),
+                    ...widget.extraFilters.map(
+                      (tipo) => _buildFilterChip(ref, tipo, colorScheme),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

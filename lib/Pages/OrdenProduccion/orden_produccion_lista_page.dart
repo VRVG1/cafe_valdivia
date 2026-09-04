@@ -1,3 +1,4 @@
+import 'package:cafe_valdivia/Components/app_navigation.dart';
 import 'package:cafe_valdivia/Components/appbar_chips.dart';
 import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
@@ -30,8 +31,14 @@ class OrdenProduccionListaPage extends ConsumerWidget {
       appBar: AppbarChips(
         labelText: "Buscar producción...",
         backOption: false,
+        // Hamburguesa que abre el drawer lateral compartido.
+        showDrawer: true,
         extraFilters: [TipoBusqueda.fecha],
+        // Menú de opciones (tres puntos) compartido con el Home.
+        actions: const [OptionsMenuButton()],
       ),
+      // Drawer compartido con todas las secciones.
+      drawer: const AppDrawer(),
       floatingActionButton: FloatingActionButton(
         tooltip: "Agregar Producción",
         onPressed: () {
