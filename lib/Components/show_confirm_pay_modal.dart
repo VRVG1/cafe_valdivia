@@ -42,6 +42,7 @@ Future<bool> showConfirmPayModal({
   final result = await showDialog(
     context: context,
     builder: (BuildContext context) {
+      var pagadoLocal = esPagado;
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
@@ -55,9 +56,10 @@ Future<bool> showConfirmPayModal({
                     const SizedBox(height: 20),
                     SwitchListTile(
                       title: const Text("¿Pagado?"),
-                      value: esPagado,
+                      value: pagadoLocal,
                       onChanged: (bool value) {
                         setState(() {
+                          pagadoLocal = value;
                           onPagadoChanged(value);
                         });
                       },

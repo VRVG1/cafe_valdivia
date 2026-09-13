@@ -66,8 +66,8 @@ class AppDrawer extends ConsumerWidget {
             child: NavigationDrawer(
               selectedIndex: selectedIndex,
               onDestinationSelected: (int index) {
-                ref.read(navigationProvider.notifier).goTo(index);
                 ref.invalidate(filtroBusquedaProvider);
+                ref.read(navigationProvider.notifier).goTo(index);
                 Navigator.pop(context);
               },
               children: _destinos,

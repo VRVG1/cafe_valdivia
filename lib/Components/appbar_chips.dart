@@ -38,6 +38,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
     _controller = TextEditingController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(filtroBusquedaProvider.notifier).limpiar();
       final filtro = ref.read(filtroBusquedaProvider);
       _controller.text = filtro.query;
     });
