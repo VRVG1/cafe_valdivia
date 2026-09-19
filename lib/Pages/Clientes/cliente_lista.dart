@@ -28,6 +28,7 @@ class Clientelista extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Clientes",
         labelText: "Buscar cliente...",
         backOption: false,
         // Hamburguesa que abre el drawer lateral compartido.

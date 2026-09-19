@@ -20,6 +20,7 @@ class VentaSeleccionProductoPage extends VentaSeleccionPage<Articulo> {
   @override
   PreferredSizeWidget buildAppBar(BuildContext context, WidgetRef ref) {
     return AppbarChips(
+      titulo: 'Seleccionar Producto',
       labelText: 'Buscar producto...',
       extraFilters: [
         TipoBusqueda.stock,

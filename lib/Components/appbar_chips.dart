@@ -13,18 +13,20 @@ class AppbarChips extends ConsumerStatefulWidget
     this.backOption = true,
     this.showDrawer = false,
     this.actions = const [],
+    this.titulo = "Taman Shud",
   });
 
   @override
   ConsumerState<AppbarChips> createState() => _AppbarChipsState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(120.0);
+  Size get preferredSize => const Size.fromHeight(180.0);
 
   final List<TipoBusqueda> extraFilters;
   final String labelText;
   final bool backOption;
   final bool showDrawer;
+  final String titulo;
   final List<Widget> actions;
 }
 
@@ -132,7 +134,6 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: colorScheme.surface,
-      toolbarHeight: 84,
       actions: widget.actions,
       leading: widget.backOption
           ? IconButton(
@@ -157,6 +158,11 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
         builder: (context, _) {
           return Column(
             children: [
+              SizedBox(height: 46),
+              Text(
+                widget.titulo,
+                style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+              ),
               SizedBox(height: 18),
               Row(
                 children: [

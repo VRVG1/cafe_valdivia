@@ -29,6 +29,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Órdenes de Producción",
         labelText: "Buscar producción...",
         backOption: false,
         // Hamburguesa que abre el drawer lateral compartido.

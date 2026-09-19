@@ -26,6 +26,7 @@ class CompraListPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Compras",
         backOption: false,
         // Hamburguesa que abre el drawer lateral compartido.
         showDrawer: true,

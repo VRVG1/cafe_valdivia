@@ -27,6 +27,7 @@ class ProductoListaPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Productos",
         extraFilters: [
           TipoBusqueda.stock,
           TipoBusqueda.venta,

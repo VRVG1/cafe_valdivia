@@ -26,6 +26,7 @@ class VentaListaPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Ventas",
         labelText: "Buscar Venta...",
         extraFilters: [TipoBusqueda.fecha],
         backOption: false,

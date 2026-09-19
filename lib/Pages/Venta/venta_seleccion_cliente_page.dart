@@ -17,6 +17,7 @@ class VentaSeleccionClientePage extends VentaSeleccionPage<Cliente> {
   @override
   PreferredSizeWidget buildAppBar(BuildContext context, WidgetRef ref) {
     return AppbarChips(
+      titulo: 'Seleccionar Cliente',
       labelText: 'Buscar cliente...',
       extraFilters: [TipoBusqueda.email, TipoBusqueda.telefono],
     );

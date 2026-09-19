@@ -34,6 +34,7 @@ class ProveedorListaState extends ConsumerState {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Proveedores",
         extraFilters: [
           TipoBusqueda.email,
           TipoBusqueda.telefono,

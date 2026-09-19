@@ -26,6 +26,7 @@ class RecetaListaPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Recetas",
         backOption: false,
         // Hamburguesa que abre el drawer lateral compartido.
         showDrawer: true,

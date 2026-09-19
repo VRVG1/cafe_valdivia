@@ -28,6 +28,7 @@ class InsumoListaPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarChips(
+        titulo: "Artículos",
         extraFilters: [TipoBusqueda.costo],
         backOption: false,
         // Hamburguesa que abre el drawer lateral compartido.
