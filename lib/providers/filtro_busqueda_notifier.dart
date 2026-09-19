@@ -42,4 +42,8 @@ class FiltroBusquedaNotifier extends _$FiltroBusquedaNotifier {
   void removerFiltro(TipoBusqueda filtro) {
     state = state.removerFiltro(filtro);
   }
+
+  void limpiar() {
+    state = const FiltroBusqueda();
+  }
 }

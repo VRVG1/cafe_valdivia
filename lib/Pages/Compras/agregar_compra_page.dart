@@ -7,7 +7,6 @@ import 'package:cafe_valdivia/Components/quantity_buttons_widget.dart';
 import 'package:cafe_valdivia/Components/show_cart_options_sheet.dart';
 import 'package:cafe_valdivia/Components/show_confirm_pay_modal.dart';
 import 'package:cafe_valdivia/Components/show_quantity_modify_dialog.dart';
-import 'package:cafe_valdivia/Components/snack_bar_message.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_page.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
@@ -181,7 +180,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     // }
   }
 
-  void _resumenCompra() {
+  Future<void> _resumenCompra() async {
     //TODO: REcordar que, siempre se tiene que actualizar el articulo, en concreto el campo costoUnitario, ya que puede que o no, cambie con la compra, y como no se como validar si cambia o no, mejor lo actualizo y ya.
     final List<Map<String, dynamic>> result = _separarPorProveedor(
       carritoDeCompras,
@@ -209,7 +208,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         detallesCompraList.add(detalleCompra);
       }
       //Usamos el crud la funcion create
-      _procesarCompra(compra, detallesCompraList, articulos);
+      await _procesarCompra(compra, detallesCompraList, articulos);
       //esperamos a que jale xd
     }
   }
@@ -457,12 +456,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                         onPagadoChanged: (v) => setState(() => _esPagado = v),
                         descripcionController: _descripcionController,
                       )) {
-                        _resumenCompra();
+                        await _resumenCompra();
                         if (context.mounted) {
-                          showCustomSnackBar(
-                            context: context,
-                            mensaje: "Compra realizada con éxito",
-                          );
                           Navigator.pop(context);
                         }
                       }
