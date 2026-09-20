@@ -70,7 +70,7 @@ class AppDrawer extends ConsumerWidget {
                 ref.read(navigationProvider.notifier).goTo(index);
                 Navigator.pop(context);
               },
-              children: _destinos,
+              children: [SizedBox(height: 36), ..._destinos],
             ),
           ),
         ],

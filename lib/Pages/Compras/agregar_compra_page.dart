@@ -153,7 +153,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     return grupos.values.toList();
   }
 
-  void _procesarCompra(
+  Future<void> _procesarCompra(
     Compra compra,
     List<DetalleCompra> detalleCompra,
     List<Articulo> articulos,
