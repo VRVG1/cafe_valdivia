@@ -14,10 +14,7 @@ Future<void> seedDatabase() async {
     for (final nombre in ['KG', 'Pieza', 'Gas', 'Monetario']) {
       qId.add(await txn.insert('Unidad_Medida', {'nombre': nombre}));
     }
-<<<<<<< HEAD
-=======
     final [kg, pieza, gas, monetario] = qId;
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
 
     // ============================================================
     // 2. CLIENTES
@@ -26,95 +23,36 @@ Future<void> seedDatabase() async {
       {
         'nombre': 'Vicente',
         'apellido': 'Valdivia',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholderasdkl@pemail.com',
-=======
         'telefono': '3330000001',
         'email': 'vicente.valdivia@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Rafael',
         'apellido': 'Valdivia',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholssdader@email.com',
-=======
         'telefono': '3330000002',
         'email': 'rafael.valdivia@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Sofia',
         'apellido': 'Valdivia',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholdersdkjklj@email.com',
-=======
         'telefono': '3330000003',
         'email': 'sofia.valdivia@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Veronica',
         'apellido': 'Valdivia',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholderd980@email.com',
-=======
         'telefono': '3330000004',
         'email': 'veronica.valdivia@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Emmanuel',
         'apellido': 'Valdivia',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholder9213@email.com',
-=======
         'telefono': '3330000005',
         'email': 'emmanuel.valdivia@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Veronica',
         'apellido': 'Gomez',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholdersdsjakli9@email.com',
-      },
-      {
-        'nombre': 'Tienda',
-        'apellido': 'Rolon',
-        'telefono': '5550101000',
-        'email': 'placeholdersdsadwqwe089@email.com',
-      },
-      {
-        'nombre': 'Restaurante',
-        'apellido': 'Buen Sason',
-        'telefono': '5550101000',
-        'email': 'placeholderuujcashd@email.com',
-      },
-      {
-        'nombre': 'Guadalupana',
-        'apellido': 'Sayula',
-        'telefono': '5550101000',
-        'email': 'placeholdersdkjeuioqw@email.com',
-      },
-      {
-        'nombre': 'San Bartolo',
-        'apellido': 'Desconocido',
-        'telefono': '5550101000',
-        'email': 'placeholderssdjal@email.com',
-      },
-      {
-        'nombre': 'Marcos',
-        'apellido': 'Desconocido',
-        'telefono': '5550101000',
-        'email': 'placeholdekjsdakjr@email.com',
-=======
         'telefono': '3330000006',
         'email': 'veronica.gomez@email.com',
       },
@@ -147,87 +85,10 @@ Future<void> seedDatabase() async {
         'apellido': '',
         'telefono': '3330000011',
         'email': 'marcos@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Chava',
         'apellido': 'Alvarez',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholdesdasr@email.com',
-      },
-      {
-        'nombre': 'Panaderia',
-        'apellido': 'Tapalpa',
-        'telefono': '5550101000',
-        'email': 'placeholder6678897@email.com',
-      },
-      {
-        'nombre': 'Rabago',
-        'apellido': 'Autlan',
-        'telefono': '5550101000',
-        'email': 'placeholder78312@email.com',
-      },
-      {
-        'nombre': 'Super',
-        'apellido': 'Vicky',
-        'telefono': '5550101000',
-        'email': 'placeholder123@email.com',
-      },
-      {
-        'nombre': 'Tia',
-        'apellido': 'Cruz',
-        'telefono': '5550101000',
-        'email': 'placeholder43@email.com',
-      },
-      {
-        'nombre': 'Carmelilia',
-        'apellido': 'Autlan',
-        'telefono': '5550101000',
-        'email': 'placeholder312@email.com',
-      },
-      {
-        'nombre': 'Dulce',
-        'apellido': 'Guzman',
-        'telefono': '5550101000',
-        'email': 'placeholder1222@email.com',
-      },
-      {
-        'nombre': 'Tienda',
-        'apellido': 'esquina',
-        'telefono': '5550101000',
-        'email': 'placeholder05@email.com',
-      },
-      {
-        'nombre': 'Eriberto',
-        'apellido': 'Guzman',
-        'telefono': '5550101000',
-        'email': 'placeholder06@email.com',
-      },
-      {
-        'nombre': 'Luis',
-        'apellido': 'Manuel',
-        'telefono': '5550101000',
-        'email': 'placeholder07@email.com',
-      },
-      {
-        'nombre': 'Cereales',
-        'apellido': 'Zacoalco',
-        'telefono': '5550101000',
-        'email': 'placeholder08@email.com',
-      },
-      {
-        'nombre': 'Micheladas',
-        'apellido': 'Tapalpa',
-        'telefono': '5550101000',
-        'email': 'placeholder09@email.com',
-      },
-      {
-        'nombre': 'Yoy',
-        'apellido': 'Hernandez',
-        'telefono': '5550101000',
-        'email': 'placeholder10@email.com',
-=======
         'telefono': '3330000012',
         'email': 'chava.alvarez@email.com',
       },
@@ -302,33 +163,10 @@ Future<void> seedDatabase() async {
         'apellido': '',
         'telefono': '3330000024',
         'email': 'yoy@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Miguel',
         'apellido': 'algo',
-<<<<<<< HEAD
-        'telefono': '5550101000',
-        'email': 'placeholder11@email.com',
-      },
-      {
-        'nombre': 'Senora',
-        'apellido': 'chayo',
-        'telefono': '5550101000',
-        'email': 'placeholder12@email.com',
-      },
-      {
-        'nombre': 'Alonso',
-        'apellido': 'Perez Guerra',
-        'telefono': '5550101000',
-        'email': 'placeholder00@email.com',
-      },
-      {
-        'nombre': 'Pedro',
-        'apellido': 'Nicolas Rios',
-        'telefono': '5550101000',
-        'email': 'placeholder99@email.com',
-=======
         'telefono': '3330000025',
         'email': 'miguel.algo@email.com',
       },
@@ -355,7 +193,6 @@ Future<void> seedDatabase() async {
         'apellido': '',
         'telefono': '3330000029',
         'email': 'paco@email.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
     ];
     for (final c in clientes) {
@@ -367,76 +204,6 @@ Future<void> seedDatabase() async {
     // ============================================================
     final proveedores = [
       {
-<<<<<<< HEAD
-        'nombre': 'Café Córdoba',
-        'telefono': '5550101000',
-        'email': 'placeholder1@email.com',
-      },
-      {
-        'nombre': 'Milio',
-        'telefono': '5550101000',
-        'email': 'placeholder2@email.com',
-      },
-      {
-        'nombre': 'Vicente',
-        'telefono': '5550101000',
-        'email': 'placeholder3@email.com',
-      },
-      {
-        'nombre': 'Cafiver',
-        'telefono': '5550101000',
-        'email': 'placeholder4@email.com',
-      },
-      {
-        'nombre': 'Llamas',
-        'telefono': '5550101000',
-        'email': 'placeholder5@email.com',
-      },
-      {
-        'nombre': 'Nando',
-        'telefono': '5550101000',
-        'email': 'placeholder6@email.com',
-      },
-      {
-        'nombre': 'Fanta',
-        'telefono': '5550101000',
-        'email': 'placeholder7@email.com',
-      },
-      {
-        'nombre': 'Adrián',
-        'telefono': '5550101000',
-        'email': 'placeholder8@email.com',
-      },
-      {
-        'nombre': 'Cristian de Tepec',
-        'telefono': '5550101000',
-        'email': 'placeholder9@email.com',
-      },
-      {
-        'nombre': 'Mercedes',
-        'telefono': '5550101000',
-        'email': 'placeholder10@email.com',
-      },
-      {
-        'nombre': 'Ruperto (Bolsas)',
-        'telefono': '5550101000',
-        'email': 'placeholder11@email.com',
-      },
-      {
-        'nombre': 'Sayula (Etiquetas)',
-        'telefono': '5550101000',
-        'email': 'placeholder12@email.com',
-      },
-      {
-        'nombre': 'Cuñado de Milio',
-        'telefono': '5550101000',
-        'email': 'placeholder13@email.com',
-      },
-      {
-        'nombre': 'Plásticos México (bolsas)',
-        'telefono': '5550101000',
-        'email': 'placeholder14@email.com',
-=======
         'nombre': 'Fernando/Armando',
         'telefono': '1234567890',
         'email': 'ejemplo0@ejemplo.com',
@@ -605,15 +372,12 @@ Future<void> seedDatabase() async {
         'nombre': '',
         'telefono': '1234567923',
         'email': 'ejemplo312s611@ejemplo.com',
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
     ];
     final pId = <int>[];
     for (final p in proveedores) {
       pId.add(await txn.insert('Proveedor', p));
     }
-<<<<<<< HEAD
-=======
     final [idProvCafe, idProvLeche, idProvEmpaques, idProvAzucar] = pId;
 
     // ============================================================
@@ -1138,6 +902,5 @@ Future<void> seedDatabase() async {
     // for (final op in ordenesProduccion) {
     //   await txn.insert('Orden_Produccion', op);
     // }
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
   });
 }

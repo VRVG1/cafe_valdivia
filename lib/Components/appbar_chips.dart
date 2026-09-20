@@ -159,16 +159,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
         builder: (context, _) {
           return Column(
             children: [
-<<<<<<< HEAD
-              SizedBox(height: 46),
-              Text(
-                widget.titulo,
-                style: tt.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              SizedBox(height: 18),
-=======
               SizedBox(height: 52),
->>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
               Row(
                 children: [
                   SizedBox(width: leadingWidth),
