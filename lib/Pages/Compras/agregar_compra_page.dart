@@ -4,16 +4,16 @@ import 'package:cafe_valdivia/Components/cart_modal_resume.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/quantity_buttons_widget.dart';
+import 'package:cafe_valdivia/Components/show_cart_item_modify_dialog.dart';
 import 'package:cafe_valdivia/Components/show_cart_options_sheet.dart';
 import 'package:cafe_valdivia/Components/show_confirm_pay_modal.dart';
-import 'package:cafe_valdivia/Components/show_quantity_modify_dialog.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_page_proveedor_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/agregar_compra_seleccion_articulo_page.dart';
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
-import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -59,6 +59,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     TextEditingController controller,
     String eleccion,
   ) async {
+    ref.read(filtroBusquedaProvider.notifier).limpiar();
+
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => widget),
@@ -98,6 +100,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     _proveedorController.dispose();
     _articuloController.dispose();
     _descripcionController.dispose();
+    ref.read(filtroBusquedaProvider.notifier).limpiar();
 
     super.dispose();
   }
@@ -113,6 +116,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
   void _agregarAlCarrito() {
     if (_formKey.currentState?.validate() ?? false) {
+      // 'precio' es el precio capturado en el formulario (puede diferir del
+      // costo_unitario del artículo) y es el que se guardará en el detalle.
       final producto = {
         'nombre': _proveedorArticulo['articulo'].nombre,
         'cantidad': int.tryParse(_cantidadController.text),
@@ -148,7 +153,14 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
       final listaArticulos =
           contenedor['articulos'] as List<Map<String, dynamic>>;
-      listaArticulos.add({'articulo': articulo, 'cantidad': item['cantidad']});
+      // Se copia también 'precio': al agrupar por proveedor hay que conservar el
+      // precio capturado, si no se perdería y el detalle se guardaría con el
+      // costo anterior del artículo.
+      listaArticulos.add({
+        'articulo': articulo,
+        'cantidad': item['cantidad'],
+        'precio': item['precio'],
+      });
     }
     return grupos.values.toList();
   }
@@ -156,9 +168,10 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   Future<void> _procesarCompra(
     Compra compra,
     List<DetalleCompra> detalleCompra,
-    List<Articulo> articulos,
   ) async {
-    final result = await create(
+    // El guardado (detalles + actualización del costo del artículo) se hace en
+    // una sola transacción dentro de CompraRepository.registrarNuevaCompra.
+    await create(
       context: context,
       ref: ref,
       provider: compraProvider,
@@ -167,21 +180,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       detallesElement: detalleCompra,
       mensajeExito: "Compra realizada con éxito",
     );
-    // TODO: Se supone que en los triggers se tiene que realizar dicha operacion de cambios
-    // if (result) {
-    //   for (var articulo in articulos) {
-    //     update(
-    //       context: context,
-    //       ref: ref,
-    //       provider: articuloProviderProvider,
-    //       element: articulo,
-    //     );
-    //   }
-    // }
   }
 
   Future<void> _resumenCompra() async {
-    //TODO: REcordar que, siempre se tiene que actualizar el articulo, en concreto el campo costoUnitario, ya que puede que o no, cambie con la compra, y como no se como validar si cambia o no, mejor lo actualizo y ya.
     final List<Map<String, dynamic>> result = _separarPorProveedor(
       carritoDeCompras,
     );
@@ -195,21 +196,22 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       );
       //Creamos una lista de compras detalladas
       final List<DetalleCompra> detallesCompraList = [];
-      final List<Articulo> articulos = [];
       for (var elemento in item['articulos']) {
+        // El precio capturado en el formulario manda sobre el costo guardado
+        // del artículo: el costo almacenado solo sirve como referencia inicial.
         DetalleCompra detalleCompra = DetalleCompra(
           idCompra:
               0, //TODO: Arreglar el objecto DetalleCompra para que este atributo pueda ser nulo, ya que se le asigna al momento de la transaccion en el repositoy compra_repository.dart
           idArticulo: elemento['articulo'].id,
           cantidad: ((elemento['cantidad'] as int?) ?? 0).toDouble(),
-          precioUnitarioCompra: elemento['articulo'].costoUnitario,
+          precioUnitarioCompra:
+              (elemento['precio'] as double?) ??
+              elemento['articulo'].costoUnitario,
         );
-        articulos.add(elemento['articulo']);
         detallesCompraList.add(detalleCompra);
       }
       //Usamos el crud la funcion create
-      await _procesarCompra(compra, detallesCompraList, articulos);
-      //esperamos a que jale xd
+      await _procesarCompra(compra, detallesCompraList);
     }
   }
 
@@ -433,10 +435,16 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
             onLongPressCallback: (item) => showCartOptionsSheet(
               context: context,
               item: item,
-              onModify: () => showQuantityModifyDialog(
+              onModify: () => showCartItemModifyDialog(
                 context: context,
                 item: item,
-                onUpdated: (nueva) => setState(() => item['cantidad'] = nueva),
+                onUpdated: ({required cantidad, required precio}) =>
+                    setState(() {
+                      // Se actualizan los dos valores: el precio es el que se
+                      // guardará en el detalle de la compra.
+                      item['cantidad'] = cantidad;
+                      item['precio'] = precio;
+                    }),
               ),
               onRemove: () => setState(() => carritoDeCompras.remove(item)),
             ),

@@ -2,7 +2,6 @@ import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
-import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -51,12 +50,6 @@ abstract class SeleccionPage<T> extends ConsumerStatefulWidget {
 
 class _SeleccionPageState<T> extends ConsumerState<SeleccionPage<T>>
     with TickerProviderStateMixin {
-  @override
-  void initState() {
-    super.initState();
-    ref.read(filtroBusquedaProvider.notifier).limpiar();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

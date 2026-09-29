@@ -62,6 +62,7 @@ class Clientelista extends ConsumerWidget {
 
           return ListviewCustom<Map<String, dynamic>>(
             data: clientes,
+            bottomeSpace: 80,
             keyBuilder: (cliente) {
               final id = cliente['id_cliente'] as int?;
               return ValueKey(id != null ? 'cliente-$id' : cliente.hashCode);

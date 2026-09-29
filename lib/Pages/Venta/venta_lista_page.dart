@@ -56,6 +56,7 @@ class VentaListaPage extends ConsumerWidget {
             return ErrorView(message: "No hay ventas para mostrar");
           }
           return ListviewCustom<Map<String, dynamic>>(
+            bottomeSpace: 80,
             data: ventas,
             hasDismissible: false,
             keyBuilder: (Map<String, dynamic> venta) {

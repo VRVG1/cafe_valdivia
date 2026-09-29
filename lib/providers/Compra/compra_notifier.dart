@@ -2,6 +2,7 @@ import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
+import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,6 +23,11 @@ class CompraNotifier extends _$CompraNotifier {
         .registrarNuevaCompra(compra: compra, detallesCompra: detallesCompra);
     if (!ref.mounted) return result;
     ref.invalidateSelf();
+    // La compra actualizó el costo de los artículos involucrados, por lo que
+    // los listados de artículos deben refrescarse para mostrar el valor nuevo.
+    ref.invalidate(articuloProviderProvider);
+    ref.invalidate(articulosFiltradosProvider);
+    ref.invalidate(productosFiltradosProvider);
     await future;
     return result;
   }

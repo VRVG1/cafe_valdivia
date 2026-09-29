@@ -58,6 +58,7 @@ class CompraListPage extends ConsumerWidget {
           return ListviewCustom<Map<String, dynamic>>(
             hasDismissible: false,
             data: compras,
+            bottomeSpace: 80,
             keyBuilder: (Map<String, dynamic> compra) {
               return ValueKey<Object>(
                 compra['id_compra'] != null
@@ -76,7 +77,7 @@ class CompraListPage extends ConsumerWidget {
             subtitleBuilder: (Map<String, dynamic> compra) =>
                 Text(fecha(compra['fecha'])),
             trailingBuilder: (Map<String, dynamic> compra) =>
-                Text("\$${compra['total_compra'].toString()}"),
+                Text("\$${compra['total_compra'].toStringAsFixed(2)}"),
             onTapCallback: (Map<String, dynamic> compra) {
               if (compra['id_compra'] != null) {
                 Navigator.push(

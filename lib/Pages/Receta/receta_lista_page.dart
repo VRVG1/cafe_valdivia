@@ -55,11 +55,10 @@ class RecetaListaPage extends ConsumerWidget {
           }
           return ListviewCustom<Receta>(
             data: recetas,
+            bottomeSpace: 80,
             keyBuilder: (receta) {
               return ValueKey(
-                receta.id != null
-                    ? 'receta-${receta.id}'
-                    : receta.hashCode,
+                receta.id != null ? 'receta-${receta.id}' : receta.hashCode,
               );
             },
             leadingBuilder: (receta) => const Icon(Icons.menu_book_rounded),

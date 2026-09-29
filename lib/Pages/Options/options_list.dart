@@ -48,6 +48,7 @@ class OptionsList extends StatelessWidget {
       appBar: AppBar(title: Center(child: Text("Configuracion"))),
       body: ListviewCustom<_OptionItem>(
         data: options,
+        bottomeSpace: 80,
         keyBuilder: (item) => ValueKey(item.title),
         titleBuilder: (item) => Text(item.title),
         subtitleBuilder: (item) => Text(item.subtitle),

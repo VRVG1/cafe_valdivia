@@ -59,6 +59,7 @@ class InsumoListaPage extends ConsumerWidget {
           }
           return ListviewCustom<Articulo>(
             data: articulos,
+            bottomeSpace: 80,
             keyBuilder: (articulo) {
               return ValueKey(
                 articulo.id != null
@@ -69,7 +70,7 @@ class InsumoListaPage extends ConsumerWidget {
             leadingBuilder: (articulo) => const Icon(Icons.inventory_2_rounded),
             titleBuilder: (articulo) => Text(articulo.nombre),
             trailingBuilder: (articulo) => Text(
-              "\$${articulo.costoUnitario}",
+              "\$${articulo.costoUnitario.toStringAsFixed(2)}",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitleBuilder: (articulo) => Row(

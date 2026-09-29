@@ -69,6 +69,7 @@ class ProveedorListaState extends ConsumerState {
 
           return ListviewCustom<Proveedor>(
             data: proveedores,
+            bottomeSpace: 80,
             keyBuilder: (proveedor) {
               return ValueKey(
                 proveedor.id != null
@@ -97,9 +98,8 @@ class ProveedorListaState extends ConsumerState {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProveedorDetallado(
-                        proveedorId: proveedor.id!,
-                      ),
+                      builder: (context) =>
+                          ProveedorDetallado(proveedorId: proveedor.id!),
                     ),
                   ),
                 },
@@ -112,9 +112,7 @@ class ProveedorListaState extends ConsumerState {
                     builder: (context) => EditarProveedor(proveedor: proveedor),
                   ),
                 ).then(
-                  (_) => ref.invalidate(
-                    proveedorDetailProvider(proveedor.id!),
-                  ),
+                  (_) => ref.invalidate(proveedorDetailProvider(proveedor.id!)),
                 );
               }
               return null;
