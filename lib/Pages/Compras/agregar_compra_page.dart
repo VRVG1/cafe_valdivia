@@ -32,6 +32,10 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FocusNode _focusNodeTextField = FocusNode();
 
+  // Notifier del buscador cacheado para poder limpiar el filtro en dispose()
+  // sin usar `ref` (ver initState).
+  late final FiltroBusquedaNotifier _filtroBusqueda;
+
   bool _isLoading = false;
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
@@ -81,6 +85,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
   @override
   void initState() {
+    super.initState();
     _focusNodeTextField.addListener(() {
       if (_focusNodeTextField.hasFocus) {
         setState(() {
@@ -88,7 +93,12 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         });
       }
     });
-    super.initState();
+    // El notifier del buscador se guarda en un campo porque en dispose() el
+    // `ref` ya no es seguro de usar: Riverpod lanza un StateError al leer un
+    // provider desde dispose() ("Using ref when a widget is about to or has
+    // been unmounted is unsafe"). Además filtroBusquedaProvider es keepAlive,
+    // así que la instancia sobrevive a esta pantalla.
+    _filtroBusqueda = ref.read(filtroBusquedaProvider.notifier);
   }
 
   @override
@@ -100,9 +110,21 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     _proveedorController.dispose();
     _articuloController.dispose();
     _descripcionController.dispose();
-    ref.read(filtroBusquedaProvider.notifier).limpiar();
+
+    // OJO: aquí no se limpia el filtro del buscador. Modificar un provider
+    // dentro de dispose() está prohibido (el dispose se ejecuta durante
+    // BuildOwner.finalizeTree y Riverpod lanza "Tried to modify a provider while
+    // the widget tree was building"). La limpieza se hace en los eventos que
+    // cierran la pantalla: ver _cerrarPantalla().
 
     super.dispose();
+  }
+
+  // Cierra la pantalla y deja el buscador limpio. Se invoca desde los botones
+  // (eventos de usuario), que es el lugar correcto para modificar providers.
+  void _cerrarPantalla() {
+    _filtroBusqueda.limpiar();
+    Navigator.of(context).pop();
   }
 
   // Funciones
@@ -233,9 +255,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         ),
         leading: IconButton(
           tooltip: "Cerrar",
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: _cerrarPantalla,
           icon: Icon(Icons.close_rounded),
         ),
       ),
@@ -466,6 +486,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                       )) {
                         await _resumenCompra();
                         if (context.mounted) {
+                          // Se limpia el filtro en el evento (no en dispose)
+                          // antes de salir de la pantalla.
+                          _filtroBusqueda.limpiar();
                           Navigator.pop(context);
                         }
                       }

@@ -30,6 +30,11 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FocusNode _focusNodeTextField = FocusNode();
 
+  // Notifier del buscador cacheado: se usa para limpiar el filtro desde los
+  // eventos que cierran la pantalla (no se puede hacer en dispose(), porque
+  // modificar un provider durante el dispose está prohibido por Riverpod).
+  late final FiltroBusquedaNotifier _filtroBusqueda;
+
   bool _isLoading = false;
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
@@ -76,6 +81,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
 
   @override
   void initState() {
+    super.initState();
     _focusNodeTextField.addListener(() {
       if (_focusNodeTextField.hasFocus) {
         setState(() {
@@ -83,7 +89,16 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         });
       }
     });
-    super.initState();
+    _filtroBusqueda = ref.read(filtroBusquedaProvider.notifier);
+  }
+
+  // Cierra la pantalla dejando el buscador limpio. Se invoca desde los botones
+  // (eventos de usuario), que es el lugar correcto para modificar providers:
+  // en dispose() Riverpod lo prohíbe ("Tried to modify a provider while the
+  // widget tree was building").
+  void _cerrarPantalla() {
+    _filtroBusqueda.limpiar();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -179,9 +194,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         ),
         leading: IconButton(
           tooltip: "Cerrar",
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: _cerrarPantalla,
           icon: Icon(Icons.close_rounded),
         ),
       ),
@@ -405,6 +418,9 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                       )) {
                         await _resumenVenta();
                         if (context.mounted) {
+                          // Se limpia el filtro en el evento (no en dispose)
+                          // antes de salir de la pantalla.
+                          _filtroBusqueda.limpiar();
                           Navigator.pop(context);
                         }
                       }
