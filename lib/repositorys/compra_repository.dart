@@ -57,6 +57,22 @@ class CompraRepository extends BaseRepository<Compra> {
         );
       }
 
+      // El precio realmente pagado (el que el usuario pudo modificar en el
+      // formulario) pasa a ser el costo de referencia del artículo, para que la
+      // siguiente compra no parta de un precio viejo. Se hace dentro de la
+      // misma transacción: si algo falla, no queda el costo desactualizado.
+      for (final detalle in detallesCompra) {
+        await txn.update(
+          'Articulo',
+          {
+            'costo_unitario': detalle.precioUnitarioCompra,
+            'updated_at': DateTime.now().toIso8601String(),
+          },
+          where: 'id_articulo = ?',
+          whereArgs: [detalle.idArticulo],
+        );
+      }
+
       return compraId;
     });
   }
@@ -86,7 +102,7 @@ class CompraRepository extends BaseRepository<Compra> {
       'pagado': firstRow['pagado'],
       'nombre_proveedor': firstRow['nombre_proveedor'],
       'total': total.toStringAsFixed(2),
-      // Pasamos el resultado completo como los "detalles"
+      // Pasamos el resultado completo como los "detalles"comprano
       'detalles': result,
     };
   }
@@ -156,12 +172,14 @@ class CompraRepository extends BaseRepository<Compra> {
         "v_compras_list",
         where: '(fecha >= ? AND fecha <= ?)',
         whereArgs: [start, end],
+        orderBy: "FECHA DESC",
       );
     } else if (pattern != null && start == null && end == null) {
       result = await db.query(
         "v_compras_list",
         where: '(nombre_proveedor LIKE ? OR total_compra LIKE ?)',
         whereArgs: ["%$pattern%", "%$pattern%"],
+        orderBy: "FECHA DESC",
       );
     } else {
       result = await db.query(
@@ -170,6 +188,7 @@ class CompraRepository extends BaseRepository<Compra> {
             where ??
             '(fecha >= ? AND fecha <= ?) AND (nombre_proveedor LIKE ? OR total_compra LIKE ?)',
         whereArgs: whereArgs ?? [start, end, "%$pattern%", "%$pattern%"],
+        orderBy: "FECHA DESC",
       );
     }
 
@@ -183,7 +202,7 @@ class CompraRepository extends BaseRepository<Compra> {
   Future<List<Map<String, dynamic>>> getAllNombreProveedor() async {
     final db = await dbHelper.database;
     final List<Map<String, dynamic>> result;
-    result = await db.query("v_compras_list");
+    result = await db.query("v_compras_list", orderBy: "FECHA DESC");
 
     if (result.isEmpty) {
       throw RegistroNoEncontradoException("No se encuentran registros");

@@ -14,7 +14,10 @@ Future<void> seedDatabase() async {
     for (final nombre in ['KG', 'Pieza', 'Gas', 'Monetario']) {
       qId.add(await txn.insert('Unidad_Medida', {'nombre': nombre}));
     }
+<<<<<<< HEAD
+=======
     final [kg, pieza, gas, monetario] = qId;
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
 
     // ============================================================
     // 2. CLIENTES
@@ -23,36 +26,95 @@ Future<void> seedDatabase() async {
       {
         'nombre': 'Vicente',
         'apellido': 'Valdivia',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholderasdkl@pemail.com',
+=======
         'telefono': '3330000001',
         'email': 'vicente.valdivia@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Rafael',
         'apellido': 'Valdivia',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholssdader@email.com',
+=======
         'telefono': '3330000002',
         'email': 'rafael.valdivia@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Sofia',
         'apellido': 'Valdivia',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholdersdkjklj@email.com',
+=======
         'telefono': '3330000003',
         'email': 'sofia.valdivia@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Veronica',
         'apellido': 'Valdivia',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholderd980@email.com',
+=======
         'telefono': '3330000004',
         'email': 'veronica.valdivia@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Emmanuel',
         'apellido': 'Valdivia',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholder9213@email.com',
+=======
         'telefono': '3330000005',
         'email': 'emmanuel.valdivia@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Veronica',
         'apellido': 'Gomez',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholdersdsjakli9@email.com',
+      },
+      {
+        'nombre': 'Tienda',
+        'apellido': 'Rolon',
+        'telefono': '5550101000',
+        'email': 'placeholdersdsadwqwe089@email.com',
+      },
+      {
+        'nombre': 'Restaurante',
+        'apellido': 'Buen Sason',
+        'telefono': '5550101000',
+        'email': 'placeholderuujcashd@email.com',
+      },
+      {
+        'nombre': 'Guadalupana',
+        'apellido': 'Sayula',
+        'telefono': '5550101000',
+        'email': 'placeholdersdkjeuioqw@email.com',
+      },
+      {
+        'nombre': 'San Bartolo',
+        'apellido': 'Desconocido',
+        'telefono': '5550101000',
+        'email': 'placeholderssdjal@email.com',
+      },
+      {
+        'nombre': 'Marcos',
+        'apellido': 'Desconocido',
+        'telefono': '5550101000',
+        'email': 'placeholdekjsdakjr@email.com',
+=======
         'telefono': '3330000006',
         'email': 'veronica.gomez@email.com',
       },
@@ -85,10 +147,87 @@ Future<void> seedDatabase() async {
         'apellido': '',
         'telefono': '3330000011',
         'email': 'marcos@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Chava',
         'apellido': 'Alvarez',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholdesdasr@email.com',
+      },
+      {
+        'nombre': 'Panaderia',
+        'apellido': 'Tapalpa',
+        'telefono': '5550101000',
+        'email': 'placeholder6678897@email.com',
+      },
+      {
+        'nombre': 'Rabago',
+        'apellido': 'Autlan',
+        'telefono': '5550101000',
+        'email': 'placeholder78312@email.com',
+      },
+      {
+        'nombre': 'Super',
+        'apellido': 'Vicky',
+        'telefono': '5550101000',
+        'email': 'placeholder123@email.com',
+      },
+      {
+        'nombre': 'Tia',
+        'apellido': 'Cruz',
+        'telefono': '5550101000',
+        'email': 'placeholder43@email.com',
+      },
+      {
+        'nombre': 'Carmelilia',
+        'apellido': 'Autlan',
+        'telefono': '5550101000',
+        'email': 'placeholder312@email.com',
+      },
+      {
+        'nombre': 'Dulce',
+        'apellido': 'Guzman',
+        'telefono': '5550101000',
+        'email': 'placeholder1222@email.com',
+      },
+      {
+        'nombre': 'Tienda',
+        'apellido': 'esquina',
+        'telefono': '5550101000',
+        'email': 'placeholder05@email.com',
+      },
+      {
+        'nombre': 'Eriberto',
+        'apellido': 'Guzman',
+        'telefono': '5550101000',
+        'email': 'placeholder06@email.com',
+      },
+      {
+        'nombre': 'Luis',
+        'apellido': 'Manuel',
+        'telefono': '5550101000',
+        'email': 'placeholder07@email.com',
+      },
+      {
+        'nombre': 'Cereales',
+        'apellido': 'Zacoalco',
+        'telefono': '5550101000',
+        'email': 'placeholder08@email.com',
+      },
+      {
+        'nombre': 'Micheladas',
+        'apellido': 'Tapalpa',
+        'telefono': '5550101000',
+        'email': 'placeholder09@email.com',
+      },
+      {
+        'nombre': 'Yoy',
+        'apellido': 'Hernandez',
+        'telefono': '5550101000',
+        'email': 'placeholder10@email.com',
+=======
         'telefono': '3330000012',
         'email': 'chava.alvarez@email.com',
       },
@@ -163,10 +302,33 @@ Future<void> seedDatabase() async {
         'apellido': '',
         'telefono': '3330000024',
         'email': 'yoy@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
       {
         'nombre': 'Miguel',
         'apellido': 'algo',
+<<<<<<< HEAD
+        'telefono': '5550101000',
+        'email': 'placeholder11@email.com',
+      },
+      {
+        'nombre': 'Senora',
+        'apellido': 'chayo',
+        'telefono': '5550101000',
+        'email': 'placeholder12@email.com',
+      },
+      {
+        'nombre': 'Alonso',
+        'apellido': 'Perez Guerra',
+        'telefono': '5550101000',
+        'email': 'placeholder00@email.com',
+      },
+      {
+        'nombre': 'Pedro',
+        'apellido': 'Nicolas Rios',
+        'telefono': '5550101000',
+        'email': 'placeholder99@email.com',
+=======
         'telefono': '3330000025',
         'email': 'miguel.algo@email.com',
       },
@@ -193,6 +355,7 @@ Future<void> seedDatabase() async {
         'apellido': '',
         'telefono': '3330000029',
         'email': 'paco@email.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
       },
     ];
     for (final c in clientes) {
@@ -204,6 +367,76 @@ Future<void> seedDatabase() async {
     // ============================================================
     final proveedores = [
       {
+<<<<<<< HEAD
+        'nombre': 'Café Córdoba',
+        'telefono': '5550101000',
+        'email': 'placeholder1@email.com',
+      },
+      {
+        'nombre': 'Milio',
+        'telefono': '5550101000',
+        'email': 'placeholder2@email.com',
+      },
+      {
+        'nombre': 'Vicente',
+        'telefono': '5550101000',
+        'email': 'placeholder3@email.com',
+      },
+      {
+        'nombre': 'Cafiver',
+        'telefono': '5550101000',
+        'email': 'placeholder4@email.com',
+      },
+      {
+        'nombre': 'Llamas',
+        'telefono': '5550101000',
+        'email': 'placeholder5@email.com',
+      },
+      {
+        'nombre': 'Nando',
+        'telefono': '5550101000',
+        'email': 'placeholder6@email.com',
+      },
+      {
+        'nombre': 'Fanta',
+        'telefono': '5550101000',
+        'email': 'placeholder7@email.com',
+      },
+      {
+        'nombre': 'Adrián',
+        'telefono': '5550101000',
+        'email': 'placeholder8@email.com',
+      },
+      {
+        'nombre': 'Cristian de Tepec',
+        'telefono': '5550101000',
+        'email': 'placeholder9@email.com',
+      },
+      {
+        'nombre': 'Mercedes',
+        'telefono': '5550101000',
+        'email': 'placeholder10@email.com',
+      },
+      {
+        'nombre': 'Ruperto (Bolsas)',
+        'telefono': '5550101000',
+        'email': 'placeholder11@email.com',
+      },
+      {
+        'nombre': 'Sayula (Etiquetas)',
+        'telefono': '5550101000',
+        'email': 'placeholder12@email.com',
+      },
+      {
+        'nombre': 'Cuñado de Milio',
+        'telefono': '5550101000',
+        'email': 'placeholder13@email.com',
+      },
+      {
+        'nombre': 'Plásticos México (bolsas)',
+        'telefono': '5550101000',
+        'email': 'placeholder14@email.com',
+=======
         'nombre': 'Fernando/Armando',
         'telefono': '1234567890',
         'email': 'ejemplo0@ejemplo.com',
@@ -368,46 +601,21 @@ Future<void> seedDatabase() async {
         'telefono': '1234567922',
         'email': 'eje123amplo611@ejemplo.com',
       },
+      {
+        'nombre': '',
+        'telefono': '1234567923',
+        'email': 'ejemplo312s611@ejemplo.com',
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
+      },
     ];
     final pId = <int>[];
     for (final p in proveedores) {
       pId.add(await txn.insert('Proveedor', p));
     }
-    final [
-      idProvFernandoArmando,
-      idProvMiliano,
-      idProvMerma,
-      idProvJohnDoe,
-      idProvVicente,
-      idProvBolasZacoalco,
-      idProvPadreDonCegas,
-      idProvValdivia,
-      idProvTecnologiaDeEmpaquesFlexibles,
-      idProvGas,
-      idProvLlamas,
-      idProvCafiver,
-      idProvGerardo,
-      idProvNando,
-      idProvRamiro,
-      idProvAdrian,
-      idProvMercadoLibre,
-      idProvEtiquetasSayula,
-      idProvCartero,
-      idProvPlasticosMexico,
-      idProvMamonaCafecito,
-      idProvJavierOchoa,
-      idProvHermanoDeMilio,
-      idProvFanta,
-      idProvMercedes,
-      idProvSenorTroca,
-      idProvCunadoDeMilio,
-      idProvPeter,
-      idProvSenorGabanzo,
-      idProvCristianTepec,
-      idProvOmar,
-      idProvSinTecho,
-      idProvTablitas,
-    ] = pId;
+<<<<<<< HEAD
+=======
+    final [idProvCafe, idProvLeche, idProvEmpaques, idProvAzucar] = pId;
+
     // ============================================================
     // 4. ARTÍCULOS
     // ============================================================
@@ -613,30 +821,30 @@ Future<void> seedDatabase() async {
     for (final a in articulos) {
       aId.add(await txn.insert('Articulo', a));
     }
-    final [
-      idArtBolita,
-      idArtCordoba,
-      idArtBolsas,
-      idArtCafeVerDeCalidadPremium,
-      idArtCafeVerDeCalidadBuena,
-      idArtCafeVerDecalidadBasura,
-      idArtCafeCerezaPremium,
-      idArtCafeCereza,
-      idArtCafeBolaPinto,
-      idArtCafePergamino,
-      idArtGas,
-      idArtMerma,
-      idArtMaquinaria,
-      idArtSalario,
-      idArtTrabajoPartesNoMerma,
-      idArtPrestamo,
-      idArtEtiquetas,
-      idArtRetornoDePrestamo,
-      idArtCafeTostadoMedio,
-      idArtcafeTostadoOscuro,
-      idArtCafeMolidoMedio,
-      idArtCafeMolidoOscuro,
-    ] = aId;
+    // final [
+    //   Bolita,
+    //   Cordoba,
+    //   Bolsas,
+    //   CafeVerDeCalidadPremium,
+    //   CafeVerDeCalidadBuena,
+    //   CafeVerDecalidadbasura,
+    //   CafeCerezaPremium,
+    //   CafeCereza,
+    //   CafeBolaPinto,
+    //   CafePergamino,
+    //   Gas,
+    //   Merma,
+    //   Maquinaria,
+    //   Salario,
+    //   TrabajoPartesNoMerma,
+    //   Prestamo,
+    //   Etiquetas,
+    //   RetornoDePrestamo,
+    //   CafeTostadoMedio,
+    //   cafeTostadoOscuro,
+    //   CafeMolidoMedio,
+    //   CafeMolidoOscuro,
+    // ] = aId;
 
     // // ============================================================
     // // 5. RECETAS
@@ -671,246 +879,46 @@ Future<void> seedDatabase() async {
     //   'id_unidad': litro,
     // });
 
-    // ============================================================
-    // 6. COMPRAS
-    // ============================================================
-    final idCompra1 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2023-12-21T09:00:00.000',
-      'detalles': 'Cafe cordoba',
-      'pagado': 1,
-    });
+    // // ============================================================
+    // // 6. COMPRAS (2 transacciones)
+    // // ============================================================
+    // final idCompra1 = await txn.insert('Compra', {
+    //   'id_proveedor': idProvCafe,
+    //   'fecha': '2026-06-01T09:00:00.000',
+    //   'detalles': 'Compra mensual de café',
+    //   'pagado': 1,
+    // });
+    // await txn.insert('Detalle_Compra', {
+    //   'id_compra': idCompra1,
+    //   'id_articulo': idCafeGrano,
+    //   'cantidad': 50.0,
+    //   'precio_unitario_compra': 28.0,
+    // });
+    // await txn.insert('Detalle_Compra', {
+    //   'id_compra': idCompra1,
+    //   'id_articulo': idCanela,
+    //   'cantidad': 500.0,
+    //   'precio_unitario_compra': 0.5,
+    // });
 
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra1,
-      'id_articulo': idArtCordoba,
-      'cantidad': 120.0,
-      'precio_unitario_compra': 6.0,
-    });
-
-    final idCompra2 = await txn.insert('Compra', {
-      'id_proveedor': idProvMiliano,
-      'fecha': '2023-12-24T09:00:00.000',
-      'detalles': 'compra café a milio',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra2,
-      'id_articulo': idArtCafeVerDeCalidadBuena,
-      'cantidad': 50.0,
-      'precio_unitario_compra': 120.0,
-    });
-
-    final idCompra3 = await txn.insert('Compra', {
-      'id_proveedor': idProvVicente,
-      'fecha': '2023-12-28T09:00:00.000',
-      'detalles': 'Cafe que se le dio a mi abue un cuarto',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra3,
-      'id_articulo': idArtMerma,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 60.0,
-    });
-
-    final idCompra4 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2023-12-29T09:00:00.000',
-      'detalles': 'Cafe cordoba 2 paquetes',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra4,
-      'id_articulo': idArtCordoba,
-      'cantidad': 120.0,
-      'precio_unitario_compra': 6.0,
-    });
-
-    final idCompra5 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2023-12-29T09:00:00.000',
-      'detalles': 'Café cordoba 1 bolsa',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra5,
-      'id_articulo': idArtCordoba,
-      'cantidad': 60.0,
-      'precio_unitario_compra': 6.0,
-    });
-
-    final idCompra6 = await txn.insert('Compra', {
-      'id_proveedor': idProvVicente,
-      'fecha': '2023-12-29T09:00:00.000',
-      'detalles': 'Se le deben 20 a la tienda por cambio',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra6,
-      'id_articulo': idArtMerma,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 20.0,
-    });
-
-    final idCompra7 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2023-12-29T09:00:00.000',
-      'detalles': 'café cordoba 5 bolsas',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra7,
-      'id_articulo': idArtCordoba,
-      'cantidad': 300.0,
-      'precio_unitario_compra': 6.0,
-    });
-
-    final idCompra8 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2023-12-29T09:00:00.000',
-      'detalles': 'café cordoba 3',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra8,
-      'id_articulo': idArtCordoba,
-      'cantidad': 180.0,
-      'precio_unitario_compra': 5.3,
-    });
-
-    final idCompra9 = await txn.insert('Compra', {
-      'id_proveedor': idProvMiliano,
-      'fecha': '2023-12-31T09:00:00.000',
-      'detalles': 'café comprado a milio 40kg',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra9,
-      'id_articulo': idArtCafeVerDeCalidadBuena,
-      'cantidad': 40.0,
-      'precio_unitario_compra': 125.0,
-    });
-
-    final idCompra10 = await txn.insert('Compra', {
-      'id_proveedor': idProvMiliano,
-      'fecha': '2023-12-31T09:00:00.000',
-      'detalles': 'pago a milio',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra10,
-      'id_articulo': idArtSalario,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 500.0,
-    });
-
-    final idCompra11 = await txn.insert('Compra', {
-      'id_proveedor': idProvVicente,
-      'fecha': '2024-01-01T09:00:00.000',
-      'detalles': 'A Vicente le faltaron 30',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra11,
-      'id_articulo': idArtMerma,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 30.0,
-    });
-
-    final idCompra12 = await txn.insert('Compra', {
-      'id_proveedor': idProvJohnDoe,
-      'fecha': '2024-01-05T09:00:00.000',
-      'detalles': '6 kilos de cafe comprados a no se quien pero estaban sucio',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra12,
-      'id_articulo': idArtCafeVerDecalidadBasura,
-      'cantidad': 6.0,
-      'precio_unitario_compra': 116.67,
-    });
-
-    final idCompra13 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2024-01-05T09:00:00.000',
-      'detalles': '10 bolsas cafe cordoba',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra13,
-      'id_articulo': idArtCordoba,
-      'cantidad': 600.0,
-      'precio_unitario_compra': 5.73,
-    });
-
-    final idCompra14 = await txn.insert('Compra', {
-      'id_proveedor': idProvFernandoArmando,
-      'fecha': '2024-01-05T09:00:00.000',
-      'detalles': 'Bolsas papel y plastico',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra14,
-      'id_articulo': idArtBolsas,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 216.0,
-    });
-
-    final idCompra15 = await txn.insert('Compra', {
-      'id_proveedor': idProvMiliano,
-      'fecha': '2024-01-13T09:00:00.000',
-      'detalles': 'Pago milio 200',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra15,
-      'id_articulo': idArtSalario,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 200.0,
-    });
-
-    final idCompra16 = await txn.insert('Compra', {
-      'id_proveedor': idProvMiliano,
-      'fecha': '2024-01-16T09:00:00.000',
-      'detalles': '50 kilos de café pagado a milio',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra16,
-      'id_articulo': idArtCafeVerDeCalidadBuena,
-      'cantidad': 50.0,
-      'precio_unitario_compra': 125.0,
-    });
-
-    final idCompra17 = await txn.insert('Compra', {
-      'id_proveedor': idProvVicente,
-      'fecha': '2024-01-23T09:00:00.000',
-      'detalles': 'se le pago a Vicente 1380',
-      'pagado': 1,
-    });
-
-    await txn.insert('Detalle_Compra', {
-      'id_compra': idCompra17,
-      'id_articulo': idArtSalario,
-      'cantidad': 1.0,
-      'precio_unitario_compra': 1380.0,
-    });
+    // final idCompra2 = await txn.insert('Compra', {
+    //   'id_proveedor': idProvLeche,
+    //   'fecha': '2026-06-05T10:30:00.000',
+    //   'detalles': 'Pedido semanal lácteos',
+    //   'pagado': 0,
+    // });
+    // await txn.insert('Detalle_Compra', {
+    //   'id_compra': idCompra2,
+    //   'id_articulo': idLeche,
+    //   'cantidad': 30.0,
+    //   'precio_unitario_compra': 8.0,
+    // });
+    // await txn.insert('Detalle_Compra', {
+    //   'id_compra': idCompra2,
+    //   'id_articulo': idLecheCond,
+    //   'cantidad': 10.0,
+    //   'precio_unitario_compra': 20.0,
+    // });
 
     // // ============================================================
     // // 7. VENTAS (3 transacciones)
@@ -1130,5 +1138,6 @@ Future<void> seedDatabase() async {
     // for (final op in ordenesProduccion) {
     //   await txn.insert('Orden_Produccion', op);
     // }
+>>>>>>> 22ba785 (fix Arreglando varios bugs y modificando el bulk de la base de datos.)
   });
 }

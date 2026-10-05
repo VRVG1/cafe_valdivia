@@ -4,15 +4,16 @@ import 'package:cafe_valdivia/Components/cart_modal_resume.dart';
 import 'package:cafe_valdivia/Components/crud.dart';
 import 'package:cafe_valdivia/Components/listview_custom.dart';
 import 'package:cafe_valdivia/Components/quantity_buttons_widget.dart';
+import 'package:cafe_valdivia/Components/show_cart_item_modify_dialog.dart';
 import 'package:cafe_valdivia/Components/show_cart_options_sheet.dart';
 import 'package:cafe_valdivia/Components/show_confirm_pay_modal.dart';
-import 'package:cafe_valdivia/Components/show_quantity_modify_dialog.dart';
 import 'package:cafe_valdivia/Pages/Venta/venta_seleccion_cliente_page.dart';
 import 'package:cafe_valdivia/Pages/Venta/venta_seleccion_producto_page.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
+import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,6 +29,11 @@ class AgregarVentaPage extends ConsumerStatefulWidget {
 class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FocusNode _focusNodeTextField = FocusNode();
+
+  // Notifier del buscador cacheado: se usa para limpiar el filtro desde los
+  // eventos que cierran la pantalla (no se puede hacer en dispose(), porque
+  // modificar un provider durante el dispose está prohibido por Riverpod).
+  late final FiltroBusquedaNotifier _filtroBusqueda;
 
   bool _isLoading = false;
   bool _isButtonsExpresive = false;
@@ -54,6 +60,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     TextEditingController controller,
     String eleccion,
   ) async {
+    ref.read(filtroBusquedaProvider.notifier).limpiar();
+
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => widget),
@@ -73,6 +81,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
 
   @override
   void initState() {
+    super.initState();
     _focusNodeTextField.addListener(() {
       if (_focusNodeTextField.hasFocus) {
         setState(() {
@@ -80,7 +89,16 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         });
       }
     });
-    super.initState();
+    _filtroBusqueda = ref.read(filtroBusquedaProvider.notifier);
+  }
+
+  // Cierra la pantalla dejando el buscador limpio. Se invoca desde los botones
+  // (eventos de usuario), que es el lugar correcto para modificar providers:
+  // en dispose() Riverpod lo prohíbe ("Tried to modify a provider while the
+  // widget tree was building").
+  void _cerrarPantalla() {
+    _filtroBusqueda.limpiar();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -176,9 +194,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         ),
         leading: IconButton(
           tooltip: "Cerrar",
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: _cerrarPantalla,
           icon: Icon(Icons.close_rounded),
         ),
       ),
@@ -371,10 +387,16 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
             onLongPressCallback: (item) => showCartOptionsSheet(
               context: context,
               item: item,
-              onModify: () => showQuantityModifyDialog(
+              onModify: () => showCartItemModifyDialog(
                 context: context,
                 item: item,
-                onUpdated: (nueva) => setState(() => item['cantidad'] = nueva),
+                onUpdated: ({required cantidad, required precio}) =>
+                    setState(() {
+                      // Se actualizan los dos valores: el precio es el que se
+                      // guardará en el detalle de la venta.
+                      item['cantidad'] = cantidad;
+                      item['precio'] = precio;
+                    }),
               ),
               onRemove: () => setState(() => carritoDeVentas.remove(item)),
             ),
@@ -396,6 +418,9 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                       )) {
                         await _resumenVenta();
                         if (context.mounted) {
+                          // Se limpia el filtro en el evento (no en dispose)
+                          // antes de salir de la pantalla.
+                          _filtroBusqueda.limpiar();
                           Navigator.pop(context);
                         }
                       }

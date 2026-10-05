@@ -16,6 +16,7 @@ import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Receta/receta_provider.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
+import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,6 +33,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     text: '1',
   );
   Articulo? _productoSeleccionado;
+  String? _sufixCantidad;
   double _totalCostoEstimado = 0.0;
   final List<ComponenteRow> _componentes = [];
   final _formKey = GlobalKey<FormState>();
@@ -52,7 +54,11 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
   }
 
   void _removerComponente(int index) {
-    removerComponente(index: index, componentes: _componentes, setState: setState);
+    removerComponente(
+      index: index,
+      componentes: _componentes,
+      setState: setState,
+    );
   }
 
   void _calcularCostoEstimado(AsyncValue<List<Articulo>> asyncInsumos) {
@@ -76,6 +82,11 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
     setState(() {
       _totalCostoEstimado = total;
     });
+  }
+
+  Future<String> _obtenerUnidadMedida(Articulo p) async {
+    final umd = await ref.read(unidadMedidaDetailProvider(p.idUnidad).future);
+    return umd.nombre;
   }
 
   Future<void> _guardar() async {
@@ -199,9 +210,13 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                   expandedInsets: EdgeInsets.zero,
                   initialSelection: _productoSeleccionado,
                   label: const Text("Producto final"),
-                  onSelected: (Articulo? p) {
+                  onSelected: (Articulo? p) async {
                     _calcularCostoEstimado(asyncInsumos);
-                    setState(() => _productoSeleccionado = p);
+                    final udm = await _obtenerUnidadMedida(p!);
+                    setState(() {
+                      _productoSeleccionado = p;
+                      _sufixCantidad = udm;
+                    });
                   },
                   dropdownMenuEntries: productos.map((p) {
                     return DropdownMenuEntry<Articulo>(
@@ -225,7 +240,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                 icon: Icons.production_quantity_limits_rounded,
                 textInputType: TextInputType.number,
                 isLoading: _isLoading,
-                suffixText: "unidades",
+                suffixText: _sufixCantidad ?? "unidades",
                 customValidator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese la cantidad base';
@@ -294,9 +309,7 @@ class AgregarRecetaPageState extends ConsumerState<AgregarRecetaPage> {
                         componente.unidad == null &&
                         asyncUms is AsyncData<List<UnidadMedida>>) {
                       final umList = asyncUms.value;
-                      final match = umList.where(
-                        (um) => um.id == a.idUnidad,
-                      );
+                      final match = umList.where((um) => um.id == a.idUnidad);
                       if (match.isNotEmpty) {
                         setState(() => componente.unidad = match.first);
                       }

@@ -62,6 +62,7 @@ class OrdenProduccionListaPage extends ConsumerWidget {
           }
           return ListviewCustom<Map<String, dynamic>>(
             data: ordenes,
+            bottomeSpace: 80,
             keyBuilder: (Map<String, dynamic> orden) {
               final id = orden['id_orden_produccion'];
               return ValueKey<Object>(id != null ? 'op-$id' : orden.hashCode);

@@ -60,6 +60,7 @@ class ProductoListaPage extends ConsumerWidget {
             return ErrorView(message: 'No hay Productos para mostrar.');
           }
           return ListviewCustom<Articulo>(
+            bottomeSpace: 80,
             data: productos,
             keyBuilder: (producto) {
               return ValueKey(
@@ -82,8 +83,7 @@ class ProductoListaPage extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ProductoDetallePage(id: producto.id!),
+                    builder: (context) => ProductoDetallePage(id: producto.id!),
                   ),
                 );
               }

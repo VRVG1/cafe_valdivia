@@ -14,6 +14,7 @@ class ListviewCustom<T> extends ConsumerWidget {
   final Widget? footer;
   final Widget? header;
   final bool hasDismissible;
+  final double bottomeSpace;
 
   // Functions
   final void Function(T element)? onTapCallback;
@@ -43,6 +44,7 @@ class ListviewCustom<T> extends ConsumerWidget {
     this.secondaryBackgroundIcon,
     this.primaryBackgroundIcon,
     this.hasDismissible = true,
+    this.bottomeSpace = 0,
   });
 
   @override
@@ -52,7 +54,9 @@ class ListviewCustom<T> extends ConsumerWidget {
     final bool hasFooter = footer != null;
     return ListView.builder(
       controller: controller,
-      padding: AppPadding.hMdVSm,
+      padding: AppPadding.hMdVSm.copyWith(
+        bottom: AppPadding.hMdVSm.vertical + bottomeSpace,
+      ),
       physics: const ClampingScrollPhysics(),
       itemCount: data.length + (hasFooter ? 1 : 0) + (hasHeader ? 1 : 0),
       itemBuilder: (BuildContext context, int index) {

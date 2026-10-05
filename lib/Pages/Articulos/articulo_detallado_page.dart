@@ -86,7 +86,9 @@ class ArticuloDetalladoPage extends ConsumerWidget {
                   DetailElement(
                     icon: Icon(Icons.attach_money_rounded),
                     title: Text("Costo Unitario"),
-                    description: Text(articulo.costoUnitario.toString()),
+                    description: Text(
+                      articulo.costoUnitario.toStringAsFixed(2),
+                    ),
                   ),
                   DetailElement(
                     icon: Icon(Icons.balance_rounded),

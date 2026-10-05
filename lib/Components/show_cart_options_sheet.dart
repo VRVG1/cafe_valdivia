@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 /// Muestra un [BottomSheet] con opciones para un elemento del carrito:
-/// "Modificar cantidad" y "Eliminar del carrito".
+/// "Modificar cantidad y precio" y "Eliminar del carrito".
 ///
-/// Al tocar "Modificar cantidad", se cierra el bottom sheet y se invoca
-/// [onModify]. Al tocar "Eliminar del carrito", se cierra y se invoca
+/// Al tocar "Modificar cantidad y precio", se cierra el bottom sheet y se
+/// invoca [onModify]. Al tocar "Eliminar del carrito", se cierra y se invoca
 /// [onRemove].
 ///
 /// ```dart
 /// showCartOptionsSheet(
 ///   context: context,
 ///   item: carrito[i],
-///   onModify: () => showQuantityModifyDialog(...),
+///   onModify: () => showCartItemModifyDialog(...),
 ///   onRemove: () => setState(() => carrito.remove(item)),
 /// );
 /// ```
@@ -38,7 +38,7 @@ Future<void> showCartOptionsSheet({
           ),
           ListTile(
             leading: Icon(Icons.edit_rounded),
-            title: Text("Modificar cantidad"),
+            title: Text("Modificar cantidad y precio"),
             onTap: () {
               Navigator.pop(ctx);
               onModify();

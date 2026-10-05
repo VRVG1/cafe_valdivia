@@ -9,11 +9,13 @@ import 'package:cafe_valdivia/core/models/orden_produccion.dart';
 import 'package:cafe_valdivia/core/models/orden_produccion_consumo.dart';
 import 'package:cafe_valdivia/core/models/receta.dart';
 import 'package:cafe_valdivia/core/models/receta_detalle.dart';
+import 'package:cafe_valdivia/core/models/unidad_medida.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
 import 'package:cafe_valdivia/core/utils/db_error_handler.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
+import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,7 +37,7 @@ class AgregarOrdenProduccionPageState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Receta? _recetaSeleccionada;
-  double _costoEstimado = 0.0;
+  UnidadMedida? _umd;
   List<RecetaDetalle>? _recetaDetalles;
   bool _isLoading = false;
   bool _cargandoDetalles = false;
@@ -46,6 +48,23 @@ class AgregarOrdenProduccionPageState
     _notasController.dispose();
     _recetaController.dispose();
     super.dispose();
+  }
+
+  void _obtenerUDM() async {
+    if (_recetaSeleccionada == null) {
+      return;
+    }
+    int id = _recetaSeleccionada?.idArticuloProducto ?? 0;
+
+    final result = await ref.read(articuloDetailProvider(id).future);
+
+    final udmResult = await ref.read(
+      unidadMedidaDetailProvider(result.idUnidad).future,
+    );
+
+    setState(() {
+      _umd = udmResult;
+    });
   }
 
   Future<void> _seleccionarReceta() async {
@@ -69,11 +88,11 @@ class AgregarOrdenProduccionPageState
       final repo = ref.read(recetaRepositoryProvider);
       final detalles = await repo.getRecetaDetalles(receta.id!);
       if (mounted) {
-        _calcularCostoEstimado();
         setState(() {
           _recetaDetalles = detalles;
           _cargandoDetalles = false;
         });
+        _obtenerUDM();
       }
     } catch (_) {
       if (mounted) {
@@ -82,32 +101,18 @@ class AgregarOrdenProduccionPageState
     }
   }
 
-  void _calcularCostoEstimado() {
-    if (mounted) {
-      final cantidad = double.tryParse(_cantidadController.text) ?? 0;
-      if (cantidad <= 0) {
-        setState(() {
-          _costoEstimado = 0.0;
-        });
-      }
-
-      final factor = cantidad / _recetaSeleccionada!.cantidad_base;
-
-      setState(() {
-        _costoEstimado = factor;
-      });
-    }
-  }
-
   Future<void> _guardar() async {
     if (_recetaSeleccionada == null || _recetaDetalles == null) return;
     if (_recetaSeleccionada!.id == null) return;
 
-    final cantidad = double.tryParse(_cantidadController.text) ?? 0;
-    if (cantidad <= 0) return;
+    final lotes = double.tryParse(_cantidadController.text) ?? 0;
+    if (lotes <= 0) return;
 
     final insumos = await ref.read(articuloProviderProvider.future);
-    final factor = cantidad / _recetaSeleccionada!.cantidad_base;
+
+    final factor = lotes;
+
+    final cantidadTotalProducida = lotes * _recetaSeleccionada!.cantidad_base;
 
     double costoTotal = 0;
     final List<OrdenProduccionConsumo> consumos = [];
@@ -115,7 +120,7 @@ class AgregarOrdenProduccionPageState
     for (final detalle in _recetaDetalles!) {
       final cantidadUsada = detalle.cantidad * factor;
       final insumo = insumos
-                  .where((a) => a.id == detalle.idArticulo)
+          .where((a) => a.id == detalle.idArticulo)
           .firstOrNull;
       final costoArticulo = insumo?.costoUnitario ?? 0;
       costoTotal += cantidadUsada * costoArticulo;
@@ -132,12 +137,14 @@ class AgregarOrdenProduccionPageState
 
     final orden = OrdenProduccion(
       idReceta: _recetaSeleccionada!.id!,
-      cantidadProducida: cantidad,
+      cantidadProducida:
+          cantidadTotalProducida, // Se registra el total producido en Kg
       fecha: DateTime.now(),
       costoTotalProduccion: costoTotal,
       notas: _notasController.text.isNotEmpty ? _notasController.text : null,
     );
 
+    // Guardar orden y consumos vía provider...
     try {
       await ref.read(ordenProduccionProvider.notifier).create(orden, consumos);
 
@@ -145,14 +152,19 @@ class AgregarOrdenProduccionPageState
 
       showCustomSnackBar(
         context: context,
+
         mensaje: "Orden de producción creada con exito",
       );
+
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!context.mounted) return;
+
       showCustomSnackBar(
         context: context,
+
         mensaje: traducirErrorBD(e),
+
         isError: true,
       );
     }
@@ -162,6 +174,9 @@ class AgregarOrdenProduccionPageState
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
+
+    // Obtener la UdM implícita de la receta o su producto objetivo
+    final udmTexto = _umd?.nombre ?? "unidades";
 
     return Scaffold(
       appBar: AppBar(
@@ -235,18 +250,17 @@ class AgregarOrdenProduccionPageState
               ],
               if (_cargandoDetalles) const LinearProgressIndicator(),
               AppBuildTextField(
-                text: "Cantidad a producir",
-                onChanged: (value) {
-                  _calcularCostoEstimado();
-                },
+                //text: "Cantidad a producir",
+                text: "Lotes a producir",
+                onChanged: (value) => setState(() {}),
                 controller: _cantidadController,
-                icon: Icons.production_quantity_limits_rounded,
+                icon: Icons.repeat_rounded,
                 textInputType: TextInputType.number,
                 isLoading: _isLoading,
-                suffixText: "unidades",
+                suffixText: "Lotes",
                 customValidator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Ingrese la cantidad a producir';
+                    return 'Ingrese el número de lotes';
                   }
                   if ((double.tryParse(value) ?? 0) <= 0) {
                     return 'Debe ser mayor a 0';
@@ -263,7 +277,7 @@ class AgregarOrdenProduccionPageState
                 controller: _notasController,
                 icon: Icons.notes_rounded,
                 textInputType: TextInputType.multiline,
-                maxLines: 3,
+                maxLines: null,
                 isLoading: _isLoading,
               ),
             ],
@@ -274,6 +288,7 @@ class AgregarOrdenProduccionPageState
   }
 
   Widget _buildRecetaInfoCard(ColorScheme cs, TextTheme tt) {
+    final udm = _umd?.nombre ?? "unidades";
     return Container(
       padding: AppPadding.allMd,
       decoration: BoxDecoration(
@@ -294,7 +309,7 @@ class AgregarOrdenProduccionPageState
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Base: ${_recetaSeleccionada!.cantidad_base} unidades',
+                  'Rendimiento base: ${_recetaSeleccionada!.cantidad_base} $udm',
                   style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
                 if (_recetaDetalles != null)
@@ -311,9 +326,6 @@ class AgregarOrdenProduccionPageState
   }
 
   Widget _buildCostoEstimado(ColorScheme cs, TextTheme tt) {
-    //final cantidad = double.tryParse(_cantidadController.text) ?? 0;
-    //if (cantidad <= 0) return const SizedBox.shrink();
-
     return Consumer(
       builder: (context, ref, child) {
         final asyncInsumos = debugOverride(
@@ -323,14 +335,22 @@ class AgregarOrdenProduccionPageState
         );
         return asyncInsumos.when(
           data: (insumos) {
-            double total = 0;
+            final lotes = double.tryParse(_cantidadController.text) ?? 0;
+
+            // Calculamos costo total usando directamente los lotes
+            double totalCosto = 0;
             for (final detalle in _recetaDetalles!) {
-              final cantidadUsada = detalle.cantidad * _costoEstimado;
+              final cantidadUsada = detalle.cantidad * lotes;
               final insumo = insumos
-          .where((a) => a.id == detalle.idArticulo)
+                  .where((a) => a.id == detalle.idArticulo)
                   .firstOrNull;
-              total += cantidadUsada * (insumo?.costoUnitario ?? 0);
+              totalCosto += cantidadUsada * (insumo?.costoUnitario ?? 0);
             }
+
+            // Calculamos el rendimiento esperado final (Lotes * Rendimiento Base)
+            final rendimientoEstimado =
+                lotes * (_recetaSeleccionada?.cantidad_base ?? 0);
+            final udm = _umd?.nombre ?? "unidades";
 
             return Container(
               padding: AppPadding.allMd,
@@ -352,7 +372,20 @@ class AgregarOrdenProduccionPageState
                         ),
                       ),
                       Text(
-                        "\$${total.toStringAsFixed(2)}",
+                        "\$${totalCosto.toStringAsFixed(2)}",
+                        style: tt.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Producción esperada",
+                        style: tt.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                      Text(
+                        "${rendimientoEstimado.toStringAsFixed(2)} $udm",
                         style: tt.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -374,6 +407,4 @@ class AgregarOrdenProduccionPageState
       },
     );
   }
-
-
 }

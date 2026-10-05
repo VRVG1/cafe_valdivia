@@ -7,7 +7,6 @@ import 'package:cafe_valdivia/Components/resumen_fila.dart';
 import 'package:cafe_valdivia/Components/table_resume.dart';
 import 'package:cafe_valdivia/Components/transaction_header_card.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
-import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
 import 'package:cafe_valdivia/core/utils/detalle_utils.dart';
 import 'package:cafe_valdivia/core/utils/tranformar_fecha.dart';
