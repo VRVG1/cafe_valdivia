@@ -368,18 +368,46 @@ Future<void> seedDatabase() async {
         'telefono': '1234567922',
         'email': 'eje123amplo611@ejemplo.com',
       },
-      {
-        'nombre': '',
-        'telefono': '1234567923',
-        'email': 'ejemplo312s611@ejemplo.com',
-      },
     ];
     final pId = <int>[];
     for (final p in proveedores) {
       pId.add(await txn.insert('Proveedor', p));
     }
-    final [idProvCafe, idProvLeche, idProvEmpaques, idProvAzucar] = pId;
-
+    final [
+      idProvFernandoArmando,
+      idProvMiliano,
+      idProvMerma,
+      idProvJohnDoe,
+      idProvVicente,
+      idProvBolasZacoalco,
+      idProvPadreDonCegas,
+      idProvValdivia,
+      idProvTecnologiaDeEmpaquesFlexibles,
+      idProvGas,
+      idProvLlamas,
+      idProvCafiver,
+      idProvGerardo,
+      idProvNando,
+      idProvRamiro,
+      idProvAdrian,
+      idProvMercadoLibre,
+      idProvEtiquetasSayula,
+      idProvCartero,
+      idProvPlasticosMexico,
+      idProvMamonaCafecito,
+      idProvJavierOchoa,
+      idProvHermanoDeMilio,
+      idProvFanta,
+      idProvMercedes,
+      idProvSenorTroca,
+      idProvCunadoDeMilio,
+      idProvPeter,
+      idProvSenorGabanzo,
+      idProvCristianTepec,
+      idProvOmar,
+      idProvSinTecho,
+      idProvTablitas,
+    ] = pId;
     // ============================================================
     // 4. ARTÍCULOS
     // ============================================================
@@ -585,30 +613,30 @@ Future<void> seedDatabase() async {
     for (final a in articulos) {
       aId.add(await txn.insert('Articulo', a));
     }
-    // final [
-    //   Bolita,
-    //   Cordoba,
-    //   Bolsas,
-    //   CafeVerDeCalidadPremium,
-    //   CafeVerDeCalidadBuena,
-    //   CafeVerDecalidadbasura,
-    //   CafeCerezaPremium,
-    //   CafeCereza,
-    //   CafeBolaPinto,
-    //   CafePergamino,
-    //   Gas,
-    //   Merma,
-    //   Maquinaria,
-    //   Salario,
-    //   TrabajoPartesNoMerma,
-    //   Prestamo,
-    //   Etiquetas,
-    //   RetornoDePrestamo,
-    //   CafeTostadoMedio,
-    //   cafeTostadoOscuro,
-    //   CafeMolidoMedio,
-    //   CafeMolidoOscuro,
-    // ] = aId;
+    final [
+      idArtBolita,
+      idArtCordoba,
+      idArtBolsas,
+      idArtCafeVerDeCalidadPremium,
+      idArtCafeVerDeCalidadBuena,
+      idArtCafeVerDecalidadBasura,
+      idArtCafeCerezaPremium,
+      idArtCafeCereza,
+      idArtCafeBolaPinto,
+      idArtCafePergamino,
+      idArtGas,
+      idArtMerma,
+      idArtMaquinaria,
+      idArtSalario,
+      idArtTrabajoPartesNoMerma,
+      idArtPrestamo,
+      idArtEtiquetas,
+      idArtRetornoDePrestamo,
+      idArtCafeTostadoMedio,
+      idArtcafeTostadoOscuro,
+      idArtCafeMolidoMedio,
+      idArtCafeMolidoOscuro,
+    ] = aId;
 
     // // ============================================================
     // // 5. RECETAS
@@ -643,46 +671,246 @@ Future<void> seedDatabase() async {
     //   'id_unidad': litro,
     // });
 
-    // // ============================================================
-    // // 6. COMPRAS (2 transacciones)
-    // // ============================================================
-    // final idCompra1 = await txn.insert('Compra', {
-    //   'id_proveedor': idProvCafe,
-    //   'fecha': '2026-06-01T09:00:00.000',
-    //   'detalles': 'Compra mensual de café',
-    //   'pagado': 1,
-    // });
-    // await txn.insert('Detalle_Compra', {
-    //   'id_compra': idCompra1,
-    //   'id_articulo': idCafeGrano,
-    //   'cantidad': 50.0,
-    //   'precio_unitario_compra': 28.0,
-    // });
-    // await txn.insert('Detalle_Compra', {
-    //   'id_compra': idCompra1,
-    //   'id_articulo': idCanela,
-    //   'cantidad': 500.0,
-    //   'precio_unitario_compra': 0.5,
-    // });
+    // ============================================================
+    // 6. COMPRAS
+    // ============================================================
+    final idCompra1 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2023-12-21T09:00:00.000',
+      'detalles': 'Cafe cordoba',
+      'pagado': 1,
+    });
 
-    // final idCompra2 = await txn.insert('Compra', {
-    //   'id_proveedor': idProvLeche,
-    //   'fecha': '2026-06-05T10:30:00.000',
-    //   'detalles': 'Pedido semanal lácteos',
-    //   'pagado': 0,
-    // });
-    // await txn.insert('Detalle_Compra', {
-    //   'id_compra': idCompra2,
-    //   'id_articulo': idLeche,
-    //   'cantidad': 30.0,
-    //   'precio_unitario_compra': 8.0,
-    // });
-    // await txn.insert('Detalle_Compra', {
-    //   'id_compra': idCompra2,
-    //   'id_articulo': idLecheCond,
-    //   'cantidad': 10.0,
-    //   'precio_unitario_compra': 20.0,
-    // });
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra1,
+      'id_articulo': idArtCordoba,
+      'cantidad': 120.0,
+      'precio_unitario_compra': 6.0,
+    });
+
+    final idCompra2 = await txn.insert('Compra', {
+      'id_proveedor': idProvMiliano,
+      'fecha': '2023-12-24T09:00:00.000',
+      'detalles': 'compra café a milio',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra2,
+      'id_articulo': idArtCafeVerDeCalidadBuena,
+      'cantidad': 50.0,
+      'precio_unitario_compra': 120.0,
+    });
+
+    final idCompra3 = await txn.insert('Compra', {
+      'id_proveedor': idProvVicente,
+      'fecha': '2023-12-28T09:00:00.000',
+      'detalles': 'Cafe que se le dio a mi abue un cuarto',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra3,
+      'id_articulo': idArtMerma,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 60.0,
+    });
+
+    final idCompra4 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2023-12-29T09:00:00.000',
+      'detalles': 'Cafe cordoba 2 paquetes',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra4,
+      'id_articulo': idArtCordoba,
+      'cantidad': 120.0,
+      'precio_unitario_compra': 6.0,
+    });
+
+    final idCompra5 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2023-12-29T09:00:00.000',
+      'detalles': 'Café cordoba 1 bolsa',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra5,
+      'id_articulo': idArtCordoba,
+      'cantidad': 60.0,
+      'precio_unitario_compra': 6.0,
+    });
+
+    final idCompra6 = await txn.insert('Compra', {
+      'id_proveedor': idProvVicente,
+      'fecha': '2023-12-29T09:00:00.000',
+      'detalles': 'Se le deben 20 a la tienda por cambio',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra6,
+      'id_articulo': idArtMerma,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 20.0,
+    });
+
+    final idCompra7 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2023-12-29T09:00:00.000',
+      'detalles': 'café cordoba 5 bolsas',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra7,
+      'id_articulo': idArtCordoba,
+      'cantidad': 300.0,
+      'precio_unitario_compra': 6.0,
+    });
+
+    final idCompra8 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2023-12-29T09:00:00.000',
+      'detalles': 'café cordoba 3',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra8,
+      'id_articulo': idArtCordoba,
+      'cantidad': 180.0,
+      'precio_unitario_compra': 5.3,
+    });
+
+    final idCompra9 = await txn.insert('Compra', {
+      'id_proveedor': idProvMiliano,
+      'fecha': '2023-12-31T09:00:00.000',
+      'detalles': 'café comprado a milio 40kg',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra9,
+      'id_articulo': idArtCafeVerDeCalidadBuena,
+      'cantidad': 40.0,
+      'precio_unitario_compra': 125.0,
+    });
+
+    final idCompra10 = await txn.insert('Compra', {
+      'id_proveedor': idProvMiliano,
+      'fecha': '2023-12-31T09:00:00.000',
+      'detalles': 'pago a milio',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra10,
+      'id_articulo': idArtSalario,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 500.0,
+    });
+
+    final idCompra11 = await txn.insert('Compra', {
+      'id_proveedor': idProvVicente,
+      'fecha': '2024-01-01T09:00:00.000',
+      'detalles': 'A Vicente le faltaron 30',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra11,
+      'id_articulo': idArtMerma,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 30.0,
+    });
+
+    final idCompra12 = await txn.insert('Compra', {
+      'id_proveedor': idProvJohnDoe,
+      'fecha': '2024-01-05T09:00:00.000',
+      'detalles': '6 kilos de cafe comprados a no se quien pero estaban sucio',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra12,
+      'id_articulo': idArtCafeVerDecalidadBasura,
+      'cantidad': 6.0,
+      'precio_unitario_compra': 116.67,
+    });
+
+    final idCompra13 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2024-01-05T09:00:00.000',
+      'detalles': '10 bolsas cafe cordoba',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra13,
+      'id_articulo': idArtCordoba,
+      'cantidad': 600.0,
+      'precio_unitario_compra': 5.73,
+    });
+
+    final idCompra14 = await txn.insert('Compra', {
+      'id_proveedor': idProvFernandoArmando,
+      'fecha': '2024-01-05T09:00:00.000',
+      'detalles': 'Bolsas papel y plastico',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra14,
+      'id_articulo': idArtBolsas,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 216.0,
+    });
+
+    final idCompra15 = await txn.insert('Compra', {
+      'id_proveedor': idProvMiliano,
+      'fecha': '2024-01-13T09:00:00.000',
+      'detalles': 'Pago milio 200',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra15,
+      'id_articulo': idArtSalario,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 200.0,
+    });
+
+    final idCompra16 = await txn.insert('Compra', {
+      'id_proveedor': idProvMiliano,
+      'fecha': '2024-01-16T09:00:00.000',
+      'detalles': '50 kilos de café pagado a milio',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra16,
+      'id_articulo': idArtCafeVerDeCalidadBuena,
+      'cantidad': 50.0,
+      'precio_unitario_compra': 125.0,
+    });
+
+    final idCompra17 = await txn.insert('Compra', {
+      'id_proveedor': idProvVicente,
+      'fecha': '2024-01-23T09:00:00.000',
+      'detalles': 'se le pago a Vicente 1380',
+      'pagado': 1,
+    });
+
+    await txn.insert('Detalle_Compra', {
+      'id_compra': idCompra17,
+      'id_articulo': idArtSalario,
+      'cantidad': 1.0,
+      'precio_unitario_compra': 1380.0,
+    });
 
     // // ============================================================
     // // 7. VENTAS (3 transacciones)
