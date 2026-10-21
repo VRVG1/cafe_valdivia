@@ -27,7 +27,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 11,
+      version: 12,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -35,7 +35,7 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 11]) =>
+  Future<void> testOnCreate(Database db, [int version = 12]) =>
       _onCreate(db, version);
 
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
@@ -103,6 +103,10 @@ class DatabaseHelper {
     if (oldversion < 11) {
       await _recreateViews(db);
     }
+
+    if (oldversion < 12) {
+      await _recreateViews(db);
+    }
   }
 
   Future<void> _recreateViews(Database db) async {
@@ -120,6 +124,7 @@ class DatabaseHelper {
     await db.execute('DROP VIEW IF EXISTS v_clientes_kilos');
     await db.execute('DROP VIEW IF EXISTS V_Ventas_Por_Dia');
     await db.execute('DROP VIEW IF EXISTS V_Compras_Por_Dia');
+    await db.execute('DROP VIEW IF EXISTS V_Movimiento_Mensual');
 
     await _createViews(db);
   }
@@ -399,6 +404,48 @@ SELECT
   IFNULL(SUM(c.subtotal), 0) AS total_compra
 FROM V_Compra_Detallada c
 GROUP BY date(c.fecha);
+''');
+
+    await db.execute('''
+CREATE VIEW IF NOT EXISTS V_Movimiento_Mensual AS
+WITH
+  ventas AS (
+    SELECT
+      strftime('%Y-%m', fecha) AS periodo,
+      COUNT(DISTINCT id_venta) AS num_ventas,
+      SUM(subtotal) AS total_ventas
+    FROM V_Venta_Detallada
+    GROUP BY periodo
+  ),
+  compras AS (
+    SELECT
+      strftime('%Y-%m', fecha) AS periodo,
+      COUNT(DISTINCT id_compra) AS num_compras,
+      SUM(subtotal) AS total_compras
+    FROM V_Compra_Detallada
+    GROUP BY periodo
+  ),
+  periodos AS (
+    SELECT periodo FROM ventas
+    UNION
+    SELECT periodo FROM compras
+  )
+SELECT
+  p.periodo,
+  CAST(substr(p.periodo, 1, 4) AS INTEGER) AS anio,
+  CAST(substr(p.periodo, 6, 2) AS INTEGER) AS mes,
+  CASE CAST(substr(p.periodo, 6, 2) AS INTEGER)
+    WHEN 1 THEN 'Ene' WHEN 2 THEN 'Feb' WHEN 3 THEN 'Mar' WHEN 4 THEN 'Abr'
+    WHEN 5 THEN 'May' WHEN 6 THEN 'Jun' WHEN 7 THEN 'Jul' WHEN 8 THEN 'Ago'
+    WHEN 9 THEN 'Sep' WHEN 10 THEN 'Oct' WHEN 11 THEN 'Nov' WHEN 12 THEN 'Dic'
+  END AS nombre_mes,
+  IFNULL(v.num_ventas, 0) AS num_ventas,
+  IFNULL(v.total_ventas, 0) AS total_ventas,
+  IFNULL(c.num_compras, 0) AS num_compras,
+  IFNULL(c.total_compras, 0) AS total_compras
+FROM periodos p
+LEFT JOIN ventas v ON v.periodo = p.periodo
+LEFT JOIN compras c ON c.periodo = p.periodo;
 ''');
   }
 

@@ -422,3 +422,51 @@ final class RecetaRepositoryProvider
 }
 
 String _$recetaRepositoryHash() => r'0b1669555ec3c841caeab3ec54f64902d86714a3';
+
+@ProviderFor(movimientoRepository)
+final movimientoRepositoryProvider = MovimientoRepositoryProvider._();
+
+final class MovimientoRepositoryProvider
+    extends
+        $FunctionalProvider<
+          MovimientoRepository,
+          MovimientoRepository,
+          MovimientoRepository
+        >
+    with $Provider<MovimientoRepository> {
+  MovimientoRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'movimientoRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$movimientoRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<MovimientoRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  MovimientoRepository create(Ref ref) {
+    return movimientoRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MovimientoRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MovimientoRepository>(value),
+    );
+  }
+}
+
+String _$movimientoRepositoryHash() =>
+    r'b7f2f8e4397a390dd078ae9232e12869c3f18e9d';

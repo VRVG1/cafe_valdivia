@@ -1,10 +1,9 @@
 import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
+import 'package:cafe_valdivia/Pages/Home/grafica_mensual.dart';
 import 'package:cafe_valdivia/core/models/rango_fechas.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
-import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
-import 'package:cafe_valdivia/providers/OrdenProduccion/orden_produccion_notifier.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,8 +12,9 @@ import 'package:shimmer/shimmer.dart';
 
 /// Lista de cartas de resumen que se muestran en el Home.
 ///
-/// Cada carta resume un módulo de la aplicación (Ventas, Compras, Órdenes y
-/// Artículos) usando los datos reales expuestos por los providers.
+/// Cada carta resume un módulo de la aplicación (Ventas y Compras) usando los
+/// datos reales expuestos por los providers, y debajo se muestra la gráfica
+/// mensual de ventas y compras.
 class Listhome extends ConsumerWidget {
   const Listhome({super.key});
 
@@ -25,15 +25,12 @@ class Listhome extends ConsumerWidget {
     //TODO: Cambiar las consultas, en lugar de traerse toda la tabla, es mejor hacer una query que solo obtenja lo que se necesita
     //TODO: En el caso de ventas, mostrar las ventas de la semana
     //TODO: Para compras es lo mismo, mostrar las ventas de la semana
-    //TODO: Ordenes y articulos no creo que sea neceario tenerlos, a lo mejor cabiarlos por una grafica que muestre la compras y las ventas del mes.
     final ventasPorDia = ref.watch(
       ventasPorDiaProvider(const RangoFechas('2026-10-19', '2026-10-25')),
     );
     final comprasPorDia = ref.watch(
       comprasPorDiaProvider(const RangoFechas('2026-10-19', '2026-10-25')),
     );
-    final ordenes = ref.watch(ordenProduccionProvider);
-    final articulos = ref.watch(articuloProviderProvider);
 
     final cartas = <Widget>[
       ventasPorDia.when(
@@ -94,53 +91,6 @@ class Listhome extends ConsumerWidget {
           detalle: "No disponible",
         ),
       ),
-      ordenes.when(
-        data: (data) {
-          final unidades = data.fold<double>(
-            0,
-            (suma, orden) => suma + _aDouble(orden['cantidad_producida']),
-          );
-          return _CartaResumen(
-            icono: Icons.precision_manufacturing_rounded,
-            titulo: "Órdenes",
-            valor: "${data.length}",
-            detalle: "${_numero(unidades)} unidades producidas",
-          );
-        },
-        loading: () => const _CartaResumen(
-          icono: Icons.precision_manufacturing_rounded,
-          titulo: "Órdenes",
-          cargando: true,
-        ),
-        error: (err, stack) => const _CartaResumen(
-          icono: Icons.precision_manufacturing_rounded,
-          titulo: "Órdenes",
-          valor: "—",
-          detalle: "No disponible",
-        ),
-      ),
-      articulos.when(
-        data: (data) {
-          final bajoStock = data.where((a) => a.stock < 10).length;
-          return _CartaResumen(
-            icono: Icons.inventory_2_rounded,
-            titulo: "Artículos",
-            valor: "${data.length}",
-            detalle: "$bajoStock con bajo stock",
-          );
-        },
-        loading: () => const _CartaResumen(
-          icono: Icons.inventory_2_rounded,
-          titulo: "Artículos",
-          cargando: true,
-        ),
-        error: (err, stack) => const _CartaResumen(
-          icono: Icons.inventory_2_rounded,
-          titulo: "Artículos",
-          valor: "—",
-          detalle: "No disponible",
-        ),
-      ),
     ];
 
     return Column(
@@ -157,11 +107,7 @@ class Listhome extends ConsumerWidget {
             builder: (context, constraints) {
               const separacion = 12.0;
               final maxWidth = constraints.maxWidth;
-              final columnas = maxWidth >= 900
-                  ? 4
-                  : maxWidth >= 560
-                  ? 3
-                  : 2;
+              final columnas = maxWidth >= 560 ? 2 : 1;
               final anchoCarta =
                   (maxWidth - (columnas - 1) * separacion) / columnas;
               return Wrap(
@@ -174,6 +120,11 @@ class Listhome extends ConsumerWidget {
               );
             },
           ),
+        ),
+        const SizedBox(height: 24),
+        Padding(
+          padding: AppPadding.hMd,
+          child: const GraficaMensual(),
         ),
       ],
     );
@@ -270,8 +221,3 @@ int _aInt(dynamic valor) {
 
 String _moneda(double valor) =>
     NumberFormat.currency(locale: 'en_MX', symbol: '\$').format(valor);
-
-String _numero(double valor) {
-  if (valor == valor.roundToDouble()) return valor.toInt().toString();
-  return valor.toStringAsFixed(2);
-}

@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:cafe_valdivia/repositorys/cliente_repository.dart';
 import 'package:cafe_valdivia/repositorys/compra_repository.dart';
+import 'package:cafe_valdivia/repositorys/movimiento_repository.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/proveedor_repository.dart';
 import 'package:cafe_valdivia/repositorys/unidad_medida_repository.dart';
@@ -67,4 +68,9 @@ OrdenProduccionRepository ordenProduccionRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 RecetaRepository recetaRepository(Ref ref) {
   return RecetaRepository(ref.watch(databaseHelperProvider));
+}
+
+@Riverpod(keepAlive: true)
+MovimientoRepository movimientoRepository(Ref ref) {
+  return MovimientoRepository(ref.watch(databaseHelperProvider));
 }
