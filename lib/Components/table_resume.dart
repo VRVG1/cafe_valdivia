@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/theme/stock_nivel.dart';
 
+/// Tabla resumida reutilizable.
+///
+/// Cada item acepta opcionalmente:
+/// - `producto`: texto principal de la primera columna.
+/// - `cantidad`: texto de la segunda columna.
+/// - `nota`: texto secundario bajo el nombre del producto.
+/// - `nivel`: [NivelStock] para pintar el badge, el icono de alerta y el tinte
+///   de la fila. Si no se envia, la fila se muestra con el color alterno.
 Widget tableResume(
   ColorScheme cs,
   TextTheme tt,
@@ -45,9 +54,14 @@ Widget tableResume(
           final item = entry.value;
           final isEven = i.isEven;
 
+          final nivel = item['nivel'] as NivelStock?;
+          final tinteFila = nivel?.colorFila(cs);
+          final colorFila =
+              tinteFila ?? (isEven ? cs.surface : cs.surfaceContainerLowest);
+
           return TableRow(
             decoration: BoxDecoration(
-              color: isEven ? cs.surface : cs.surfaceContainerLowest,
+              color: colorFila,
               border: Border(
                 bottom: BorderSide(
                   color: cs.outlineVariant.withValues(alpha: 0.5),
@@ -63,6 +77,14 @@ Widget tableResume(
                 ),
                 child: Row(
                   children: [
+                    if (nivel?.icono(cs) != null) ...[
+                      Icon(
+                        nivel!.icono(cs),
+                        size: 16,
+                        color: nivel.colorIcono(cs),
+                      ),
+                      const SizedBox(width: 6),
+                    ],
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,9 +93,20 @@ Widget tableResume(
                             item['producto'], // TODO: Esto se tiene que cambiar
                             style: tt.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
+                              color: nivel == NivelStock.sinStock
+                                  ? cs.error
+                                  : null,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
+                          if (item['nota'] != null)
+                            Text(
+                              item['nota'],
+                              style: tt.labelSmall?.copyWith(
+                                color: cs.onSurfaceVariant,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                         ],
                       ),
                     ),
@@ -90,14 +123,14 @@ Widget tableResume(
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: cs.primaryContainer,
+                      color: nivel?.colorBadge(cs) ?? cs.primaryContainer,
                       borderRadius: AppRadius.lgCircular,
                     ),
                     child: Text(
                       item['cantidad'], //TODO: Esto se tiene que cambiar
                       style: tt.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: cs.onPrimaryContainer,
+                        color: nivel?.colorTextoBadge(cs) ?? cs.onPrimaryContainer,
                       ),
                     ),
                   ),
