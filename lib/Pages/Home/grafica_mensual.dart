@@ -155,10 +155,8 @@ class _GraficaBarras extends StatelessWidget {
           show: true,
           drawVerticalLine: false,
           horizontalInterval: maxY / 4,
-          getDrawingHorizontalLine: (value) => FlLine(
-            color: cs.outlineVariant.withAlpha(120),
-            strokeWidth: 1,
-          ),
+          getDrawingHorizontalLine: (value) =>
+              FlLine(color: cs.outlineVariant.withAlpha(120), strokeWidth: 1),
         ),
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
@@ -204,7 +202,7 @@ class _GraficaBarras extends StatelessWidget {
                 BarChartRodData(
                   toY: _aDouble(datos[i]['total_ventas']),
                   color: cs.primary,
-                  width: 10,
+                  width: 16,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(3),
                   ),
@@ -212,7 +210,7 @@ class _GraficaBarras extends StatelessWidget {
                 BarChartRodData(
                   toY: _aDouble(datos[i]['total_compras']),
                   color: cs.tertiary,
-                  width: 10,
+                  width: 16,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(3),
                   ),
