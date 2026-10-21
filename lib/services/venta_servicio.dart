@@ -24,10 +24,8 @@ class VentaServicio {
 
   //     // Procesar inventario
   //     await _inventarioServicio.registrarSalidaPorVenta(ventaId);
-  //     appLogger.i("Se realizo una venta");
   //     return ventaId;
   //   } catch (e, stackTrace) {
-  //     appLogger.e("Error registrando venta", error: e, stackTrace: stackTrace);
   //     rethrow;
   //   }
   // }
@@ -42,7 +40,6 @@ class VentaServicio {
   //     final venta = await _ventaRepository.getFullVenta(ventaId);
 
   //     if (venta.estado == VentaEstado.anulada) {
-  //       appLogger.i('Intento de anular venta ya anulada $ventaId');
   //       throw OperacionInvalidaException(
   //         "La venta $ventaId ya ha sido anulada",
   //       );
@@ -51,14 +48,11 @@ class VentaServicio {
   //     await _inventarioServicio.registrarDevolucionPorVentaAnulada(ventaId);
   //     // Marcar la venta como anulada en la base de datos
   //     await _ventaRepository.markAsNulled(ventaId);
-  //     appLogger.i("Se realizo una devolucion de la venta: $ventaId");
   //   } on RegistroNoEncontradoException {
-  //     appLogger.w("Intento de anular venta no encontrada: $ventaId");
   //     rethrow;
   //   } on OperacionInvalidaException {
   //     rethrow;
   //   } catch (e, stackTrace) {
-  //     appLogger.e(
   //       "Error al anular la venta $ventaId",
   //       error: e,
   //       stackTrace: stackTrace,

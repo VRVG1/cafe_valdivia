@@ -29,7 +29,6 @@ class ProveedorRepository extends BaseRepository<Proveedor> {
       return await super.create(entity);
     } on DatabaseException catch (e) {
       if (e.toString().contains('UNIQUE constraint failed')) {
-        // appLogger.e(e);
         throw OperacionInvalidaException('El email del proveedor ya existe.');
       }
       rethrow;

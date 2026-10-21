@@ -33,7 +33,7 @@ final class CompraNotifierProvider
   CompraNotifier create() => CompraNotifier();
 }
 
-String _$compraNotifierHash() => r'e31b620bc994a29580b4ef0b9b9a76acf3dbc655';
+String _$compraNotifierHash() => r'b40b28e8e726f19f35a28f4f844063b79a78fce2';
 
 abstract class _$CompraNotifier
     extends $AsyncNotifier<List<Map<String, dynamic>>> {
@@ -137,6 +137,87 @@ final class CompraDetalladaFamily extends $Family
 
   @override
   String toString() => r'compraDetalladaProvider';
+}
+
+@ProviderFor(comprasPorDia)
+final comprasPorDiaProvider = ComprasPorDiaFamily._();
+
+final class ComprasPorDiaProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Map<String, dynamic>>>,
+          List<Map<String, dynamic>>,
+          FutureOr<List<Map<String, dynamic>>>
+        >
+    with
+        $FutureModifier<List<Map<String, dynamic>>>,
+        $FutureProvider<List<Map<String, dynamic>>> {
+  ComprasPorDiaProvider._({
+    required ComprasPorDiaFamily super.from,
+    required RangoFechas super.argument,
+  }) : super(
+         retry: null,
+         name: r'comprasPorDiaProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$comprasPorDiaHash();
+
+  @override
+  String toString() {
+    return r'comprasPorDiaProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Map<String, dynamic>>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Map<String, dynamic>>> create(Ref ref) {
+    final argument = this.argument as RangoFechas;
+    return comprasPorDia(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ComprasPorDiaProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$comprasPorDiaHash() => r'b05e7faadeecfaa0949b05c8e064523d7c8be082';
+
+final class ComprasPorDiaFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<Map<String, dynamic>>>,
+          RangoFechas
+        > {
+  ComprasPorDiaFamily._()
+    : super(
+        retry: null,
+        name: r'comprasPorDiaProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  ComprasPorDiaProvider call(RangoFechas rango) =>
+      ComprasPorDiaProvider._(argument: rango, from: this);
+
+  @override
+  String toString() => r'comprasPorDiaProvider';
 }
 
 @ProviderFor(compraFiltrados)

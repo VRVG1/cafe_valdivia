@@ -47,3 +47,5 @@ app.*.map.json
 
 # base de datos 
 *.db
+# Widget Preview related
+.widget_preview/

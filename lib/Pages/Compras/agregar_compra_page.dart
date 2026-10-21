@@ -16,6 +16,7 @@ import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 const Object _grupoCantidad = 'grupo_cantidad';
 
@@ -36,7 +37,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
   // sin usar `ref` (ver initState).
   late final FiltroBusquedaNotifier _filtroBusqueda;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
   bool _esPagado = false;
@@ -53,6 +54,9 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     text: "0",
   );
   final TextEditingController _descripcionController = TextEditingController();
+  final TextEditingController _fechaController = TextEditingController();
+
+  DateTime _fechaSeleccionada = DateTime.now();
   // Test
   List<Map<String, dynamic>> carritoDeCompras = [];
   //
@@ -74,7 +78,6 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
 
     setState(() {
       if (eleccion == 'articulo') {
-        // print(result.costoUnitario);
         _precioController.text = result.costoUnitario.toString();
       }
       controller.text = result.nombre;
@@ -99,6 +102,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     // been unmounted is unsafe"). Además filtroBusquedaProvider es keepAlive,
     // así que la instancia sobrevive a esta pantalla.
     _filtroBusqueda = ref.read(filtroBusquedaProvider.notifier);
+    _fechaController.text = _formatearFecha(_fechaSeleccionada);
   }
 
   @override
@@ -110,6 +114,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     _proveedorController.dispose();
     _articuloController.dispose();
     _descripcionController.dispose();
+    _fechaController.dispose();
 
     // OJO: aquí no se limpia el filtro del buscador. Modificar un provider
     // dentro de dispose() está prohibido (el dispose se ejecuta durante
@@ -127,10 +132,41 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
     Navigator.of(context).pop();
   }
 
+  String _formatearFecha(DateTime fecha) {
+    return DateFormat("dd/MM/yyyy HH:mm", 'es').format(fecha);
+  }
+
+  Future<void> _seleccionarFecha() async {
+    final DateTime? fecha = await showDatePicker(
+      context: context,
+      initialDate: _fechaSeleccionada,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (fecha == null || !mounted) return;
+
+    final TimeOfDay? hora = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_fechaSeleccionada),
+    );
+    if (hora == null || !mounted) return;
+
+    setState(() {
+      _fechaSeleccionada = DateTime(
+        fecha.year,
+        fecha.month,
+        fecha.day,
+        hora.hour,
+        hora.minute,
+      );
+      _fechaController.text = _formatearFecha(_fechaSeleccionada);
+    });
+  }
+
   // Funciones
 
   void _incrementarCantidad(int valor) {
-    int actual = int.tryParse(_cantidadController.text) ?? 0;
+    double actual = double.tryParse(_cantidadController.text) ?? 0;
     setState(() {
       _cantidadController.text = (actual + valor).toString();
     });
@@ -142,7 +178,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       // costo_unitario del artículo) y es el que se guardará en el detalle.
       final producto = {
         'nombre': _proveedorArticulo['articulo'].nombre,
-        'cantidad': int.tryParse(_cantidadController.text),
+        'cantidad': double.tryParse(_cantidadController.text),
         'precio': double.tryParse(_precioController.text),
         'articulo': _proveedorArticulo['articulo'],
         'proveedor': _proveedorArticulo['proveedor'],
@@ -212,7 +248,7 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
       //Creamos una compras
       Compra compra = Compra(
         idProveedor: item['idProveedor'],
-        fecha: DateTime.now(),
+        fecha: _fechaSeleccionada,
         pagado: _esPagado,
         detalles: _descripcionController.text,
       );
@@ -276,6 +312,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
                 children: <Widget>[
                   _buildAgregarProveedor(),
                   const SizedBox(height: 16),
+                  _buildFecha(),
+                  const SizedBox(height: 16),
                   _buildAgregarArticulo(),
 
                   const SizedBox(height: 16),
@@ -324,6 +362,18 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
         }
         return null;
       },
+    );
+  }
+
+  Widget _buildFecha() {
+    return AppBuildTextField(
+      text: "Fecha",
+      controller: _fechaController,
+      icon: Icons.calendar_month_rounded,
+      readOnly: true,
+      isLoading: _isLoading,
+      onTap: _seleccionarFecha,
+      suffixIcon: const Icon(Icons.edit_calendar_rounded),
     );
   }
 
@@ -431,8 +481,8 @@ class AgregarCompraPageState extends ConsumerState<AgregarCompraPage> {
           return sum + ((item['precio'] ?? 0) * (item['cantidad'] ?? 0));
         });
 
-        final int totalProductos = carritoDeCompras.fold<int>(0, (sum, item) {
-          return sum + (item['cantidad'] as int? ?? 0);
+        final double totalProductos = carritoDeCompras.fold<double>(0, (sum, item) {
+          return sum + (item['cantidad'] as double? ?? 0);
         });
         return Container(
           decoration: BoxDecoration(

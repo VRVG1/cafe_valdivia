@@ -32,7 +32,6 @@ class FiltroBusquedaNotifier extends _$FiltroBusquedaNotifier {
 
   void toggleFiltro(TipoBusqueda filtro) {
     state = state.toggleFiltro(filtro);
-    // appLogger.i(state);
   }
 
   void agregarFiltro(TipoBusqueda filtro) {

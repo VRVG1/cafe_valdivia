@@ -17,21 +17,17 @@ class CompraServicio {
   //     final compraId = await _compraRepository.registrarNuevaCompra(compra);
 
   //     await _inventarioServicio.resgistrarEntradaPorCompra(compraId);
-  //     appLogger.i("Se registro una compra");
   //     return compraId;
   //   } catch (e, stacktrace) {
-  //     appLogger.e('Error registrando compra', error: e, stackTrace: stacktrace);
   //     rethrow;
   //   }
   // }
 
   // Future<Compra> obtenerCompraCompleta(int compraId) async {
   //   try {
-  //     appLogger.i("Se consulto una compra con el id: $compraId");
   //     final compra = await _compraRepository.getFullCompra(compraId);
   //     return compra;
   //   } catch (e, stackTrace) {
-  //     appLogger.e(
   //       "Error al obtener la compra: $compraId",
   //       error: e,
   //       stackTrace: stackTrace,
@@ -47,11 +43,9 @@ class CompraServicio {
   //     } else {
   //       await _compraRepository.markAsUnpaid(compraId);
   //     }
-  //     appLogger.i(
   //       "Se actualizo el pago de una compra: $compraId a pagado: $pagado",
   //     );
   //   } catch (e, stackTrace) {
-  //     appLogger.e("Error al actualizar pago", error: e, stackTrace: stackTrace);
   //     throw OperacionInvalidaException("Error al actulizar pago: $e");
   //   }
   // }

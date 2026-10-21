@@ -138,7 +138,7 @@ class SkeletonAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               const SizedBox(height: 8),
 
-              Container(
+              SizedBox(
                 width: 320,
                 height: 48,
                 child: TextField(
@@ -261,7 +261,7 @@ class ShimmerTableResume extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Center(
-                  child: Container(
+                  child: SizedBox(
                     height: 24,
                     width: 50,
                     child: Center(

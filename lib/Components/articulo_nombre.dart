@@ -22,7 +22,7 @@ class ArticuloNombre extends ConsumerWidget {
         return Text(match.isNotEmpty ? match.first.nombre : "ID: $articuloId");
       },
       loading: () => const SkeletonLine(),
-      error: (_, __) => Text("ID: $articuloId"),
+      error: (_, _) => Text("ID: $articuloId"),
     );
   }
 }

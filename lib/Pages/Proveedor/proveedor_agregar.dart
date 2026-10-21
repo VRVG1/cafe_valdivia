@@ -21,7 +21,7 @@ class ProveedorAgregarState extends ConsumerState<ProveedorAgregar> {
   final TextEditingController _nombreController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   void dispose() {

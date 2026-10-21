@@ -187,8 +187,8 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                             ),
                           ),
                           filled: true,
-                          fillColor: colorScheme.secondaryContainer.withOpacity(
-                            0.4,
+                          fillColor: colorScheme.secondaryContainer.withValues(
+                            alpha: 0.4,
                           ),
                           labelText: widget.labelText,
                           labelStyle: tt.bodyLarge?.copyWith(

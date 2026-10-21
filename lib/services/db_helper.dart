@@ -27,7 +27,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 9,
+      version: 11,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onConfigure: _onConfigure,
@@ -35,7 +35,7 @@ class DatabaseHelper {
   }
 
   // Metodos para facilitar las pruebas
-  Future<void> testOnCreate(Database db, [int version = 9]) =>
+  Future<void> testOnCreate(Database db, [int version = 11]) =>
       _onCreate(db, version);
 
   Future<void> testOnConfigure(Database db) => _onConfigure(db);
@@ -95,6 +95,14 @@ class DatabaseHelper {
     if (oldversion < 9) {
       await _recreateViews(db);
     }
+
+    if (oldversion < 10) {
+      await _recreateViews(db);
+    }
+
+    if (oldversion < 11) {
+      await _recreateViews(db);
+    }
   }
 
   Future<void> _recreateViews(Database db) async {
@@ -110,6 +118,8 @@ class DatabaseHelper {
     await db.execute('DROP VIEW IF EXISTS V_Venta_Detallada');
     await db.execute('DROP VIEW IF EXISTS V_Compra_Detallada');
     await db.execute('DROP VIEW IF EXISTS v_clientes_kilos');
+    await db.execute('DROP VIEW IF EXISTS V_Ventas_Por_Dia');
+    await db.execute('DROP VIEW IF EXISTS V_Compras_Por_Dia');
 
     await _createViews(db);
   }
@@ -357,6 +367,38 @@ LEFT JOIN Articulo a ON dv.id_articulo = a.id_articulo
 LEFT JOIN Unidad_Medida um ON a.id_unidad = um.id_unidad
 WHERE c.activo = 1
 GROUP BY c.id_cliente
+''');
+
+    await db.execute('''
+CREATE VIEW IF NOT EXISTS V_Ventas_Por_Dia AS
+SELECT
+  CASE strftime('%w', v.fecha)
+    WHEN '0' THEN 'Domingo' WHEN '1' THEN 'Lunes' WHEN '2' THEN 'Martes'
+    WHEN '3' THEN 'Miércoles' WHEN '4' THEN 'Jueves' WHEN '5' THEN 'Viernes'
+    WHEN '6' THEN 'Sábado' END AS dia,
+  CAST(strftime('%w', v.fecha) AS INTEGER) AS orden,
+  date(v.fecha) AS fecha,
+  COUNT(DISTINCT v.id_venta) AS num_ventas,
+  IFNULL(SUM(v.cantidad), 0) AS total_cantidad,
+  IFNULL(SUM(v.subtotal), 0) AS total_venta
+FROM V_Venta_Detallada v
+GROUP BY date(v.fecha);
+''');
+
+    await db.execute('''
+CREATE VIEW IF NOT EXISTS V_Compras_Por_Dia AS
+SELECT
+  CASE strftime('%w', c.fecha)
+    WHEN '0' THEN 'Domingo' WHEN '1' THEN 'Lunes' WHEN '2' THEN 'Martes'
+    WHEN '3' THEN 'Miércoles' WHEN '4' THEN 'Jueves' WHEN '5' THEN 'Viernes'
+    WHEN '6' THEN 'Sábado' END AS dia,
+  CAST(strftime('%w', c.fecha) AS INTEGER) AS orden,
+  date(c.fecha) AS fecha,
+  COUNT(DISTINCT c.id_compra) AS num_compras,
+  IFNULL(SUM(c.cantidad), 0) AS total_cantidad,
+  IFNULL(SUM(c.subtotal), 0) AS total_compra
+FROM V_Compra_Detallada c
+GROUP BY date(c.fecha);
 ''');
   }
 

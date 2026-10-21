@@ -1,7 +1,7 @@
 import 'package:cafe_valdivia/Components/app_navigation.dart';
-import 'package:cafe_valdivia/Components/card_almacen.dart';
 import 'package:cafe_valdivia/Pages/Clientes/cliente_lista.dart';
 import 'package:cafe_valdivia/Pages/Compras/compra_list_page.dart';
+import 'package:cafe_valdivia/Pages/Home/home.dart';
 import 'package:cafe_valdivia/Pages/Venta/venta_lista_page.dart';
 import 'package:cafe_valdivia/Pages/OrdenProduccion/orden_produccion_lista_page.dart';
 import 'package:cafe_valdivia/Pages/Articulos/articulo_lista_page.dart';
@@ -26,7 +26,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
   // Cada índice de esta lista se corresponde con un destino de [AppDrawer]
   // y con el valor de [navigationProvider].
   final List<Widget> pages = [
-    Cardalmacen(titulo: "Pene", cuerpo: "Sexo"),
+    Home(),
     CompraListPage(),
     Clientelista(),
     ProveedorLista(),

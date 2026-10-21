@@ -1,6 +1,7 @@
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/models/venta.dart';
 import 'package:cafe_valdivia/core/models/detalle_venta.dart';
+import 'package:cafe_valdivia/core/models/rango_fechas.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:cafe_valdivia/providers/providers.dart';
@@ -63,6 +64,21 @@ Future<Map<String, dynamic>> ventaDetallada(Ref ref, int id) async {
 }
 
 @riverpod
+Future<List<Map<String, dynamic>>> ventasPorDia(
+  Ref ref,
+  RangoFechas rango,
+) async {
+  ref.watch(ventaProvider);
+  final repo = ref.watch(ventaRepositoryProvider);
+  return repo
+      .ventasPorDia(rango.fechaInicio, rango.fechaFin)
+      .catchError((error) {
+    appLogger.e(error);
+    return <Map<String, dynamic>>[];
+  });
+}
+
+@riverpod
 Future<List<Map<String, dynamic>>> ventasfiltrados(Ref ref) async {
   ref.watch(ventaProvider);
   final repo = ref.watch(ventaRepositoryProvider);
@@ -89,3 +105,6 @@ Future<List<Map<String, dynamic>>> ventasfiltrados(Ref ref) async {
       });
   return result;
 }
+
+// @riverpod
+// Future<

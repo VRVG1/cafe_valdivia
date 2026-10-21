@@ -4,10 +4,10 @@ import 'package:cafe_valdivia/Components/error_view.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/Components/unidad_medida_dropdown.dart';
+import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_notifier.dart';
 import 'package:cafe_valdivia/providers/unidad_medida/unidad_medida_providers.dart';
@@ -62,7 +62,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
       nombre: _nombreController.text,
       descripcion: _descriptionController.text,
       precioVenta: double.parse(_precioController.text),
-      stock: double.parse(_stockController.text),
+      stock: double.tryParse(_stockController.text) ?? widget.producto.stock,
     );
     mostrarDialogoConfirmacion(
       context: context,
@@ -83,6 +83,7 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final bool debugStock = ref.watch(debugStateProvider).enabled;
     final unidadMedidaAsync = debugOverride(
       ref,
       'editar_producto',
@@ -125,7 +126,6 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                         if (mounted) {
                           _update();
                         }
-                      } catch (e, st) {
                       } finally {
                         if (mounted) setState(() => _isLoading = false);
                       }
@@ -196,26 +196,28 @@ class ProductoEditarPageState extends ConsumerState<ProductoEditarPage> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 16),
-                  AppBuildTextField(
-                    text: "Stock",
-                    controller: _stockController,
-                    icon: Icons.inventory_rounded,
-                    textInputType: TextInputType.number,
-                    isLoading: _isLoading,
-                    customValidator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, ingrese el Stock';
-                      }
-                      if (double.tryParse(value) == null) {
-                        return 'Ingresar un valor numerico correcto';
-                      }
-                      if ((double.tryParse(value) ?? 0.0) < 0.0) {
-                        return "El stock no puede ser negativo";
-                      }
-                      return null;
-                    },
-                  ),
+                  if (debugStock) ...[
+                    const SizedBox(height: 16),
+                    AppBuildTextField(
+                      text: "Stock",
+                      controller: _stockController,
+                      icon: Icons.inventory_rounded,
+                      textInputType: TextInputType.number,
+                      isLoading: _isLoading,
+                      customValidator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingrese el Stock';
+                        }
+                        if (double.tryParse(value) == null) {
+                          return 'Ingresar un valor numerico correcto';
+                        }
+                        if ((double.tryParse(value) ?? 0.0) < 0.0) {
+                          return "El stock no puede ser negativo";
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   AppBuildTextField(
                     text: "Descripcion",

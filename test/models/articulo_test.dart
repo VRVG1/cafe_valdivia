@@ -1,6 +1,5 @@
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 void main() {
   group('Articulo', () {

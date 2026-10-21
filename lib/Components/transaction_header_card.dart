@@ -28,7 +28,7 @@ class TransactionHeaderCard extends StatelessWidget {
             const SizedBox(width: 16),
           ],
           Expanded(child: child),
-          if (chip != null) chip!,
+          ?chip,
         ],
       ),
     );

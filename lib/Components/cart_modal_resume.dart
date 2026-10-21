@@ -30,7 +30,7 @@ class CartModalResume extends StatelessWidget {
   final TextTheme tt;
 
   /// Cantidad total de productos en el carrito.
-  final int totalProductos;
+  final double totalProductos;
 
   /// Suma total del precio de todos los productos del carrito.
   final double totalDinero;

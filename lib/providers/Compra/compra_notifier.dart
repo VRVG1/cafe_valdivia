@@ -1,5 +1,6 @@
 import 'package:cafe_valdivia/core/models/compra.dart';
 import 'package:cafe_valdivia/core/models/detalle_compra.dart';
+import 'package:cafe_valdivia/core/models/rango_fechas.dart';
 import 'package:cafe_valdivia/core/models/tipo_busqueda.dart';
 import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/providers/Articulo/articulo_provider.dart';
@@ -63,6 +64,21 @@ class CompraNotifier extends _$CompraNotifier {
 Future<Map<String, dynamic>> compraDetallada(Ref ref, int id) async {
   final repository = ref.watch(compraRepositoryProvider);
   return repository.getFullCompra(id);
+}
+
+@riverpod
+Future<List<Map<String, dynamic>>> comprasPorDia(
+  Ref ref,
+  RangoFechas rango,
+) async {
+  ref.watch(compraProvider);
+  final repo = ref.watch(compraRepositoryProvider);
+  return repo
+      .comprasPorDia(rango.fechaInicio, rango.fechaFin)
+      .catchError((error) {
+    appLogger.e(error);
+    return <Map<String, dynamic>>[];
+  });
 }
 
 @riverpod

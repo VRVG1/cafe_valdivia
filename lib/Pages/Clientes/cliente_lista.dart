@@ -99,7 +99,6 @@ class Clientelista extends ConsumerWidget {
             onTapCallback: (cliente) {
               final id = cliente['id_cliente'] as int?;
               if (id != null) {
-                // appLogger.w(id);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

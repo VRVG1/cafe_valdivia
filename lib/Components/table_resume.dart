@@ -50,7 +50,7 @@ Widget tableResume(
               color: isEven ? cs.surface : cs.surfaceContainerLowest,
               border: Border(
                 bottom: BorderSide(
-                  color: cs.outlineVariant.withOpacity(0.5),
+                  color: cs.outlineVariant.withValues(alpha: 0.5),
                   width: 0.5,
                 ),
               ),

@@ -1,6 +1,5 @@
 import 'package:cafe_valdivia/core/utils/exceptions.dart';
 import 'package:cafe_valdivia/core/models/converters.dart';
-import 'package:cafe_valdivia/core/utils/logger.dart';
 import 'package:cafe_valdivia/repositorys/articulo_repository.dart';
 import 'package:cafe_valdivia/repositorys/base_repository.dart';
 import 'package:cafe_valdivia/services/db_helper.dart';
@@ -209,5 +208,19 @@ class CompraRepository extends BaseRepository<Compra> {
     }
 
     return List<Map<String, dynamic>>.from(result);
+  }
+
+  Future<List<Map<String, dynamic>>> comprasPorDia(
+    String fechaInicio,
+    String fechaFin,
+  ) async {
+    final db = await dbHelper.database;
+    return await db.rawQuery('''
+    SELECT dia, orden, num_compras, total_cantidad, total_compra
+    FROM V_Compras_Por_Dia
+    WHERE fecha BETWEEN ? AND ?
+    ORDER BY orden
+  ''',
+        [fechaInicio, fechaFin]);
   }
 }

@@ -25,10 +25,12 @@ class ClienteRepository extends BaseRepository<Cliente> {
 
   @override
   Future<int> create(Cliente entity) async {
-    if (entity.nombre.trim().isEmpty)
+    if (entity.nombre.trim().isEmpty) {
       throw OperacionInvalidaException('El nombre no puede estar vacío.');
-    if (entity.apellido.trim().isEmpty)
+    }
+    if (entity.apellido.trim().isEmpty) {
       throw OperacionInvalidaException('El apellido no puede estar vacío.');
+    }
     try {
       return await super.create(entity);
     } catch (e) {
@@ -41,10 +43,12 @@ class ClienteRepository extends BaseRepository<Cliente> {
 
   @override
   Future<int> update(Cliente entity) async {
-    if (entity.nombre.trim().isEmpty)
+    if (entity.nombre.trim().isEmpty) {
       throw OperacionInvalidaException('El nombre no puede estar vacío.');
-    if (entity.apellido.trim().isEmpty)
+    }
+    if (entity.apellido.trim().isEmpty) {
       throw OperacionInvalidaException('El apellido no puede estar vacío.');
+    }
     return await super.update(entity);
   }
 

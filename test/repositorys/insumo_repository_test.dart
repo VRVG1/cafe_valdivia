@@ -19,11 +19,11 @@ void main() {
     late UnidadMedidaRepository unidadMedidaRepository;
     late Database database;
 
-    Future<int> _crearUnidad(String nombre) async {
+    Future<int> crearUnidad(String nombre) async {
       return await unidadMedidaRepository.create(UnidadMedida(nombre: nombre));
     }
 
-    Future<int> _crearArticulo(String nombre, int unidadId, double costo) async {
+    Future<int> crearArticulo(String nombre, int unidadId, double costo) async {
       return await articuloRepository.create(
         Articulo(
           nombre: nombre,
@@ -71,7 +71,7 @@ void main() {
       test(
         'Create, GetById, Update, and Delete an Articulo successfully',
         () async {
-          final unidadId = await _crearUnidad('Kilogramo');
+          final unidadId = await crearUnidad('Kilogramo');
           final nuevoArticulo = Articulo(
             nombre: 'Café en Grano',
             tipo: ArticuloTipo.insumo,
@@ -109,10 +109,10 @@ void main() {
       );
 
       test('getAll returns a list of all articulos', () async {
-        final unidadId = await _crearUnidad('Kilogramos');
-        await _crearArticulo('Articulo A', unidadId, 666);
-        await _crearArticulo('Articulo B', unidadId, 65.20);
-        await _crearArticulo('Articulo C', unidadId, 21);
+        final unidadId = await crearUnidad('Kilogramos');
+        await crearArticulo('Articulo A', unidadId, 666);
+        await crearArticulo('Articulo B', unidadId, 65.20);
+        await crearArticulo('Articulo C', unidadId, 21);
 
         final todosLosArticulos = await articuloRepository.getAll();
 
@@ -121,10 +121,10 @@ void main() {
       });
 
       test('getAll with "where" clause filters correctly', () async {
-        final unidadId = await _crearUnidad('Litro');
-        await _crearArticulo('Leche Entera', unidadId, 20.5);
-        await _crearArticulo('Leche Descremada', unidadId, 22.5);
-        await _crearArticulo('Crema de Leche', unidadId, 30.0);
+        final unidadId = await crearUnidad('Litro');
+        await crearArticulo('Leche Entera', unidadId, 20.5);
+        await crearArticulo('Leche Descremada', unidadId, 22.5);
+        await crearArticulo('Crema de Leche', unidadId, 30.0);
 
         final resultado = await articuloRepository.getAll(
           where: 'nombre LIKE ?',
@@ -141,9 +141,9 @@ void main() {
         test(
           'returns correct unit and a list of multiple articulos associated with it',
           () async {
-            final unidadId = await _crearUnidad('Pieza');
-            await _crearArticulo('Taza', unidadId, 50.0);
-            await _crearArticulo('Plato', unidadId, 40.0);
+            final unidadId = await crearUnidad('Pieza');
+            await crearArticulo('Taza', unidadId, 50.0);
+            await crearArticulo('Plato', unidadId, 40.0);
 
             final (unidad, articulos) = await articuloRepository
                 .getArticuloByIdUnidad(idUnidad: unidadId);
@@ -157,7 +157,7 @@ void main() {
         test(
           'returns correct unit and an empty list if unit has no articulos',
           () async {
-            final unidadId = await _crearUnidad('Caja');
+            final unidadId = await crearUnidad('Caja');
 
             final (unidad, articulos) = await articuloRepository
                 .getArticuloByIdUnidad(idUnidad: unidadId);
@@ -192,8 +192,8 @@ void main() {
             'id_proveedor': proveedorId,
             'fecha': DateTime.now().toIso8601String(),
           });
-          final unidadId = await _crearUnidad('Unidad');
-          final articuloId = await _crearArticulo(
+          final unidadId = await crearUnidad('Unidad');
+          final articuloId = await crearArticulo(
             'Vaso Desechable',
             unidadId,
             22.22,
@@ -220,8 +220,8 @@ void main() {
         });
 
         test('returns 0.0 if articulo has no purchase history', () async {
-          final unidadId = await _crearUnidad('Gramo');
-          final articuloId = await _crearArticulo('Azafrán', unidadId, 999);
+          final unidadId = await crearUnidad('Gramo');
+          final articuloId = await crearArticulo('Azafrán', unidadId, 999);
 
           final costoPromedio = await articuloRepository.getCostoPromedio(
             articuloId,
@@ -283,7 +283,7 @@ void main() {
       );
 
       test('create fails for articulo with empty name if constrained', () async {
-        final unidadId = await _crearUnidad('Unidad');
+        final unidadId = await crearUnidad('Unidad');
         final articuloVacio = Articulo(
           nombre: '',
           tipo: ArticuloTipo.insumo,
@@ -307,7 +307,7 @@ void main() {
         'handles bulk creation and reading efficiently',
         () async {
           final stopwatch = Stopwatch()..start();
-          final unidadId = await _crearUnidad('Pieza');
+          final unidadId = await crearUnidad('Pieza');
 
           final batch = database.batch();
           for (int i = 0; i < recordCount; i++) {
@@ -319,13 +319,11 @@ void main() {
           }
           final createResults = await batch.commit();
           expect(createResults.length, recordCount);
-          // print(
           //   'Creación de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
           // );
 
           final allArticulos = await articuloRepository.getAll();
           expect(allArticulos.length, recordCount);
-          // print(
           //   'Lectura de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
           // );
 
@@ -343,7 +341,7 @@ void main() {
       test(
         'handles bulk updates and deletions efficiently',
         () async {
-          final unidadId = await _crearUnidad('Pieza');
+          final unidadId = await crearUnidad('Pieza');
           final batch = database.batch();
           for (int i = 0; i < recordCount; i++) {
             batch.insert('Articulo', {
@@ -367,7 +365,6 @@ void main() {
             );
           }
           await updateBatch.commit(noResult: true);
-          // print(
           //   'Actualización de $recordCount registros: ${stopwatch.elapsedMilliseconds} ms',
           // );
 
@@ -382,7 +379,6 @@ void main() {
           await deleteBatch.commit(noResult: true);
           final finalList = await articuloRepository.getAll();
           expect(finalList, isEmpty);
-          // print(
           //   'Borrado de $recordCount y tiempo total: ${stopwatch.elapsedMilliseconds} ms',
           // );
 

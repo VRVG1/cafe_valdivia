@@ -16,6 +16,7 @@ import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:cafe_valdivia/providers/filtro_busqueda_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 const Object _grupoCantidad = 'grupo_cantidad';
 
@@ -35,7 +36,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
   // modificar un provider durante el dispose está prohibido por Riverpod).
   late final FiltroBusquedaNotifier _filtroBusqueda;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isButtonsExpresive = false;
   bool _isNegative = false;
   bool _esPagado = false;
@@ -51,6 +52,9 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     text: "0",
   );
   final TextEditingController _descripcionController = TextEditingController();
+  final TextEditingController _fechaController = TextEditingController();
+
+  DateTime _fechaSeleccionada = DateTime.now();
 
   List<Map<String, dynamic>> carritoDeVentas = [];
 
@@ -90,6 +94,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       }
     });
     _filtroBusqueda = ref.read(filtroBusquedaProvider.notifier);
+    _fechaController.text = _formatearFecha(_fechaSeleccionada);
   }
 
   // Cierra la pantalla dejando el buscador limpio. Se invoca desde los botones
@@ -109,11 +114,43 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     _productoController.dispose();
     _descripcionController.dispose();
     _precioController.dispose();
+    _fechaController.dispose();
     super.dispose();
   }
 
+  String _formatearFecha(DateTime fecha) {
+    return DateFormat("dd/MM/yyyy HH:mm", 'es').format(fecha);
+  }
+
+  Future<void> _seleccionarFecha() async {
+    final DateTime? fecha = await showDatePicker(
+      context: context,
+      initialDate: _fechaSeleccionada,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (fecha == null || !mounted) return;
+
+    final TimeOfDay? hora = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_fechaSeleccionada),
+    );
+    if (hora == null || !mounted) return;
+
+    setState(() {
+      _fechaSeleccionada = DateTime(
+        fecha.year,
+        fecha.month,
+        fecha.day,
+        hora.hour,
+        hora.minute,
+      );
+      _fechaController.text = _formatearFecha(_fechaSeleccionada);
+    });
+  }
+
   void _incrementarCantidad(int valor) {
-    int actual = int.tryParse(_cantidadController.text) ?? 0;
+    double actual = double.tryParse(_cantidadController.text) ?? 0;
     setState(() {
       _cantidadController.text = (actual + valor).toString();
     });
@@ -123,7 +160,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
     if (_formKey.currentState?.validate() ?? false) {
       final producto = {
         'nombre': _clienteProducto['producto'].nombre,
-        'cantidad': int.tryParse(_cantidadController.text),
+        'cantidad': double.tryParse(_cantidadController.text),
         'precio': double.tryParse(_precioController.text),
         'articulo': _clienteProducto['producto'],
         'cliente': _clienteProducto['cliente'],
@@ -158,7 +195,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
 
     Venta venta = Venta(
       idCliente: cliente.id,
-      fecha: DateTime.now(),
+      fecha: _fechaSeleccionada,
       pagado: _esPagado,
       estado: VentaEstado.pendiente,
       detalles: _descripcionController.text,
@@ -169,7 +206,7 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
       DetalleVenta detalleVenta = DetalleVenta(
         idVenta: 0,
         idArticulo: elemento['articulo'].id,
-        cantidad: ((elemento['cantidad'] as int?) ?? 0).toDouble(),
+        cantidad: ((elemento['cantidad'] as double?) ?? 0).toDouble(),
         precioUnitarioVenta: elemento['precio'],
       );
       detallesVentaList.add(detalleVenta);
@@ -214,6 +251,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   _buildAgregarCliente(),
+                  const SizedBox(height: 16),
+                  _buildFecha(),
                   const SizedBox(height: 16),
                   _buildAgregarProducto(),
                   const SizedBox(height: 16),
@@ -260,6 +299,18 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
         }
         return null;
       },
+    );
+  }
+
+  Widget _buildFecha() {
+    return AppBuildTextField(
+      text: "Fecha",
+      controller: _fechaController,
+      icon: Icons.calendar_month_rounded,
+      readOnly: true,
+      isLoading: _isLoading,
+      onTap: _seleccionarFecha,
+      suffixIcon: const Icon(Icons.edit_calendar_rounded),
     );
   }
 
@@ -363,8 +414,8 @@ class AgregarVentaPageState extends ConsumerState<AgregarVentaPage> {
           return sum + ((item['precio'] ?? 0) * (item['cantidad'] ?? 0));
         });
 
-        final int totalProductos = carritoDeVentas.fold<int>(0, (sum, item) {
-          return sum + (item['cantidad'] as int? ?? 0);
+        final double totalProductos = carritoDeVentas.fold<double>(0, (sum, item) {
+          return sum + (item['cantidad'] as double? ?? 0);
         });
         return Container(
           decoration: BoxDecoration(

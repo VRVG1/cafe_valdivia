@@ -42,7 +42,7 @@ final class FiltroBusquedaNotifierProvider
 }
 
 String _$filtroBusquedaNotifierHash() =>
-    r'616de104067ed248109274ee19a21742dec4d7d7';
+    r'2b92164cf94d1bfb0e7c007592017de69c14baba';
 
 abstract class _$FiltroBusquedaNotifier extends $Notifier<FiltroBusqueda> {
   FiltroBusqueda build();

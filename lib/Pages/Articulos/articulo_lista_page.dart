@@ -53,7 +53,6 @@ class InsumoListaPage extends ConsumerWidget {
       ),
       body: asyncArticulo.when(
         data: (articulos) {
-          // appLogger.w(articulos);
           if (articulos.isEmpty) {
             return ErrorView(message: 'No hay articulos para mostrar.');
           }

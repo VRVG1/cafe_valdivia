@@ -104,7 +104,7 @@ class RecetaDetallePage extends ConsumerWidget {
                           );
                         },
                         loading: () => SkeletonLine(),
-                        error: (_, __) =>
+                        error: (_, _) =>
                             Text("ID: ${receta.idArticuloProducto}"),
                       ),
                     ),
@@ -251,7 +251,7 @@ class _UnidadNombre extends ConsumerWidget {
     return asyncUnidad.when(
       data: (unidad) => Text(unidad.nombre, textAlign: textAlign, style: style),
       loading: () => SkeletonLine(),
-      error: (_, __) => Text("ID: $unidadId", textAlign: textAlign),
+      error: (_, _) => Text("ID: $unidadId", textAlign: textAlign),
     );
   }
 }

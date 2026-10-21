@@ -18,7 +18,7 @@ String fechaORD(String fechaIso) {
 
 String fechaHoraHumano(String fechaIso) {
   String fechaArreglada = fechaIso.substring(0, 19);
-  fechaArreglada = fechaArreglada + "Z";
+  fechaArreglada = "${fechaArreglada}Z";
   final date = DateTime.parse(fechaArreglada);
   final formatter = DateFormat("d MMMM yyyy 'a las' HH:mm:ss", 'es');
   String resultado = formatter.format(date);

@@ -5,6 +5,7 @@ import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Components/pop_scope_guard.dart';
 import 'package:cafe_valdivia/Components/save_button.dart';
 import 'package:cafe_valdivia/Components/unidad_medida_dropdown.dart';
+import 'package:cafe_valdivia/Debug/debug_state.dart';
 import 'package:cafe_valdivia/Debug/debug_utils.dart';
 import 'package:cafe_valdivia/core/models/articulo.dart';
 import 'package:cafe_valdivia/core/models/unidad_medida.dart';
@@ -26,15 +27,18 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
   late final TextEditingController _descripcionController;
   late final TextEditingController _nombreController;
   late final TextEditingController _costoUnitarioController;
+  late final TextEditingController _stockController;
   UnidadMedida? _selectedUnidadMedidad;
   bool _isLoading = false;
   bool _initialized = false;
+  bool _debugStock = false;
 
   final _formKey = GlobalKey<FormState>();
 
   late String _initialDescripcion;
   late String _initialNombre;
   late double _initialCostoUnitario;
+  late double _initialStock;
   late int _initialUnidadMedida;
 
   @override
@@ -47,10 +51,14 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     _costoUnitarioController = TextEditingController(
       text: widget.articulo.costoUnitario.toString(),
     );
+    _stockController = TextEditingController(
+      text: widget.articulo.stock.toString(),
+    );
 
     _initialDescripcion = widget.articulo.descripcion ?? '';
     _initialNombre = widget.articulo.nombre;
     _initialCostoUnitario = widget.articulo.costoUnitario;
+    _initialStock = widget.articulo.stock;
     _initialUnidadMedida = widget.articulo.idUnidad;
   }
 
@@ -58,6 +66,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     return _nombreController.text != _initialNombre ||
         _descripcionController.text != _initialDescripcion ||
         _costoUnitarioController.text != _initialCostoUnitario.toString() ||
+        (_debugStock && _stockController.text != _initialStock.toString()) ||
         (_selectedUnidadMedidad?.id ?? _initialUnidadMedida) !=
             _initialUnidadMedida;
   }
@@ -67,6 +76,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     _descripcionController.dispose();
     _nombreController.dispose();
     _costoUnitarioController.dispose();
+    _stockController.dispose();
     super.dispose();
   }
 
@@ -78,6 +88,9 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
       nombre: _nombreController.text,
       descripcion: _descripcionController.text,
       costoUnitario: double.tryParse(_costoUnitarioController.text) ?? 0.0,
+      stock: _debugStock
+          ? (double.tryParse(_stockController.text) ?? widget.articulo.stock)
+          : widget.articulo.stock,
       idUnidad: unidadFinal.id!,
     );
 
@@ -93,6 +106,7 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    _debugStock = ref.watch(debugStateProvider).enabled;
     final unidadMedidaAsync = debugOverride(
       ref,
       'editar_articulo',
@@ -201,6 +215,28 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
                       controller: _costoUnitarioController,
                       icon: Icons.attach_money_rounded,
                     ),
+                    if (_debugStock) ...[
+                      const SizedBox(height: 16),
+                      _buildTextField(
+                        label: "Stock",
+                        controller: _stockController,
+                        icon: Icons.inventory_rounded,
+                        textInputType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, ingrese el Stock';
+                          }
+                          final parsed = double.tryParse(value);
+                          if (parsed == null) {
+                            return 'Ingresar un valor numerico correcto';
+                          }
+                          if (parsed < 0) {
+                            return "El stock no puede ser negativo";
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -215,19 +251,24 @@ class EditarArticuloPageState extends ConsumerState<EditarArticuloPage> {
     required String label,
     required TextEditingController controller,
     required IconData icon,
+    TextInputType? textInputType,
+    String? Function(String?)? validator,
   }) {
     return AppBuildTextField(
       text: label,
       controller: controller,
       icon: icon,
+      textInputType: textInputType,
       isLoading: _isLoading,
       onChanged: (value) => setState(() {}),
-      customValidator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Por favor, ingrese el $label';
-        }
-        return null;
-      },
+      customValidator:
+          validator ??
+          (value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor, ingrese el $label';
+            }
+            return null;
+          },
     );
   }
 }

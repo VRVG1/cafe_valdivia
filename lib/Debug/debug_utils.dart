@@ -12,7 +12,7 @@ AsyncValue<T> debugOverride<T>(
   }
   if (debug.shouldFail(pageName)) {
     return AsyncValue.error(
-      Exception('${debug.errors[pageName] ?? "Error forzado [$pageName]"}'),
+      Exception(debug.errors[pageName] ?? "Error forzado [$pageName]"),
       StackTrace.current,
     );
   }

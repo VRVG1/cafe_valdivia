@@ -91,7 +91,7 @@ void main() {
       unidadRepo = UnidadMedidaRepository(databaseHelper);
       articuloRepo = ArticuloRepository(databaseHelper, unidadRepo);
       recetaRepo = RecetaRepository(databaseHelper);
-      repo = OrdenProduccionRepository(databaseHelper);
+      repo = OrdenProduccionRepository(databaseHelper, articuloRepo);
 
       await unidadRepo.create(unidad);
       await articuloRepo.create(insumo);
@@ -503,7 +503,9 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      repo = OrdenProduccionRepository(databaseHelper);
+      final unidadRepo = UnidadMedidaRepository(databaseHelper);
+      final articuloRepo = ArticuloRepository(databaseHelper, unidadRepo);
+      repo = OrdenProduccionRepository(databaseHelper, articuloRepo);
 
       await database.insert('Unidad_Medida', {'nombre': 'Kg'});
       await database.insert('Articulo', {
@@ -590,7 +592,10 @@ void main() {
       databaseHelper = DatabaseHelper();
       databaseHelper.setMockDatabase(database);
 
-      repo = OrdenProduccionRepository(databaseHelper);
+      final unidadRepo = UnidadMedidaRepository(databaseHelper);
+      final articuloRepo = ArticuloRepository(databaseHelper, unidadRepo);
+      repo = OrdenProduccionRepository(databaseHelper, articuloRepo);
+
 
       await database.insert('Unidad_Medida', {'nombre': 'Kg'});
       await database.insert('Articulo', {

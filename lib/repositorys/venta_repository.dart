@@ -49,8 +49,9 @@ class VentaRepository extends BaseRepository<Venta> {
 
   @override
   Future<int> update(Venta entity) async {
-    if (entity.id == null)
+    if (entity.id == null) {
       throw OperacionInvalidaException('ID de venta no puede ser nulo');
+    }
     return await dbHelper.update(
       tableName,
       sanitizeMapForDb(_ventaToJson(entity)),
@@ -168,7 +169,6 @@ class VentaRepository extends BaseRepository<Venta> {
       );
     }
 
-    appLogger.d(result);
 
     if (result.isEmpty) {
       throw RegistroNoEncontradoException("No se encuentran registros");
@@ -214,6 +214,20 @@ class VentaRepository extends BaseRepository<Venta> {
     } on RegistroNoEncontradoException {
       return [];
     }
+  }
+
+  Future<List<Map<String, dynamic>>> ventasPorDia(
+    String fechaInicio,
+    String fechaFin,
+  ) async {
+    final db = await dbHelper.database;
+    return await db.rawQuery('''
+    SELECT dia, orden, num_ventas, total_cantidad, total_venta
+    FROM V_Ventas_Por_Dia
+    WHERE fecha BETWEEN ? AND ?
+    ORDER BY orden
+  ''',
+        [fechaInicio, fechaFin]);
   }
 
   Future<int> markAsPaid(int ventaId) async {

@@ -23,12 +23,15 @@ String traducirErrorBD(dynamic error) {
   }
 
   if (msg.contains('UNIQUE constraint failed')) {
-    if (msg.contains('Cliente.email'))
+    if (msg.contains('Cliente.email')) {
       return 'Ya existe un cliente con ese email';
-    if (msg.contains('Proveedor.email'))
+    }
+    if (msg.contains('Proveedor.email')) {
       return 'Ya existe un proveedor con ese email';
-    if (msg.contains('Articulo.nombre'))
+    }
+    if (msg.contains('Articulo.nombre')) {
       return 'Ya existe un artículo con ese nombre';
+    }
     return 'Ya existe un registro con ese valor';
   }
 
