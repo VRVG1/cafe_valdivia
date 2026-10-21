@@ -22,9 +22,6 @@ class Listhome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
 
-    //TODO: Cambiar las consultas, en lugar de traerse toda la tabla, es mejor hacer una query que solo obtenja lo que se necesita
-    //TODO: En el caso de ventas, mostrar las ventas de la semana
-    //TODO: Para compras es lo mismo, mostrar las ventas de la semana
     final ventasPorDia = ref.watch(
       ventasPorDiaProvider(const RangoFechas('2026-10-19', '2026-10-25')),
     );
@@ -122,10 +119,7 @@ class Listhome extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Padding(
-          padding: AppPadding.hMd,
-          child: const GraficaMensual(),
-        ),
+        Padding(padding: AppPadding.hMd, child: const GraficaMensual()),
       ],
     );
   }

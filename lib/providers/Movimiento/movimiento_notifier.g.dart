@@ -9,11 +9,17 @@ part of 'movimiento_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Resumen mensual de ventas y compras para la gráfica del Home.
+///
+/// Devuelve los 12 meses del año [anio]; los meses sin movimientos vienen en
+/// cero, incluidos los meses futuros del año en curso.
 
 @ProviderFor(movimientoMensual)
 final movimientoMensualProvider = MovimientoMensualFamily._();
 
 /// Resumen mensual de ventas y compras para la gráfica del Home.
+///
+/// Devuelve los 12 meses del año [anio]; los meses sin movimientos vienen en
+/// cero, incluidos los meses futuros del año en curso.
 
 final class MovimientoMensualProvider
     extends
@@ -26,6 +32,9 @@ final class MovimientoMensualProvider
         $FutureModifier<List<Map<String, dynamic>>>,
         $FutureProvider<List<Map<String, dynamic>>> {
   /// Resumen mensual de ventas y compras para la gráfica del Home.
+  ///
+  /// Devuelve los 12 meses del año [anio]; los meses sin movimientos vienen en
+  /// cero, incluidos los meses futuros del año en curso.
   MovimientoMensualProvider._({
     required MovimientoMensualFamily super.from,
     required int super.argument,
@@ -70,9 +79,12 @@ final class MovimientoMensualProvider
   }
 }
 
-String _$movimientoMensualHash() => r'27274ba9ed07015284387990f6f81d24eb98ae92';
+String _$movimientoMensualHash() => r'599cdb74221585b9a1ae20710ae7be7e1e0c918e';
 
 /// Resumen mensual de ventas y compras para la gráfica del Home.
+///
+/// Devuelve los 12 meses del año [anio]; los meses sin movimientos vienen en
+/// cero, incluidos los meses futuros del año en curso.
 
 final class MovimientoMensualFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<Map<String, dynamic>>>, int> {
@@ -86,9 +98,12 @@ final class MovimientoMensualFamily extends $Family
       );
 
   /// Resumen mensual de ventas y compras para la gráfica del Home.
+  ///
+  /// Devuelve los 12 meses del año [anio]; los meses sin movimientos vienen en
+  /// cero, incluidos los meses futuros del año en curso.
 
-  MovimientoMensualProvider call(int meses) =>
-      MovimientoMensualProvider._(argument: meses, from: this);
+  MovimientoMensualProvider call(int anio) =>
+      MovimientoMensualProvider._(argument: anio, from: this);
 
   @override
   String toString() => r'movimientoMensualProvider';

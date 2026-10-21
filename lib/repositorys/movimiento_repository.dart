@@ -9,19 +9,19 @@ class MovimientoRepository {
 
   MovimientoRepository(this.dbHelper);
 
-  /// Devuelve los movimientos de los últimos [meses] meses, terminando en el
-  /// mes actual.
+  /// Devuelve los movimientos de los 12 meses del año [anio].
   ///
-  /// Los meses sin movimientos se incluyen con valores en cero para que la
-  /// gráfica siempre tenga la misma cantidad de barras.
+  /// Si [anio] es null se usa el año en curso. La serie siempre incluye los
+  /// 12 meses de enero a diciembre: los que no tienen movimientos (por ejemplo
+  /// los meses futuros del año en curso) se devuelven con valores en cero.
   Future<List<Map<String, dynamic>>> movimientoMensual({
-    int meses = 12,
+    int? anio,
   }) async {
     final db = await dbHelper.database;
 
-    final ahora = DateTime.now();
-    final inicio = DateTime(ahora.year, ahora.month - (meses - 1), 1);
-    final fin = DateTime(ahora.year, ahora.month, 1);
+    final anioTarget = anio ?? DateTime.now().year;
+    final inicio = DateTime(anioTarget, 1, 1);
+    final fin = DateTime(anioTarget, 12, 1);
 
     final filas = await db.rawQuery('''
     SELECT periodo, anio, mes, nombre_mes,
@@ -37,16 +37,16 @@ class MovimientoRepository {
     };
 
     final List<Map<String, dynamic>> resultado = [];
-    for (int i = 0; i < meses; i++) {
-      final mes = DateTime(inicio.year, inicio.month + i, 1);
+    for (int mesNumero = 1; mesNumero <= 12; mesNumero++) {
+      final mes = DateTime(anioTarget, mesNumero, 1);
       final periodo = _periodo(mes);
       resultado.add(
         porPeriodo[periodo] ??
             <String, dynamic>{
               'periodo': periodo,
-              'anio': mes.year,
-              'mes': mes.month,
-              'nombre_mes': _nombreMes(mes.month),
+              'anio': anioTarget,
+              'mes': mesNumero,
+              'nombre_mes': _nombreMes(mesNumero),
               'num_ventas': 0,
               'total_ventas': 0.0,
               'num_compras': 0,

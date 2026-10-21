@@ -43,13 +43,13 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          movimientoMensualProvider(3)
+          movimientoMensualProvider(2026)
               .overrideWith((ref) async => datos),
         ],
         child: const MaterialApp(
           home: Scaffold(
             body: SingleChildScrollView(
-              child: GraficaMensual(meses: 3),
+              child: GraficaMensual(anio: 2026),
             ),
           ),
         ),
@@ -61,7 +61,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump(const Duration(seconds: 2));
 
-    expect(find.text('Ventas y compras por mes'), findsOneWidget);
+    expect(find.text('Ventas y compras por mes · 2026'), findsOneWidget);
     expect(find.text('Ventas'), findsOneWidget);
     expect(find.text('Compras'), findsOneWidget);
     expect(find.text('Ago'), findsOneWidget);

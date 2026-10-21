@@ -5,18 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-/// Gráfica de barras agrupadas con las ventas y compras de los últimos meses.
+/// Gráfica de barras agrupadas con las ventas y compras de cada mes del año.
+///
+/// Por defecto muestra el año en curso completo (enero a diciembre); los meses
+/// que todavía no tienen movimientos aparecen en cero.
 class GraficaMensual extends ConsumerWidget {
-  const GraficaMensual({super.key, this.meses = 12});
+  const GraficaMensual({super.key, this.anio});
 
-  final int meses;
+  /// Año a graficar. Si es null se usa el año en curso.
+  final int? anio;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
     final tt = Theme.of(context).textTheme;
 
-    final movimiento = ref.watch(movimientoMensualProvider(meses));
+    final anioTarget = anio ?? DateTime.now().year;
+    final movimiento = ref.watch(movimientoMensualProvider(anioTarget));
 
     return Container(
       padding: AppPadding.allMd,
@@ -33,7 +38,7 @@ class GraficaMensual extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  "Ventas y compras por mes",
+                  "Ventas y compras por mes · $anioTarget",
                   style: tt.labelLarge?.copyWith(
                     color: cs.onSurfaceVariant,
                     fontWeight: FontWeight.w700,

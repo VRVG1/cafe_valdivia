@@ -61,12 +61,14 @@ void main() {
           'stock': 100.0,
         });
 
-    test('devuelve un mes por cada periodo solicitado', () async {
-      final resultado = await repo.movimientoMensual(meses: 12);
+    test('devuelve los 12 meses del anio solicitado', () async {
+      final resultado = await repo.movimientoMensual(anio: 2026);
 
       expect(resultado.length, 12);
-      expect(resultado.first['periodo'], isA<String>());
-      expect(resultado.last['periodo'], isA<String>());
+      expect(resultado.first['periodo'], '2026-01');
+      expect(resultado.last['periodo'], '2026-12');
+      expect(resultado.first['nombre_mes'], 'Ene');
+      expect(resultado.last['nombre_mes'], 'Dic');
       // Los periodos vienen ordenados de mas antiguo a mas reciente.
       expect(
         (resultado.first['periodo'] as String).compareTo(
@@ -76,8 +78,17 @@ void main() {
       );
     });
 
+    test('sin argumento usa el anio en curso', () async {
+      final resultado = await repo.movimientoMensual();
+      final anioActual = DateTime.now().year;
+
+      expect(resultado.length, 12);
+      expect(resultado.first['periodo'], '$anioActual-01');
+      expect(resultado.last['periodo'], '$anioActual-12');
+    });
+
     test('los meses sin movimientos vienen en cero', () async {
-      final resultado = await repo.movimientoMensual(meses: 12);
+      final resultado = await repo.movimientoMensual(anio: 2026);
 
       for (final fila in resultado) {
         expect(fila['num_ventas'], 0);
@@ -87,14 +98,13 @@ void main() {
       }
     });
 
-    test('suma las ventas y compras del mes actual', () async {
+    test('suma las ventas y compras en el mes que corresponde', () async {
       final unidadId = await crearUnidad();
       final articuloId = await crearArticulo(unidadId);
       final clienteId = await crearCliente();
       final proveedorId = await crearProveedor();
 
-      final ahora = DateTime.now();
-      final fecha = ahora.toIso8601String();
+      const fecha = '2026-03-15T09:00:00.000';
 
       final ventaId = await database.insert('Venta', {
         'id_cliente': clienteId,
@@ -120,13 +130,20 @@ void main() {
         'precio_unitario_compra': 50.0,
       });
 
-      final resultado = await repo.movimientoMensual(meses: 12);
-      final actual = resultado.last;
+      final resultado = await repo.movimientoMensual(anio: 2026);
+      final marzo = resultado[2];
 
-      expect(actual['num_ventas'], 1);
-      expect(actual['total_ventas'], 200.0);
-      expect(actual['num_compras'], 1);
-      expect(actual['total_compras'], 150.0);
+      expect(marzo['periodo'], '2026-03');
+      expect(marzo['nombre_mes'], 'Mar');
+      expect(marzo['num_ventas'], 1);
+      expect(marzo['total_ventas'], 200.0);
+      expect(marzo['num_compras'], 1);
+      expect(marzo['total_compras'], 150.0);
+
+      // Los meses siguientes al de los movimientos siguen en cero.
+      expect(resultado[3]['total_ventas'], 0.0);
+      expect(resultado[11]['periodo'], '2026-12');
+      expect(resultado[11]['total_ventas'], 0.0);
     });
   });
 }
