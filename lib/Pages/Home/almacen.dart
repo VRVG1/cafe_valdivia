@@ -96,7 +96,8 @@ class Almacen extends ConsumerWidget {
       for (final articulo in familias)
         articulo.nombre: (maxPorFamilia[_familia(articulo.nombre)] ?? 0) <= 0
             ? 0
-            : (articulo.stock / maxPorFamilia[_familia(articulo.nombre)]!) * 100,
+            : (articulo.stock / maxPorFamilia[_familia(articulo.nombre)]!) *
+                  100,
     };
 
     // ============ ORDEN DE LOS ARTÍCULOS ============

@@ -15,9 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NavigationScreen extends ConsumerStatefulWidget {
-  const NavigationScreen({super.key, required this.colorScheme});
+  const NavigationScreen({super.key});
 
-  final ColorScheme colorScheme;
   @override
   ConsumerState<NavigationScreen> createState() => _NavigationScreenState();
 }

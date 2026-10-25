@@ -202,7 +202,7 @@ class _GraficaBarras extends StatelessWidget {
                 BarChartRodData(
                   toY: _aDouble(datos[i]['total_ventas']),
                   color: cs.primary,
-                  width: 16,
+                  width: 10,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(3),
                   ),
@@ -210,7 +210,7 @@ class _GraficaBarras extends StatelessWidget {
                 BarChartRodData(
                   toY: _aDouble(datos[i]['total_compras']),
                   color: cs.tertiary,
-                  width: 16,
+                  width: 10,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(3),
                   ),

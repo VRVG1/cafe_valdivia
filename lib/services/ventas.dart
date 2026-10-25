@@ -27944,7 +27944,7 @@ Future<void> ventas(txn, clientes, articulos) async {
     "id_cliente": idClienVicenteValdivia,
     'fecha': '2026-10-18T09:00:00.000',
     'detalles': '',
-    'pagado': 0,
+    'pagado': 1,
     'estado': 'completado',
   });
 
@@ -27959,7 +27959,7 @@ Future<void> ventas(txn, clientes, articulos) async {
     "id_cliente": idClienVicenteValdivia,
     'fecha': '2026-10-18T09:00:00.000',
     'detalles': '',
-    'pagado': 0,
+    'pagado': 1,
     'estado': 'completado',
   });
 
@@ -28169,7 +28169,7 @@ Future<void> ventas(txn, clientes, articulos) async {
     "id_cliente": idClienVicenteValdivia,
     'fecha': '2026-10-20T09:00:00.000',
     'detalles': '',
-    'pagado': 0,
+    'pagado': 1,
     'estado': 'completado',
   });
 
@@ -28177,6 +28177,96 @@ Future<void> ventas(txn, clientes, articulos) async {
     "id_venta": idVenta1876,
     'id_articulo': idArtCafeMolidoOscuro,
     'cantidad': 1.75,
+    'precio_unitario_venta': 320,
+  });
+
+  final idVenta1877 = await txn.insert('Venta', {
+    "id_cliente": idClienVicenteValdivia,
+    'fecha': '2026-10-21T09:00:00.000',
+    'detalles': '',
+    'pagado': 1,
+    'estado': 'completado',
+  });
+
+  await txn.insert('Detalle_Venta', {
+    "id_venta": idVenta1877,
+    'id_articulo': idArtCafeMolidoOscuro,
+    'cantidad': 4.75,
+    'precio_unitario_venta': 320,
+  });
+
+  final idVenta1878 = await txn.insert('Venta', {
+    "id_cliente": idClienPedro,
+    'fecha': '2026-10-22T09:00:00.000',
+    'detalles': '',
+    'pagado': 1,
+    'estado': 'completado',
+  });
+
+  await txn.insert('Detalle_Venta', {
+    "id_venta": idVenta1878,
+    'id_articulo': idArtCafeMolidoOscuro,
+    'cantidad': 0.5,
+    'precio_unitario_venta': 320,
+  });
+
+  final idVenta1879 = await txn.insert('Venta', {
+    "id_cliente": idClienVicenteValdivia,
+    'fecha': '2026-10-23T09:00:00.000',
+    'detalles': '',
+    'pagado': 1,
+    'estado': 'completado',
+  });
+
+  await txn.insert('Detalle_Venta', {
+    "id_venta": idVenta1879,
+    'id_articulo': idArtCafeMolidoOscuro,
+    'cantidad': 2,
+    'precio_unitario_venta': 320,
+  });
+
+  final idVenta1880 = await txn.insert('Venta', {
+    "id_cliente": idClienVicenteValdivia,
+    'fecha': '2026-10-23T09:00:00.000',
+    'detalles': '',
+    'pagado': 0,
+    'estado': 'completado',
+  });
+
+  await txn.insert('Detalle_Venta', {
+    "id_venta": idVenta1880,
+    'id_articulo': idArtCafeMolidoOscuro,
+    'cantidad': 2,
+    'precio_unitario_venta': 320,
+  });
+
+  final idVenta1881 = await txn.insert('Venta', {
+    "id_cliente": idClienVicenteValdivia,
+    'fecha': '2026-10-23T09:00:00.000',
+    'detalles': '',
+    'pagado': 0,
+    'estado': 'completado',
+  });
+
+  await txn.insert('Detalle_Venta', {
+    "id_venta": idVenta1881,
+    'id_articulo': idArtCafeMolidoOscuro,
+    'cantidad': 1.25,
+    'precio_unitario_venta': 320,
+  });
+
+  final idVenta1882 = await txn.insert('Venta', {
+    "id_cliente": idClienVicenteValdivia,
+    'fecha': '2026-10-24T09:00:00.000',
+    'detalles': '',
+    'pagado': 0,
+    'estado': 'completado',
+  });
+
+  await txn.insert('Detalle_Venta', {
+    "id_venta": idVenta1882,
+    'id_articulo': idArtCafeMolidoOscuro,
+    'cantidad': 5,
     'precio_unitario_venta': 320,
   });
 }

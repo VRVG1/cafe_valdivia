@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:cafe_valdivia/Components/navigation_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
-  await initializeDateFormatting("es");
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     sqfliteFfiInit();
+    await initializeDateFormatting("es");
 
     databaseFactory = databaseFactoryFfi;
   }
@@ -29,7 +30,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Administracion Cafe',
       theme: ThemeData(colorScheme: colorScheme, useMaterial3: true),
-      home: NavigationScreen(colorScheme: colorScheme),
+      home: M3ETheme(
+        data: M3EThemeData.light(seedColor: const Color(0xFF7E570E)),
+        child: NavigationScreen(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }
