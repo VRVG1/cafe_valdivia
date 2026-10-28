@@ -20,7 +20,7 @@ class AppbarChips extends ConsumerStatefulWidget
   ConsumerState<AppbarChips> createState() => _AppbarChipsState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(180.0);
+  Size get preferredSize => const Size.fromHeight(120.0);
 
   final List<TipoBusqueda> extraFilters;
   final String labelText;
@@ -165,7 +165,7 @@ class _AppbarChipsState extends ConsumerState<AppbarChips> {
                   SizedBox(width: leadingWidth),
                   Expanded(
                     child: FractionallySizedBox(
-                      widthFactor: 0.6,
+                      widthFactor: 0.8,
                       child: TextField(
                         onChanged: (value) {
                           ref

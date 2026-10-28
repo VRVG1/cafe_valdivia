@@ -1,8 +1,8 @@
 import 'package:cafe_valdivia/Components/carta_resume.dart';
 import 'package:cafe_valdivia/Components/loading_view.dart';
 import 'package:cafe_valdivia/Pages/Home/grafica_mensual.dart';
-import 'package:cafe_valdivia/core/models/rango_fechas.dart';
 import 'package:cafe_valdivia/core/theme/app_constants.dart';
+import 'package:cafe_valdivia/core/utils/semana_actual.dart';
 import 'package:cafe_valdivia/providers/Compra/compra_notifier.dart';
 import 'package:cafe_valdivia/providers/Venta/venta_notifier.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +22,9 @@ class Listhome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
 
-    final ventasPorDia = ref.watch(
-      ventasPorDiaProvider(const RangoFechas('2026-10-19', '2026-10-25')),
-    );
-    final comprasPorDia = ref.watch(
-      comprasPorDiaProvider(const RangoFechas('2026-10-19', '2026-10-25')),
-    );
+    final rangoSemana = rangoSemanaActual();
+    final ventasPorDia = ref.watch(ventasPorDiaProvider(rangoSemana));
+    final comprasPorDia = ref.watch(comprasPorDiaProvider(rangoSemana));
 
     final cartas = <Widget>[
       ventasPorDia.when(

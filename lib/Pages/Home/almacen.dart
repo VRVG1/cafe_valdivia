@@ -12,25 +12,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Sección del Home que muestra una tabla con los artículos de café del
 /// almacén.
 ///
-/// La tabla muestra únicamente las familias de café indicadas en
-/// [_familiasMostradas]. Cada artículo se compara contra el artículo con más
-/// stock de su misma familia para obtener un porcentaje, y ese porcentaje
-/// define el aviso visual (normal / poco stock / crítico / sin stock).
+/// La tabla muestra únicamente las familias indicadas en [_familias]. El
+/// porcentaje de cada artículo se calcula contra el stock máximo manual de su
+/// familia (100%), y ese porcentaje define el aviso visual
+/// (normal / poco stock / crítico / sin stock).
 class Almacen extends ConsumerWidget {
   const Almacen({super.key});
 
-  /// Familias de café que aparecen en la tabla. Se busca por fragmento del
-  /// nombre (sin distinguir mayúsculas), así que cubre todas sus variedades:
-  /// "Cafe molido medio", "Cafe molido oscuro", "Cafe verde calidad buena",
-  /// "cafe tostado oscuro", etc.
+  /// Familias que aparecen en la tabla, junto con el stock que representa su
+  /// 100%.
   ///
-  /// Para mostrar otra familia o quitar alguna, edita esta lista.
-  static const List<String> _familiasMostradas = [
-    'molido',
-    'verde',
-    'tostado',
-    'bola',
-    'pergamino',
+  /// La coincidencia se hace por fragmento del nombre (sin distinguir
+  /// mayúsculas), así que cada entrada cubre todas sus variedades. El orden
+  /// importa: si un nombre coincide con dos familias, gana la primera.
+  ///
+  /// Para agregar otro grupo, agrega una entrada aquí.
+  static const List<_FamiliaStock> _familias = [
+    _FamiliaStock('molido', 10),
+    _FamiliaStock('verde', 10000),
+    _FamiliaStock('tostado', 1000),
+    _FamiliaStock('bola', 1000),
+    _FamiliaStock('pergamino', 1000),
+    _FamiliaStock('Bolita', 400),
+    _FamiliaStock('Bolsa Cuarto', 100),
+    _FamiliaStock('Bolsa Medio', 100),
+    _FamiliaStock('Bolsa Kilo', 100),
   ];
 
   /// Umbral superior: por encima de este porcentaje el stock se ve normal.
@@ -75,29 +81,24 @@ class Almacen extends ConsumerWidget {
 
   Widget _tabla(ColorScheme cs, TextTheme tt, List<Articulo> articulos) {
     final familias = articulos
-        .where((a) => _familia(a.nombre).isNotEmpty)
+        .where((a) => _familia(a.nombre) != null)
         .toList();
 
     if (familias.isEmpty) {
-      return ErrorView(message: "No hay artículos de café en el almacén.");
+      return ErrorView(message: "No hay artículos en el almacén.");
     }
 
-    // El 100% de cada familia es el artículo con más stock de esa familia.
-    final maxPorFamilia = <String, double>{};
-    for (final articulo in familias) {
+    // El 100% de cada familia es el stock máximo configurado manualmente.
+    double porcentajeDe(Articulo articulo) {
       final familia = _familia(articulo.nombre);
-      final actual = maxPorFamilia[familia] ?? 0;
-      if (articulo.stock > actual) {
-        maxPorFamilia[familia] = articulo.stock;
-      }
+      if (familia == null || familia.stockMaximo <= 0) return 0;
+      return (articulo.stock / familia.stockMaximo * 100)
+          .clamp(0, 100)
+          .toDouble();
     }
 
     final porcentajes = <String, double>{
-      for (final articulo in familias)
-        articulo.nombre: (maxPorFamilia[_familia(articulo.nombre)] ?? 0) <= 0
-            ? 0
-            : (articulo.stock / maxPorFamilia[_familia(articulo.nombre)]!) *
-                  100,
+      for (final articulo in familias) articulo.nombre: porcentajeDe(articulo),
     };
 
     // ============ ORDEN DE LOS ARTÍCULOS ============
@@ -133,7 +134,8 @@ class Almacen extends ConsumerWidget {
     return tableResume(cs, tt, items, ["Artículo", "Stock", "Costo", "Total"]);
   }
 
-  /// Clasifica el artículo según su porcentaje de stock dentro de su familia.
+  /// Clasifica el artículo según su porcentaje de stock contra el máximo
+  /// manual de su familia.
   NivelStock _nivel(double stock, double porcentaje) {
     if (stock <= 0) return NivelStock.sinStock;
     if (porcentaje < _umbralCritico) return NivelStock.critico;
@@ -141,15 +143,30 @@ class Almacen extends ConsumerWidget {
     return NivelStock.normal;
   }
 
-  /// Devuelve la familia de café a la que pertenece el artículo, o cadena
-  /// vacía si no pertenece a ninguna de las [_familiasMostradas].
-  static String _familia(String nombre) {
-    final normalizado = nombre.toLowerCase();
-    for (final familia in _familiasMostradas) {
-      if (normalizado.contains(familia)) return familia;
+  /// Devuelve la familia a la que pertenece el artículo, o null si no coincide
+  /// con ninguna de [_familias].
+  static _FamiliaStock? _familia(String nombre) {
+    for (final familia in _familias) {
+      if (familia.coincide(nombre)) return familia;
     }
-    return '';
+    return null;
   }
+}
+
+/// Familia de artículos que se muestra en la tabla del almacén.
+class _FamiliaStock {
+  /// Fragmento que debe contener el nombre del artículo. La comparación no
+  /// distingue mayúsculas.
+  final String nombre;
+
+  /// Stock que representa el 100% de la familia.
+  final double stockMaximo;
+
+  const _FamiliaStock(this.nombre, this.stockMaximo);
+
+  /// True si el nombre del artículo pertenece a esta familia.
+  bool coincide(String nombreArticulo) =>
+      nombreArticulo.toLowerCase().contains(nombre.toLowerCase());
 }
 
 String _numero(double valor) {

@@ -200,37 +200,6 @@ Future<void> seedDatabase() async {
     for (final c in clientes) {
       cId.add(await txn.insert('Cliente', c));
     }
-    final [
-      idClienVicenteValdivia,
-      idClienRafaelValdivia,
-      idClienSofiaValdivia,
-      idClienVeronicaValdivia,
-      idClienEmmanuelValdivia,
-      idClienVeronicaGomez,
-      idClienTiendaRolon,
-      idClienRestauranteBuenSason,
-      idClienGuadalupana,
-      idClienSanBartolo,
-      idClienMarcos,
-      idClienChavaAlvarez,
-      idClienPanaderiaTapalpa,
-      idClienRabago,
-      idClienSuperVicky,
-      idClienTiaCruz,
-      idClienCarmelilia,
-      idClienDulce,
-      idClienTiendaEsquina,
-      idClienEriberto,
-      idClienLuisManuel,
-      idClienCerealesZacoalco,
-      idClienMicheladas,
-      idClienYoy,
-      idClienMiguelAlgo,
-      idClienSenoraChayo,
-      idClienAlonso,
-      idClienPedro,
-      idClienPaco,
-    ] = cId;
     // ============================================================
     // 3. PROVEEDORES
     // ============================================================
@@ -638,7 +607,7 @@ Future<void> seedDatabase() async {
         'id_unidad': kg,
         'costo_unitario': 320.0,
         'precio_venta': 320.0,
-        'stock': 5220.0,
+        'stock': 522099.0,
       },
     ];
     final aId = <int>[];

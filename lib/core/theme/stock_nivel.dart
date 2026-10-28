@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
 
+/// Colores fijos de los niveles de stock.
+///
+/// Se usan para identificar el estado de un vistazo: verde cuando el nivel es
+/// bueno, amarillo cuando hay poco stock y rojo cuando es crítico o no hay
+/// stock.
+abstract final class StockColores {
+  static const verde = Color(0xFF2E7D32);
+  static const amarillo = Color(0xFFF9A825);
+  static const rojo = Color(0xFFC62828);
+  static const rojoOscuro = Color(0xFF8E0000);
+}
+
 /// Nivel de alerta de stock de un artículo.
 ///
 /// Se calcula a partir del porcentaje de stock que el artículo tiene respecto
-/// al máximo de su familia (ver `Almacen` en `lib/Pages/Home/almacen.dart`).
+/// al stock máximo manual de su familia (ver `Almacen` en
+/// `lib/Pages/Home/almacen.dart`).
 enum NivelStock {
-  /// Más del 40% del stock de la familia: se muestra normal.
+  /// Desde 40% del stock máximo manual: se muestra en verde.
   normal,
 
-  /// Entre 20% y 40%: aviso visual de poco stock.
+  /// Entre 20% y 40%: aviso visual amarillo de poco stock.
   advertencia,
 
-  /// Menos del 20%: aviso visual grave.
+  /// Menos del 20%: aviso visual rojo grave.
   critico,
 
-  /// Sin stock: aviso visual de peligro.
+  /// Sin stock: aviso visual rojo oscuro de peligro.
   sinStock;
 
   /// True cuando el nivel requiere algún tipo de aviso en pantalla.
@@ -24,13 +37,13 @@ enum NivelStock {
   Color colorBadge(ColorScheme cs) {
     switch (this) {
       case NivelStock.normal:
-        return cs.primaryContainer;
+        return StockColores.verde;
       case NivelStock.advertencia:
-        return cs.tertiaryContainer;
+        return StockColores.amarillo;
       case NivelStock.critico:
-        return cs.errorContainer;
+        return StockColores.rojo;
       case NivelStock.sinStock:
-        return cs.error;
+        return StockColores.rojoOscuro;
     }
   }
 
@@ -38,27 +51,27 @@ enum NivelStock {
   Color colorTextoBadge(ColorScheme cs) {
     switch (this) {
       case NivelStock.normal:
-        return cs.onPrimaryContainer;
+        return Colors.white;
       case NivelStock.advertencia:
-        return cs.onTertiaryContainer;
+        return Colors.black87;
       case NivelStock.critico:
-        return cs.onErrorContainer;
+        return Colors.white;
       case NivelStock.sinStock:
-        return cs.onError;
+        return Colors.white;
     }
   }
 
-  /// Tinte de fondo de la fila, o null si la fila usa el color alterno normal.
+  /// Tinte de fondo de la fila.
   Color? colorFila(ColorScheme cs) {
     switch (this) {
       case NivelStock.normal:
-        return null;
+        return StockColores.verde.withValues(alpha: 0.12);
       case NivelStock.advertencia:
-        return cs.tertiaryContainer.withValues(alpha: 0.30);
+        return StockColores.amarillo.withValues(alpha: 0.22);
       case NivelStock.critico:
-        return cs.errorContainer.withValues(alpha: 0.38);
+        return StockColores.rojo.withValues(alpha: 0.18);
       case NivelStock.sinStock:
-        return cs.error.withValues(alpha: 0.14);
+        return StockColores.rojoOscuro.withValues(alpha: 0.16);
     }
   }
 
@@ -80,13 +93,13 @@ enum NivelStock {
   Color colorIcono(ColorScheme cs) {
     switch (this) {
       case NivelStock.normal:
-        return cs.onSurfaceVariant;
+        return StockColores.verde;
       case NivelStock.advertencia:
-        return cs.tertiary;
+        return StockColores.amarillo;
       case NivelStock.critico:
-        return cs.error;
+        return StockColores.rojo;
       case NivelStock.sinStock:
-        return cs.error;
+        return StockColores.rojoOscuro;
     }
   }
 
